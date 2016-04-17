@@ -41,13 +41,18 @@ implementation as a reference.
 This library has been tested with Python 2.7 and 3.5. Running 'tox' will
 run unittests on both versions, and verify that all python files pass flake8.
 
+#### Running with OpenBLAS
+
+I highly recommend setting 'export OPENBLAS_NUM_THREADS=1' on systems using
+OpenBLAS. This disables its internal multithreading ability, which leads to
+substantial speedups for this package.
+
 #### TODO
 
 This is still a work in progress. Things immediately on the horizon:
 
 - Example application
 - Sphinx autodoc
-- Test on linux, verify openmp support actually works
 - Benchmark
 
 Released under the MIT License
