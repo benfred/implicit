@@ -1,20 +1,15 @@
 """ Implicit Alternating Least Squares """
-from __future__ import print_function
-
 import numpy as np
 import time
 import os
 import logging
+from . import _implicit
 
-try:
-    from . import _implicit
-    has_cython = True
-except:
-    has_cython = False
+log = logging.getLogger("implicit")
 
 
 def alternating_least_squares(Cui, factors, regularization=0.01,
-                              iterations=15, use_native=has_cython):
+                              iterations=15, use_native=True):
     """ factorizes the matrix Cui using an implicit alternating least squares
     algorithm
 
@@ -43,7 +38,7 @@ def alternating_least_squares(Cui, factors, regularization=0.01,
         s = time.time()
         solver(Cui, X, Y, regularization)
         solver(Ciu, Y, X, regularization)
-        print("finished iteration %i in %s" % (iteration, time.time() - s))
+        log.debug("finished iteration %i in %s", iteration, time.time() - s)
 
     return X, Y
 
@@ -84,5 +79,5 @@ def _check_open_blas():
     """ checks to see if using OpenBlas. If so, warn if the number of threads isn't set to 1
     (causes perf issues) """
     if np.__config__.openblas_info and os.environ.get('OPENBLAS_NUM_THREADS') != '1':
-        logging.warn("OpenBLAS detected. Its highly recommend to set the environment variable "
-                     "'export OPENBLAS_NUM_THREADS=1' to disable its internal multithreading")
+        log.warn("OpenBLAS detected. Its highly recommend to set the environment variable "
+                 "'export OPENBLAS_NUM_THREADS=1' to disable its internal multithreading")

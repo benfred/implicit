@@ -23,11 +23,13 @@ def least_squares(Cui, double [:, :] X, double [:, :] Y, double regularization):
 
     cdef double * A
     cdef double * b
+    cdef int * pivot
 
     with nogil, parallel():
         # allocate temp memory for each thread
         A = <double *> malloc(sizeof(double) * factors * factors)
         b = <double *> malloc(sizeof(double) * factors)
+        pivot = <int *> malloc(sizeof(int) * factors)
         try:
             for u in prange(users):
                 # For each user u calculate 
@@ -52,13 +54,19 @@ def least_squares(Cui, double [:, :] X, double [:, :] Y, double regularization):
                         cython_blas.daxpy(&factors, &temp, &Y[i, 0], &one, A + j * factors, &one)
 
                 cython_lapack.dposv("U", &factors, &one, A, &factors, b, &factors, &err);
+
+                # fall back to using a LU decomposition if this fails
+                if err:
+                    cython_lapack.dgesv(&factors, &one, A, &factors, pivot, b, &factors, &err)
+
                 if not err:
                     memcpy(&X[u, 0], b, sizeof(double) * factors)
 
                 else:
                     with gil:
-                        raise ValueError("Non positive definite matrix (err=%i) on row %i" % (err, u))
+                        raise ValueError("Singular matrix (err=%i) on row %i" % (err, u))
 
         finally:
             free(A)
             free(b)
+            free(pivot)
