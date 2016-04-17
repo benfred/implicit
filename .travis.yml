@@ -1,0 +1,26 @@
+language: python
+sudo: false
+python:
+  - "2.7"
+  - "3.5"
+
+addons:
+  apt:
+    packages:
+    - libblas-dev
+    - liblapack-dev
+    - gfortran
+
+before_install:
+  - pip install -U pip setuptools wheel
+
+install:
+  - travis_wait travis_retry pip install -r requirements.txt
+  - travis_retry python setup.py install
+
+script: python setup.py test
+
+cache:
+  - apt
+  - directories:
+    - $HOME/.cache/pip

@@ -5,6 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
+implicit/_implicit.c
 
 # Distribution / packaging
 .Python
