@@ -31,7 +31,7 @@ def least_squares(Cui, double [:, :] X, double [:, :] Y, double regularization):
         b = <double *> malloc(sizeof(double) * factors)
         pivot = <int *> malloc(sizeof(int) * factors)
         try:
-            for u in prange(users):
+            for u in prange(users, schedule='guided'):
                 # For each user u calculate 
                 # Xu = (YtCuY + regularization*I)i^-1 * YtYCuPu
 

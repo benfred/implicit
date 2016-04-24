@@ -1,3 +1,8 @@
 include implicit/*.pyx
+include implicit/*.c
 include tests/*.py
+include examples/*.py
 include README.md
+include requirements.txt
+include LICENSE
+include tox.ini

@@ -1,33 +1,79 @@
-from setuptools import setup, Extension
-from codecs import open
-from os import path
+import glob
+import os.path
+import platform
 import sys
 
-from Cython.Distutils import build_ext
-import numpy
+from setuptools import Command, Extension, setup
 
-here = path.abspath(path.dirname(__file__))
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+
+def define_extensions(cythonize=False):
+    compile_args = ['-fopenmp', '-ffast-math']
+
+    if 'anaconda' not in sys.version.lower():
+        compile_args.append('-march=native')
+
+    if cythonize:
+        implicit_cython = "implicit/_implicit.pyx"
+    else:
+        implicit_cython = "implicit/_implicit.c"
+
+    return [Extension("implicit._implicit", [implicit_cython],
+                      extra_link_args=["-fopenmp"],
+                      extra_compile_args=compile_args)]
+
+
+# set_gcc copied from glove-python project
+# https://github.com/maciejkula/glove-python
+
+def set_gcc():
+    """
+    Try to find and use GCC on OSX for OpenMP support.
+    """
+    # For macports and homebrew
+    patterns = ['/opt/local/bin/gcc-mp-[0-9].[0-9]',
+                '/opt/local/bin/gcc-mp-[0-9]',
+                '/usr/local/bin/gcc-[0-9].[0-9]',
+                '/usr/local/bin/gcc-[0-9]']
+
+    if 'darwin' in platform.platform().lower():
+        gcc_binaries = []
+        for pattern in patterns:
+            gcc_binaries += glob.glob(pattern)
+        gcc_binaries.sort()
+
+        if gcc_binaries:
+            _, gcc = os.path.split(gcc_binaries[-1])
+            os.environ["CC"] = gcc
+
+        else:
+            raise Exception('No GCC available. Install gcc from Homebrew '
+                            'using brew install gcc.')
+
+
+set_gcc()
+
+
+class Cythonize(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        from Cython.Build import cythonize
+        cythonize(define_extensions(cythonize=True))
+
+
+here = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(here, 'README.md')) as f:
     long_description = f.read()
-
-compile_args = ['-O3', '-Wno-strict-prototypes', '-Wno-unused-function', '-Wno-unreachable-code']
-link_args = []
-
-if not sys.platform.startswith('darwin'):
-    compile_args.append("-fopenmp")
-    link_args.append("-fopenmp")
-
-extension = Extension(
-    "implicit._implicit",
-    ["implicit/_implicit.pyx"],
-    extra_compile_args=compile_args,
-    extra_link_args=link_args,
-    include_dirs=[numpy.get_include()],
-)
 
 setup(
     name='implicit',
-    version="0.1.0",
+    version="0.1.1",
     description='Collaborative Filtering for Implicit Datasets',
     long_description=long_description,
     url='http://github.com/benfred/implicit/',
@@ -51,8 +97,9 @@ setup(
              'Collaborative Filtering, Recommender Systems',
 
     packages=['implicit'],
+    install_requires=['numpy', 'scipy>=0.16'],
+    cmdclass={'cythonize': Cythonize},
     setup_requires=["Cython >= 0.19"],
-    ext_modules=[extension],
+    ext_modules=define_extensions(),
     test_suite="tests",
-    cmdclass={'build_ext': build_ext},
 )
