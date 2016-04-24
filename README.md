@@ -39,7 +39,7 @@ The core of this package is written in Cython, leveraging OpenMP to
 parallelize computation. Linear Algebra is done using the BLAS and LAPACK
 libraries distributed with SciPy. This leads to extremely fast matrix factorization.
 
-On a simple [benchmark](https://github.com/benfred/implicit/blob/master/tests/benchmark.py), this
+On a simple [benchmark](https://github.com/benfred/implicit/blob/master/examples/benchmark.py), this
 library is about 1.8 times faster than the multithreaded C++ implementation provided by Quora's
 [QMF Library](https://github.com/quora/qmf) and at least 60,000 times faster than [implicit-mf](https://github.com/MrChrisJohnson/implicit-mf).
 
