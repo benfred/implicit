@@ -54,7 +54,7 @@ def least_squares(Cui, X, Y, regularization):
     YtY = Y.T.dot(Y)
 
     for u in range(users):
-        # accumulate YtCuY + regulariation*I in A
+        # accumulate YtCuY + regularization*I in A
         A = YtY + regularization * np.eye(factors)
 
         # accumulate YtCuPu in b

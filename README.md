@@ -32,7 +32,7 @@ which can be installed with homebrew: ```brew install gcc```.
 
 This library came about because I was looking for an efficient Python
 implementation of this algorithm for a [blog
-post on matrix factorization](http://www.benfrederickson/matrix-factorization/). The other python
+post on matrix factorization](http://www.benfrederickson.com/matrix-factorization/). The other python
 packages were too slow, and integrating with a different language or framework was too cumbersome.
 
 The core of this package is written in Cython, leveraging OpenMP to

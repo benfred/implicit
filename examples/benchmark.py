@@ -1,4 +1,5 @@
 """ A simple benchmark on the last.fm dataset
+
 Compares the running time of this package vs the QMF library from Quora.
 
 On my laptop (2015 Macbook Pro , Dual Core 3.1 GHz Intel Core i7) running
@@ -17,9 +18,6 @@ import logging
 import argparse
 import time
 from subprocess import call
-
-import pandas
-from scipy.sparse import coo_matrix
 
 from implicit import alternating_least_squares
 from lastfm import read_data, bm25_weight

@@ -1,6 +1,13 @@
 """ An example of using this library to calculate related artists
 from the last.fm dataset. More details can be found
-at http://www.benfrederickson.com/matrix_factorization/
+at http://www.benfrederickson.com/matrix-factorization/
+
+The dataset here can be found at
+http://www.dtic.upf.edu/~ocelma/MusicRecommendationDataset/lastfm-360K.html
+
+Note there are some invalid entries in this dataset, running
+this function will clean it up so pandas can read it:
+https://github.com/benfred/bens-blog-code/blob/master/distance-metrics/musicdata.py#L39
 """
 
 from __future__ import print_function
@@ -54,16 +61,14 @@ def bm25_weight(data, K1=100, B=0.8):
     return ret
 
 
-class ExactTopRelated(object):
+class TopRelated(object):
     def __init__(self, artist_factors):
-        # fully normalize artist_factors, so can compare
-        # with only dot product
-        for row in artist_factors:
-            row /= (1e-10 + numpy.linalg.norm(row))
-        self.artist_factors
+        # fully normalize artist_factors, so can compare with only the dot product
+        norms = numpy.linalg.norm(artist_factors, axis=-1)
+        self.factors = artist_factors / norms[:, numpy.newaxis]
 
     def get_related(self, artistid, N=10):
-        scores = self.artist_factors.dot(self.artist_factors[artistid])
+        scores = self.factors.dot(self.factors[artistid])
         best = numpy.argpartition(scores, -N)[-N:]
         return sorted((best, scores[best]), key=lambda x: -x[1])
 
@@ -112,7 +117,7 @@ def calculate_similar_artists(input_filename, output_filename,
     to_generate = sorted(list(artists), key=lambda x: -user_count[x])
 
     if exact:
-        calc = ExactTopRelated(artist_factors)
+        calc = TopRelated(artist_factors)
     else:
         calc = ApproximateTopRelated(artist_factors, trees)
 
