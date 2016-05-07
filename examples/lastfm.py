@@ -70,7 +70,7 @@ class TopRelated(object):
     def get_related(self, artistid, N=10):
         scores = self.factors.dot(self.factors[artistid])
         best = numpy.argpartition(scores, -N)[-N:]
-        return sorted((best, scores[best]), key=lambda x: -x[1])
+        return sorted(zip(best, scores[best]), key=lambda x: -x[1])
 
 
 class ApproximateTopRelated(object):
