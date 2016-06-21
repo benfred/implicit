@@ -9,7 +9,7 @@ log = logging.getLogger("implicit")
 
 
 def alternating_least_squares(Cui, factors, regularization=0.01,
-                              iterations=15, use_native=True, num_threads=1):
+                              iterations=15, use_native=True, num_threads=0):
     """ factorizes the matrix Cui using an implicit alternating least squares
     algorithm
 
@@ -19,6 +19,8 @@ def alternating_least_squares(Cui, factors, regularization=0.01,
         regularization (double): Regularization parameter to use
         iterations (int): Number of alternating least squares iterations to
         run
+        num_threads (int): Number of threads to run least squares iterations.
+        0 means to use all CPU cores.
 
     Returns:
         tuple: A tuple of (row, col) factors
