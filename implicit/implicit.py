@@ -9,7 +9,7 @@ log = logging.getLogger("implicit")
 
 
 def alternating_least_squares(Cui, factors, regularization=0.01,
-                              iterations=15, use_native=True, num_threads=1)
+                              iterations=15, use_native=True, num_threads=1):
     """ factorizes the matrix Cui using an implicit alternating least squares
     algorithm
 
