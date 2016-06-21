@@ -9,7 +9,7 @@ log = logging.getLogger("implicit")
 
 
 def alternating_least_squares(Cui, factors, regularization=0.01,
-                              iterations=15, use_native=True):
+                              iterations=15, use_native=True, num_threads=1)
     """ factorizes the matrix Cui using an implicit alternating least squares
     algorithm
 
@@ -36,14 +36,14 @@ def alternating_least_squares(Cui, factors, regularization=0.01,
 
     for iteration in range(iterations):
         s = time.time()
-        solver(Cui, X, Y, regularization)
-        solver(Ciu, Y, X, regularization)
+        solver(Cui, X, Y, regularization, num_threads)
+        solver(Ciu, Y, X, regularization, num_threads)
         log.debug("finished iteration %i in %s", iteration, time.time() - s)
 
     return X, Y
 
 
-def least_squares(Cui, X, Y, regularization):
+def least_squares(Cui, X, Y, regularization, num_threads):
     """ For each user in Cui, calculate factors Xu for them
     using least squares on Y.
 
