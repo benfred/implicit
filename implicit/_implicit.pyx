@@ -9,7 +9,7 @@ cimport scipy.linalg.cython_lapack as cython_lapack
 cimport scipy.linalg.cython_blas as cython_blas
 
 @cython.boundscheck(False)
-def least_squares(Cui, double [:, :] X, double [:, :] Y, double regularization):
+def least_squares(Cui, double [:, :] X, double [:, :] Y, double regularization, int num_threads):
     cdef int [:] indptr = Cui.indptr, indices = Cui.indices
     cdef double [:] data = Cui.data
 
@@ -25,14 +25,14 @@ def least_squares(Cui, double [:, :] X, double [:, :] Y, double regularization):
     cdef double * b
     cdef int * pivot
 
-    with nogil, parallel():
+    with nogil, parallel(num_threads = num_threads):
         # allocate temp memory for each thread
         A = <double *> malloc(sizeof(double) * factors * factors)
         b = <double *> malloc(sizeof(double) * factors)
         pivot = <int *> malloc(sizeof(int) * factors)
         try:
             for u in prange(users, schedule='guided'):
-                # For each user u calculate 
+                # For each user u calculate
                 # Xu = (YtCuY + regularization*I)i^-1 * YtYCuPu
 
                 # Build up A = YtCuY + reg * I and b = YtCuPu
@@ -42,7 +42,7 @@ def least_squares(Cui, double [:, :] X, double [:, :] Y, double regularization):
                 for index in range(indptr[u], indptr[u+1]):
                     i = indices[index]
                     confidence = data[index]
-                   
+
                     # b += Yi Cui Pui
                     # Pui is implicit, its defined to be 1 for non-zero entries
                     cython_blas.daxpy(&factors, &confidence, &Y[i, 0], &one, b, &one)
