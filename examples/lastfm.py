@@ -44,21 +44,21 @@ def read_data(filename):
     return data, plays
 
 
-def bm25_weight(data, K1=100, B=0.8):
-    """ Weighs each row of the matrix data by BM25 weighting """
+def bm25_weight(X, K1=100, B=0.8):
+    """ Weighs each row of the sparse matrix of the data by BM25 weighting """
     # calculate idf per term (user)
-    N = float(data.shape[0])
-    idf = numpy.log(N / (1 + numpy.bincount(data.col)))
+    X = coo_matrix(X)
+    N = X.shape[0]
+    idf = numpy.log(float(N) / (1 + numpy.bincount(X.col)))
 
     # calculate length_norm per document (artist)
-    row_sums = numpy.squeeze(numpy.asarray(data.sum(1)))
-    average_length = row_sums.sum() / N
+    row_sums = numpy.ravel(X.sum(axis=1))
+    average_length = row_sums.mean()
     length_norm = (1.0 - B) + B * row_sums / average_length
 
     # weight matrix rows by bm25
-    ret = coo_matrix(data)
-    ret.data = ret.data * (K1 + 1.0) / (K1 * length_norm[ret.row] + ret.data) * idf[ret.col]
-    return ret
+    X.data = X.data * (K1 + 1.0) / (K1 * length_norm[X.row] + X.data) * idf[X.col]
+    return X
 
 
 class TopRelated(object):
