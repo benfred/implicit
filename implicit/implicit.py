@@ -9,7 +9,8 @@ log = logging.getLogger("implicit")
 
 
 def alternating_least_squares(Cui, factors, regularization=0.01,
-                              iterations=15, use_native=True, num_threads=0):
+                              iterations=15, use_native=True, num_threads=0,
+                              dtype=np.float64):
     """ factorizes the matrix Cui using an implicit alternating least squares
     algorithm
 
@@ -29,8 +30,8 @@ def alternating_least_squares(Cui, factors, regularization=0.01,
 
     users, items = Cui.shape
 
-    X = np.random.rand(users, factors) * 0.01
-    Y = np.random.rand(items, factors) * 0.01
+    X = np.random.rand(users, factors).astype(dtype) * 0.01
+    Y = np.random.rand(items, factors).astype(dtype) * 0.01
 
     Cui, Ciu = Cui.tocsr(), Cui.T.tocsr()
 

@@ -73,7 +73,7 @@ with open(os.path.join(here, 'README.md')) as f:
 
 setup(
     name='implicit',
-    version="0.1.1",
+    version="0.1.2",
     description='Collaborative Filtering for Implicit Datasets',
     long_description=long_description,
     url='http://github.com/benfred/implicit/',

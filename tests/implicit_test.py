@@ -34,6 +34,13 @@ class ImplicitALSTest(unittest.TestCase):
                                                         use_native=True)
         check_solution(rows, cols, counts.todense())
 
+        # check cython version (using 32 bit factors)
+        rows, cols = implicit.alternating_least_squares(counts * 2, 7,
+                                                        regularization,
+                                                        use_native=True,
+                                                        dtype=np.float32)
+        check_solution(rows, cols, counts.todense())
+
         # try out pure python version
         rows, cols = implicit.alternating_least_squares(counts, 7,
                                                         regularization,
