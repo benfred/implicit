@@ -57,12 +57,12 @@ def define_extensions(use_cython=False):
     if 'anaconda' not in sys.version.lower():
         compile_args.append('-march=native')
 
-    SRC_EXT = '.pyx' if use_cython else '.c'
+    src_ext = '.pyx' if use_cython else '.c'
 
     modules = [
         Extension(import_string_from_path(filepath), [filepath], language='c',
                   extra_compile_args=compile_args, extra_link_args=link_args)
-        for filepath in find_files(SRC_ROOT, SRC_EXT)
+        for filepath in find_files(SRC_ROOT, src_ext)
     ]
 
     if use_cython:
@@ -130,7 +130,7 @@ setup(
     keywords='Matrix Factorization, Implicit Alternating Least Squares, '
              'Collaborative Filtering, Recommender Systems',
 
-    packages=['implicit'],
+    packages=[SRC_ROOT],
     install_requires=['numpy', 'scipy>=0.16'],
     setup_requires=["Cython >= 0.19"],
     ext_modules=define_extensions(use_cython),
