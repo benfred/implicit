@@ -2,24 +2,73 @@ import glob
 import os.path
 import platform
 import sys
+import warnings
 
-from setuptools import Command, Extension, setup
+from setuptools import Extension, setup
+
+NAME = 'implicit'
+VERSION = '0.1.3'
+SRC_ROOT = 'implicit'
 
 
-def define_extensions(cythonize=False):
-    compile_args = ['-fopenmp', '-ffast-math']
+
+try:
+    from Cython.Build import cythonize
+    has_cython = True
+except ImportError:
+    has_cython = False
+
+is_dev = 'dev' in VERSION
+use_cython = is_dev or '--cython' in sys.argv or '--with-cython' in sys.argv
+if '--no-cython' in sys.argv:
+    use_cython = False
+    sys.argv.remove('--no-cython')
+if '--without-cython' in sys.argv:
+    use_cython = False
+    sys.argv.remove('--without-cython')
+if '--cython' in sys.argv:
+    sys.argv.remove('--cython')
+if '--with-cython' in sys.argv:
+    sys.argv.remove('--with-cython')
+
+
+if use_cython and not has_cython:
+    if is_dev:
+        raise RuntimeError('Cython required to build dev version of %s.' % NAME)
+    warnings.warn('Cython not installed. Building without Cython.')
+    use_cython = False
+
+
+def find_files(dir_path, extension):
+    for root, _, files in os.walk(dir_path):
+        for name in files:
+            if name.endswith(extension):
+                yield os.path.join(root, name)
+
+
+def import_string_from_path(path):
+    return os.path.splitext(path)[0].replace('/', '.')
+
+
+def define_extensions(use_cython=False):
+    compile_args = ['-Wno-unused-function', '-O3', '-fopenmp', '-ffast-math']
+    link_args = ['-fopenmp']
 
     if 'anaconda' not in sys.version.lower():
         compile_args.append('-march=native')
 
-    if cythonize:
-        implicit_cython = "implicit/_implicit.pyx"
-    else:
-        implicit_cython = "implicit/_implicit.c"
+    SRC_EXT = '.pyx' if use_cython else '.c'
 
-    return [Extension("implicit._implicit", [implicit_cython],
-                      extra_link_args=["-fopenmp"],
-                      extra_compile_args=compile_args)]
+    modules = [
+        Extension(import_string_from_path(filepath), [filepath], language='c',
+                  extra_compile_args=compile_args, extra_link_args=link_args)
+        for filepath in find_files(SRC_ROOT, SRC_EXT)
+    ]
+
+    if use_cython:
+        return cythonize(modules)
+    else:
+        return modules
 
 
 # set_gcc copied from glove-python project
@@ -53,27 +102,13 @@ def set_gcc():
 set_gcc()
 
 
-class Cythonize(Command):
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        from Cython.Build import cythonize
-        cythonize(define_extensions(cythonize=True))
-
-
 here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='implicit',
-    version="0.1.2",
+    name=NAME,
+    version=VERSION,
     description='Collaborative Filtering for Implicit Datasets',
     long_description=long_description,
     url='http://github.com/benfred/implicit/',
@@ -90,16 +125,14 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Cython',
         'Operating System :: OS Independent',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        ],
+        'Topic :: Software Development :: Libraries :: Python Modules'],
 
     keywords='Matrix Factorization, Implicit Alternating Least Squares, '
              'Collaborative Filtering, Recommender Systems',
 
     packages=['implicit'],
     install_requires=['numpy', 'scipy>=0.16'],
-    cmdclass={'cythonize': Cythonize},
     setup_requires=["Cython >= 0.19"],
-    ext_modules=define_extensions(),
+    ext_modules=define_extensions(use_cython),
     test_suite="tests",
 )
