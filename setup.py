@@ -132,7 +132,6 @@ setup(
 
     packages=[SRC_ROOT],
     install_requires=['numpy', 'scipy>=0.16'],
-    hiddenimports=['scipy.linalg.cython_blas', 'scipy.linalg.cython_lapack'],
     setup_requires=["Cython >= 0.19"],
     ext_modules=define_extensions(use_cython),
     test_suite="tests",
