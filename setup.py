@@ -104,7 +104,6 @@ def set_gcc():
         if gcc_binaries:
             _, gcc = os.path.split(gcc_binaries[-1])
             os.environ["CC"] = gcc
-            print "gcc"
 
         else:
             global use_openmp
