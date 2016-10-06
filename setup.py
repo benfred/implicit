@@ -3,13 +3,13 @@ import os.path
 import platform
 import sys
 import warnings
+import logging
 
 from setuptools import Extension, setup
 
 NAME = 'implicit'
-VERSION = '0.1.3'
+VERSION = '0.1.4'
 SRC_ROOT = 'implicit'
-
 
 
 try:
@@ -38,6 +38,8 @@ if use_cython and not has_cython:
     warnings.warn('Cython not installed. Building without Cython.')
     use_cython = False
 
+use_openmp = True
+
 
 def find_files(dir_path, extension):
     for root, _, files in os.walk(dir_path):
@@ -51,11 +53,20 @@ def import_string_from_path(path):
 
 
 def define_extensions(use_cython=False):
-    compile_args = ['-Wno-unused-function', '-O3', '-fopenmp', '-ffast-math']
-    link_args = ['-fopenmp']
+    if sys.platform.startswith("win"):
+        # compile args from
+        # https://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
+        compile_args = ['/openmp', '/O2']
+        link_args = ['/openmp']
+    else:
+        compile_args = ['-Wno-unused-function', '-O3', '-ffast-math']
+        link_args = []
+        if use_openmp:
+            compile_args.append("-fopenmp")
+            link_args.append("-fopenmp")
 
-    if 'anaconda' not in sys.version.lower():
-        compile_args.append('-march=native')
+        if 'anaconda' not in sys.version.lower():
+            compile_args.append('-march=native')
 
     src_ext = '.pyx' if use_cython else '.c'
 
@@ -93,24 +104,20 @@ def set_gcc():
         if gcc_binaries:
             _, gcc = os.path.split(gcc_binaries[-1])
             os.environ["CC"] = gcc
+            print "gcc"
 
         else:
-            raise Exception('No GCC available. Install gcc from Homebrew '
+            global use_openmp
+            use_openmp = False
+            logging.warning('No GCC available. Install gcc from Homebrew '
                             'using brew install gcc.')
 
-
 set_gcc()
-
-
-here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here, 'README.md')) as f:
-    long_description = f.read()
 
 setup(
     name=NAME,
     version=VERSION,
     description='Collaborative Filtering for Implicit Datasets',
-    long_description=long_description,
     url='http://github.com/benfred/implicit/',
     author='Ben Frederickson',
     author_email='ben@benfrederickson.com',
