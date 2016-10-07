@@ -15,7 +15,6 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda create --name implicit numpy scipy
   - activate implicit
-  - conda install --yes scipy numpy
 
 test_script:
-  - "%PYTHON%\\python.exe setup.py test"
+  - python setup.py test
