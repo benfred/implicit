@@ -17,4 +17,4 @@ install:
   - conda install --yes scipy numpy
 
 test_script:
-  - %PYTHON%\\python.exe setup.py test
+  - "%PYTHON%\\python.exe setup.py test"
