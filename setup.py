@@ -56,8 +56,8 @@ def define_extensions(use_cython=False):
     if sys.platform.startswith("win"):
         # compile args from
         # https://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
-        compile_args = ['/openmp', '/O2']
-        link_args = ['/openmp']
+        compile_args = ['/O2']
+        link_args = []
     else:
         compile_args = ['-Wno-unused-function', '-O3', '-ffast-math']
         link_args = []
