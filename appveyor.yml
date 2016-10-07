@@ -12,6 +12,7 @@ init:
 
 install:
   - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
+  - conda config --set always_yes yes --set changeps1 no
   - conda create --name implicit numpy scipy
   - activate implicit
   - conda install --yes scipy numpy
