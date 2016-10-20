@@ -1,11 +1,9 @@
-# appveyor config as described here https://packaging.python.org/appveyor/
-
 build: false
 
 environment:
   matrix:
     - PYTHON_VERSION: 2.7
-      MINICONDA: C:\Miniconda
+      MINICONDA: C:\Miniconda-x64
 
 init:
   - "ECHO %PYTHON_VERSION% %MINICONDA%"
@@ -13,8 +11,12 @@ init:
 install:
   - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
   - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda info -a
   - conda create --name implicit numpy scipy
   - activate implicit
+  - pip install -e .
 
 test_script:
   - python setup.py test
+

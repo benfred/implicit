@@ -41,22 +41,11 @@ if use_cython and not has_cython:
 use_openmp = True
 
 
-def find_files(dir_path, extension):
-    for root, _, files in os.walk(dir_path):
-        for name in files:
-            if name.endswith(extension):
-                yield os.path.join(root, name)
-
-
-def import_string_from_path(path):
-    return os.path.splitext(path)[0].replace('/', '.')
-
-
 def define_extensions(use_cython=False):
     if sys.platform.startswith("win"):
         # compile args from
         # https://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
-        compile_args = ['/O2']
+        compile_args = ['/O2', '/openmp']
         link_args = []
     else:
         compile_args = ['-Wno-unused-function', '-O3', '-ffast-math']
@@ -69,12 +58,9 @@ def define_extensions(use_cython=False):
             compile_args.append('-march=native')
 
     src_ext = '.pyx' if use_cython else '.c'
-
-    modules = [
-        Extension(import_string_from_path(filepath), [filepath], language='c',
-                  extra_compile_args=compile_args, extra_link_args=link_args)
-        for filepath in find_files(SRC_ROOT, src_ext)
-    ]
+    modules = [Extension("implicit._implicit",
+                         [os.path.join("implicit", "_implicit" + src_ext)],
+                         extra_compile_args=compile_args, extra_link_args=link_args)]
 
     if use_cython:
         return cythonize(modules)
