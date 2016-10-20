@@ -8,7 +8,7 @@ import logging
 from setuptools import Extension, setup
 
 NAME = 'implicit'
-VERSION = '0.1.4'
+VERSION = '0.1.5'
 SRC_ROOT = 'implicit'
 
 
