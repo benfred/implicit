@@ -10,7 +10,8 @@ log = logging.getLogger("implicit")
 
 def alternating_least_squares(Cui, factors, regularization=0.01,
                               iterations=15, use_native=True, num_threads=0,
-                              dtype=np.float64):
+                              dtype=np.float64,
+                              calculate_training_loss=False):
     """ factorizes the matrix Cui using an implicit alternating least squares
     algorithm
 
@@ -42,6 +43,10 @@ def alternating_least_squares(Cui, factors, regularization=0.01,
         solver(Cui, X, Y, regularization, num_threads)
         solver(Ciu, Y, X, regularization, num_threads)
         log.debug("finished iteration %i in %s", iteration, time.time() - s)
+
+        if calculate_training_loss:
+            loss = _implicit.calculate_loss(Cui, X, Y, regularization, num_threads)
+            log.debug("loss at iteration %i is %s", iteration, loss)
 
     return X, Y
 

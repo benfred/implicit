@@ -16,6 +16,18 @@ cdef inline void axpy(int * n, floating * da, floating * dx, int * incx, floatin
     else:
         cython_blas.saxpy(n, da, dx, incx, dy, incy)
 
+cdef inline void symv(char *uplo, int *n, floating *alpha, floating *a, int *lda, floating *x, int *incx, floating *beta, floating *y, int *incy) nogil:
+    if floating is double:
+        cython_blas.dsymv(uplo, n, alpha, a, lda, x, incx, beta, y, incy)
+    else:
+        cython_blas.ssymv(uplo, n, alpha, a, lda, x, incx, beta, y, incy)
+
+cdef inline floating dot(int *n, floating *sx, int *incx, floating *sy, int *incy) nogil:
+    if floating is double:
+        return cython_blas.ddot(n, sx, incx, sy, incy)
+    else:
+        return cython_blas.sdot(n, sx, incx, sy, incy)
+
 cdef inline void posv(char * u, int * n, int * nrhs, floating * a, int * lda, floating * b, int * ldb, int * info) nogil:
     if floating is double:
         cython_lapack.dposv(u, n, nrhs, a, lda, b, ldb, info)
@@ -93,3 +105,51 @@ def least_squares(Cui, floating [:, :] X, floating [:, :] Y, double regularizati
             free(A)
             free(b)
             free(pivot)
+
+
+@cython.cdivision(True)
+@cython.boundscheck(False)
+def calculate_loss(Cui, floating [:, :] X, floating [:, :] Y, float regularization, int num_threads=0):
+    dtype = numpy.float64 if floating is double else numpy.float32
+    cdef int [:] indptr = Cui.indptr, indices = Cui.indices
+    cdef double [:] data = Cui.data
+
+    cdef int users = X.shape[0], N = X.shape[1], items = Y.shape[0], u, i, index, one = 1
+    cdef floating confidence, temp
+    cdef floating zero = 0.
+
+    cdef floating[:, :] YtY = numpy.dot(numpy.transpose(Y), Y)
+
+    cdef floating * r
+
+    cdef double loss = 0, total_confidence = 0, item_norm = 0, user_norm = 0
+
+    with nogil, parallel(num_threads = num_threads):
+        r = <floating *> malloc(sizeof(floating) * N)
+        try:
+            for u in prange(users, schedule='guided'):
+                # calculates (A.dot(Xu) - 2 * b).dot(Xu), without calculating A
+                temp = 1.0
+                symv("U", &N, &temp, &YtY[0, 0], &N, &X[u, 0], &one, &zero, r, &one)
+
+                for index in range(indptr[u], indptr[u + 1]):
+                    i = indices[index]
+                    confidence = data[index]
+
+                    temp = (confidence - 1) * dot(&N, &Y[i, 0], &one, &X[u ,0], &one) - 2 * confidence
+                    axpy(&N, &temp, &Y[i, 0], &one, r, &one)
+
+                    total_confidence += confidence
+                    loss += confidence
+
+                loss += dot(&N, r, &one, &X[u, 0], &one)
+                user_norm += dot(&N, &X[u, 0], &one, &X[u, 0], &one)
+
+            for i in prange(items, schedule='guided'):
+                item_norm += dot(&N, &Y[i, 0], &one, &Y[i, 0], &one)
+
+        finally:
+            free(r)
+
+    loss += regularization * (item_norm + user_norm)
+    return loss / (total_confidence  + Cui.shape[0] * Cui.shape[1] - Cui.nnz)
