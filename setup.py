@@ -11,32 +11,15 @@ NAME = 'implicit'
 VERSION = '0.1.7'
 SRC_ROOT = 'implicit'
 
-
 try:
     from Cython.Build import cythonize
-    has_cython = True
+    use_cython = True
 except ImportError:
-    has_cython = False
+    use_cython = False
 
 is_dev = 'dev' in VERSION
-use_cython = is_dev or '--cython' in sys.argv or '--with-cython' in sys.argv
-if '--no-cython' in sys.argv:
-    use_cython = False
-    sys.argv.remove('--no-cython')
-if '--without-cython' in sys.argv:
-    use_cython = False
-    sys.argv.remove('--without-cython')
-if '--cython' in sys.argv:
-    sys.argv.remove('--cython')
-if '--with-cython' in sys.argv:
-    sys.argv.remove('--with-cython')
-
-
-if use_cython and not has_cython:
-    if is_dev:
-        raise RuntimeError('Cython required to build dev version of %s.' % NAME)
-    warnings.warn('Cython not installed. Building without Cython.')
-    use_cython = False
+if is_dev and not use_cython:
+    raise RuntimeError('Cython required to build dev version of %s.' % NAME)
 
 use_openmp = True
 
@@ -48,7 +31,7 @@ def define_extensions(use_cython=False):
         compile_args = ['/O2', '/openmp']
         link_args = []
     else:
-        compile_args = ['-Wno-unused-function', '-O3', '-ffast-math']
+        compile_args = ['-Wno-unused-function', '-Wno-maybe-uninitialized','-O3', '-ffast-math']
         link_args = []
         if use_openmp:
             compile_args.append("-fopenmp")
