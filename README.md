@@ -6,8 +6,10 @@ Implicit
 
 Fast Python Collaborative Filtering for Implicit Datasets.
 
-This project provides a fast Python implementation of the algorithm described in the paper [Collaborative Filtering for Implicit Feedback Datasets](
-http://yifanhu.net/PUB/cf.pdf).
+This project provides fast Python implementations of the algorithms described in the paper [Collaborative Filtering for Implicit Feedback Datasets](
+http://yifanhu.net/PUB/cf.pdf) and in [Applications of the Conjugate Gradient Method for Implicit
+Feedback Collaborative
+Filtering](https://pdfs.semanticscholar.org/bfdf/7af6cf7fd7bb5e6b6db5bbd91be11597eaf0.pdf).
 
 
 To install:
@@ -29,7 +31,7 @@ last.fm dataset](https://github.com/benfred/implicit/blob/master/examples/lastfm
 #### Requirements
 
 This library requires SciPy version 0.16 or later. Running on OSX requires an OpenMP compiler,
-which can be installed with homebrew: ```brew install gcc```. 
+which can be installed with homebrew: ```brew install gcc```.
 
 #### Why Use This?
 
@@ -44,7 +46,12 @@ libraries distributed with SciPy. This leads to extremely fast matrix factorizat
 
 On a simple [benchmark](https://github.com/benfred/implicit/blob/master/examples/benchmark.py), this
 library is about 1.8 times faster than the multithreaded C++ implementation provided by Quora's
-[QMF Library](https://github.com/quora/qmf) and at least 60,000 times faster than [implicit-mf](https://github.com/MrChrisJohnson/implicit-mf).
+[QMF Library](https://github.com/quora/qmf) and at least 60,000 times faster than
+[implicit-mf](https://github.com/MrChrisJohnson/implicit-mf).
+
+A [follow up post](http://www.benfrederickson.com/fast-implicit-matrix-factorization/) describes
+further performance improvements based on the Conjugate Gradient method - that further boosts performance
+by 3x to over 19x depending on the number of factors used.
 
 This library has been tested with Python 2.7 and 3.5. Running 'tox' will
 run unittests on both versions, and verify that all python files pass flake8.

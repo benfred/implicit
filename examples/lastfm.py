@@ -92,7 +92,8 @@ def calculate_similar_artists(input_filename, output_filename,
                               iterations=15,
                               exact=False, trees=20,
                               use_native=True,
-                              dtype=numpy.float64):
+                              dtype=numpy.float64,
+                              cg=False):
     logging.debug("Calculating similar artists. This might take a while")
     logging.debug("reading data from %s", input_filename)
     start = time.time()
@@ -109,7 +110,8 @@ def calculate_similar_artists(input_filename, output_filename,
                                                              regularization=regularization,
                                                              iterations=iterations,
                                                              use_native=use_native,
-                                                             dtype=dtype)
+                                                             dtype=dtype,
+                                                             use_cg=cg)
     logging.debug("calculated factors in %s", time.time() - start)
 
     # write out artists by popularity
@@ -154,6 +156,9 @@ if __name__ == "__main__":
     parser.add_argument('--float32',
                         help='use 32 bit floating point numbers',
                         action="store_true")
+    parser.add_argument('--cg',
+                        help='use CG optimizer',
+                        action="store_true")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.DEBUG)
@@ -163,5 +168,6 @@ if __name__ == "__main__":
                               exact=args.exact, trees=args.treecount,
                               iterations=args.iterations,
                               use_native=not args.purepython,
-                              dtype=numpy.float32 if args.float32 else numpy.float64)
+                              dtype=numpy.float32 if args.float32 else numpy.float64,
+                              cg=args.cg)
 

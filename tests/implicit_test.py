@@ -28,24 +28,17 @@ class ImplicitALSTest(unittest.TestCase):
                     self.assertTrue(abs(counts[i, j] - reconstructed[i, j]) <
                                     tolerance)
 
-        # check cython version
-        rows, cols = implicit.alternating_least_squares(counts * 2, 7,
-                                                        regularization,
-                                                        use_native=True)
-        check_solution(rows, cols, counts.todense())
-
-        # check cython version (using 32 bit factors)
-        rows, cols = implicit.alternating_least_squares(counts * 2, 7,
-                                                        regularization,
-                                                        use_native=True,
-                                                        dtype=np.float32)
-        check_solution(rows, cols, counts.todense())
-
-        # try out pure python version
-        rows, cols = implicit.alternating_least_squares(counts, 7,
-                                                        regularization,
-                                                        use_native=False)
-        check_solution(rows, cols, counts.todense())
+        # try all 8 variants of native/python, cg/cholesky, and
+        # 64 vs 32 bit factors
+        for dtype in (np.float32, np.float64):
+            for use_cg in (True, False):
+                for use_native in (True, False):
+                    rows, cols = implicit.alternating_least_squares(counts * 2, 7,
+                                                                    regularization,
+                                                                    use_native=use_native,
+                                                                    use_cg=use_cg,
+                                                                    dtype=dtype)
+                    check_solution(rows, cols, counts.todense())
 
 if __name__ == "__main__":
     unittest.main()
