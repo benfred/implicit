@@ -1,5 +1,8 @@
-from .implicit import alternating_least_squares
+from .als import alternating_least_squares
 
-__version__ = '0.1.5'
+from . import nearest_neighbours
+from . import als
 
-__all__ = [alternating_least_squares, __version__]
+__version__ = '0.2.0'
+
+__all__ = [alternating_least_squares, als, nearest_neighbours, __version__]

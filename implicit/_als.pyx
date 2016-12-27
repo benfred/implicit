@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import cython
 from cython cimport floating
 from cython.parallel import parallel, prange
@@ -10,13 +10,15 @@ cimport scipy.linalg.cython_lapack as cython_lapack
 cimport scipy.linalg.cython_blas as cython_blas
 
 # lapack/blas wrappers for cython fused types
-cdef inline void axpy(int * n, floating * da, floating * dx, int * incx, floating * dy, int * incy) nogil:
+cdef inline void axpy(int * n, floating * da, floating * dx, int * incx, floating * dy,
+                      int * incy) nogil:
     if floating is double:
         cython_blas.daxpy(n, da, dx, incx, dy, incy)
     else:
         cython_blas.saxpy(n, da, dx, incx, dy, incy)
 
-cdef inline void symv(char *uplo, int *n, floating *alpha, floating *a, int *lda, floating *x, int *incx, floating *beta, floating *y, int *incy) nogil:
+cdef inline void symv(char *uplo, int *n, floating *alpha, floating *a, int *lda, floating *x,
+                      int *incx, floating *beta, floating *y, int *incy) nogil:
     if floating is double:
         cython_blas.dsymv(uplo, n, alpha, a, lda, x, incx, beta, y, incy)
     else:
@@ -34,13 +36,15 @@ cdef inline void scal(int *n, floating *sa, floating *sx, int *incx) nogil:
     else:
         cython_blas.sscal(n, sa, sx, incx)
 
-cdef inline void posv(char * u, int * n, int * nrhs, floating * a, int * lda, floating * b, int * ldb, int * info) nogil:
+cdef inline void posv(char * u, int * n, int * nrhs, floating * a, int * lda, floating * b,
+                      int * ldb, int * info) nogil:
     if floating is double:
         cython_lapack.dposv(u, n, nrhs, a, lda, b, ldb, info)
     else:
         cython_lapack.sposv(u, n, nrhs, a, lda, b, ldb, info)
 
-cdef inline void gesv(int * n, int * nrhs, floating * a, int * lda, int * piv, floating * b, int * ldb, int * info) nogil:
+cdef inline void gesv(int * n, int * nrhs, floating * a, int * lda, int * piv, floating * b,
+                      int * ldb, int * info) nogil:
     if floating is double:
         cython_lapack.dgesv(n, nrhs, a, lda, piv, b, ldb, info)
     else:
@@ -48,25 +52,26 @@ cdef inline void gesv(int * n, int * nrhs, floating * a, int * lda, int * piv, f
 
 
 @cython.boundscheck(False)
-def least_squares(Cui, floating [:, :] X, floating [:, :] Y, double regularization, int num_threads=0):
-    dtype = numpy.float64 if floating is double else numpy.float32
+def least_squares(Cui, floating[:, :] X, floating[:, :] Y, double regularization,
+                  int num_threads=0):
+    dtype = np.float64 if floating is double else np.float32
 
-    cdef int [:] indptr = Cui.indptr, indices = Cui.indices
-    cdef double [:] data = Cui.data
+    cdef int[:] indptr = Cui.indptr, indices = Cui.indices
+    cdef double[:] data = Cui.data
 
     cdef int users = X.shape[0], factors = X.shape[1], u, i, j, index, err, one = 1
     cdef floating confidence, temp
 
-    YtY = numpy.dot(numpy.transpose(Y), Y)
+    YtY = np.dot(np.transpose(Y), Y)
 
-    cdef floating[:, :] initialA = YtY + regularization * numpy.eye(factors, dtype=dtype)
-    cdef floating[:] initialB = numpy.zeros(factors, dtype=dtype)
+    cdef floating[:, :] initialA = YtY + regularization * np.eye(factors, dtype=dtype)
+    cdef floating[:] initialB = np.zeros(factors, dtype=dtype)
 
     cdef floating * A
     cdef floating * b
     cdef int * pivot
 
-    with nogil, parallel(num_threads = num_threads):
+    with nogil, parallel(num_threads=num_threads):
         # allocate temp memory for each thread
         A = <floating *> malloc(sizeof(floating) * factors * factors)
         b = <floating *> malloc(sizeof(floating) * factors)
@@ -94,9 +99,11 @@ def least_squares(Cui, floating [:, :] X, floating [:, :] Y, double regularizati
                         temp = (confidence - 1) * Y[i, j]
                         axpy(&factors, &temp, &Y[i, 0], &one, A + j * factors, &one)
 
-                posv("U", &factors, &one, A, &factors, b, &factors, &err);
+                err = 0
+                posv("U", &factors, &one, A, &factors, b, &factors, &err)
 
                 # fall back to using a LU decomposition if this fails
+                # TODO: I don't think this works since posv can modify A
                 if err:
                     gesv(&factors, &one, A, &factors, pivot, b, &factors, &err)
 
@@ -115,23 +122,24 @@ def least_squares(Cui, floating [:, :] X, floating [:, :] Y, double regularizati
 
 @cython.cdivision(True)
 @cython.boundscheck(False)
-def least_squares_cg(Cui, floating [:, :] X, floating [:, :] Y, float regularization, int num_threads=0, int cg_steps=3):
-    dtype = numpy.float64 if floating is double else numpy.float32
-    cdef int [:] indptr = Cui.indptr, indices = Cui.indices
-    cdef double [:] data = Cui.data
+def least_squares_cg(Cui, floating[:, :] X, floating[:, :] Y, float regularization,
+                     int num_threads=0, int cg_steps=3):
+    dtype = np.float64 if floating is double else np.float32
+    cdef int[:] indptr = Cui.indptr, indices = Cui.indices
+    cdef double[:] data = Cui.data
 
     cdef int users = X.shape[0], N = X.shape[1], u, i, index, one = 1, it
     cdef floating confidence, temp, alpha, rsnew, rsold
     cdef floating zero = 0.
 
-    cdef floating[:, :] YtY = numpy.dot(numpy.transpose(Y), Y) + regularization * numpy.eye(N, dtype=dtype)
+    cdef floating[:, :] YtY = np.dot(np.transpose(Y), Y) + regularization * np.eye(N, dtype=dtype)
 
     cdef floating * x
     cdef floating * p
     cdef floating * r
     cdef floating * Ap
 
-    with nogil, parallel(num_threads = num_threads):
+    with nogil, parallel(num_threads=num_threads):
 
         # allocate temp memory for each thread
         Ap = <floating *> malloc(sizeof(floating) * N)
@@ -193,22 +201,23 @@ def least_squares_cg(Cui, floating [:, :] X, floating [:, :] Y, float regulariza
 
 @cython.cdivision(True)
 @cython.boundscheck(False)
-def calculate_loss(Cui, floating [:, :] X, floating [:, :] Y, float regularization, int num_threads=0):
-    dtype = numpy.float64 if floating is double else numpy.float32
-    cdef int [:] indptr = Cui.indptr, indices = Cui.indices
-    cdef double [:] data = Cui.data
+def calculate_loss(Cui, floating[:, :] X, floating[:, :] Y, float regularization,
+                   int num_threads=0):
+    dtype = np.float64 if floating is double else np.float32
+    cdef int[:] indptr = Cui.indptr, indices = Cui.indices
+    cdef double[:] data = Cui.data
 
     cdef int users = X.shape[0], N = X.shape[1], items = Y.shape[0], u, i, index, one = 1
     cdef floating confidence, temp
     cdef floating zero = 0.
 
-    cdef floating[:, :] YtY = numpy.dot(numpy.transpose(Y), Y)
+    cdef floating[:, :] YtY = np.dot(np.transpose(Y), Y)
 
     cdef floating * r
 
     cdef double loss = 0, total_confidence = 0, item_norm = 0, user_norm = 0
 
-    with nogil, parallel(num_threads = num_threads):
+    with nogil, parallel(num_threads=num_threads):
         r = <floating *> malloc(sizeof(floating) * N)
         try:
             for u in prange(users, schedule='guided'):
@@ -220,7 +229,8 @@ def calculate_loss(Cui, floating [:, :] X, floating [:, :] Y, float regularizati
                     i = indices[index]
                     confidence = data[index]
 
-                    temp = (confidence - 1) * dot(&N, &Y[i, 0], &one, &X[u ,0], &one) - 2 * confidence
+                    temp = (confidence - 1) * dot(&N, &Y[i, 0], &one, &X[u, 0],
+                                                  &one) - 2 * confidence
                     axpy(&N, &temp, &Y[i, 0], &one, r, &one)
 
                     total_confidence += confidence
@@ -236,4 +246,4 @@ def calculate_loss(Cui, floating [:, :] X, floating [:, :] Y, float regularizati
             free(r)
 
     loss += regularization * (item_norm + user_norm)
-    return loss / (total_confidence  + Cui.shape[0] * Cui.shape[1] - Cui.nnz)
+    return loss / (total_confidence + Cui.shape[0] * Cui.shape[1] - Cui.nnz)

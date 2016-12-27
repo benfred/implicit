@@ -1,14 +1,13 @@
 import glob
+import logging
 import os.path
 import platform
 import sys
-import warnings
-import logging
 
 from setuptools import Extension, setup
 
 NAME = 'implicit'
-VERSION = '0.1.7'
+VERSION = '0.2.0'
 SRC_ROOT = 'implicit'
 
 try:
@@ -31,7 +30,7 @@ def define_extensions(use_cython=False):
         compile_args = ['/O2', '/openmp']
         link_args = []
     else:
-        compile_args = ['-Wno-unused-function', '-Wno-maybe-uninitialized','-O3', '-ffast-math']
+        compile_args = ['-Wno-unused-function', '-Wno-maybe-uninitialized', '-O3', '-ffast-math']
         link_args = []
         if use_openmp:
             compile_args.append("-fopenmp")
@@ -40,10 +39,12 @@ def define_extensions(use_cython=False):
         if 'anaconda' not in sys.version.lower():
             compile_args.append('-march=native')
 
-    src_ext = '.pyx' if use_cython else '.c'
-    modules = [Extension("implicit._implicit",
-                         [os.path.join("implicit", "_implicit" + src_ext)],
-                         extra_compile_args=compile_args, extra_link_args=link_args)]
+    src_ext = '.pyx' if use_cython else '.cpp'
+    modules = [Extension("implicit." + name,
+                         [os.path.join("implicit", name + src_ext)],
+                         language='c++',
+                         extra_compile_args=compile_args, extra_link_args=link_args)
+               for name in ['_als', '_nearest_neighbours']]
 
     if use_cython:
         return cythonize(modules)
@@ -59,10 +60,10 @@ def set_gcc():
     Try to find and use GCC on OSX for OpenMP support.
     """
     # For macports and homebrew
-    patterns = ['/opt/local/bin/gcc-mp-[0-9].[0-9]',
-                '/opt/local/bin/gcc-mp-[0-9]',
-                '/usr/local/bin/gcc-[0-9].[0-9]',
-                '/usr/local/bin/gcc-[0-9]']
+    patterns = ['/opt/local/bin/g++-mp-[0-9].[0-9]',
+                '/opt/local/bin/g++-mp-[0-9]',
+                '/usr/local/bin/g++-[0-9].[0-9]',
+                '/usr/local/bin/g++-[0-9]']
 
     if 'darwin' in platform.platform().lower():
         gcc_binaries = []
@@ -73,12 +74,14 @@ def set_gcc():
         if gcc_binaries:
             _, gcc = os.path.split(gcc_binaries[-1])
             os.environ["CC"] = gcc
+            os.environ["CXX"] = gcc
 
         else:
             global use_openmp
             use_openmp = False
             logging.warning('No GCC available. Install gcc from Homebrew '
                             'using brew install gcc.')
+
 
 set_gcc()
 

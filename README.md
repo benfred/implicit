@@ -28,6 +28,19 @@ user_factors, item_factors = implicit.alternating_least_squares(data, factors=50
 The examples folder has a program showing how to use this to [compute similar artists on the
 last.fm dataset](https://github.com/benfred/implicit/blob/master/examples/lastfm.py).
 
+#### Articles about Implicit
+
+Several posts have been written talking about using Implicit to build recommendation systems:
+
+ * [Intro to Implicit Matrix Factorization: Classic ALS with Sketchfab Models](http://blog.ethanrosenthal.com/2016/10/19/implicit-mf-part-1/)
+ * [A Gentle Introduction to Recommender Systems with Implicit Feedback](https://jessesw.com/Rec-System/).
+
+There are also a couple posts talking about the algorithms that power this library:
+
+ * [Faster Implicit Matrix Factorization](http://benfrederickson.com/fast-implicit-matrix-factorization)
+ * [Finding Similar Music with Matrix Factorization](http://www.benfrederickson.com/matrix-factorization)
+ * [Distance Metrics for Fun and Profit](http://www.benfrederickson.com/distance-metrics/)
+
 #### Requirements
 
 This library requires SciPy version 0.16 or later. Running on OSX requires an OpenMP compiler,
