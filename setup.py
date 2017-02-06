@@ -8,7 +8,7 @@ import logging
 from setuptools import Extension, setup
 
 NAME = 'implicit'
-VERSION = '0.1.7'
+VERSION = '0.1.8'
 SRC_ROOT = 'implicit'
 
 try:
@@ -36,9 +36,6 @@ def define_extensions(use_cython=False):
         if use_openmp:
             compile_args.append("-fopenmp")
             link_args.append("-fopenmp")
-
-        if 'anaconda' not in sys.version.lower():
-            compile_args.append('-march=native')
 
     src_ext = '.pyx' if use_cython else '.c'
     modules = [Extension("implicit._implicit",
