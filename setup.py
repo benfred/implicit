@@ -36,9 +36,6 @@ def define_extensions(use_cython=False):
             compile_args.append("-fopenmp")
             link_args.append("-fopenmp")
 
-        if 'anaconda' not in sys.version.lower():
-            compile_args.append('-march=native')
-
     src_ext = '.pyx' if use_cython else '.cpp'
     modules = [Extension("implicit." + name,
                          [os.path.join("implicit", name + src_ext)],
