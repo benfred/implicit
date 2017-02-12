@@ -1,9 +1,11 @@
 """ Implicit Alternating Least Squares """
-import numpy as np
-import time
-import os
 import logging
-from . import _implicit
+import time
+
+import numpy as np
+
+from . import _als
+from .utils import check_open_blas, nonzeros
 
 log = logging.getLogger("implicit")
 
@@ -28,7 +30,7 @@ def alternating_least_squares(Cui, factors, regularization=0.01,
     Returns:
         tuple: A tuple of (row, col) factors
     """
-    _check_open_blas()
+    check_open_blas()
 
     users, items = Cui.shape
 
@@ -37,9 +39,9 @@ def alternating_least_squares(Cui, factors, regularization=0.01,
 
     Cui, Ciu = Cui.tocsr(), Cui.T.tocsr()
 
-    solver = _implicit.least_squares if use_native else least_squares
+    solver = _als.least_squares if use_native else least_squares
     if use_cg:
-        solver = _implicit.least_squares_cg if use_native else least_squares_cg
+        solver = _als.least_squares_cg if use_native else least_squares_cg
 
     for iteration in range(iterations):
         s = time.time()
@@ -48,7 +50,7 @@ def alternating_least_squares(Cui, factors, regularization=0.01,
         log.debug("finished iteration %i in %s", iteration, time.time() - s)
 
         if calculate_training_loss:
-            loss = _implicit.calculate_loss(Cui, X, Y, regularization, num_threads)
+            loss = _als.calculate_loss(Cui, X, Y, regularization, num_threads)
             log.debug("loss at iteration %i is %s", iteration, loss)
 
     return X, Y
@@ -111,17 +113,3 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
             rsold = rsnew
 
         X[u] = x
-
-
-def nonzeros(m, row):
-    """ returns the non zeroes of a row in csr_matrix """
-    for index in range(m.indptr[row], m.indptr[row+1]):
-        yield m.indices[index], m.data[index]
-
-
-def _check_open_blas():
-    """ checks to see if using OpenBlas. If so, warn if the number of threads isn't set to 1
-    (causes perf issues) """
-    if np.__config__.get_info('openblas_info') and os.environ.get('OPENBLAS_NUM_THREADS') != '1':
-        log.warn("OpenBLAS detected. Its highly recommend to set the environment variable "
-                 "'export OPENBLAS_NUM_THREADS=1' to disable its internal multithreading")

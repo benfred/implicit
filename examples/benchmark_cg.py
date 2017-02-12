@@ -10,9 +10,10 @@ import time
 from collections import defaultdict
 
 import numpy
-from implicit._implicit import calculate_loss, least_squares, least_squares_cg
 
-from lastfm import bm25_weight, read_data
+from implicit._als import calculate_loss, least_squares, least_squares_cg
+from implicit.nearest_neighbours import bm25_weight
+from lastfm import read_data
 
 
 def benchmark_solver(Cui, factors, solver, callback, iterations=7, dtype=numpy.float64,

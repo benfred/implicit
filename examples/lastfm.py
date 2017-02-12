@@ -12,16 +12,18 @@ https://github.com/benfred/bens-blog-code/blob/master/distance-metrics/musicdata
 
 from __future__ import print_function
 
-import logging
 import argparse
+import logging
 import time
 
+import annoy
 import numpy
 import pandas
 from scipy.sparse import coo_matrix
-import annoy
 
 from implicit import alternating_least_squares
+from implicit.nearest_neighbours import bm25_weight
+from implicit.nearest_neighbours import BM25Recommender, CosineRecommender, TFIDFRecommender
 
 
 def read_data(filename):
@@ -42,23 +44,6 @@ def read_data(filename):
                         data['user'].cat.codes.copy())))
 
     return data, plays
-
-
-def bm25_weight(X, K1=100, B=0.8):
-    """ Weighs each row of the sparse matrix of the data by BM25 weighting """
-    # calculate idf per term (user)
-    X = coo_matrix(X)
-    N = X.shape[0]
-    idf = numpy.log(float(N) / (1 + numpy.bincount(X.col)))
-
-    # calculate length_norm per document (artist)
-    row_sums = numpy.ravel(X.sum(axis=1))
-    average_length = row_sums.mean()
-    length_norm = (1.0 - B) + B * row_sums / average_length
-
-    # weight matrix rows by bm25
-    X.data = X.data * (K1 + 1.0) / (K1 * length_norm[X.row] + X.data) * idf[X.col]
-    return X
 
 
 class TopRelated(object):
@@ -88,6 +73,7 @@ class ApproximateTopRelated(object):
 
 
 def calculate_similar_artists(input_filename, output_filename,
+                              model="als",
                               factors=50, regularization=0.01,
                               iterations=15,
                               exact=False, trees=20,
@@ -100,37 +86,62 @@ def calculate_similar_artists(input_filename, output_filename,
     df, plays = read_data(input_filename)
     logging.debug("read data file in %s", time.time() - start)
 
-    logging.debug("weighting matrix by bm25")
-    weighted = bm25_weight(plays)
-
-    logging.debug("calculating factors")
-    start = time.time()
-    artist_factors, user_factors = alternating_least_squares(weighted,
-                                                             factors=factors,
-                                                             regularization=regularization,
-                                                             iterations=iterations,
-                                                             use_native=use_native,
-                                                             dtype=dtype,
-                                                             use_cg=cg)
-    logging.debug("calculated factors in %s", time.time() - start)
-
     # write out artists by popularity
     logging.debug("calculating top artists")
     user_count = df.groupby('artist').size()
     artists = dict(enumerate(df['artist'].cat.categories))
     to_generate = sorted(list(artists), key=lambda x: -user_count[x])
 
-    if exact:
-        calc = TopRelated(artist_factors)
-    else:
-        calc = ApproximateTopRelated(artist_factors, trees)
+    start = time.time()
 
-    logging.debug("writing top related to %s", output_filename)
-    with open(output_filename, "w") as o:
-        for artistid in to_generate:
-            artist = artists[artistid]
-            for other, score in calc.get_related(artistid):
-                o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
+    if model == "als":
+        logging.debug("weighting matrix by bm25")
+        weighted = bm25_weight(plays, K1=100, B=0.8)
+
+        logging.debug("calculating factors")
+        artist_factors, user_factors = alternating_least_squares(weighted,
+                                                                 factors=factors,
+                                                                 regularization=regularization,
+                                                                 iterations=iterations,
+                                                                 use_native=use_native,
+                                                                 dtype=dtype,
+                                                                 use_cg=cg)
+        logging.debug("calculated factors in %s", time.time() - start)
+
+        if exact:
+            calc = TopRelated(artist_factors)
+        else:
+            calc = ApproximateTopRelated(artist_factors, trees)
+        logging.debug("writing top related to %s", output_filename)
+        with open(output_filename, "w") as o:
+            for artistid in to_generate:
+                artist = artists[artistid]
+                for other, score in calc.get_related(artistid):
+                    o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
+
+    elif model in ("bm25", "tfidf", "cosine", "smoothed_cosine", "ochiai", "overlap"):
+        if model == "bm25":
+            scorer = BM25Recommender(K1=100, B=0.5)
+
+        elif model == "tfidf":
+            scorer = TFIDFRecommender()
+
+        elif model == "cosine":
+            scorer = CosineRecommender()
+
+        else:
+            raise NotImplementedError("TODO: model %s" % model)
+
+        logging.debug("calculating similar items")
+        start = time.time()
+        scorer.fit(plays, K=11)
+        logging.debug("calculated all_pairs_knn in %s", time.time() - start)
+
+        with open(output_filename, "w") as o:
+            for artistid in to_generate:
+                artist = artists[artistid]
+                for other, score in scorer.similar_items(artistid):
+                    o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
 
 
 if __name__ == "__main__":
@@ -141,6 +152,8 @@ if __name__ == "__main__":
                         dest='inputfile', help='last.fm dataset file', required=True)
     parser.add_argument('--output', type=str, default='similar-artists.tsv',
                         dest='outputfile', help='output file name')
+    parser.add_argument('--model', type=str, default='als',
+                        dest='model', help='model to calculate (als/bm25)')
     parser.add_argument('--factors', type=int, default=50, dest='factors',
                         help='Number of factors to calculate')
     parser.add_argument('--reg', type=float, default=0.8, dest='regularization',
@@ -162,7 +175,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.DEBUG)
+
     calculate_similar_artists(args.inputfile, args.outputfile,
+                              model=args.model,
                               factors=args.factors,
                               regularization=args.regularization,
                               exact=args.exact, trees=args.treecount,
@@ -170,4 +185,3 @@ if __name__ == "__main__":
                               use_native=not args.purepython,
                               dtype=numpy.float32 if args.float32 else numpy.float64,
                               cg=args.cg)
-

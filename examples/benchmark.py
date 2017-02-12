@@ -14,13 +14,13 @@ slower on the last.fm dataset - with an estimated running time of around 250 day
 """
 from __future__ import print_function
 
-import logging
 import argparse
+import logging
 import time
 from subprocess import call
 
 from implicit import alternating_least_squares
-from lastfm import read_data, bm25_weight
+from lastfm import bm25_weight, read_data
 
 
 def benchmark_implicit(matrix, factors, reg, iterations):
