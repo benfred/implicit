@@ -21,9 +21,9 @@ import numpy
 import pandas
 from scipy.sparse import coo_matrix
 
-from implicit import alternating_least_squares
-from implicit.nearest_neighbours import bm25_weight
-from implicit.nearest_neighbours import BM25Recommender, CosineRecommender, TFIDFRecommender
+from implicit.als import AlternatingLeastSquares
+from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
+                                         TFIDFRecommender, bm25_weight)
 
 
 def read_data(filename):
@@ -46,34 +46,29 @@ def read_data(filename):
     return data, plays
 
 
-class TopRelated(object):
-    def __init__(self, artist_factors):
-        # fully normalize artist_factors, so can compare with only the dot product
-        norms = numpy.linalg.norm(artist_factors, axis=-1)
-        self.factors = artist_factors / norms[:, numpy.newaxis]
+class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
+    """ A version of the AlternatingLeastSquares model that uses an annoy
+    index to calculate similar items. This leads to massive speedups
+    when called repeatedly """
+    def fit(self, Ciu):
+        # train the model
+        super(AnnoyAlternatingLeastSquares, self).fit(Ciu)
 
-    def get_related(self, artistid, N=10):
-        scores = self.factors.dot(self.factors[artistid])
-        best = numpy.argpartition(scores, -N)[-N:]
-        return sorted(zip(best, scores[best]), key=lambda x: -x[1])
-
-
-class ApproximateTopRelated(object):
-    def __init__(self, artist_factors, treecount=20):
-        index = annoy.AnnoyIndex(artist_factors.shape[1], 'angular')
-        for i, row in enumerate(artist_factors):
+        # build up an index with all the item_factors
+        index = annoy.AnnoyIndex(self.item_factors.shape[1], 'angular')
+        for i, row in enumerate(self.item_factors):
             index.add_item(i, row)
-        index.build(treecount)
+        index.build(self.factors / 2)
         self.index = index
 
-    def get_related(self, artistid, N=10):
+    def similar_items(self, artistid, N=10):
         neighbours = self.index.get_nns_by_item(artistid, N)
         return sorted(((other, 1 - self.index.get_distance(artistid, other))
                       for other in neighbours), key=lambda x: -x[1])
 
 
 def calculate_similar_artists(input_filename, output_filename,
-                              model="als",
+                              model_name="als",
                               factors=50, regularization=0.01,
                               iterations=15,
                               exact=False, trees=20,
@@ -81,67 +76,58 @@ def calculate_similar_artists(input_filename, output_filename,
                               dtype=numpy.float64,
                               cg=False):
     logging.debug("Calculating similar artists. This might take a while")
+
+    # read in the input data file
     logging.debug("reading data from %s", input_filename)
     start = time.time()
     df, plays = read_data(input_filename)
     logging.debug("read data file in %s", time.time() - start)
 
-    # write out artists by popularity
+    # generate a recommender model based off the input params
+    if model_name == "als":
+        if exact:
+            model = AlternatingLeastSquares(factors=factors, regularization=regularization,
+                                            use_native=use_native, use_cg=cg,
+                                            dtype=dtype)
+        else:
+            model = AnnoyAlternatingLeastSquares(factors=factors, regularization=regularization,
+                                                 use_native=use_native, use_cg=cg,
+                                                 dtype=dtype)
+
+        # lets weight these models by bm25weight.
+        logging.debug("weighting matrix by bm25_weight")
+        plays = bm25_weight(plays, K1=100, B=0.8)
+
+    elif model_name == "tfidf":
+        model = TFIDFRecommender()
+
+    elif model_name == "cosine":
+        model = CosineRecommender()
+
+    elif model_name == "bm25":
+        model = BM25Recommender(K1=100, B=0.5)
+
+    else:
+        raise NotImplementedError("TODO: model %s" % model_name)
+
+    # train the model
+    logging.debug("training model %s", model_name)
+    start = time.time()
+    model.fit(plays)
+    logging.debug("trained model '%s' in %s", model_name, time.time() - start)
+
+    # write out similar artists by popularity
     logging.debug("calculating top artists")
     user_count = df.groupby('artist').size()
     artists = dict(enumerate(df['artist'].cat.categories))
     to_generate = sorted(list(artists), key=lambda x: -user_count[x])
 
-    start = time.time()
-
-    if model == "als":
-        logging.debug("weighting matrix by bm25")
-        weighted = bm25_weight(plays, K1=100, B=0.8)
-
-        logging.debug("calculating factors")
-        artist_factors, user_factors = alternating_least_squares(weighted,
-                                                                 factors=factors,
-                                                                 regularization=regularization,
-                                                                 iterations=iterations,
-                                                                 use_native=use_native,
-                                                                 dtype=dtype,
-                                                                 use_cg=cg)
-        logging.debug("calculated factors in %s", time.time() - start)
-
-        if exact:
-            calc = TopRelated(artist_factors)
-        else:
-            calc = ApproximateTopRelated(artist_factors, trees)
-        logging.debug("writing top related to %s", output_filename)
-        with open(output_filename, "w") as o:
-            for artistid in to_generate:
-                artist = artists[artistid]
-                for other, score in calc.get_related(artistid):
-                    o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
-
-    elif model in ("bm25", "tfidf", "cosine", "smoothed_cosine", "ochiai", "overlap"):
-        if model == "bm25":
-            scorer = BM25Recommender(K1=100, B=0.5)
-
-        elif model == "tfidf":
-            scorer = TFIDFRecommender()
-
-        elif model == "cosine":
-            scorer = CosineRecommender()
-
-        else:
-            raise NotImplementedError("TODO: model %s" % model)
-
-        logging.debug("calculating similar items")
-        start = time.time()
-        scorer.fit(plays, K=11)
-        logging.debug("calculated all_pairs_knn in %s", time.time() - start)
-
-        with open(output_filename, "w") as o:
-            for artistid in to_generate:
-                artist = artists[artistid]
-                for other, score in scorer.similar_items(artistid):
-                    o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
+    # write out as a TSV of artistid, otherartistid, score
+    with open(output_filename, "w") as o:
+        for artistid in to_generate:
+            artist = artists[artistid]
+            for other, score in model.similar_items(artistid, 11):
+                o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
 
 
 if __name__ == "__main__":
@@ -153,7 +139,7 @@ if __name__ == "__main__":
     parser.add_argument('--output', type=str, default='similar-artists.tsv',
                         dest='outputfile', help='output file name')
     parser.add_argument('--model', type=str, default='als',
-                        dest='model', help='model to calculate (als/bm25)')
+                        dest='model', help='model to calculate (als/bm25/tfidf/cosine)')
     parser.add_argument('--factors', type=int, default=50, dest='factors',
                         help='Number of factors to calculate')
     parser.add_argument('--reg', type=float, default=0.8, dest='regularization',
@@ -177,7 +163,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     calculate_similar_artists(args.inputfile, args.outputfile,
-                              model=args.model,
+                              model_name=args.model,
                               factors=args.factors,
                               regularization=args.regularization,
                               exact=args.exact, trees=args.treecount,

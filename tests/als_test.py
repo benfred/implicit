@@ -5,11 +5,16 @@ import unittest
 import numpy as np
 from scipy.sparse import csr_matrix
 
-import implicit
+from implicit.als import AlternatingLeastSquares
+
+from .recommender_base_test import TestRecommenderBaseMixin
 
 
-class ALSTest(unittest.TestCase):
-    def testALS(self):
+class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
+    def _get_model(self):
+        return AlternatingLeastSquares(factors=3, regularization=0)
+
+    def test_factorize(self):
         counts = csr_matrix([[1, 1, 0, 1, 0, 0],
                              [0, 1, 1, 1, 0, 0],
                              [1, 0, 1, 0, 0, 0],
@@ -24,13 +29,15 @@ class ALSTest(unittest.TestCase):
             for use_cg in (False, True):
                 for use_native in (True, False):
                     try:
+                        model = AlternatingLeastSquares(factors=6,
+                                                        regularization=1e-10,
+                                                        dtype=dtype,
+                                                        use_native=use_native,
+                                                        use_cg=use_cg)
                         np.random.seed(23)
+                        model.fit(counts * 2)
+                        rows, cols = model.item_factors, model.user_factors
 
-                        rows, cols = implicit.alternating_least_squares(counts * 2, 6,
-                                                                        regularization=1e-10,
-                                                                        use_native=use_native,
-                                                                        use_cg=use_cg,
-                                                                        dtype=dtype)
                     except Exception as e:
                         self.fail(msg="failed to factorize matrix. Error=%s"
                                       " dtype=%s, cg=%s, native=%s"

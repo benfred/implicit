@@ -22,7 +22,18 @@ Basic usage:
 
 ```python
 import implicit
-user_factors, item_factors = implicit.alternating_least_squares(data, factors=50)
+
+# initialize a model
+model = implicit.als.AlternatingLeastSquares(factors=50)
+
+# train the model on a sparse matrix of item/user/confidence weights
+model.fit(item_user_data)
+
+# recommend items for a user
+recommendations = model.recommend(userid, item_user_data.T)
+
+# find related items
+related = model.similar_items(itemid)
 ```
 
 The examples folder has a program showing how to use this to [compute similar artists on the

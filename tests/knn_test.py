@@ -1,4 +1,5 @@
 from __future__ import print_function
+
 import unittest
 
 import numpy as np
@@ -6,10 +7,26 @@ from scipy.sparse import csr_matrix
 
 import implicit
 
+from .recommender_base_test import TestRecommenderBaseMixin
+
+
+class BM25Test(unittest.TestCase, TestRecommenderBaseMixin):
+    def _get_model(self):
+        return implicit.nearest_neighbours.BM25Recommender(K=50)
+
+
+class TFIDFTest(unittest.TestCase, TestRecommenderBaseMixin):
+    def _get_model(self):
+        return implicit.nearest_neighbours.TFIDFRecommender(K=50)
+
+
+class CosineTest(unittest.TestCase, TestRecommenderBaseMixin):
+    def _get_model(self):
+        return implicit.nearest_neighbours.CosineRecommender(K=50)
+
 
 class NearestNeighboursTest(unittest.TestCase):
-
-    def testNearestNeighbours(self):
+    def test_all_pairs_knn(self):
         counts = csr_matrix([[5, 1, 0, 9, 0, 0],
                              [0, 2, 1, 1, 0, 0],
                              [7, 0, 3, 0, 0, 0],

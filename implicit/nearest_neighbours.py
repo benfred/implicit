@@ -1,28 +1,46 @@
+import itertools
+
 import numpy
 from numpy import bincount, log, sqrt
 from scipy.sparse import coo_matrix, csr_matrix
 
 from ._nearest_neighbours import all_pairs_knn
+from .recommender_base import RecommenderBase
 from .utils import nonzeros
 
 
-class ItemItemRecommender(object):
+class ItemItemRecommender(RecommenderBase):
     """ Base class for Item-Item Nearest Neighbour recommender models
     here """
-    def __init__(self):
+    def __init__(self, K=20):
         self.similarity = None
+        self.K = K
 
-    def fit(self, weighted, K):
+    def fit(self, weighted):
         """ Computes and stores the similarity matrix """
-        self.similarity = all_pairs_knn(weighted, K).tocsr()
+        self.similarity = all_pairs_knn(weighted, self.K).tocsr()
 
-    def similar_items(self, itemid):
+    def recommend(self, userid, user_items, N=10):
+        """ returns the best N recommendations for a user """
+        # calculate the top related items
+        recommendations = user_items[userid].dot(self.similarity)
+        best = sorted(zip(recommendations.indices, recommendations.data), key=lambda x: -x[1])
+
+        # remove users own liked items from the output
+        liked = set(user_items[userid].indices)
+        return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
+
+    def similar_items(self, itemid, N=10):
         """ Returns a list of the most similar other items """
-        return sorted(list(nonzeros(self.similarity, itemid)), key=lambda x: -x[1])
+        if itemid >= self.similarity.shape[0]:
+            return []
+
+        return sorted(list(nonzeros(self.similarity, itemid)), key=lambda x: -x[1])[:N]
 
     def save(self, filename):
         m = self.similarity
-        numpy.savez(filename, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape)
+        numpy.savez(filename, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape,
+                    K=self.K)
 
     @classmethod
     def load(cls, filename):
@@ -35,32 +53,34 @@ class ItemItemRecommender(object):
 
         ret = cls()
         ret.similarity = similarity
+        ret.K = m['K']
         return ret
 
 
 class CosineRecommender(ItemItemRecommender):
     """ An Item-Item Recommender on Cosine distances between items """
-    def fit(self, counts, K):
+    def fit(self, counts):
         # cosine distance is just the dot-product of a normalized matrix
-        ItemItemRecommender.fit(self, normalize(counts), K)
+        ItemItemRecommender.fit(self, normalize(counts))
 
 
 class TFIDFRecommender(ItemItemRecommender):
     """ An Item-Item Recommender on TF-IDF distances between items """
-    def fit(self, counts, K):
+    def fit(self, counts):
         weighted = normalize(tfidf_weight(counts))
-        ItemItemRecommender.fit(self, weighted, K)
+        ItemItemRecommender.fit(self, weighted)
 
 
 class BM25Recommender(ItemItemRecommender):
     """ An Item-Item Recommender on BM25 distance between items """
-    def __init__(self, K1=1.2, B=.75):
+    def __init__(self, K=20, K1=1.2, B=.75):
+        super(BM25Recommender, self).__init__(K)
         self.K1 = K1
         self.B = B
 
-    def fit(self, counts, K):
+    def fit(self, counts):
         weighted = bm25_weight(counts, self.K1, self.B)
-        ItemItemRecommender.fit(self, weighted, K)
+        ItemItemRecommender.fit(self, weighted)
 
 
 def tfidf_weight(X):
