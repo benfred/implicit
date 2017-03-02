@@ -185,6 +185,8 @@ def least_squares_cg(Cui, floating[:, :] X, floating[:, :] Y, float regularizati
                     axpy(&N, &temp, Ap, &one, r, &one)
 
                     rsnew = dot(&N, r, &one, r, &one)
+                    if rsnew < 1e-10:
+                        break
 
                     # p = r + (rsnew/rsold) * p
                     temp = rsnew / rsold

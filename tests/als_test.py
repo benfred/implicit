@@ -14,6 +14,34 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
     def _get_model(self):
         return AlternatingLeastSquares(factors=3, regularization=0)
 
+    def test_cg_nan(self):
+        # test issue with CG code that was causing NaN values in output:
+        # https://github.com/benfred/implicit/issues/19#issuecomment-283164905
+        raw = [[0.0, 2.0, 1.5, 1.33333333, 1.25, 1.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+               [0.0, 0.0, 2.0, 1.5, 1.33333333, 1.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+               [0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+               [0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+               [0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333, 1.25, 1.2],
+               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333, 1.25],
+               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333],
+               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5],
+               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0],
+               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+        counts = csr_matrix(raw, dtype=np.float64)
+        for use_native in (True, False):
+            model = AlternatingLeastSquares(factors=3,
+                                            regularization=0.01,
+                                            dtype=np.float64,
+                                            use_native=use_native,
+                                            use_cg=True)
+            model.fit(counts)
+            rows, cols = model.item_factors, model.user_factors
+
+            self.assertFalse(np.isnan(np.sum(cols)))
+            self.assertFalse(np.isnan(np.sum(rows)))
+
     def test_factorize(self):
         counts = csr_matrix([[1, 1, 0, 1, 0, 0],
                              [0, 1, 1, 1, 0, 0],
