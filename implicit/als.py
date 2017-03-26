@@ -87,8 +87,12 @@ class AlternatingLeastSquares(RecommenderBase):
 
         # calcualte the top N items, removing the users own liked items from the results
         liked = set(user_items[userid].indices)
-        ids = np.argpartition(scores, -(N + len(liked)))[-(N + len(liked)):]
-        best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
+        count = N + len(liked)
+        if count < len(scores):
+            ids = np.argpartition(scores, -count)[-count:]
+            best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
+        else:
+            best = sorted(enumerate(scores), key=lambda x: -x[1])
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
 
     def similar_items(self, itemid, N=10):

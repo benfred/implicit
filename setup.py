@@ -7,7 +7,7 @@ import sys
 from setuptools import Extension, setup
 
 NAME = 'implicit'
-VERSION = '0.2.2'
+VERSION = '0.2.3'
 SRC_ROOT = 'implicit'
 
 try:

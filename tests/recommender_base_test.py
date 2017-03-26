@@ -29,6 +29,12 @@ class TestRecommenderBaseMixin(object):
             # all the other similar users
             self.assertEqual(recs[0][0], userid)
 
+        # try asking for more items than possible,
+        # should return only the available items
+        # https://github.com/benfred/implicit/issues/22
+        recs = model.recommend(0, user_items, N=10000)
+        self.assertTrue(len(recs))
+
     def test_similar_items(self):
         model = self._get_model()
         model.fit(self.get_checker_board(50))
