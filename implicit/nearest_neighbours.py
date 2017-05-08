@@ -20,14 +20,14 @@ class ItemItemRecommender(RecommenderBase):
         """ Computes and stores the similarity matrix """
         self.similarity = all_pairs_knn(weighted, self.K).tocsr()
 
-    def recommend(self, userid, user_items, N=10):
+    def recommend(self, userid, user_items, N=10, filter_items=[]):
         """ returns the best N recommendations for a user """
         # calculate the top related items
-        recommendations = user_items[userid].dot(self.similarity)
-        best = sorted(zip(recommendations.indices, recommendations.data), key=lambda x: -x[1])
-
+        recommendations = numpy.squeeze(user_items[userid].dot(self.similarity).toarray())
+        best = sorted(zip(range(len(recommendations)), recommendations), key=lambda x: -x[1])
         # remove users own liked items from the output
-        liked = set(user_items[userid].indices)
+        liked = set(user_items[userid].indices) | set(filter_items)
+
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
 
     def similar_items(self, itemid, N=10):
