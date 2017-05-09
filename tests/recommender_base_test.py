@@ -38,8 +38,7 @@ class TestRecommenderBaseMixin(object):
         # filter recommended items using an additional filter list
         # https://github.com/benfred/implicit/issues/26
         recs = model.recommend(0, user_items, N=1, filter_items=[0])
-        self.assertTrue(len(recs))
-        self.assertNotEqual(recs[0][0], 0)
+        self.assertTrue(0 not in dict(recs))
 
     def test_similar_items(self):
         model = self._get_model()
