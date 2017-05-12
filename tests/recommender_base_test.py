@@ -35,6 +35,11 @@ class TestRecommenderBaseMixin(object):
         recs = model.recommend(0, user_items, N=10000)
         self.assertTrue(len(recs))
 
+        # filter recommended items using an additional filter list
+        # https://github.com/benfred/implicit/issues/26
+        recs = model.recommend(0, user_items, N=1, filter_items=[0])
+        self.assertTrue(0 not in dict(recs))
+
     def test_similar_items(self):
         model = self._get_model()
         model.fit(self.get_checker_board(50))

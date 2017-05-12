@@ -81,12 +81,15 @@ class AlternatingLeastSquares(RecommenderBase):
                                            self.regularization, num_threads=self.num_threads)
                 log.debug("loss at iteration %i is %s", iteration, loss)
 
-    def recommend(self, userid, user_items, N=10):
+    def recommend(self, userid, user_items, N=10, filter_items=None):
         """ Returns the top N ranked items for a single user """
         scores = self.item_factors.dot(self.user_factors[userid])
 
         # calcualte the top N items, removing the users own liked items from the results
         liked = set(user_items[userid].indices)
+        if filter_items:
+            liked.update(filter_items)
+
         count = N + len(liked)
         if count < len(scores):
             ids = np.argpartition(scores, -count)[-count:]
