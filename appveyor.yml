@@ -13,7 +13,7 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda create --name implicit numpy scipy
+  - conda create --name implicit numpy scipy annoy
   - activate implicit
   - pip install -e .
 
