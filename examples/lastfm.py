@@ -16,12 +16,12 @@ import argparse
 import logging
 import time
 
-import annoy
 import numpy
 import pandas
 from scipy.sparse import coo_matrix
 
 from implicit.als import AlternatingLeastSquares
+from implicit.annoy_als import AnnoyAlternatingLeastSquares
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
 
@@ -46,32 +46,11 @@ def read_data(filename):
     return data, plays
 
 
-class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
-    """ A version of the AlternatingLeastSquares model that uses an annoy
-    index to calculate similar items. This leads to massive speedups
-    when called repeatedly """
-    def fit(self, Ciu):
-        # train the model
-        super(AnnoyAlternatingLeastSquares, self).fit(Ciu)
-
-        # build up an index with all the item_factors
-        index = annoy.AnnoyIndex(self.item_factors.shape[1], 'angular')
-        for i, row in enumerate(self.item_factors):
-            index.add_item(i, row)
-        index.build(self.factors / 2)
-        self.index = index
-
-    def similar_items(self, artistid, N=10):
-        neighbours = self.index.get_nns_by_item(artistid, N)
-        return sorted(((other, 1 - self.index.get_distance(artistid, other))
-                      for other in neighbours), key=lambda x: -x[1])
-
-
 def calculate_similar_artists(input_filename, output_filename,
                               model_name="als",
                               factors=50, regularization=0.01,
                               iterations=15,
-                              exact=False, trees=20,
+                              exact=False,
                               use_native=True,
                               dtype=numpy.float64,
                               cg=False):
@@ -147,8 +126,6 @@ if __name__ == "__main__":
     parser.add_argument('--iter', type=int, default=15, dest='iterations',
                         help='Number of ALS iterations')
     parser.add_argument('--exact', help='compute exact distances (slow)', action="store_true")
-    parser.add_argument('--trees', type=int, default=20, dest='treecount',
-                        help='Number of trees to use in annoy')
     parser.add_argument('--purepython',
                         help='dont use cython extension (slow)',
                         action="store_true")
@@ -166,7 +143,7 @@ if __name__ == "__main__":
                               model_name=args.model,
                               factors=args.factors,
                               regularization=args.regularization,
-                              exact=args.exact, trees=args.treecount,
+                              exact=args.exact,
                               iterations=args.iterations,
                               use_native=not args.purepython,
                               dtype=numpy.float32 if args.float32 else numpy.float64,

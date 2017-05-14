@@ -1,2 +1,3 @@
 scipy>=0.16.0
 Cython>=0.22.0
+annoy>=1.8.0
