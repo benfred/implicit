@@ -15,7 +15,7 @@ before_install:
   - pip install -U pip setuptools wheel
 
 install:
-  - travis_wait travis_retry pip install -r requirements.txt flake8 isort cpplint
+  - travis_wait travis_retry pip install -r requirements.txt flake8 isort cpplint annoy
   - travis_retry python setup.py build install
 
 script:

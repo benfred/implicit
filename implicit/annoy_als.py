@@ -2,11 +2,18 @@
 approximate neighbours from an ALS Matrix factorization model
 """
 import itertools
+import logging
 
-import annoy
 import numpy
 
 from implicit.als import AlternatingLeastSquares
+
+try:
+    import annoy
+    has_annoy = True
+except ImportError:
+    has_annoy = False
+    logging.warning("Annoy isn't installed")
 
 
 class MaximumInnerProductIndex(object):
