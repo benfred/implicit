@@ -67,11 +67,11 @@ def calculate_similar_artists(input_filename, output_filename,
         if exact:
             model = AlternatingLeastSquares(factors=factors, regularization=regularization,
                                             use_native=use_native, use_cg=cg,
-                                            dtype=dtype)
+                                            dtype=dtype, iterations=iterations)
         else:
             model = AnnoyAlternatingLeastSquares(factors=factors, regularization=regularization,
                                                  use_native=use_native, use_cg=cg,
-                                                 dtype=dtype)
+                                                 dtype=dtype, iterations=iterations)
 
         # lets weight these models by bm25weight.
         logging.debug("weighting matrix by bm25_weight")
