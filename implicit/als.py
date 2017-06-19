@@ -40,6 +40,9 @@ class AlternatingLeastSquares(RecommenderBase):
         # cache of item norms (useful for calculating similar items)
         self._item_norms = None
 
+        # cache for item factors squared
+        self._YtY = None
+
         check_open_blas()
 
     def fit(self, item_users):
@@ -82,11 +85,36 @@ class AlternatingLeastSquares(RecommenderBase):
                 log.debug("loss at iteration %i is %s", iteration, loss)
 
     def recommend(self, userid, user_items, N=10, filter_items=None):
-        """ Returns the top N ranked items for a single user """
-        scores = self.item_factors.dot(self.user_factors[userid])
-
-        # calcualte the top N items, removing the users own liked items from the results
+        """ Returns the top N ranked items for a single user, given its id """
         liked = set(user_items[userid].indices)
+        user_vector = self.user_factors[userid]
+        return self._recommend_from_user_vector(liked, user_vector, N, filter_items)
+
+    def recommend_from_liked(self, liked, confidence=1.0, N=10):
+        """ Returns the top N ranked items for a single user, given its history """
+        Y = self.item_factors
+        if self._YtY is None:
+            self._YtY = Y.T.dot(Y)
+        YtY = self._YtY
+
+        # accumulate YtCuY + regularization*I in A
+        A = YtY + self.regularization * np.eye(self.factors)
+
+        # accumulate YtCuPu in b
+        b = np.zeros(self.factors)
+
+        for i in liked:
+            factor = Y[i]
+            A += (confidence - 1) * np.outer(factor, factor)
+            b += confidence * factor
+
+        # Xu = (YtCuY + regularization * I)^-1 (YtCuPu)
+        user_vector = np.linalg.solve(A, b)
+        return self._recommend_from_user_vector(set(liked), user_vector, N)
+
+    def _recommend_from_user_vector(self, liked, user_vector, N=10, filter_items=None):
+        # calculate the top N items, removing the users own liked items from the results
+        scores = self.item_factors.dot(user_vector)
         if filter_items:
             liked.update(filter_items)
 

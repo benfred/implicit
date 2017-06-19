@@ -36,7 +36,7 @@ class NearestNeighboursTest(unittest.TestCase):
                              [0, 0, 0, 0, 6, 0]], dtype=np.float64)
         counts = implicit.nearest_neighbours.tfidf_weight(counts).tocsr()
 
-        # compute all neighbours usiong matrix dot product
+        # compute all neighbours using matrix dot product
         all_neighbours = counts.dot(counts.T).tocsr()
         K = 3
         knn = implicit.nearest_neighbours.all_pairs_knn(counts, K).tocsr()

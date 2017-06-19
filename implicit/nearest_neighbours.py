@@ -21,13 +21,24 @@ class ItemItemRecommender(RecommenderBase):
         self.similarity = all_pairs_knn(weighted, self.K).tocsr()
 
     def recommend(self, userid, user_items, N=10, filter_items=None):
-        """ returns the best N recommendations for a user """
+        """ returns the best N recommendations for a user given its id"""
+        return self._recommend_from_like_vector(user_items[userid], N, filter_items)
+
+    def recommend_from_liked(self, liked, N=10, filter_items=None):
+        """ returns the best N recommendations for a user given its history"""
+        data = [1.0 for _ in liked]
+        i = [0 for _ in liked]
+        shape = (1, self.similarity.shape[0])
+        liked_vector = coo_matrix((data, (i, liked)), shape=shape).tocsr()
+        return self._recommend_from_like_vector(liked_vector, N, filter_items)
+
+    def _recommend_from_like_vector(self, liked_vector, N=10, filter_items=None):
         # calculate the top related items
-        recommendations = user_items[userid].dot(self.similarity)
+        recommendations = liked_vector.dot(self.similarity)
         best = sorted(zip(recommendations.indices, recommendations.data), key=lambda x: -x[1])
 
         # remove users own liked items from the output
-        liked = set(user_items[userid].indices)
+        liked = set(liked_vector.indices)
         if filter_items:
             liked.update(filter_items)
 
@@ -47,7 +58,7 @@ class ItemItemRecommender(RecommenderBase):
 
     @classmethod
     def load(cls, filename):
-        # numpy.savez automatically appends a npz suffic, numpy.load doesn't apparently
+        # numpy.save automatically appends a npz suffic, numpy.load doesn't apparently
         if not filename.endswith(".npz"):
             filename = filename + ".npz"
 

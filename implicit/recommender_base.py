@@ -13,8 +13,13 @@ class RecommenderBase(object):
         pass
 
     @abstractmethod
-    def recommend(self, userid, user_items, N=10, filter_items=None):
-        """ Recommends items for a user """
+    def recommend(self, user_items, userid=None, N=10, filter_items=None):
+        """ Recommends items for a user"""
+        pass
+
+    @abstractmethod
+    def recommend_from_liked(self, liked, N=10, filter_items=None):
+        """ Returns the top N ranked items for a single user, given its history """
         pass
 
     @abstractmethod
