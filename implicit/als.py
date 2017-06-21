@@ -58,7 +58,6 @@ class AlternatingLeastSquares(RecommenderBase):
         """
         Ciu, Cui = item_users.tocsr(), item_users.T.tocsr()
         items, users = Ciu.shape
-        self._YtY = None
 
         # Initialize the variables randomly if they haven't already been set
         if self.user_factors is None:
@@ -66,8 +65,9 @@ class AlternatingLeastSquares(RecommenderBase):
         if self.item_factors is None:
             self.item_factors = np.random.rand(items, self.factors).astype(self.dtype) * 0.01
 
-        # invalidate cached norms
+        # invalidate cached norms and squared factors
         self._item_norms = None
+        self._YtY = None
 
         solver = self.solver
 
@@ -105,11 +105,35 @@ class AlternatingLeastSquares(RecommenderBase):
     def _user_factor(self, userid, user_items, recalculate_user=False):
         if not recalculate_user:
             return self.user_factors[userid]
-        Y = self.item_factors
-        if self._YtY is None:
-            self._YtY = Y.T.dot(Y)
-        return user_factor(Y, self._YtY, user_items, userid,
+        return user_factor(self.item_factors, self.YtY, user_items, userid,
                            self.regularization, self.factors)
+
+    def explain(self, userid, user_items, itemid, user_weights=None, N=10):
+        """ Returns the predicted rating for an user x item pair,
+            the explanation (the contribution from the top N items the user liked),
+            and a user latent factor weight that can be cached if you want to
+            get more than one explanation for the same user.
+        """
+        if user_weights is None:
+            A, _ = user_linear_equation(self.item_factors, self.YtY,
+                                        user_items, userid,
+                                        self.regularization, self.factors)
+            user_weights = np.linalg.inv(A)
+
+        seed_item = self.item_factors[itemid]
+        weighted_item = seed_item.T.dot(user_weights)
+
+        contributions = []
+        total_score = 0.0
+        for i, confidence in nonzeros(user_items, userid):
+            factor = self.item_factors[i]
+            similarity = weighted_item.dot(factor)
+            score = similarity * confidence
+            total_score += score
+            contributions.append((i, score))
+
+        top_contributions = sorted(contributions, key=lambda x: -x[1])[:N]
+        return total_score, top_contributions, user_weights
 
     def similar_items(self, itemid, N=10):
         """ Return the top N similar items for itemid. """
@@ -128,6 +152,13 @@ class AlternatingLeastSquares(RecommenderBase):
         if self.use_cg:
             return _als.least_squares_cg if self.use_native else least_squares_cg
         return _als.least_squares if self.use_native else least_squares
+
+    @property
+    def YtY(self):
+        if self._YtY is None:
+            Y = self.item_factors
+            self._YtY = Y.T.dot(Y)
+        return self._YtY
 
 
 def alternating_least_squares(Ciu, factors, **kwargs):
@@ -158,7 +189,9 @@ def least_squares(Cui, X, Y, regularization, num_threads=0):
         X[u] = user_factor(Y, YtY, Cui, u, regularization, n_factors)
 
 
-def user_factor(Y, YtY, Cui, u, regularization, n_factors):
+def user_linear_equation(Y, YtY, Cui, u, regularization, n_factors):
+    # Xu = (YtCuY + regularization * I)^-1 (YtCuPu)
+    # YtCuY + regularization * I = YtY + regularization * I + Yt(Cu-I)
     # accumulate YtCuY + regularization*I in A
     A = YtY + regularization * np.eye(n_factors)
 
@@ -169,8 +202,12 @@ def user_factor(Y, YtY, Cui, u, regularization, n_factors):
         factor = Y[i]
         A += (confidence - 1) * np.outer(factor, factor)
         b += confidence * factor
+    return A, b
 
+
+def user_factor(Y, YtY, Cui, u, regularization, n_factors):
     # Xu = (YtCuY + regularization * I)^-1 (YtCuPu)
+    A, b = user_linear_equation(Y, YtY, Cui, u, regularization, n_factors)
     return np.linalg.solve(A, b)
 
 
