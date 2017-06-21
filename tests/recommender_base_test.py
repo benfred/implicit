@@ -29,9 +29,10 @@ class TestRecommenderBaseMixin(object):
             # all the other similar users
             self.assertEqual(recs[0][0], userid)
 
-            # we should get the same item and scores if we use the list of likes
-            liked = user_items[userid].indices
-            recs_from_liked = model.recommend_from_liked(liked, N=1)
+            # we should get the same item if we recalculate_user
+            user_vector = user_items[userid]
+            recs_from_liked = model.recommend(userid=0, user_items=user_vector,
+                                              N=1, recalculate_user=True)
             self.assertEqual(recs[0][0], recs_from_liked[0][0])
             self.assertAlmostEqual(recs[0][1], recs_from_liked[0][1], places=6)
 

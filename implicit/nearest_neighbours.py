@@ -20,19 +20,11 @@ class ItemItemRecommender(RecommenderBase):
         """ Computes and stores the similarity matrix """
         self.similarity = all_pairs_knn(weighted, self.K).tocsr()
 
-    def recommend(self, userid, user_items, N=10, filter_items=None):
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
         """ returns the best N recommendations for a user given its id"""
-        return self._recommend_from_like_vector(user_items[userid], N, filter_items)
+        # recalculate_user is ignored because this is not a model based algorithm
+        liked_vector = user_items[userid]
 
-    def recommend_from_liked(self, liked, N=10, filter_items=None):
-        """ returns the best N recommendations for a user given its history"""
-        data = [1.0 for _ in liked]
-        i = [0 for _ in liked]
-        shape = (1, self.similarity.shape[0])
-        liked_vector = coo_matrix((data, (i, liked)), shape=shape).tocsr()
-        return self._recommend_from_like_vector(liked_vector, N, filter_items)
-
-    def _recommend_from_like_vector(self, liked_vector, N=10, filter_items=None):
         # calculate the top related items
         recommendations = liked_vector.dot(self.similarity)
         best = sorted(zip(recommendations.indices, recommendations.data), key=lambda x: -x[1])
