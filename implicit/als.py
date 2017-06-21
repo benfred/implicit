@@ -58,6 +58,7 @@ class AlternatingLeastSquares(RecommenderBase):
         """
         Ciu, Cui = item_users.tocsr(), item_users.T.tocsr()
         items, users = Ciu.shape
+        self._YtY = None
 
         # Initialize the variables randomly if they haven't already been set
         if self.user_factors is None:
