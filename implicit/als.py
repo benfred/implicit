@@ -128,8 +128,7 @@ class AlternatingLeastSquares(RecommenderBase):
         h = []
         for i, (itemid, confidence) in enumerate(nonzeros(user_items, userid)):
             factor = self.item_factors[itemid]
-            similarity = weighted_item.dot(factor)
-            score = similarity * confidence
+            score = weighted_item.dot(factor) * confidence
             total_score += score
             contribution = (score, itemid)
             if i < N:
