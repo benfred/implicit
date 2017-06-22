@@ -13,8 +13,8 @@ class RecommenderBase(object):
         pass
 
     @abstractmethod
-    def recommend(self, userid, user_items, N=10, filter_items=None):
-        """ Recommends items for a user """
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+        """ Recommends items for a user"""
         pass
 
     @abstractmethod

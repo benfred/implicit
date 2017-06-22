@@ -40,6 +40,9 @@ class AlternatingLeastSquares(RecommenderBase):
         # cache of item norms (useful for calculating similar items)
         self._item_norms = None
 
+        # cache for item factors squared
+        self._YtY = None
+
         check_open_blas()
 
     def fit(self, item_users):
@@ -55,6 +58,7 @@ class AlternatingLeastSquares(RecommenderBase):
         """
         Ciu, Cui = item_users.tocsr(), item_users.T.tocsr()
         items, users = Ciu.shape
+        self._YtY = None
 
         # Initialize the variables randomly if they haven't already been set
         if self.user_factors is None:
@@ -81,12 +85,12 @@ class AlternatingLeastSquares(RecommenderBase):
                                            self.regularization, num_threads=self.num_threads)
                 log.debug("loss at iteration %i is %s", iteration, loss)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None):
-        """ Returns the top N ranked items for a single user """
-        scores = self.item_factors.dot(self.user_factors[userid])
-
-        # calcualte the top N items, removing the users own liked items from the results
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+        """ Returns the top N ranked items for a single user, given its id """
+        user = self._user_factor(userid, user_items, recalculate_user)
+        # calculate the top N items, removing the users own liked items from the results
         liked = set(user_items[userid].indices)
+        scores = self.item_factors.dot(user)
         if filter_items:
             liked.update(filter_items)
 
@@ -97,6 +101,15 @@ class AlternatingLeastSquares(RecommenderBase):
         else:
             best = sorted(enumerate(scores), key=lambda x: -x[1])
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
+
+    def _user_factor(self, userid, user_items, recalculate_user=False):
+        if not recalculate_user:
+            return self.user_factors[userid]
+        Y = self.item_factors
+        if self._YtY is None:
+            self._YtY = Y.T.dot(Y)
+        return user_factor(Y, self._YtY, user_items, userid,
+                           self.regularization, self.factors)
 
     def similar_items(self, itemid, N=10):
         """ Return the top N similar items for itemid. """
@@ -138,23 +151,27 @@ def least_squares(Cui, X, Y, regularization, num_threads=0):
     Note: this is at least 10 times slower than the cython version included
     here.
     """
-    users, factors = X.shape
+    users, n_factors = X.shape
     YtY = Y.T.dot(Y)
 
     for u in range(users):
-        # accumulate YtCuY + regularization*I in A
-        A = YtY + regularization * np.eye(factors)
+        X[u] = user_factor(Y, YtY, Cui, u, regularization, n_factors)
 
-        # accumulate YtCuPu in b
-        b = np.zeros(factors)
 
-        for i, confidence in nonzeros(Cui, u):
-            factor = Y[i]
-            A += (confidence - 1) * np.outer(factor, factor)
-            b += confidence * factor
+def user_factor(Y, YtY, Cui, u, regularization, n_factors):
+    # accumulate YtCuY + regularization*I in A
+    A = YtY + regularization * np.eye(n_factors)
 
-        # Xu = (YtCuY + regularization * I)^-1 (YtCuPu)
-        X[u] = np.linalg.solve(A, b)
+    # accumulate YtCuPu in b
+    b = np.zeros(n_factors)
+
+    for i, confidence in nonzeros(Cui, u):
+        factor = Y[i]
+        A += (confidence - 1) * np.outer(factor, factor)
+        b += confidence * factor
+
+    # Xu = (YtCuY + regularization * I)^-1 (YtCuPu)
+    return np.linalg.solve(A, b)
 
 
 def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
