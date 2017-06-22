@@ -107,7 +107,8 @@ class AlternatingLeastSquares(RecommenderBase):
     def _user_factor(self, userid, user_items, recalculate_user=False):
         if not recalculate_user:
             return self.user_factors[userid]
-        return user_factor(self.item_factors, self.YtY, user_items, userid,
+        return user_factor(self.item_factors, self.YtY,
+                           user_items.tocsr(), userid,
                            self.regularization, self.factors)
 
     def explain(self, userid, user_items, itemid, user_weights=None, N=10):
@@ -116,11 +117,13 @@ class AlternatingLeastSquares(RecommenderBase):
             and a user latent factor weight that can be cached if you want to
             get more than one explanation for the same user.
         """
-        # user_weights = Wu^-1 from section 5 of the paper CF for Implicit Feedback Datasets
+        # user_weights = Cholesky decomposition of Wu^-1
+        # from section 5 of the paper CF for Implicit Feedback Datasets
+        user_items = user_items.tocsr()
         if user_weights is None:
             A, _ = user_linear_equation(self.item_factors, self.YtY,
-                                                   user_items, userid,
-                                                   self.regularization, self.factors)
+                                        user_items, userid,
+                                        self.regularization, self.factors)
             user_weights = scipy.linalg.cho_factor(A)
         seed_item = self.item_factors[itemid]
 

@@ -85,42 +85,50 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
     def test_explain(self):
         counts = csr_matrix([[1, 1, 0, 1, 0, 0],
                              [0, 1, 1, 1, 0, 0],
-                             [1, 0, 1, 0, 0, 0],
+                             [1, 4, 1, 0, 7, 0],
                              [1, 1, 0, 0, 0, 0],
-                             [0, 0, 1, 1, 0, 1],
+                             [9, 0, 4, 1, 0, 1],
                              [0, 1, 0, 0, 0, 1],
-                             [0, 0, 0, 0, 1, 1]], dtype=np.float64)
+                             [0, 0, 2, 0, 1, 1]], dtype=np.float64)
         user_items = counts * 2
+        item_users = user_items.T
 
         model = AlternatingLeastSquares(factors=4,
-                                        regularization=1e-1,
+                                        regularization=20,
                                         use_native=False,
                                         use_cg=False,
-                                        iterations=10)
+                                        iterations=100)
         np.random.seed(23)
         model.fit(user_items)
-        model.item_factors, model.user_factors
 
         userid = 0
-        recs = model.recommend(userid, user_items, N=10, recalculate_user=True)
-        top_rec, score = recs[0]
-        score_explained, contributions, W = model.explain(
-            userid, user_items, itemid=top_rec)
+
+        # Assert recommendation is the the same if we recompute user vectors
+        recs = model.recommend(userid, item_users, N=10)
+        recalculated_recs = model.recommend(userid, item_users, N=10, recalculate_user=True)
+        for (item1, score1), (item2, score2) in zip(recs, recalculated_recs):
+            self.assertEqual(item1, item2)
+            self.assertAlmostEqual(score1, score2, 4)
+
+        # Assert explanation makes sense
+        top_rec, score = recalculated_recs[0]
+        score_explained, contributions, W = model.explain(userid, item_users, itemid=top_rec)
         scores = [s for _, s in contributions]
         items = [i for i, _ in contributions]
         self.assertAlmostEqual(score, score_explained, 4)
         self.assertAlmostEqual(score, sum(scores), 4)
         self.assertEqual(scores, sorted(scores, reverse=True), "Scores not in order")
-        self.assertEqual([0, 1, 3], sorted(items), "Items not seen by user")
+        self.assertEqual([0, 2, 3, 4], sorted(items), "Items not seen by user")
 
-        # run again with precomputed user weigths
-        score_explained, contributions, W = model.explain(
-            userid, user_items, itemid=top_rec, user_weights=W, N=2)
-        scores = [s for _, s in contributions]
-        items = [i for i, _ in contributions]
-        self.assertAlmostEqual(score, score_explained, 4)
-        self.assertNotAlmostEqual(score, sum(scores), 4)
-        self.assertEqual(scores, sorted(scores, reverse=True), "Scores not in order")
+        # Assert explanation with precomputed user weights is correct
+        top_score_explained, top_contributions, W = model.explain(
+            userid, item_users, itemid=top_rec, user_weights=W, N=2)
+        top_scores = [s for _, s in top_contributions]
+        top_items = [i for i, _ in top_contributions]
+        self.assertEqual(2, len(top_contributions))
+        self.assertAlmostEqual(score, top_score_explained, 4)
+        self.assertEqual(scores[:2], top_scores)
+        self.assertEqual(items[:2], top_items)
 
 
 if __name__ == "__main__":
