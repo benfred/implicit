@@ -115,19 +115,21 @@ class AlternatingLeastSquares(RecommenderBase):
             and a user latent factor weight that can be cached if you want to
             get more than one explanation for the same user.
         """
+        # user_weights = Wu^-1 from section 5 of the paper CF for Implicit Feedback Datasets
         if user_weights is None:
-            A, _ = user_linear_equation(self.item_factors, self.YtY,
-                                        user_items, userid,
-                                        self.regularization, self.factors)
-            user_weights = np.linalg.inv(A)
-
+            user_weights, _ = user_linear_equation(self.item_factors, self.YtY,
+                                                   user_items, userid,
+                                                   self.regularization, self.factors)
         seed_item = self.item_factors[itemid]
-        weighted_item = seed_item.T.dot(user_weights)
+
+        # weighted_item = y_i^t W_u
+        weighted_item = np.linalg.solve(user_weights.T, seed_item)
 
         total_score = 0.0
         h = []
         for i, (itemid, confidence) in enumerate(nonzeros(user_items, userid)):
             factor = self.item_factors[itemid]
+            # s_u^ij = (y_i^t W^u) y_j
             score = weighted_item.dot(factor) * confidence
             total_score += score
             contribution = (score, itemid)
@@ -197,6 +199,7 @@ def least_squares(Cui, X, Y, regularization, num_threads=0):
 def user_linear_equation(Y, YtY, Cui, u, regularization, n_factors):
     # Xu = (YtCuY + regularization * I)^-1 (YtCuPu)
     # YtCuY + regularization * I = YtY + regularization * I + Yt(Cu-I)
+
     # accumulate YtCuY + regularization*I in A
     A = YtY + regularization * np.eye(n_factors)
 
