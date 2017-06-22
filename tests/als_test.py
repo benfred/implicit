@@ -104,9 +104,23 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         userid = 0
         recs = model.recommend(userid, user_items, N=10, recalculate_user=True)
         top_rec, score = recs[0]
-        score_explained, contributions, W = model.explain(userid, user_items, itemid=top_rec)
+        score_explained, contributions, W = model.explain(
+            userid, user_items, itemid=top_rec)
+        scores = [s for _, s in contributions]
+        items = [i for i, _ in contributions]
         self.assertAlmostEqual(score, score_explained, 4)
-        self.assertAlmostEqual(score, sum(s for _, s in contributions), 4)
+        self.assertAlmostEqual(score, sum(scores), 4)
+        self.assertEqual(scores, sorted(scores, reverse=True), "Scores not in order")
+        self.assertEqual([0, 1, 3], sorted(items), "Items not seen by user")
+
+        # run again with precomputed user weigths
+        score_explained, contributions, W = model.explain(
+            userid, user_items, itemid=top_rec, user_weights=W, N=2)
+        scores = [s for _, s in contributions]
+        items = [i for i, _ in contributions]
+        self.assertAlmostEqual(score, score_explained, 4)
+        self.assertNotAlmostEqual(score, sum(scores), 4)
+        self.assertEqual(scores, sorted(scores, reverse=True), "Scores not in order")
 
 
 if __name__ == "__main__":

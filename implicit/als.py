@@ -5,6 +5,7 @@ import logging
 import time
 
 import numpy as np
+import scipy
 
 from . import _als
 from .recommender_base import RecommenderBase
@@ -117,13 +118,14 @@ class AlternatingLeastSquares(RecommenderBase):
         """
         # user_weights = Wu^-1 from section 5 of the paper CF for Implicit Feedback Datasets
         if user_weights is None:
-            user_weights, _ = user_linear_equation(self.item_factors, self.YtY,
+            A, _ = user_linear_equation(self.item_factors, self.YtY,
                                                    user_items, userid,
                                                    self.regularization, self.factors)
+            user_weights = scipy.linalg.cho_factor(A)
         seed_item = self.item_factors[itemid]
 
         # weighted_item = y_i^t W_u
-        weighted_item = np.linalg.solve(user_weights.T, seed_item)
+        weighted_item = scipy.linalg.cho_solve(user_weights, seed_item)
 
         total_score = 0.0
         h = []
