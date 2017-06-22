@@ -1,4 +1,5 @@
 """ Implicit Alternating Least Squares """
+import heapq
 import itertools
 import logging
 import time
@@ -123,16 +124,21 @@ class AlternatingLeastSquares(RecommenderBase):
         seed_item = self.item_factors[itemid]
         weighted_item = seed_item.T.dot(user_weights)
 
-        contributions = []
         total_score = 0.0
-        for i, confidence in nonzeros(user_items, userid):
-            factor = self.item_factors[i]
+        h = []
+        for i, (itemid, confidence) in enumerate(nonzeros(user_items, userid)):
+            factor = self.item_factors[itemid]
             similarity = weighted_item.dot(factor)
             score = similarity * confidence
             total_score += score
-            contributions.append((i, score))
+            contribution = (score, itemid)
+            if i < N:
+                heapq.heappush(h, contribution)
+            else:
+                heapq.heappushpop(h, contribution)
 
-        top_contributions = sorted(contributions, key=lambda x: -x[1])[:N]
+        items = (heapq.heappop(h) for i in range(len(h)))
+        top_contributions = list((i, s) for s, i in items)[::-1]
         return total_score, top_contributions, user_weights
 
     def similar_items(self, itemid, N=10):
