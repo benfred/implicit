@@ -43,6 +43,7 @@ last.fm dataset](https://github.com/benfred/implicit/blob/master/examples/lastfm
 
 Several posts have been written talking about using Implicit to build recommendation systems:
 
+ * [Recommending GitHub Repositories with Google BigQuery and the implicit library](https://medium.com/@jbochi/recommending-github-repositories-with-google-bigquery-and-the-implicit-library-e6cce666c77)
  * [Intro to Implicit Matrix Factorization: Classic ALS with Sketchfab Models](http://blog.ethanrosenthal.com/2016/10/19/implicit-mf-part-1/)
  * [A Gentle Introduction to Recommender Systems with Implicit Feedback](https://jessesw.com/Rec-System/).
 
