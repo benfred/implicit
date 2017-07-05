@@ -1,6 +1,5 @@
 """ Implicit Alternating Least Squares """
 import heapq
-import itertools
 import logging
 import time
 
@@ -87,7 +86,7 @@ class AlternatingLeastSquares(RecommenderBase):
                                            self.regularization, num_threads=self.num_threads)
                 log.debug("loss at iteration %i is %s", iteration, loss)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False, return_liked = False):
         """ Returns the top N ranked items for a single user, given its id """
         user = self._user_factor(userid, user_items, recalculate_user)
         # calculate the top N items, removing the users own liked items from the results
@@ -102,7 +101,8 @@ class AlternatingLeastSquares(RecommenderBase):
             best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
         else:
             best = sorted(enumerate(scores), key=lambda x: -x[1])
-        return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
+
+        return self.slice_recommendations(N, best, liked, return_liked)
 
     def _user_factor(self, userid, user_items, recalculate_user=False):
         if not recalculate_user:

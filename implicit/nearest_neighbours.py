@@ -1,5 +1,3 @@
-import itertools
-
 import numpy
 from numpy import bincount, log, sqrt
 from scipy.sparse import coo_matrix, csr_matrix
@@ -20,7 +18,7 @@ class ItemItemRecommender(RecommenderBase):
         """ Computes and stores the similarity matrix """
         self.similarity = all_pairs_knn(weighted, self.K).tocsr()
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False, return_liked = False):
         """ returns the best N recommendations for a user given its id"""
         # recalculate_user is ignored because this is not a model based algorithm
         liked_vector = user_items[userid]
@@ -34,7 +32,7 @@ class ItemItemRecommender(RecommenderBase):
         if filter_items:
             liked.update(filter_items)
 
-        return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
+        return self.slice_recommendations(N, best, liked, return_liked)
 
     def similar_items(self, itemid, N=10):
         """ Returns a list of the most similar other items """

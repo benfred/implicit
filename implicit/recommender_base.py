@@ -1,5 +1,6 @@
 """ Base class for recommendation algorithms in this package """
 
+import itertools
 from abc import ABCMeta, abstractmethod
 
 
@@ -13,7 +14,7 @@ class RecommenderBase(object):
         pass
 
     @abstractmethod
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False, return_liked = False):
         """ Recommends items for a user"""
         pass
 
@@ -21,3 +22,7 @@ class RecommenderBase(object):
     def similar_items(self, itemid, N=10):
         """ Returns related items for an item """
         pass
+
+    def slice_recommendations(self, N, best, liked, return_liked = False):
+        """ Returns N recommendations from best candidates, either filtering or not those already liked """
+        return list(itertools.islice((rec for rec in best if return_liked or rec[0] not in liked), N))
