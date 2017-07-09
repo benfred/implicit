@@ -86,23 +86,19 @@ class AlternatingLeastSquares(RecommenderBase):
                                            self.regularization, num_threads=self.num_threads)
                 log.debug("loss at iteration %i is %s", iteration, loss)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False, filter_liked = True):
-        """ Returns the top N ranked items for a single user, given its id """
-        user = self._user_factor(userid, user_items, recalculate_user)
-        # calculate the top N items, removing the users own liked items from the results
-        liked = set(user_items[userid].indices)
-        scores = self.item_factors.dot(user)
-        if filter_items:
-            liked.update(filter_items)
+    def liked(self, userid, user_items):
+        return set(user_items[userid].indices)
 
-        count = N + len(liked)
-        if count < len(scores):
-            ids = np.argpartition(scores, -count)[-count:]
+    def best_recommendations(self, userid, user_items, N, recalculate_user=False):
+        user = self._user_factor(userid, user_items, recalculate_user)
+        scores = self.item_factors.dot(user)
+        if N < len(scores):
+            ids = np.argpartition(scores, -N)[-N:]
             best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
         else:
             best = sorted(enumerate(scores), key=lambda x: -x[1])
 
-        return self.slice_recommendations(N, best, liked, filter_liked)
+        return best
 
     def _user_factor(self, userid, user_items, recalculate_user=False):
         if not recalculate_user:
