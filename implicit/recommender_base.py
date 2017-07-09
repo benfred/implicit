@@ -14,7 +14,7 @@ class RecommenderBase(object):
         pass
 
     @abstractmethod
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False, return_liked = False):
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False, filter_liked = True):
         """ Recommends items for a user"""
         pass
 
@@ -23,6 +23,6 @@ class RecommenderBase(object):
         """ Returns related items for an item """
         pass
 
-    def slice_recommendations(self, N, best, liked, return_liked = False):
+    def slice_recommendations(self, N, best, liked, filter_liked = True):
         """ Returns N recommendations from best candidates, either filtering or not those already liked """
-        return list(itertools.islice((rec for rec in best if return_liked or rec[0] not in liked), N))
+        return list(itertools.islice((rec for rec in best if not filter_liked or rec[0] not in liked), N))
