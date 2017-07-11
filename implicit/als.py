@@ -15,10 +15,40 @@ log = logging.getLogger("implicit")
 
 
 class AlternatingLeastSquares(RecommenderBase):
-    """ A Recommendation Model based off the algorithms described in the paper 'Collaborative
-        Filtering for Implicit Feedback Datasets' with perfomance optimizations described in
-        'Applications of the Conjugate Gradient Method for Implicit Feedback Collaborative
-        Filtering.'
+    """ Alternating Least Squares
+
+    A Recommendation Model based off the algorithms described in the paper 'Collaborative
+    Filtering for Implicit Feedback Datasets' with performance optimizations described in
+    'Applications of the Conjugate Gradient Method for Implicit Feedback Collaborative
+    Filtering.'
+
+    Parameters
+    ----------
+    factors : int, optional
+        The number of latent factors to compute
+    regularization : float, optional
+        The regularization factor to use
+    dtype : data-type, optional
+        Specifies whether to generate 64 bit or 32 bit floating point factors
+    use_native : bool, optional
+        Use native extensions to speed up model fitting
+    use_cg : bool, optional
+        Use a faster Conjugate Gradient solver to calculate factors
+    iterations : int, optional
+        The number of ALS iterations to use when fitting data
+    calculate_training_loss : bool, optional
+        Whether to log out the training loss at each iteration
+    num_threads : int, optional
+        The number of threads to use for fitting the model. This only
+        applies for the native extensions. Specifying 0 means to default
+        to the number of cores on the machine.
+
+    Attributes
+    ----------
+    item_factors : ndarray
+        Array of latent factors for each item in the training set
+    user_factors : ndarray
+        Array of latent factors for each user in the training set
     """
     def __init__(self, factors=100, regularization=0.01, dtype=np.float64,
                  use_native=True, use_cg=True,
@@ -48,15 +78,25 @@ class AlternatingLeastSquares(RecommenderBase):
         check_open_blas()
 
     def fit(self, item_users):
-        """ Factorizes the matrix Cui. This must be called before trying to recommend items.
-        After calling this method, the members 'user_factors' and 'item_factors' will be
-        initialized with a latent factor model of the input data
+        """ Factorizes the item_users matrix.
 
-        Args:
-            item_users (csr_matrix): Matrix of confidences for the liked items. This matrix
-                should be a csr_matrix where the rows of the matrix are the
-                item, the columns are the users that liked that item, and the
-                value is the confidence that the user liked the item.
+        After calling this method, the members 'user_factors' and 'item_factors' will be
+        initialized with a latent factor model of the input data.
+
+        The item_users matrix does double duty here. It defines which items are liked by which
+        users (P_iu in the original paper), as well as how much confidence we have that the user
+        liked the item (C_iu).
+
+        The negative items are implicitly defined: This code assumes that non-zero items in the
+        item_users matrix means that the user liked the item. The negatives are left unset in this
+        sparse matrix: the library will assume that means Piu = 0 and Ciu = 1 for all these items.
+
+        Parameters
+        ----------
+        item_users: csr_matrix
+            Matrix of confidences for the liked items. This matrix should be a csr_matrix where
+            the rows of the matrix are the item, the columns are the users that liked that item,
+            and the value is the confidence that the user liked the item.
         """
         Ciu, Cui = item_users.tocsr(), item_users.T.tocsr()
         items, users = Ciu.shape
@@ -88,7 +128,6 @@ class AlternatingLeastSquares(RecommenderBase):
                 log.debug("loss at iteration %i is %s", iteration, loss)
 
     def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
-        """ Returns the top N ranked items for a single user, given its id """
         user = self._user_factor(userid, user_items, recalculate_user)
         # calculate the top N items, removing the users own liked items from the results
         liked = set(user_items[userid].indices)
@@ -104,6 +143,8 @@ class AlternatingLeastSquares(RecommenderBase):
             best = sorted(enumerate(scores), key=lambda x: -x[1])
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
 
+    recommend.__doc__ = RecommenderBase.recommend.__doc__
+
     def _user_factor(self, userid, user_items, recalculate_user=False):
         if not recalculate_user:
             return self.user_factors[userid]
@@ -112,10 +153,32 @@ class AlternatingLeastSquares(RecommenderBase):
                            self.regularization, self.factors)
 
     def explain(self, userid, user_items, itemid, user_weights=None, N=10):
-        """ Returns the predicted rating for an user x item pair,
-            the explanation (the contribution from the top N items the user liked),
-            and a user latent factor weight that can be cached if you want to
-            get more than one explanation for the same user.
+        """ Provides explanations for why the item is liked by the user.
+
+        Parameters
+        ---------
+        userid : int
+            The userid to explain recommendations for
+        user_items : csr_matrix
+            Sparse matrix containing the liked items for the user
+        itemid : int
+            The itemid to explain recommendations for
+        user_weights : ndarray, optional
+            Precomputed Cholesky decomposition of the weighted user liked items.
+            Useful for speeding up repeated calls to this function, this value
+            is returned
+        N : int, optional
+            The number of liked items to show the contribution for
+
+        Returns
+        -------
+        total_score : float
+            The total predicted score for this user/item pair
+        top_contributions : list
+            A list of the top N (itemid, score) contributions for this user/item pair
+        user_weights : ndarray
+            A factorized representation of the user. Passing this in to
+            future 'explain' calls will lead to noticeable speedups
         """
         # user_weights = Cholesky decomposition of Wu^-1
         # from section 5 of the paper CF for Implicit Feedback Datasets
@@ -148,10 +211,11 @@ class AlternatingLeastSquares(RecommenderBase):
         return total_score, top_contributions, user_weights
 
     def similar_items(self, itemid, N=10):
-        """ Return the top N similar items for itemid. """
         scores = self.item_factors.dot(self.item_factors[itemid]) / self.item_norms
         best = np.argpartition(scores, -N)[-N:]
         return sorted(zip(best, scores[best] / self.item_norms[itemid]), key=lambda x: -x[1])
+
+    similar_items.__doc__ = RecommenderBase.similar_items.__doc__
 
     @property
     def item_norms(self):

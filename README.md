@@ -30,7 +30,8 @@ model = implicit.als.AlternatingLeastSquares(factors=50)
 model.fit(item_user_data)
 
 # recommend items for a user
-recommendations = model.recommend(userid, item_user_data.T)
+user_items = item_user_data.T.tocsr()
+recommendations = model.recommend(userid, user_items)
 
 # find related items
 related = model.similar_items(itemid)
@@ -38,6 +39,8 @@ related = model.similar_items(itemid)
 
 The examples folder has a program showing how to use this to [compute similar artists on the
 last.fm dataset](https://github.com/benfred/implicit/blob/master/examples/lastfm.py).
+
+For more information see the [documentation](http://implicit.readthedocs.io/).
 
 #### Articles about Implicit
 
@@ -49,7 +52,7 @@ Several posts have been written talking about using Implicit to build recommenda
 
 There are also a couple posts talking about the algorithms that power this library:
 
- * [Faster Implicit Matrix Factorization](http://benfrederickson.com/fast-implicit-matrix-factorization)
+ * [Faster Implicit Matrix Factorization](http://www.benfrederickson.com/fast-implicit-matrix-factorization)
  * [Finding Similar Music with Matrix Factorization](http://www.benfrederickson.com/matrix-factorization)
  * [Distance Metrics for Fun and Profit](http://www.benfrederickson.com/distance-metrics/)
 
