@@ -178,8 +178,12 @@ class AlternatingLeastSquares(RecommenderBase):
 
         if user_ids is None:
             user_ids = np.arange(user_latent.shape[0])
+        else:
+            user_ids = np.array(user_ids)
         if item_ids is None:
             item_ids = np.arange(item_latent.shape[0])
+        else:
+            item_ids = np.array(item_ids)
 
         n_users = len(user_ids)
         n_items = len(item_ids)
@@ -191,8 +195,17 @@ class AlternatingLeastSquares(RecommenderBase):
 
         # Optionally remove weights for items with high confidences
         if ignore_pairs is not None:
-            drop_row_idx, drop_col_idx = ignore_pairs
-            weights[drop_row_idx, drop_col_idx] = np.nan
+            drop_pair_user, drop_pair_item = ignore_pairs
+            # Only consider pairs that are present in our weights
+            in_weights = np.in1d(drop_pair_user, user_ids) & np.in1d(drop_pair_item, item_ids)
+            drop_pair_user = drop_pair_user[in_weights]
+            drop_pair_item = drop_pair_item[in_weights]
+
+            # Map the given pairs to the indices of our current subset of users and items
+            drop_pair_user = [np.where(user_ids == u)[0][0] for u in drop_pair_user]
+            drop_pair_item = [np.where(item_ids == i)[0][0] for i in drop_pair_item]
+
+            weights[drop_pair_user, drop_pair_item] = np.nan
 
         item_labels = np.repeat(item_ids[np.newaxis, :], n_users, axis=0)  # users x items
 

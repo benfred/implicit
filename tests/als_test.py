@@ -130,37 +130,58 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         self.assertEqual(scores[:2], top_scores)
         self.assertEqual(items[:2], top_items)
 
+    def _compare_single_and_batch_recommendations(self, single, batch):
+        self.assertEqual(len(single), len(batch))
+
+        for single_rec_list, batch_rec_list in zip(single, batch):
+            self.assertEqual(len(single_rec_list), len(batch_rec_list))
+            for (s_item, s_weight), (b_item, b_weight) in zip(single_rec_list, batch_rec_list):
+                self.assertEqual(s_item, b_item)
+                self.assertAlmostEqual(s_weight, b_weight)
+
     def test_recommend_batch(self):
         """Check that the results of recommend_batch() exactly match what we get from iterating
         over recommend().
         """
-
-        for N in (2, 10):
-            counts = csr_matrix([[1, 1, 0, 1, 0, 0],
+        user_items = csr_matrix([[1, 1, 0, 1, 0, 0],
                                  [0, 1, 1, 1, 0, 0],
                                  [1, 4, 1, 0, 7, 0],
                                  [1, 1, 0, 0, 0, 0],
                                  [9, 0, 4, 1, 0, 1],
                                  [0, 1, 0, 0, 0, 1],
                                  [0, 0, 2, 0, 1, 1]], dtype=np.float64)
-            user_items = counts
 
-            model = AlternatingLeastSquares(factors=4, iterations=100)
+        model = AlternatingLeastSquares(factors=4, iterations=100)
+        model.fit(user_items.T)
 
-            model.fit(user_items.T)
-
+        def get_single_recs(user_ids=None, **kwargs):
             single_recs = []
-            for user_id in range(user_items.shape[0]):
-                single_recs.append(model.recommend(user_id, user_items, N=N))
+            user_ids = user_ids or range(user_items.shape[0])
+            for user_id in user_ids:
+                single_recs.append(model.recommend(user_id, user_items, **kwargs))
+            return single_recs
+
+        for N in (2, 10):
+            # Does it reproduce the removal of liked items?
+            single_recs = get_single_recs(N=N)
             batch_recs = model.recommend_batch(N=N, ignore_pairs=user_items.nonzero())
+            self._compare_single_and_batch_recommendations(single_recs, batch_recs)
 
-            self.assertEqual(len(single_recs), len(batch_recs))
+            # Does it reproduce the effect of filter_items?
+            ignore_items = [2, 4]  # negative list style of recommend
+            item_ids = [0, 1, 3, 5]  # positive list style of recommend_batch
 
-            for single_rec_list, batch_rec_list in zip(single_recs, batch_recs):
-                self.assertEqual(len(single_rec_list), len(batch_rec_list))
-                for (s_item, s_weight), (b_item, b_weight) in zip(single_rec_list, batch_rec_list):
-                    self.assertEqual(s_item, b_item)
-                    self.assertAlmostEqual(s_weight, b_weight)
+            single_recs = get_single_recs(N=N, filter_items=ignore_items)
+            batch_recs = model.recommend_batch(
+                item_ids=item_ids, N=N, ignore_pairs=user_items.nonzero())
+            self._compare_single_and_batch_recommendations(single_recs, batch_recs)
+
+            # Does subsetting of users work as expected?
+            user_ids = [3, 4, 6]
+            single_recs = get_single_recs(user_ids=user_ids, N=N, filter_items=ignore_items)
+            batch_recs = model.recommend_batch(
+                user_ids=user_ids, item_ids=item_ids, N=N, ignore_pairs=user_items.nonzero())
+            self._compare_single_and_batch_recommendations(single_recs, batch_recs)
 
 
 if __name__ == "__main__":
