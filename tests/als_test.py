@@ -130,6 +130,38 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         self.assertEqual(scores[:2], top_scores)
         self.assertEqual(items[:2], top_items)
 
+    def test_recommend_batch(self):
+        """Check that the results of recommend_batch() exactly match what we get from iterating
+        over recommend().
+        """
+
+        for N in (2, 10):
+            counts = csr_matrix([[1, 1, 0, 1, 0, 0],
+                                 [0, 1, 1, 1, 0, 0],
+                                 [1, 4, 1, 0, 7, 0],
+                                 [1, 1, 0, 0, 0, 0],
+                                 [9, 0, 4, 1, 0, 1],
+                                 [0, 1, 0, 0, 0, 1],
+                                 [0, 0, 2, 0, 1, 1]], dtype=np.float64)
+            user_items = counts
+
+            model = AlternatingLeastSquares(factors=4, iterations=100)
+
+            model.fit(user_items.T)
+
+            single_recs = []
+            for user_id in range(user_items.shape[0]):
+                single_recs.append(model.recommend(user_id, user_items, N=N))
+            batch_recs = model.recommend_batch(N=N, ignore_pairs=user_items.nonzero())
+
+            self.assertEqual(len(single_recs), len(batch_recs))
+
+            for single_rec_list, batch_rec_list in zip(single_recs, batch_recs):
+                self.assertEqual(len(single_rec_list), len(batch_rec_list))
+                for (s_item, s_weight), (b_item, b_weight) in zip(single_rec_list, batch_rec_list):
+                    self.assertEqual(s_item, b_item)
+                    self.assertAlmostEqual(s_weight, b_weight)
+
 
 if __name__ == "__main__":
     unittest.main()

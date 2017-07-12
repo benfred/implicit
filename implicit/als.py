@@ -145,6 +145,91 @@ class AlternatingLeastSquares(RecommenderBase):
 
     recommend.__doc__ = RecommenderBase.recommend.__doc__
 
+    def recommend_batch(self, user_ids=None, item_ids=None, N=10, ignore_pairs=None):
+        """ Batch computation of recommendations, optionally for subsets of users and items.
+
+        Parameters
+        ---------
+        user_ids : arraylike, optional
+            If given, restricts the users recommendations are made for. If not given,
+            recommendations are made for all users.
+        item_ids : arraylike, optional
+            If given, restricts the items recommendations are made for. If not given,
+            recommendations are made for all items.
+        N : int > 0, optional
+            Maximum number of items to recommend per user. If there are fewer items available for
+            a user than N, all available items are returned.
+        ignore_pairs : tuple-like, optional
+            Indices (user ID and item ID) of user-item pairs that are not eligible for
+            recommendation. If given, the user cannot be recommended the item.
+            If you want to ignore liked events, input the result of user_items.nonzero() here.
+            See also np.nonzero().
+
+        Returns
+        ---------
+        recommendations : list
+            A list with an element per user (in order of user_ids). Each element is a list of up to
+            N (item_id, weight) tuples.
+        """
+
+        # Fetch and subset factorizations
+        user_latent = self.user_factors  # all users x factors
+        item_latent = self.item_factors  # all items x factors
+
+        if user_ids is None:
+            user_ids = np.arange(user_latent.shape[0])
+        if item_ids is None:
+            item_ids = np.arange(item_latent.shape[0])
+
+        n_users = len(user_ids)
+        n_items = len(item_ids)
+        user_latent = user_latent[user_ids, :]  # user_ids x factors
+        item_latent = item_latent[item_ids, :]  # item_ids x factors
+
+        # Calculate the recommendation weights
+        weights = (user_latent @ item_latent.T)  # users x items
+
+        # Optionally remove weights for items with high confidences
+        if ignore_pairs is not None:
+            drop_row_idx, drop_col_idx = ignore_pairs
+            weights[drop_row_idx, drop_col_idx] = np.nan
+
+        item_labels = np.repeat(item_ids[np.newaxis, :], n_users, axis=0)  # users x items
+
+        # Advanced indexing! Adapted from https://stackoverflow.com/a/33141247/3275967
+        row_selector = np.arange(n_users)[:, np.newaxis]
+
+        # Select top N items per row iff there are N or more items available.
+        if N < n_items:
+            # Indices of the top N weights per row
+            indices = np.argpartition(-weights, N, axis=1)[:, :N]  # users x N
+            # Advanced indexing: For each row (user) in weights, take the top N weights
+            weights = weights[row_selector, indices]  # users x N
+            # Separate but related, the item IDs of the top N weights per user, same ordering as in
+            # weights.
+            item_labels = item_labels[row_selector, indices]  # users x N
+
+        # Sort the weights and their associated item IDs
+        indices = np.argsort(-weights)
+        weights = weights[row_selector, indices]
+        item_labels = item_labels[row_selector, indices]
+
+        # Prepare output: A list of recommendations per user. The recommendations are themselves
+        # lists of (item_id, weight) tuples.
+        recommendations = []
+        for user_id in range(n_users):
+            user_recommendations = []
+            for column in range(min(N, n_items)):
+                w = weights[user_id, column]
+                if np.isnan(w):
+                    # nothing more to do here, only nans remaining in the row
+                    break
+                recommended_item = (item_labels[user_id, column], w)
+                user_recommendations.append(recommended_item)
+            recommendations.append(user_recommendations)
+
+        return recommendations
+
     def _user_factor(self, userid, user_items, recalculate_user=False):
         if not recalculate_user:
             return self.user_factors[userid]
