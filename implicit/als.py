@@ -187,7 +187,7 @@ class AlternatingLeastSquares(RecommenderBase):
         item_latent = item_latent[item_ids, :]  # item_ids x factors
 
         # Calculate the recommendation weights
-        weights = (user_latent @ item_latent.T)  # users x items
+        weights = user_latent.dot(item_latent.T)  # users x items
 
         # Optionally remove weights for items with high confidences
         if ignore_pairs is not None:
