@@ -36,11 +36,11 @@ def read_data(path, min_rating=4.0):
 
 
 def calculate_similar_movies(input_path, output_filename,
-                             model_name="als"):
+                             model_name="als", min_rating=4.0):
     # read in the input data file
     logging.debug("reading data from %s", input_path)
     start = time.time()
-    ratings, movies, m = read_data(input_path)
+    ratings, movies, m = read_data(input_path, min_rating=min_rating)
     logging.debug("read data file in %s", time.time() - start)
 
     # generate a recommender model based off the input params
@@ -99,4 +99,5 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     calculate_similar_movies(args.inputfile, args.outputfile,
-                             model_name=args.model)
+                             model_name=args.model,
+                             min_rating=args.min_rating)
