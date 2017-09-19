@@ -106,7 +106,7 @@ setup(
              'Collaborative Filtering, Recommender Systems',
 
     packages=[SRC_ROOT],
-    install_requires=['numpy', 'scipy>=0.16'],
+    install_requires=['numpy', 'scipy>=0.16', 'joblib'],
     setup_requires=["Cython >= 0.19"],
     ext_modules=define_extensions(use_cython),
     test_suite="tests",
