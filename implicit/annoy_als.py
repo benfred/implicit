@@ -50,7 +50,7 @@ class MaximumInnerProductIndex(object):
 
         index.build(num_trees)
         self.index = index
-    
+
     @classmethod
     def from_file(cls, base_filename):
         """ Factory method to create a MaximumInnerProductIndex model from :filename: """
@@ -69,6 +69,9 @@ class MaximumInnerProductIndex(object):
 
         joblib.dump(self, base_filename + '.pkl', compress=3)
         index.save(base_filename + '_index.bin')
+
+        # Put index back
+        self.index = index
 
     def get_nns_by_vector(self, v, N=10):
         return self._get_nns(numpy.append(v, 0), N)
@@ -145,7 +148,9 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
         inner_product_index.to_file(base_filename + '_inner_product_index')
         cosine_index.save('{}_cosine_index.bin'.format(base_filename))
 
-    
+        # Put fields back so that can still use model after saving
+        self.inner_product_index = inner_product_index
+        self.cosine_index = cosine_index
 
     @classmethod
     def from_files(cls, base_filename):
