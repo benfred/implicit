@@ -161,7 +161,8 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
         and cosine index have been saved to.
         """
         obj = joblib.load('{}_annoy_als.pkl'.format(base_filename))
-        obj.inner_product_index = MaximumInnerProductIndex.from_file(base_filename + '_inner_product_index')
+        obj.inner_product_index = MaximumInnerProductIndex.from_file(base_filename +
+                                                                     '_inner_product_index')
 
         obj.cosine_index = annoy.AnnoyIndex(obj.index_dim, 'angular')
 
