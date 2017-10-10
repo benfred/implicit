@@ -107,7 +107,7 @@ setup(
 
     packages=[SRC_ROOT],
     install_requires=['numpy', 'scipy>=0.16'],
-    setup_requires=["Cython >= 0.19"],
+    setup_requires=["Cython >= 0.24"],
     ext_modules=define_extensions(use_cython),
     test_suite="tests",
 )
