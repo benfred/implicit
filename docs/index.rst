@@ -20,8 +20,9 @@ Filtering <https://pdfs.semanticscholar.org/bfdf/7af6cf7fd7bb5e6b6db5bbd91be1159
    :caption: Contents:
 
     Quickstart <quickstart>
-    API Reference <models>
-
+    RecommenderBase <models>
+    Alternating Least Squares <als>
+    Approximate Alternating Least Squares <ann>
 
 Indices and tables
 ==================
