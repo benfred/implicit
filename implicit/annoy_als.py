@@ -55,7 +55,7 @@ class MaximumInnerProductIndex(object):
     def get_nns_by_item(self, itemid, N=10):
         v = self.index.get_item_vector(itemid)
         v[-1] = 0
-        return self._get_nns(v)
+        return self._get_nns(v, N)
 
     def _get_nns(self, v, N=10):
         ids, dist = self.index.get_nns_by_vector(v, N, include_distances=True)
