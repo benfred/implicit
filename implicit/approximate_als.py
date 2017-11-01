@@ -32,6 +32,7 @@ def augment_inner_product_matrix(factors):
 
 
 class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
+
     """ Speeds up the base :class:`~implicit.als.AlternatingLeastSquares` model by using
     `NMSLib <https://github.com/searchivarius/nmslib>`_ to create approximate nearest neighbours
     indices of the latent factors.
@@ -88,7 +89,18 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         if self.approximate_similar_items:
             self.similar_items_index = nmslib.init(
                 method=self.method, space='cosinesimil')
-            self.similar_items_index.addDataPointBatch(self.item_factors)
+
+            # there are some numerical instability issues here with
+            # building a cosine index with vectors with 0 norms, hack around this
+            # by just not indexing them
+            norms = numpy.linalg.norm(self.item_factors, axis=1)
+            ids = numpy.arange(self.item_factors.shape[0])
+
+            # delete zero valued rows from the matrix
+            item_factors = numpy.delete(self.item_factors, ids[norms == 0], axis=0)
+            ids = ids[norms != 0]
+
+            self.similar_items_index.addDataPointBatch(item_factors, ids=ids)
             self.similar_items_index.createIndex(self.index_params)
             self.similar_items_index.setQueryTimeParams(self.query_params)
 
@@ -138,6 +150,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
 
 
 class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
+
     """A version of the :class:`~implicit.als.AlternatingLeastSquares` model that uses an
     `Annoy <https://github.com/spotify/annoy>`_ index to calculate similar items and
     recommend items.
@@ -239,6 +252,7 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
 
 
 class FaissAlternatingLeastSquares(AlternatingLeastSquares):
+
     """ Speeds up the base :class:`~implicit.als.AlternatingLeastSquares` model by using
     `Faiss <https://github.com/facebookresearch/faiss>`_ to create approximate nearest neighbours
     indices of the latent factors.
@@ -315,6 +329,8 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
             # likewise build up cosine index for similar_items, using an inner product
             # index on normalized vectors`
             norms = numpy.linalg.norm(item_factors, axis=1)
+            norms[norms == 0] = 1e-10
+
             normalized = (item_factors.T / norms).T.astype('float32')
             if self.gpu:
                 index = faiss.GpuIndexIVFFlat(self.gpu_resources, self.factors, self.nlist,

@@ -3,7 +3,7 @@ import cython
 from cython cimport floating
 from cython.parallel import parallel, prange
 from libc.stdlib cimport malloc, free
-from libc.string cimport memcpy
+from libc.string cimport memcpy, memset
 
 # requires scipy v0.16
 cimport scipy.linalg.cython_lapack as cython_lapack
@@ -78,6 +78,11 @@ def least_squares(Cui, floating[:, :] X, floating[:, :] Y, double regularization
         pivot = <int *> malloc(sizeof(int) * factors)
         try:
             for u in prange(users, schedule='guided'):
+                # if we have no items for this user, skip and set to zero
+                if indptr[u] == indptr[u+1]:
+                    memset(&X[u, 0], 0, sizeof(floating) * factors)
+                    continue
+
                 # For each user u calculate
                 # Xu = (YtCuY + regularization*I)i^-1 * YtYCuPu
 
@@ -149,6 +154,11 @@ def least_squares_cg(Cui, floating[:, :] X, floating[:, :] Y, float regularizati
             for u in prange(users, schedule='guided'):
                 # start from previous iteration
                 x = &X[u, 0]
+
+                # if we have no items for this user, skip and set to zero
+                if indptr[u] == indptr[u+1]:
+                    memset(x, 0, sizeof(floating) * N)
+                    continue
 
                 # calculate residual r = (YtCuPu - (YtCuY.dot(Xu)
                 temp = -1.0
