@@ -69,7 +69,7 @@ def read_data(filename):
     data['artist'] = data['artist'].astype("category")
 
     # create a sparse matrix of all the users/plays
-    plays = coo_matrix((data['plays'].astype(float),
+    plays = coo_matrix((data['plays'].astype(numpy.float32),
                        (data['artist'].cat.codes.copy(),
                         data['user'].cat.codes.copy())))
 

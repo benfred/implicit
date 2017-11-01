@@ -30,7 +30,8 @@ def read_data(path, min_rating=4.0):
 
     movies = pandas.read_csv(os.path.join(path, "movies.csv"))
 
-    m = coo_matrix((positive['rating'].astype(float), (positive['movieId'], positive['userId'])))
+    m = coo_matrix((positive['rating'].astype(numpy.float32),
+                    (positive['movieId'], positive['userId'])))
     m.data = numpy.ones(len(m.data))
     return ratings, movies, m
 

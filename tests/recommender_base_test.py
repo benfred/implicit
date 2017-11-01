@@ -69,6 +69,15 @@ class TestRecommenderBaseMixin(object):
             recs = model.similar_items(itemid, 10)
             self.assertTrue(42 not in [r for r, _ in recs])
 
+    def test_dtype(self):
+        # models should be able to accept input of either float32 or float64
+        item_users = self.get_checker_board(50)
+        model = self._get_model()
+        model.fit(item_users.astype(np.float64))
+
+        model = self._get_model()
+        model.fit(item_users.astype(np.float32))
+
     def get_checker_board(self, X):
         """ Returns a 'checkerboard' matrix: where every even userid has liked
         every even itemid and every odd userid has liked every odd itemid.
