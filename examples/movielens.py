@@ -64,6 +64,7 @@ def calculate_similar_movies(input_path, output_filename,
         raise NotImplementedError("TODO: model %s" % model_name)
 
     # train the model
+    m = m.tocsr()
     logging.debug("training model %s", model_name)
     start = time.time()
     model.fit(m)
@@ -76,6 +77,11 @@ def calculate_similar_movies(input_path, output_filename,
 
     with open(output_filename, "w") as o:
         for movieid in to_generate:
+            # if this movie has no ratings, skip over (for instance 'Graffiti Bridge' has
+            # no ratings > 4 meaning we've filtered out all data for it.
+            if m.indptr[movieid] == m.indptr[movieid + 1]:
+                continue
+
             movie = movie_lookup[movieid]
             for other, score in model.similar_items(movieid, 11):
                 o.write("%s\t%s\t%s\n" % (movie, movie_lookup[other], score))

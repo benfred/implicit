@@ -55,6 +55,20 @@ class TestRecommenderBaseMixin(object):
             for r, _ in recs:
                 self.assertEqual(r % 2, itemid % 2)
 
+    def test_zero_length_row(self):
+        # get a matrix where a row/column is 0
+        item_users = self.get_checker_board(50).todense()
+        item_users[42] = 0
+        item_users[:, 42] = 0
+
+        model = self._get_model()
+        model.fit(csr_matrix(item_users))
+
+        # item 42 has no users, shouldn't be similar to anything
+        for itemid in range(40):
+            recs = model.similar_items(itemid, 10)
+            self.assertTrue(42 not in [r for r, _ in recs])
+
     def get_checker_board(self, X):
         """ Returns a 'checkerboard' matrix: where every even userid has liked
         every even itemid and every odd userid has liked every odd itemid.

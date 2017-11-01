@@ -221,6 +221,8 @@ class AlternatingLeastSquares(RecommenderBase):
     def item_norms(self):
         if self._item_norms is None:
             self._item_norms = np.linalg.norm(self.item_factors, axis=-1)
+            # don't divide by zero in similar_items, replace with small value
+            self._item_norms[self._item_norms == 0] = 1e-10
         return self._item_norms
 
     @property
