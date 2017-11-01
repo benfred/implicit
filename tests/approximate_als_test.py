@@ -23,7 +23,8 @@ try:
 
     class NMSLibALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
-            return NMSLibAlternatingLeastSquares(factors=2, regularization=0)
+            return NMSLibAlternatingLeastSquares(factors=2, regularization=0,
+                                                 index_params={'post': 2})
 except ImportError:
     pass
 
