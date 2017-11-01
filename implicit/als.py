@@ -50,7 +50,7 @@ class AlternatingLeastSquares(RecommenderBase):
     user_factors : ndarray
         Array of latent factors for each user in the training set
     """
-    def __init__(self, factors=100, regularization=0.01, dtype=np.float64,
+    def __init__(self, factors=100, regularization=0.01, dtype=np.float32,
                  use_native=True, use_cg=True,
                  iterations=15, calculate_training_loss=False, num_threads=0):
         # parameters on how to factorize
@@ -98,7 +98,8 @@ class AlternatingLeastSquares(RecommenderBase):
             the rows of the matrix are the item, the columns are the users that liked that item,
             and the value is the confidence that the user liked the item.
         """
-        Ciu, Cui = item_users.tocsr(), item_users.T.tocsr()
+        Ciu = item_users.astype(np.float32).tocsr()
+        Cui = Ciu.T.tocsr()
         items, users = Ciu.shape
 
         # Initialize the variables randomly if they haven't already been set
