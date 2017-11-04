@@ -6,6 +6,8 @@ import sys
 
 from setuptools import Extension, setup
 
+from cuda_setup import CUDA, build_ext
+
 NAME = 'implicit'
 VERSION = '0.2.7'
 SRC_ROOT = 'implicit'
@@ -42,6 +44,19 @@ def define_extensions(use_cython=False):
                          language='c++',
                          extra_compile_args=compile_args, extra_link_args=link_args)
                for name in ['_als', '_nearest_neighbours']]
+
+    if CUDA:
+        modules.append(Extension("implicit.cuda._cuda",
+                                 [os.path.join("implicit", "cuda", "_cuda" + src_ext),
+                                  os.path.join("implicit", "cuda", "als.cu"),
+                                  os.path.join("implicit", "cuda", "matrix.cu")],
+                                 language="c++",
+                                 extra_compile_args=compile_args,
+                                 extra_link_args=link_args,
+                                 library_dirs=[CUDA['lib64']],
+                                 libraries=['cudart', 'cublas'],
+                                 runtime_library_dirs=[CUDA['lib64']],
+                                 include_dirs=[CUDA['include'], '.']))
 
     if use_cython:
         return cythonize(modules)
@@ -109,5 +124,6 @@ setup(
     install_requires=['numpy', 'scipy>=0.16'],
     setup_requires=["Cython >= 0.24"],
     ext_modules=define_extensions(use_cython),
+    cmdclass={'build_ext': build_ext},
     test_suite="tests",
 )

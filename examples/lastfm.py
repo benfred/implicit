@@ -21,11 +21,10 @@ import pandas
 from scipy.sparse import coo_matrix
 
 from implicit.als import AlternatingLeastSquares
-from implicit.approximate_als import (AnnoyAlternatingLeastSquares, NMSLibAlternatingLeastSquares,
-                                      FaissAlternatingLeastSquares)
+from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlternatingLeastSquares,
+                                      NMSLibAlternatingLeastSquares)
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
-
 
 # maps command line model argument to class name
 MODELS = {"als":  AlternatingLeastSquares,
@@ -44,7 +43,7 @@ def get_model(model_name):
 
     # some default params
     if issubclass(model_class, AlternatingLeastSquares):
-        params = {'factors': 50, 'dtype': numpy.float32}
+        params = {'factors': 64, 'dtype': numpy.float32, 'use_gpu': False}
     elif model_name == "bm25":
         params = {'K1': 100, 'B': 0.5}
     else:
@@ -95,6 +94,9 @@ def calculate_similar_artists(input_filename, output_filename, model_name="als")
         # also disable building approximate recommend index
         model.approximate_recommend = False
 
+    # this is actually disturbingly expensive:
+    plays = plays.tocsr()
+
     logging.debug("training model %s", model_name)
     start = time.time()
     model.fit(plays)
@@ -134,6 +136,9 @@ def calculate_recommendations(input_filename, output_filename, model_name="als")
 
         # also disable building approximate recommend index
         model.approximate_similar_items = False
+
+    # this is actually disturbingly expensive:
+    plays = plays.tocsr()
 
     logging.debug("training model %s", model_name)
     start = time.time()

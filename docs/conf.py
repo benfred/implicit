@@ -56,6 +56,7 @@ author = u'Ben Frederickson'
 #
 # The short X.Y version.
 import implicit  # noqa
+
 version = '.'.join(implicit.__version__.split('.')[:2])
 
 # The full version, including alpha/beta/rc tags.

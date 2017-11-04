@@ -64,6 +64,11 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
     def __init__(self,
                  approximate_similar_items=True, approximate_recommend=True,
                  method='hnsw', index_params=None, query_params=None, *args, **kwargs):
+        if index_params is None:
+            index_params = {'M': 32, 'post': 2, 'efConstruction': 800}
+        if query_params is None:
+            query_params = {'ef': 50}
+
         self.similar_items_index = None
         self.recommend_index = None
 
@@ -180,7 +185,7 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
     """
 
     def __init__(self, approximate_similar_items=True, approximate_recommend=True,
-                 n_trees=10, search_k=-1, *args, **kwargs):
+                 n_trees=50, search_k=-1, *args, **kwargs):
         super(AnnoyAlternatingLeastSquares, self).__init__(*args, **kwargs)
         self.similar_items_index = None
         self.recommend_index = None

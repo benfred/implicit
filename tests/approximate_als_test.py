@@ -7,7 +7,6 @@ from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlterna
 
 from .recommender_base_test import TestRecommenderBaseMixin
 
-
 # don't require annoy/faiss/nmslib to be installed
 try:
     import annoy  # noqa

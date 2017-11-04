@@ -11,6 +11,7 @@ from .recommender_base_test import TestRecommenderBaseMixin
 
 
 class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
+
     def _get_model(self):
         return AlternatingLeastSquares(factors=3, regularization=0)
 
@@ -54,33 +55,44 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
         # try all 8 variants of native/python, cg/cholesky, and
         # 64 vs 32 bit factors
-        for dtype in (np.float32, np.float64):
-            for use_cg in (False, True):
-                for use_native in (True, False):
-                    try:
-                        model = AlternatingLeastSquares(factors=6,
-                                                        regularization=1e-10,
-                                                        dtype=dtype,
-                                                        use_native=use_native,
-                                                        use_cg=use_cg)
-                        np.random.seed(23)
-                        model.fit(user_items)
-                        rows, cols = model.item_factors, model.user_factors
+        options = [(dtype, cg, native, False)
+                   for dtype in (np.float32, np.float64)
+                   for cg in (False, True)
+                   for native in (False, True)]
 
-                    except Exception as e:
-                        self.fail(msg="failed to factorize matrix. Error=%s"
-                                      " dtype=%s, cg=%s, native=%s"
-                                      % (e, dtype, use_cg, use_native))
+        # also try out GPU support if available
+        try:
+            import implicit.cuda  # noqa
+            options.append((np.float32, False, False, True))
+        except ImportError:
+            pass
 
-                    reconstructed = rows.dot(cols.T)
-                    for i in range(counts.shape[0]):
-                        for j in range(counts.shape[1]):
-                            self.assertAlmostEqual(counts[i, j], reconstructed[i, j],
-                                                   delta=0.0001,
-                                                   msg="failed to reconstruct row=%s, col=%s,"
-                                                       " value=%.5f, dtype=%s, cg=%s, native=%s"
-                                                       % (i, j, reconstructed[i, j], dtype, use_cg,
-                                                          use_native))
+        for dtype, use_cg, use_native, use_gpu in options:
+            try:
+                model = AlternatingLeastSquares(factors=6,
+                                                regularization=0,
+                                                dtype=dtype,
+                                                use_native=use_native,
+                                                use_cg=use_cg,
+                                                use_gpu=use_gpu)
+                np.random.seed(23)
+                model.fit(user_items)
+                rows, cols = model.item_factors, model.user_factors
+
+            except Exception as e:
+                self.fail(msg="failed to factorize matrix. Error=%s"
+                              " dtype=%s, cg=%s, native=%s gpu=%s"
+                              % (e, dtype, use_cg, use_native, use_gpu))
+
+            reconstructed = rows.dot(cols.T)
+            for i in range(counts.shape[0]):
+                for j in range(counts.shape[1]):
+                    self.assertAlmostEqual(counts[i, j], reconstructed[i, j],
+                                           delta=0.0001,
+                                           msg="failed to reconstruct row=%s, col=%s,"
+                                               " value=%.5f, dtype=%s, cg=%s, native=%s gpu=%s"
+                                               % (i, j, reconstructed[i, j], dtype, use_cg,
+                                                  use_native, use_gpu))
 
     def test_explain(self):
         counts = csr_matrix([[1, 1, 0, 1, 0, 0],
