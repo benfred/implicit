@@ -54,7 +54,7 @@ def benchmark_accuracy(plays):
     return output
 
 
-def benchmark_times(plays, iterations=5):
+def benchmark_times(plays, iterations=3):
     times = defaultdict(lambda: defaultdict(list))
 
     def store_time(model, name):
@@ -115,14 +115,13 @@ def generate_speed_graph(data, filename="als_speed.png", keys=['gpu', 'cg2', 'cg
     factors = data['factors']
     for key in keys:
         ax.plot(factors, data[key],
-                label=labels.get(key, LABELS[key]),
-                color=colours.get(key, COLOURS[key]),
+                color=colours.get(key, COLOURS.get(key)),
                 marker='o', markersize=6)
 
-    ax.set_title("ALS Training Speed")
+        ax.text(factors[-1] + 5, data[key][-1], labels.get(key, LABELS[key]), fontsize=10)
+
     ax.set_ylabel("Seconds per Iteration")
     ax.set_xlabel("Factors")
-    ax.legend()
     plt.savefig(filename, bbox_inches='tight', dpi=300)
 
 
@@ -134,14 +133,12 @@ def generate_loss_graph(data, filename="als_speed.png", keys=['gpu', 'cg2', 'cg3
     iterations = range(1, len(data['cholesky']) + 1)
     for key in keys:
         ax.plot(iterations, data[key],
-                label=LABELS[key],
                 color=COLOURS[key],
                 marker='o', markersize=6)
+        ax.text(iterations[-1] + 1, data[key][-1], LABELS[key], fontsize=10)
 
-    ax.set_title("ALS Training Loss")
     ax.set_ylabel("Mean Squared Error")
     ax.set_xlabel("Iteration")
-    ax.legend()
     plt.savefig(filename, bbox_inches='tight', dpi=300)
 
 

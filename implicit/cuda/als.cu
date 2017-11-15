@@ -119,7 +119,8 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
 
         }
 
-        // this shouldn't happen, usually a sign I messed some __syncthread() call somewhere
+        // this shouldn't happen - but if we hit a NaN in the above code then complain
+        // and don't let it perpetuate
         if (isnan(rsold)) {
             if (threadIdx.x == 0) {
                 printf("Warning NaN Detected in row %d of %d\n", u, user_count);
