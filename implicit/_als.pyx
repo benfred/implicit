@@ -217,7 +217,7 @@ def calculate_loss(Cui, floating[:, :] X, floating[:, :] Y, float regularization
                    int num_threads=0):
     dtype = np.float64 if floating is double else np.float32
     cdef int[:] indptr = Cui.indptr, indices = Cui.indices
-    cdef float[:] data = Cui.data.atype(np.float32)
+    cdef float[:] data = Cui.data.astype(np.float32)
 
     cdef int users = X.shape[0], N = X.shape[1], items = Y.shape[0], u, i, index, one = 1
     cdef floating confidence, temp

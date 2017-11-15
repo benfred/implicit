@@ -1,16 +1,13 @@
-""" A simple benchmark on the last.fm dataset
+""" A simple benchmark comparing the ALS model here to QMF from Quora.
 
 Compares the running time of this package vs the QMF library from Quora.
 
-On my laptop (2015 Macbook Pro , Dual Core 3.1 GHz Intel Core i7) running
-with 50 factors for 15 iterations this is the output:
+On my desktop (Intel Core i7 7820x) running with 50 factors for 15 iterations
+on the last.fm 360k dataset, this is the output:
 
-    QMF finished in 547.933080912
-    Implicit finished in 302.997884989
-    Implicit is 1.80837262587 times faster
-
-(implicit-mf package was run separately, I estimate it at over 60,000 times
-slower on the last.fm dataset - with an estimated running time of around 250 days)
+    QMF finished in 279.32511353492737
+    Implicit finished in 24.046602964401245
+    Implicit is 11.615990580808532 times faster
 """
 from __future__ import print_function
 
@@ -19,13 +16,16 @@ import logging
 import time
 from subprocess import call
 
-from implicit import alternating_least_squares
-from lastfm import bm25_weight, read_data
+import scipy.io
+
+from implicit.als import AlternatingLeastSquares
+from implicit.nearest_neighbours import bm25_weight
 
 
 def benchmark_implicit(matrix, factors, reg, iterations):
     start = time.time()
-    alternating_least_squares(matrix, factors, reg, iterations)
+    model = AlternatingLeastSquares(factors, regularization=reg, iterations=iterations, use_cg=True)
+    model.fit(matrix)
     return time.time() - start
 
 
@@ -56,10 +56,11 @@ def benchmark_qmf(qmfpath, matrix, factors, reg, iterations):
 
 
 def run_benchmark(args):
-    plays = bm25_weight(read_data(args.inputfile)[1])
+    plays = bm25_weight(scipy.io.mmread(args.inputfile))
 
     qmf_time = benchmark_qmf(args.qmfpath, plays, args.factors, args.regularization,
                              args.iterations)
+
     implicit_time = benchmark_implicit(plays, args.factors, args.regularization, args.iterations)
 
     print("QMF finished in", qmf_time)
@@ -72,7 +73,7 @@ if __name__ == "__main__":
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('--input', type=str,
-                        dest='inputfile', help='last.fm dataset file')
+                        dest='inputfile', help='dataset file in matrix market format')
     parser.add_argument('--qmfpath', type=str,
                         dest='qmfpath', help='full path to qmf wals.bin file', required=True)
     parser.add_argument('--factors', type=int, default=50, dest='factors',

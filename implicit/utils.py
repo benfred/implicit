@@ -10,9 +10,13 @@ def nonzeros(m, row):
         yield m.indices[index], m.data[index]
 
 
-def check_open_blas():
-    """ checks to see if using OpenBlas. If so, warn if the number of threads isn't set to 1
-    (causes perf issues) """
+def check_blas_config():
+    """ checks to see if using OpenBlas/Intel MKL. If so, warn if the number of threads isn't set
+    to 1 (causes severe perf issues when training - can be 10x slower) """
     if np.__config__.get_info('openblas_info') and os.environ.get('OPENBLAS_NUM_THREADS') != '1':
         logging.warning("OpenBLAS detected. Its highly recommend to set the environment variable "
                         "'export OPENBLAS_NUM_THREADS=1' to disable its internal multithreading")
+    if np.__config__.get_info('blas_mkl_info') and os.environ.get('MKL_NUM_THREADS') != '1':
+        logging.warning("Intel MKL BLAS detected. Its highly recommend to set the environment "
+                        "variable 'export MKL_NUM_THREADS=1' to disable its internal "
+                        "multithreading")
