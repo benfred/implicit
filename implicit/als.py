@@ -182,18 +182,11 @@ class AlternatingLeastSquares(RecommenderBase):
             elapsed = time.time() - s
             log.debug("finished iteration %i in %.3fs", iteration, elapsed)
 
-            if self.fit_callback or self.calculate_training_loss:
-                s = time.time()
-                X.to_host(self.user_factors)
-                Y.to_host(self.item_factors)
-                log.debug("copied back to host in %.3fs", time.time() - s)
-
             if self.fit_callback:
                 self.fit_callback(iteration, elapsed)
 
             if self.calculate_training_loss:
-                loss = _als.calculate_loss(Cui_host, self.user_factors, self.item_factors,
-                                           self.regularization, num_threads=self.num_threads)
+                loss = solver.calculate_loss(Cui, X, Y, self.regularization)
                 log.debug("loss at iteration %i is %s", iteration, loss)
 
         X.to_host(self.user_factors)

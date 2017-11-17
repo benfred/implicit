@@ -854,7 +854,7 @@ struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
 struct __pyx_memoryviewslice_obj;
 
-/* "implicit/cuda/_cuda.pyx":21
+/* "implicit/cuda/_cuda.pyx":24
  * 
  * 
  * cdef class CuDenseMatrix(object):             # <<<<<<<<<<<<<<
@@ -867,7 +867,7 @@ struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix {
 };
 
 
-/* "implicit/cuda/_cuda.pyx":34
+/* "implicit/cuda/_cuda.pyx":37
  * 
  * 
  * cdef class CuCSRMatrix(object):             # <<<<<<<<<<<<<<
@@ -880,7 +880,7 @@ struct __pyx_obj_8implicit_4cuda_5_cuda_CuCSRMatrix {
 };
 
 
-/* "implicit/cuda/_cuda.pyx":48
+/* "implicit/cuda/_cuda.pyx":51
  * 
  * 
  * cdef class CuLeastSquaresSolver(object):             # <<<<<<<<<<<<<<
@@ -1870,9 +1870,10 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix_4__reduce_cython_
 static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix_6__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8implicit_4cuda_5_cuda_CuCSRMatrix *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver___cinit__(struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self, int __pyx_v_factors); /* proto */
 static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_2least_squares(struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self, struct __pyx_obj_8implicit_4cuda_5_cuda_CuCSRMatrix *__pyx_v_cui, struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *__pyx_v_X, struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *__pyx_v_Y, float __pyx_v_regularization, int __pyx_v_cg_steps); /* proto */
-static void __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_4__dealloc__(struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_4calculate_loss(struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self, struct __pyx_obj_8implicit_4cuda_5_cuda_CuCSRMatrix *__pyx_v_cui, struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *__pyx_v_X, struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *__pyx_v_Y, float __pyx_v_regularization); /* proto */
+static void __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_6__dealloc__(struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -1959,7 +1960,7 @@ static PyObject *__pyx_tuple__30;
 static PyObject *__pyx_tuple__31;
 static PyObject *__pyx_codeobj__32;
 
-/* "implicit/cuda/_cuda.pyx":24
+/* "implicit/cuda/_cuda.pyx":27
  *     cdef CudaDenseMatrix* c_matrix
  * 
  *     def __cinit__(self, float[:, :] X):             # <<<<<<<<<<<<<<
@@ -1993,18 +1994,18 @@ static int __pyx_pw_8implicit_4cuda_5_cuda_13CuDenseMatrix_1__cinit__(PyObject *
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 24, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 27, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
     }
-    __pyx_v_X = __Pyx_PyObject_to_MemoryviewSlice_dsds_float(values[0]); if (unlikely(!__pyx_v_X.memview)) __PYX_ERR(1, 24, __pyx_L3_error)
+    __pyx_v_X = __Pyx_PyObject_to_MemoryviewSlice_dsds_float(values[0]); if (unlikely(!__pyx_v_X.memview)) __PYX_ERR(1, 27, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 24, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 27, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("implicit.cuda._cuda.CuDenseMatrix.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2026,7 +2027,7 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_13CuDenseMatrix___cinit__(struct __py
   implicit::CudaDenseMatrix *__pyx_t_4;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "implicit/cuda/_cuda.pyx":25
+  /* "implicit/cuda/_cuda.pyx":28
  * 
  *     def __cinit__(self, float[:, :] X):
  *         self.c_matrix = new CudaDenseMatrix(X.shape[0], X.shape[1], &X[0, 0])             # <<<<<<<<<<<<<<
@@ -2046,17 +2047,17 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_13CuDenseMatrix___cinit__(struct __py
   } else if (unlikely(__pyx_t_2 >= __pyx_v_X.shape[1])) __pyx_t_3 = 1;
   if (unlikely(__pyx_t_3 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_3);
-    __PYX_ERR(1, 25, __pyx_L1_error)
+    __PYX_ERR(1, 28, __pyx_L1_error)
   }
   try {
     __pyx_t_4 = new implicit::CudaDenseMatrix((__pyx_v_X.shape[0]), (__pyx_v_X.shape[1]), (&(*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_X.data + __pyx_t_1 * __pyx_v_X.strides[0]) ) + __pyx_t_2 * __pyx_v_X.strides[1]) )))));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 25, __pyx_L1_error)
+    __PYX_ERR(1, 28, __pyx_L1_error)
   }
   __pyx_v_self->c_matrix = __pyx_t_4;
 
-  /* "implicit/cuda/_cuda.pyx":24
+  /* "implicit/cuda/_cuda.pyx":27
  *     cdef CudaDenseMatrix* c_matrix
  * 
  *     def __cinit__(self, float[:, :] X):             # <<<<<<<<<<<<<<
@@ -2076,7 +2077,7 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_13CuDenseMatrix___cinit__(struct __py
   return __pyx_r;
 }
 
-/* "implicit/cuda/_cuda.pyx":27
+/* "implicit/cuda/_cuda.pyx":30
  *         self.c_matrix = new CudaDenseMatrix(X.shape[0], X.shape[1], &X[0, 0])
  * 
  *     def to_host(self, float[:, :] X):             # <<<<<<<<<<<<<<
@@ -2092,7 +2093,7 @@ static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_13CuDenseMatrix_3to_host(PyObje
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("to_host (wrapper)", 0);
   assert(__pyx_arg_X); {
-    __pyx_v_X = __Pyx_PyObject_to_MemoryviewSlice_dsds_float(__pyx_arg_X); if (unlikely(!__pyx_v_X.memview)) __PYX_ERR(1, 27, __pyx_L3_error)
+    __pyx_v_X = __Pyx_PyObject_to_MemoryviewSlice_dsds_float(__pyx_arg_X); if (unlikely(!__pyx_v_X.memview)) __PYX_ERR(1, 30, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -2115,7 +2116,7 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_13CuDenseMatrix_2to_host(struct
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("to_host", 0);
 
-  /* "implicit/cuda/_cuda.pyx":28
+  /* "implicit/cuda/_cuda.pyx":31
  * 
  *     def to_host(self, float[:, :] X):
  *         self.c_matrix.to_host(&X[0, 0])             # <<<<<<<<<<<<<<
@@ -2135,16 +2136,16 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_13CuDenseMatrix_2to_host(struct
   } else if (unlikely(__pyx_t_2 >= __pyx_v_X.shape[1])) __pyx_t_3 = 1;
   if (unlikely(__pyx_t_3 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_3);
-    __PYX_ERR(1, 28, __pyx_L1_error)
+    __PYX_ERR(1, 31, __pyx_L1_error)
   }
   try {
     __pyx_v_self->c_matrix->to_host((&(*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_X.data + __pyx_t_1 * __pyx_v_X.strides[0]) ) + __pyx_t_2 * __pyx_v_X.strides[1]) )))));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 28, __pyx_L1_error)
+    __PYX_ERR(1, 31, __pyx_L1_error)
   }
 
-  /* "implicit/cuda/_cuda.pyx":27
+  /* "implicit/cuda/_cuda.pyx":30
  *         self.c_matrix = new CudaDenseMatrix(X.shape[0], X.shape[1], &X[0, 0])
  * 
  *     def to_host(self, float[:, :] X):             # <<<<<<<<<<<<<<
@@ -2165,7 +2166,7 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_13CuDenseMatrix_2to_host(struct
   return __pyx_r;
 }
 
-/* "implicit/cuda/_cuda.pyx":30
+/* "implicit/cuda/_cuda.pyx":33
  *         self.c_matrix.to_host(&X[0, 0])
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2188,7 +2189,7 @@ static void __pyx_pf_8implicit_4cuda_5_cuda_13CuDenseMatrix_4__dealloc__(struct 
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "implicit/cuda/_cuda.pyx":31
+  /* "implicit/cuda/_cuda.pyx":34
  * 
  *     def __dealloc__(self):
  *         del self.c_matrix             # <<<<<<<<<<<<<<
@@ -2197,7 +2198,7 @@ static void __pyx_pf_8implicit_4cuda_5_cuda_13CuDenseMatrix_4__dealloc__(struct 
  */
   delete __pyx_v_self->c_matrix;
 
-  /* "implicit/cuda/_cuda.pyx":30
+  /* "implicit/cuda/_cuda.pyx":33
  *         self.c_matrix.to_host(&X[0, 0])
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2316,7 +2317,7 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_13CuDenseMatrix_8__setstate_cyt
   return __pyx_r;
 }
 
-/* "implicit/cuda/_cuda.pyx":37
+/* "implicit/cuda/_cuda.pyx":40
  *     cdef CudaCSRMatrix* c_matrix
  * 
  *     def __cinit__(self, X):             # <<<<<<<<<<<<<<
@@ -2350,7 +2351,7 @@ static int __pyx_pw_8implicit_4cuda_5_cuda_11CuCSRMatrix_1__cinit__(PyObject *__
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 37, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 40, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
@@ -2361,7 +2362,7 @@ static int __pyx_pw_8implicit_4cuda_5_cuda_11CuCSRMatrix_1__cinit__(PyObject *__
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 37, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 40, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("implicit.cuda._cuda.CuCSRMatrix.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2397,53 +2398,53 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix___cinit__(struct __pyx_
   implicit::CudaCSRMatrix *__pyx_t_15;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "implicit/cuda/_cuda.pyx":38
+  /* "implicit/cuda/_cuda.pyx":41
  * 
  *     def __cinit__(self, X):
  *         cdef int[:] indptr = X.indptr             # <<<<<<<<<<<<<<
  *         cdef int[:] indices = X.indices
  *         cdef float[:] data = X.data.astype(np.float32)
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_indptr); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 38, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_indptr); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(__pyx_t_1);
-  if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(1, 38, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(1, 41, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_indptr = __pyx_t_2;
   __pyx_t_2.memview = NULL;
   __pyx_t_2.data = NULL;
 
-  /* "implicit/cuda/_cuda.pyx":39
+  /* "implicit/cuda/_cuda.pyx":42
  *     def __cinit__(self, X):
  *         cdef int[:] indptr = X.indptr
  *         cdef int[:] indices = X.indices             # <<<<<<<<<<<<<<
  *         cdef float[:] data = X.data.astype(np.float32)
  *         self.c_matrix = new CudaCSRMatrix(X.shape[0], X.shape[1], len(X.data),
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_indices); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 39, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_indices); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(__pyx_t_1);
-  if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(1, 39, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(1, 42, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_indices = __pyx_t_2;
   __pyx_t_2.memview = NULL;
   __pyx_t_2.data = NULL;
 
-  /* "implicit/cuda/_cuda.pyx":40
+  /* "implicit/cuda/_cuda.pyx":43
  *         cdef int[:] indptr = X.indptr
  *         cdef int[:] indices = X.indices
  *         cdef float[:] data = X.data.astype(np.float32)             # <<<<<<<<<<<<<<
  *         self.c_matrix = new CudaCSRMatrix(X.shape[0], X.shape[1], len(X.data),
  *                                           &indptr[0], &indices[0], &data[0])
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_data); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 40, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_data); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 40, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 40, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 40, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -2457,14 +2458,14 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix___cinit__(struct __pyx_
     }
   }
   if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 40, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 43, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_4)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_t_5};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 40, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 43, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -2473,59 +2474,59 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix___cinit__(struct __pyx_
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
       PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_t_5};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 40, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 43, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     } else
     #endif
     {
-      __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 40, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 43, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3); __pyx_t_3 = NULL;
       __Pyx_GIVEREF(__pyx_t_5);
       PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_5);
       __pyx_t_5 = 0;
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 40, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 43, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_float(__pyx_t_1);
-  if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(1, 40, __pyx_L1_error)
+  if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_data = __pyx_t_7;
   __pyx_t_7.memview = NULL;
   __pyx_t_7.data = NULL;
 
-  /* "implicit/cuda/_cuda.pyx":41
+  /* "implicit/cuda/_cuda.pyx":44
  *         cdef int[:] indices = X.indices
  *         cdef float[:] data = X.data.astype(np.float32)
  *         self.c_matrix = new CudaCSRMatrix(X.shape[0], X.shape[1], len(X.data),             # <<<<<<<<<<<<<<
  *                                           &indptr[0], &indices[0], &data[0])
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 41, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 41, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 41, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 44, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 41, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_4, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 41, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_4, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 41, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 44, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 41, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_10 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(1, 41, __pyx_L1_error)
+  __pyx_t_10 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(1, 44, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "implicit/cuda/_cuda.pyx":42
+  /* "implicit/cuda/_cuda.pyx":45
  *         cdef float[:] data = X.data.astype(np.float32)
  *         self.c_matrix = new CudaCSRMatrix(X.shape[0], X.shape[1], len(X.data),
  *                                           &indptr[0], &indices[0], &data[0])             # <<<<<<<<<<<<<<
@@ -2540,7 +2541,7 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix___cinit__(struct __pyx_
   } else if (unlikely(__pyx_t_11 >= __pyx_v_indptr.shape[0])) __pyx_t_12 = 0;
   if (unlikely(__pyx_t_12 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_12);
-    __PYX_ERR(1, 42, __pyx_L1_error)
+    __PYX_ERR(1, 45, __pyx_L1_error)
   }
   __pyx_t_13 = 0;
   __pyx_t_12 = -1;
@@ -2550,7 +2551,7 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix___cinit__(struct __pyx_
   } else if (unlikely(__pyx_t_13 >= __pyx_v_indices.shape[0])) __pyx_t_12 = 0;
   if (unlikely(__pyx_t_12 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_12);
-    __PYX_ERR(1, 42, __pyx_L1_error)
+    __PYX_ERR(1, 45, __pyx_L1_error)
   }
   __pyx_t_14 = 0;
   __pyx_t_12 = -1;
@@ -2560,10 +2561,10 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix___cinit__(struct __pyx_
   } else if (unlikely(__pyx_t_14 >= __pyx_v_data.shape[0])) __pyx_t_12 = 0;
   if (unlikely(__pyx_t_12 != -1)) {
     __Pyx_RaiseBufferIndexError(__pyx_t_12);
-    __PYX_ERR(1, 42, __pyx_L1_error)
+    __PYX_ERR(1, 45, __pyx_L1_error)
   }
 
-  /* "implicit/cuda/_cuda.pyx":41
+  /* "implicit/cuda/_cuda.pyx":44
  *         cdef int[:] indices = X.indices
  *         cdef float[:] data = X.data.astype(np.float32)
  *         self.c_matrix = new CudaCSRMatrix(X.shape[0], X.shape[1], len(X.data),             # <<<<<<<<<<<<<<
@@ -2574,11 +2575,11 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix___cinit__(struct __pyx_
     __pyx_t_15 = new implicit::CudaCSRMatrix(__pyx_t_8, __pyx_t_9, __pyx_t_10, (&(*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_11 * __pyx_v_indptr.strides[0]) )))), (&(*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_13 * __pyx_v_indices.strides[0]) )))), (&(*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_14 * __pyx_v_data.strides[0]) )))));
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 41, __pyx_L1_error)
+    __PYX_ERR(1, 44, __pyx_L1_error)
   }
   __pyx_v_self->c_matrix = __pyx_t_15;
 
-  /* "implicit/cuda/_cuda.pyx":37
+  /* "implicit/cuda/_cuda.pyx":40
  *     cdef CudaCSRMatrix* c_matrix
  * 
  *     def __cinit__(self, X):             # <<<<<<<<<<<<<<
@@ -2607,7 +2608,7 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix___cinit__(struct __pyx_
   return __pyx_r;
 }
 
-/* "implicit/cuda/_cuda.pyx":44
+/* "implicit/cuda/_cuda.pyx":47
  *                                           &indptr[0], &indices[0], &data[0])
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2630,7 +2631,7 @@ static void __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix_2__dealloc__(struct __
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "implicit/cuda/_cuda.pyx":45
+  /* "implicit/cuda/_cuda.pyx":48
  * 
  *     def __dealloc__(self):
  *         del self.c_matrix             # <<<<<<<<<<<<<<
@@ -2639,7 +2640,7 @@ static void __pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix_2__dealloc__(struct __
  */
   delete __pyx_v_self->c_matrix;
 
-  /* "implicit/cuda/_cuda.pyx":44
+  /* "implicit/cuda/_cuda.pyx":47
  *                                           &indptr[0], &indices[0], &data[0])
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2758,7 +2759,7 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_11CuCSRMatrix_6__setstate_cytho
   return __pyx_r;
 }
 
-/* "implicit/cuda/_cuda.pyx":51
+/* "implicit/cuda/_cuda.pyx":54
  *     cdef CudaLeastSquaresSolver * c_solver
  * 
  *     def __cinit__(self, int factors):             # <<<<<<<<<<<<<<
@@ -2792,18 +2793,18 @@ static int __pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_1__cinit__(PyO
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 51, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(1, 54, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
     }
-    __pyx_v_factors = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_factors == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 51, __pyx_L3_error)
+    __pyx_v_factors = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_factors == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 54, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 51, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 54, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("implicit.cuda._cuda.CuLeastSquaresSolver.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2822,7 +2823,7 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver___cinit__(stru
   implicit::CudaLeastSquaresSolver *__pyx_t_1;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "implicit/cuda/_cuda.pyx":52
+  /* "implicit/cuda/_cuda.pyx":55
  * 
  *     def __cinit__(self, int factors):
  *         self.c_solver = new CudaLeastSquaresSolver(factors)             # <<<<<<<<<<<<<<
@@ -2833,11 +2834,11 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver___cinit__(stru
     __pyx_t_1 = new implicit::CudaLeastSquaresSolver(__pyx_v_factors);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 52, __pyx_L1_error)
+    __PYX_ERR(1, 55, __pyx_L1_error)
   }
   __pyx_v_self->c_solver = __pyx_t_1;
 
-  /* "implicit/cuda/_cuda.pyx":51
+  /* "implicit/cuda/_cuda.pyx":54
  *     cdef CudaLeastSquaresSolver * c_solver
  * 
  *     def __cinit__(self, int factors):             # <<<<<<<<<<<<<<
@@ -2856,7 +2857,7 @@ static int __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver___cinit__(stru
   return __pyx_r;
 }
 
-/* "implicit/cuda/_cuda.pyx":54
+/* "implicit/cuda/_cuda.pyx":57
  *         self.c_solver = new CudaLeastSquaresSolver(factors)
  * 
  *     def least_squares(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y,             # <<<<<<<<<<<<<<
@@ -2904,29 +2905,29 @@ static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_3least_s
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_X)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, 1); __PYX_ERR(1, 54, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, 1); __PYX_ERR(1, 57, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_Y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, 2); __PYX_ERR(1, 54, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, 2); __PYX_ERR(1, 57, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_regularization)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, 3); __PYX_ERR(1, 54, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, 3); __PYX_ERR(1, 57, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_cg_steps)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, 4); __PYX_ERR(1, 54, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, 4); __PYX_ERR(1, 57, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "least_squares") < 0)) __PYX_ERR(1, 54, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "least_squares") < 0)) __PYX_ERR(1, 57, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -2940,20 +2941,20 @@ static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_3least_s
     __pyx_v_cui = ((struct __pyx_obj_8implicit_4cuda_5_cuda_CuCSRMatrix *)values[0]);
     __pyx_v_X = ((struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *)values[1]);
     __pyx_v_Y = ((struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *)values[2]);
-    __pyx_v_regularization = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_regularization == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 55, __pyx_L3_error)
-    __pyx_v_cg_steps = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_cg_steps == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 55, __pyx_L3_error)
+    __pyx_v_regularization = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_regularization == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 58, __pyx_L3_error)
+    __pyx_v_cg_steps = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_cg_steps == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 58, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 54, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("least_squares", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 57, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("implicit.cuda._cuda.CuLeastSquaresSolver.least_squares", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_cui), __pyx_ptype_8implicit_4cuda_5_cuda_CuCSRMatrix, 1, "cui", 0))) __PYX_ERR(1, 54, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_X), __pyx_ptype_8implicit_4cuda_5_cuda_CuDenseMatrix, 1, "X", 0))) __PYX_ERR(1, 54, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_Y), __pyx_ptype_8implicit_4cuda_5_cuda_CuDenseMatrix, 1, "Y", 0))) __PYX_ERR(1, 54, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_cui), __pyx_ptype_8implicit_4cuda_5_cuda_CuCSRMatrix, 1, "cui", 0))) __PYX_ERR(1, 57, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_X), __pyx_ptype_8implicit_4cuda_5_cuda_CuDenseMatrix, 1, "X", 0))) __PYX_ERR(1, 57, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_Y), __pyx_ptype_8implicit_4cuda_5_cuda_CuDenseMatrix, 1, "Y", 0))) __PYX_ERR(1, 57, __pyx_L1_error)
   __pyx_r = __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_2least_squares(((struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *)__pyx_v_self), __pyx_v_cui, __pyx_v_X, __pyx_v_Y, __pyx_v_regularization, __pyx_v_cg_steps);
 
   /* function exit code */
@@ -2970,7 +2971,7 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_2least_s
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("least_squares", 0);
 
-  /* "implicit/cuda/_cuda.pyx":56
+  /* "implicit/cuda/_cuda.pyx":59
  *     def least_squares(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y,
  *                       float regularization, int cg_steps):
  *         self.c_solver.least_squares(dereference(cui.c_matrix), X.c_matrix, dereference(Y.c_matrix),             # <<<<<<<<<<<<<<
@@ -2981,10 +2982,10 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_2least_s
     __pyx_v_self->c_solver->least_squares((*__pyx_v_cui->c_matrix), __pyx_v_X->c_matrix, (*__pyx_v_Y->c_matrix), __pyx_v_regularization, __pyx_v_cg_steps);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(1, 56, __pyx_L1_error)
+    __PYX_ERR(1, 59, __pyx_L1_error)
   }
 
-  /* "implicit/cuda/_cuda.pyx":54
+  /* "implicit/cuda/_cuda.pyx":57
  *         self.c_solver = new CudaLeastSquaresSolver(factors)
  * 
  *     def least_squares(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y,             # <<<<<<<<<<<<<<
@@ -3004,37 +3005,197 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_2least_s
   return __pyx_r;
 }
 
-/* "implicit/cuda/_cuda.pyx":59
+/* "implicit/cuda/_cuda.pyx":62
  *                                     regularization, cg_steps)
+ * 
+ *     def calculate_loss(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y, float regularization):             # <<<<<<<<<<<<<<
+ *         return self.c_solver.calculate_loss(dereference(cui.c_matrix), dereference(X.c_matrix),
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_5calculate_loss(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_5calculate_loss(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  struct __pyx_obj_8implicit_4cuda_5_cuda_CuCSRMatrix *__pyx_v_cui = 0;
+  struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *__pyx_v_X = 0;
+  struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *__pyx_v_Y = 0;
+  float __pyx_v_regularization;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("calculate_loss (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_cui,&__pyx_n_s_X,&__pyx_n_s_Y,&__pyx_n_s_regularization,0};
+    PyObject* values[4] = {0,0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_cui)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_X)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("calculate_loss", 1, 4, 4, 1); __PYX_ERR(1, 62, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_Y)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("calculate_loss", 1, 4, 4, 2); __PYX_ERR(1, 62, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_regularization)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("calculate_loss", 1, 4, 4, 3); __PYX_ERR(1, 62, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "calculate_loss") < 0)) __PYX_ERR(1, 62, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+    }
+    __pyx_v_cui = ((struct __pyx_obj_8implicit_4cuda_5_cuda_CuCSRMatrix *)values[0]);
+    __pyx_v_X = ((struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *)values[1]);
+    __pyx_v_Y = ((struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *)values[2]);
+    __pyx_v_regularization = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_regularization == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 62, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("calculate_loss", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 62, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("implicit.cuda._cuda.CuLeastSquaresSolver.calculate_loss", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_cui), __pyx_ptype_8implicit_4cuda_5_cuda_CuCSRMatrix, 1, "cui", 0))) __PYX_ERR(1, 62, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_X), __pyx_ptype_8implicit_4cuda_5_cuda_CuDenseMatrix, 1, "X", 0))) __PYX_ERR(1, 62, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_Y), __pyx_ptype_8implicit_4cuda_5_cuda_CuDenseMatrix, 1, "Y", 0))) __PYX_ERR(1, 62, __pyx_L1_error)
+  __pyx_r = __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_4calculate_loss(((struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *)__pyx_v_self), __pyx_v_cui, __pyx_v_X, __pyx_v_Y, __pyx_v_regularization);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_4calculate_loss(struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self, struct __pyx_obj_8implicit_4cuda_5_cuda_CuCSRMatrix *__pyx_v_cui, struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *__pyx_v_X, struct __pyx_obj_8implicit_4cuda_5_cuda_CuDenseMatrix *__pyx_v_Y, float __pyx_v_regularization) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  float __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  __Pyx_RefNannySetupContext("calculate_loss", 0);
+
+  /* "implicit/cuda/_cuda.pyx":63
+ * 
+ *     def calculate_loss(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y, float regularization):
+ *         return self.c_solver.calculate_loss(dereference(cui.c_matrix), dereference(X.c_matrix),             # <<<<<<<<<<<<<<
+ * 
+ *                                             dereference(Y.c_matrix), regularization)
+ */
+  __Pyx_XDECREF(__pyx_r);
+
+  /* "implicit/cuda/_cuda.pyx":65
+ *         return self.c_solver.calculate_loss(dereference(cui.c_matrix), dereference(X.c_matrix),
+ * 
+ *                                             dereference(Y.c_matrix), regularization)             # <<<<<<<<<<<<<<
+ * 
+ *     def __dealloc__(self):
+ */
+  try {
+    __pyx_t_1 = __pyx_v_self->c_solver->calculate_loss((*__pyx_v_cui->c_matrix), (*__pyx_v_X->c_matrix), (*__pyx_v_Y->c_matrix), __pyx_v_regularization);
+  } catch(...) {
+    __Pyx_CppExn2PyErr();
+    __PYX_ERR(1, 63, __pyx_L1_error)
+  }
+
+  /* "implicit/cuda/_cuda.pyx":63
+ * 
+ *     def calculate_loss(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y, float regularization):
+ *         return self.c_solver.calculate_loss(dereference(cui.c_matrix), dereference(X.c_matrix),             # <<<<<<<<<<<<<<
+ * 
+ *                                             dereference(Y.c_matrix), regularization)
+ */
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 63, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
+
+  /* "implicit/cuda/_cuda.pyx":62
+ *                                     regularization, cg_steps)
+ * 
+ *     def calculate_loss(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y, float regularization):             # <<<<<<<<<<<<<<
+ *         return self.c_solver.calculate_loss(dereference(cui.c_matrix), dereference(X.c_matrix),
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("implicit.cuda._cuda.CuLeastSquaresSolver.calculate_loss", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "implicit/cuda/_cuda.pyx":67
+ *                                             dereference(Y.c_matrix), regularization)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  *         del self.c_solver
  */
 
 /* Python wrapper */
-static void __pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_5__dealloc__(PyObject *__pyx_v_self); /*proto*/
-static void __pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_5__dealloc__(PyObject *__pyx_v_self) {
+static void __pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_7__dealloc__(PyObject *__pyx_v_self); /*proto*/
+static void __pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_7__dealloc__(PyObject *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
-  __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_4__dealloc__(((struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *)__pyx_v_self));
+  __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_6__dealloc__(((struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
 }
 
-static void __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_4__dealloc__(struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self) {
+static void __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_6__dealloc__(struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "implicit/cuda/_cuda.pyx":60
+  /* "implicit/cuda/_cuda.pyx":68
  * 
  *     def __dealloc__(self):
  *         del self.c_solver             # <<<<<<<<<<<<<<
  */
   delete __pyx_v_self->c_solver;
 
-  /* "implicit/cuda/_cuda.pyx":59
- *                                     regularization, cg_steps)
+  /* "implicit/cuda/_cuda.pyx":67
+ *                                             dereference(Y.c_matrix), regularization)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  *         del self.c_solver
@@ -3051,19 +3212,19 @@ static void __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_4__dealloc__(
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_7__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_9__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_6__reduce_cython__(((struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *)__pyx_v_self));
+  __pyx_r = __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_8__reduce_cython__(((struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self) {
+static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3105,19 +3266,19 @@ static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_6__reduc
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_9__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_11__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_8__setstate_cython__(((struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_10__setstate_cython__(((struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_8implicit_4cuda_5_cuda_CuLeastSquaresSolver *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -16179,7 +16340,7 @@ static void __pyx_tp_dealloc_8implicit_4cuda_5_cuda_CuLeastSquaresSolver(PyObjec
     PyObject *etype, *eval, *etb;
     PyErr_Fetch(&etype, &eval, &etb);
     ++Py_REFCNT(o);
-    __pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_5__dealloc__(o);
+    __pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_7__dealloc__(o);
     --Py_REFCNT(o);
     PyErr_Restore(etype, eval, etb);
   }
@@ -16188,8 +16349,9 @@ static void __pyx_tp_dealloc_8implicit_4cuda_5_cuda_CuLeastSquaresSolver(PyObjec
 
 static PyMethodDef __pyx_methods_8implicit_4cuda_5_cuda_CuLeastSquaresSolver[] = {
   {"least_squares", (PyCFunction)__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_3least_squares, METH_VARARGS|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_7__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_9__setstate_cython__, METH_O, 0},
+  {"calculate_loss", (PyCFunction)__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_5calculate_loss, METH_VARARGS|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_9__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_8implicit_4cuda_5_cuda_20CuLeastSquaresSolver_11__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
@@ -17495,20 +17657,20 @@ PyMODINIT_FUNC PyInit__cuda(void)
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_8implicit_4cuda_5_cuda_CuDenseMatrix) < 0) __PYX_ERR(1, 21, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_8implicit_4cuda_5_cuda_CuDenseMatrix) < 0) __PYX_ERR(1, 24, __pyx_L1_error)
   __pyx_type_8implicit_4cuda_5_cuda_CuDenseMatrix.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "CuDenseMatrix", (PyObject *)&__pyx_type_8implicit_4cuda_5_cuda_CuDenseMatrix) < 0) __PYX_ERR(1, 21, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8implicit_4cuda_5_cuda_CuDenseMatrix) < 0) __PYX_ERR(1, 21, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "CuDenseMatrix", (PyObject *)&__pyx_type_8implicit_4cuda_5_cuda_CuDenseMatrix) < 0) __PYX_ERR(1, 24, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8implicit_4cuda_5_cuda_CuDenseMatrix) < 0) __PYX_ERR(1, 24, __pyx_L1_error)
   __pyx_ptype_8implicit_4cuda_5_cuda_CuDenseMatrix = &__pyx_type_8implicit_4cuda_5_cuda_CuDenseMatrix;
-  if (PyType_Ready(&__pyx_type_8implicit_4cuda_5_cuda_CuCSRMatrix) < 0) __PYX_ERR(1, 34, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_8implicit_4cuda_5_cuda_CuCSRMatrix) < 0) __PYX_ERR(1, 37, __pyx_L1_error)
   __pyx_type_8implicit_4cuda_5_cuda_CuCSRMatrix.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "CuCSRMatrix", (PyObject *)&__pyx_type_8implicit_4cuda_5_cuda_CuCSRMatrix) < 0) __PYX_ERR(1, 34, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8implicit_4cuda_5_cuda_CuCSRMatrix) < 0) __PYX_ERR(1, 34, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "CuCSRMatrix", (PyObject *)&__pyx_type_8implicit_4cuda_5_cuda_CuCSRMatrix) < 0) __PYX_ERR(1, 37, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8implicit_4cuda_5_cuda_CuCSRMatrix) < 0) __PYX_ERR(1, 37, __pyx_L1_error)
   __pyx_ptype_8implicit_4cuda_5_cuda_CuCSRMatrix = &__pyx_type_8implicit_4cuda_5_cuda_CuCSRMatrix;
-  if (PyType_Ready(&__pyx_type_8implicit_4cuda_5_cuda_CuLeastSquaresSolver) < 0) __PYX_ERR(1, 48, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_8implicit_4cuda_5_cuda_CuLeastSquaresSolver) < 0) __PYX_ERR(1, 51, __pyx_L1_error)
   __pyx_type_8implicit_4cuda_5_cuda_CuLeastSquaresSolver.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "CuLeastSquaresSolver", (PyObject *)&__pyx_type_8implicit_4cuda_5_cuda_CuLeastSquaresSolver) < 0) __PYX_ERR(1, 48, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8implicit_4cuda_5_cuda_CuLeastSquaresSolver) < 0) __PYX_ERR(1, 48, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "CuLeastSquaresSolver", (PyObject *)&__pyx_type_8implicit_4cuda_5_cuda_CuLeastSquaresSolver) < 0) __PYX_ERR(1, 51, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_8implicit_4cuda_5_cuda_CuLeastSquaresSolver) < 0) __PYX_ERR(1, 51, __pyx_L1_error)
   __pyx_ptype_8implicit_4cuda_5_cuda_CuLeastSquaresSolver = &__pyx_type_8implicit_4cuda_5_cuda_CuLeastSquaresSolver;
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;

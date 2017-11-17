@@ -186,6 +186,76 @@ void CudaLeastSquaresSolver::least_squares(const CudaCSRMatrix & Cui,
     CHECK_CUDA(cudaDeviceSynchronize());
 }
 
+__global__
+void calculate_loss_kernel(int factors, int user_count, int item_count,
+                           const float * X, const float * Y, const float * YtY,
+                           const int * indptr, const int * indices,
+                           const float * data, float regularization, float * output) {
+    // https://devblogs.nvidia.com/parallelforall/using-shared-memory-cuda-cc/
+    extern __shared__ float shared_memory[];
+    float * r = &shared_memory[0];
+
+    float loss = 0, user_norm = 0, item_norm = 0, total_confidence = 0;
+
+    for (int u = blockIdx.x; u < user_count; u += gridDim.x) {
+        const float * x = &X[u * factors];
+
+        // calculates r = (YtCuY.dot(Xu) - 2 * YtCuPu).dot(Xu), without calculating YtCuY
+        float temp = 0;
+        for (int i = 0; i < factors; ++i) {
+            temp += x[i] * YtY[i * factors + threadIdx.x];
+        }
+
+        for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
+            const float * Yi = &Y[indices[index] * factors];
+            float confidence = data[index];
+            temp += ((confidence - 1 ) * dot(Yi, x) - 2 * confidence) * Yi[threadIdx.x];
+            loss += confidence;
+            total_confidence += confidence;
+        }
+        r[threadIdx.x] = temp;
+        loss += dot(x, r);
+
+        user_norm += dot(x, x);
+    }
+    for (int i = blockIdx.x; i < item_count; i += gridDim.x) {
+        const float * y = &Y[i * factors];
+        item_norm += dot(y, y);
+    }
+
+    loss += regularization * (item_norm + user_norm);
+    if (threadIdx.x == 0) {
+        atomicAdd(output, loss);
+        atomicAdd(output + 1, total_confidence);
+    }
+}
+
+float CudaLeastSquaresSolver::calculate_loss(const CudaCSRMatrix & Cui,
+                                            const CudaDenseMatrix & X,
+                                            const CudaDenseMatrix & Y,
+                                            float regularization) {
+    int item_count = Y.rows, factors = Y.cols, user_count = X.rows;
+
+    float alpha = 1.0, beta = 0.;
+    CHECK_CUBLAS(cublasSgemm(blas_handle, CUBLAS_OP_N, CUBLAS_OP_T,
+                             factors, factors, item_count,
+                             &alpha,
+                             Y.data, factors,
+                             Y.data, factors,
+                             &beta,
+                             YtY.data, factors));
+    CHECK_CUDA(cudaDeviceSynchronize());
+    float temp[2] = {0, 0};
+    CudaDenseMatrix output(2, 1, temp);
+    calculate_loss_kernel<<<1024, factors, sizeof(float) * factors>>>(
+        factors, user_count, item_count, X.data, Y.data, YtY.data,
+        Cui.indptr, Cui.indices, Cui.data, regularization, output.data);
+    CHECK_CUDA(cudaDeviceSynchronize());
+    output.to_host(temp);
+
+    return temp[0] / (temp[1] + Cui.rows * Cui.cols - Cui.nonzeros);
+}
+
 CudaLeastSquaresSolver::~CudaLeastSquaresSolver() {
     CHECK_CUBLAS(cublasDestroy(blas_handle));
 }
