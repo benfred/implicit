@@ -16,6 +16,11 @@ struct CudaLeastSquaresSolver {
                        float regularization,
                        int cg_steps) const;
 
+    float calculate_loss(const CudaCSRMatrix & Cui,
+                        const CudaDenseMatrix & X,
+                        const CudaDenseMatrix & Y,
+                        float regularization);
+
     CudaDenseMatrix YtY;
     cublasContext * blas_handle;
 };
