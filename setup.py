@@ -9,7 +9,7 @@ from setuptools import Extension, setup
 from cuda_setup import CUDA, build_ext
 
 NAME = 'implicit'
-VERSION = '0.2.7'
+VERSION = '0.2.8'
 SRC_ROOT = 'implicit'
 
 try:
@@ -32,8 +32,14 @@ def define_extensions(use_cython=False):
         compile_args = ['/O2', '/openmp']
         link_args = []
     else:
+        gcc = extract_gcc_binaries()
+        if gcc is not None:
+            rpath = '/usr/local/opt/gcc/lib/gcc/' + gcc[-1] + '/'
+            link_args = ['-Wl,-rpath,' + rpath]
+        else:
+            link_args = []
+
         compile_args = ['-Wno-unused-function', '-Wno-maybe-uninitialized', '-O3', '-ffast-math']
-        link_args = []
         if use_openmp:
             compile_args.append("-fopenmp")
             link_args.append("-fopenmp")
@@ -67,24 +73,34 @@ def define_extensions(use_cython=False):
 # set_gcc copied from glove-python project
 # https://github.com/maciejkula/glove-python
 
-def set_gcc():
-    """
-    Try to find and use GCC on OSX for OpenMP support.
-    """
-    # For macports and homebrew
+def extract_gcc_binaries():
+    """Try to find GCC on OSX for OpenMP support."""
     patterns = ['/opt/local/bin/g++-mp-[0-9].[0-9]',
                 '/opt/local/bin/g++-mp-[0-9]',
                 '/usr/local/bin/g++-[0-9].[0-9]',
                 '/usr/local/bin/g++-[0-9]']
-
     if 'darwin' in platform.platform().lower():
         gcc_binaries = []
         for pattern in patterns:
             gcc_binaries += glob.glob(pattern)
         gcc_binaries.sort()
-
         if gcc_binaries:
             _, gcc = os.path.split(gcc_binaries[-1])
+            return gcc
+        else:
+            return None
+    else:
+        return None
+
+
+def set_gcc():
+    """Try to use GCC on OSX for OpenMP support."""
+    # For macports and homebrew
+
+    if 'darwin' in platform.platform().lower():
+        gcc = extract_gcc_binaries()
+
+        if gcc is not None:
             os.environ["CC"] = gcc
             os.environ["CXX"] = gcc
 
