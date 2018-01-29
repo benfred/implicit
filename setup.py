@@ -4,13 +4,12 @@ import os.path
 import platform
 import sys
 
-from setuptools import Extension, setup
+from setuptools import Extension, setup, find_packages
 
 from cuda_setup import CUDA, build_ext
 
 NAME = 'implicit'
 VERSION = '0.2.8'
-SRC_ROOT = 'implicit'
 
 try:
     from Cython.Build import cythonize
@@ -136,7 +135,7 @@ setup(
     keywords='Matrix Factorization, Implicit Alternating Least Squares, '
              'Collaborative Filtering, Recommender Systems',
 
-    packages=[SRC_ROOT],
+    packages=find_packages(),
     install_requires=['numpy', 'scipy>=0.16'],
     setup_requires=["Cython >= 0.24"],
     ext_modules=define_extensions(use_cython),
