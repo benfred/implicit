@@ -3,6 +3,7 @@ include implicit/*.cpp
 include implicit/*.h
 include tests/*.py
 include examples/*.py
+include cuda_setup.py
 include README.md
 include requirements.txt
 include LICENSE
