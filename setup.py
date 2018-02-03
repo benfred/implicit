@@ -9,7 +9,7 @@ from setuptools import Extension, setup, find_packages
 from cuda_setup import CUDA, build_ext
 
 NAME = 'implicit'
-VERSION = '0.2.10'
+VERSION = '0.2.11'
 
 try:
     from Cython.Build import cythonize
