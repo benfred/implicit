@@ -1,21 +1,18 @@
 # Compile spark with native blas support:
 # https://github.com/Mega-DatA-Lab/SpectralLDA-Spark/wiki/Compile-Spark-with-Native-BLAS-LAPACK-Support
 from __future__ import print_function
-import time
 
 import argparse
-import scipy.io
-import numpy
 import json
+import time
 
 import matplotlib.pyplot as plt
+import numpy
+import scipy.io
 import seaborn
-
-from pyspark import SparkContext, SparkConf
-from pyspark.sql import SparkSession
-
+from pyspark import SparkConf, SparkContext
 from pyspark.ml.recommendation import ALS
-from pyspark.sql import Row
+from pyspark.sql import Row, SparkSession
 
 import implicit
 

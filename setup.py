@@ -43,23 +43,27 @@ def define_extensions(use_cython=False):
             compile_args.append("-fopenmp")
             link_args.append("-fopenmp")
 
+        compile_args.append("-std=c++11")
+        link_args.append("-std=c++11")
+
     src_ext = '.pyx' if use_cython else '.cpp'
     modules = [Extension("implicit." + name,
                          [os.path.join("implicit", name + src_ext)],
                          language='c++',
                          extra_compile_args=compile_args, extra_link_args=link_args)
-               for name in ['_als', '_nearest_neighbours']]
+               for name in ['_als', '_nearest_neighbours', 'bpr']]
 
     if CUDA:
         modules.append(Extension("implicit.cuda._cuda",
                                  [os.path.join("implicit", "cuda", "_cuda" + src_ext),
                                   os.path.join("implicit", "cuda", "als.cu"),
+                                  os.path.join("implicit", "cuda", "bpr.cu"),
                                   os.path.join("implicit", "cuda", "matrix.cu")],
                                  language="c++",
                                  extra_compile_args=compile_args,
                                  extra_link_args=link_args,
                                  library_dirs=[CUDA['lib64']],
-                                 libraries=['cudart', 'cublas'],
+                                 libraries=['cudart', 'cublas', 'curand'],
                                  runtime_library_dirs=[CUDA['lib64']],
                                  include_dirs=[CUDA['include'], '.']))
 

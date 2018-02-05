@@ -42,4 +42,24 @@ CudaCSRMatrix::~CudaCSRMatrix() {
     CHECK_CUDA(cudaFree(indptr));
     CHECK_CUDA(cudaFree(data));
 }
+
+CudaCOOMatrix::CudaCOOMatrix(int rows, int cols, int nonzeros,
+                             const int * row_, const int * col_, const float * data_)
+    : rows(rows), cols(cols), nonzeros(nonzeros) {
+
+    CHECK_CUDA(cudaMalloc(&row, nonzeros * sizeof(int)));
+    CHECK_CUDA(cudaMemcpy(row, row_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
+
+    CHECK_CUDA(cudaMalloc(&col, nonzeros * sizeof(int)));
+    CHECK_CUDA(cudaMemcpy(col, col_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
+
+    CHECK_CUDA(cudaMalloc(&data, nonzeros * sizeof(float)));
+    CHECK_CUDA(cudaMemcpy(data, data_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
+}
+
+CudaCOOMatrix::~CudaCOOMatrix() {
+    CHECK_CUDA(cudaFree(row));
+    CHECK_CUDA(cudaFree(col));
+    CHECK_CUDA(cudaFree(data));
+}
 }  // namespace implicit
