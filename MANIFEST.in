@@ -1,4 +1,6 @@
 recursive-include implicit *.h *.cu *.cuh *.pyx *.py *.cpp
+recursive-exclude tests *
+recursive-exclude examples *
 include cuda_setup.py
 include README.md
 include requirements.txt
