@@ -23,6 +23,7 @@ from scipy.sparse import coo_matrix
 from implicit.als import AlternatingLeastSquares
 from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlternatingLeastSquares,
                                       NMSLibAlternatingLeastSquares)
+from implicit.bpr import BayesianPersonalizedRanking
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
 
@@ -33,6 +34,7 @@ MODELS = {"als":  AlternatingLeastSquares,
           "faiss_als": FaissAlternatingLeastSquares,
           "tfidf": TFIDFRecommender,
           "cosine": CosineRecommender,
+          "bpr": BayesianPersonalizedRanking,
           "bm25": BM25Recommender}
 
 
@@ -46,6 +48,8 @@ def get_model(model_name):
         params = {'factors': 64, 'dtype': numpy.float32, 'use_gpu': False}
     elif model_name == "bm25":
         params = {'K1': 100, 'B': 0.5}
+    elif model_name == "bpr":
+        params = {'factors': 63, 'use_gpu': False}
     else:
         params = {}
 

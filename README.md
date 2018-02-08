@@ -6,11 +6,20 @@ Implicit
 
 Fast Python Collaborative Filtering for Implicit Datasets.
 
-This project provides fast Python implementations of the algorithms described in the paper [Collaborative Filtering for Implicit Feedback Datasets](
-http://yifanhu.net/PUB/cf.pdf) and in [Applications of the Conjugate Gradient Method for Implicit
-Feedback Collaborative
-Filtering](https://pdfs.semanticscholar.org/bfdf/7af6cf7fd7bb5e6b6db5bbd91be11597eaf0.pdf).
+This project provides fast Python implementations of several different popular recommendation algorithms for
+implicit feedback datasets:
 
+ * Alternating Least Squares as described in the papers [Collaborative Filtering for Implicit Feedback Datasets](http://yifanhu.net/PUB/cf.pdf) and [Applications of the Conjugate Gradient Method for Implicit
+Feedback Collaborative Filtering](https://pdfs.semanticscholar.org/bfdf/7af6cf7fd7bb5e6b6db5bbd91be11597eaf0.pdf).
+
+ * [Bayesian Personalized Ranking](https://arxiv.org/pdf/1205.2618.pdf).
+
+ * Item-Item Nearest Neighbour models using Cosine, TFIDF or BM25 as a distance metric.
+
+All models have multi-threaded training routines, using Cython and OpenMP to fit the models in
+parallel among all available CPU cores.  In addition, the ALS and BPR models both have custom CUDA
+kernels - enabling fitting on compatible GPU's. Approximate nearest neighbours libraries such as [Annoy](https://github.com/spotify/annoy), [NMSLIB](https://github.com/searchivarius/nmslib)
+and [Faiss](https://github.com/facebookresearch/faiss) can also be used by Implicit to [speed up making recommendations](http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/).
 
 To install:
 
@@ -44,45 +53,31 @@ For more information see the [documentation](http://implicit.readthedocs.io/).
 
 #### Articles about Implicit
 
-Several posts have been written talking about using Implicit to build recommendation systems:
+These blog posts describe the algorithms that power this library:
+
+ * [Finding Similar Music with Matrix Factorization](http://www.benfrederickson.com/matrix-factorization/)
+ * [Faster Implicit Matrix Factorization](http://www.benfrederickson.com/fast-implicit-matrix-factorization/)
+ * [Implicit Matrix Factorization on the GPU](http://www.benfrederickson.com/implicit-matrix-factorization-on-the-gpu/)
+ * [Approximate Nearest Neighbours for Recommender Systems](http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/)
+ * [Distance Metrics for Fun and Profit](http://www.benfrederickson.com/distance-metrics/)
+
+There are also several other blog posts about using Implicit to build recommendation systems:
 
  * [Recommending GitHub Repositories with Google BigQuery and the implicit library](https://medium.com/@jbochi/recommending-github-repositories-with-google-bigquery-and-the-implicit-library-e6cce666c77)
  * [Intro to Implicit Matrix Factorization: Classic ALS with Sketchfab Models](http://blog.ethanrosenthal.com/2016/10/19/implicit-mf-part-1/)
  * [A Gentle Introduction to Recommender Systems with Implicit Feedback](https://jessesw.com/Rec-System/).
 
-There are also a couple posts talking about the algorithms that power this library:
-
- * [Faster Implicit Matrix Factorization](http://www.benfrederickson.com/fast-implicit-matrix-factorization)
- * [Finding Similar Music with Matrix Factorization](http://www.benfrederickson.com/matrix-factorization)
- * [Distance Metrics for Fun and Profit](http://www.benfrederickson.com/distance-metrics/)
 
 #### Requirements
 
 This library requires SciPy version 0.16 or later. Running on OSX requires an OpenMP compiler,
 which can be installed with homebrew: ```brew install gcc```.
 
-#### Why Use This?
+This library has been tested with Python 2.7, 3.5 and 3.6 on Ubuntu, OSX and Windows.
 
-This library came about because I was looking for an efficient Python
-implementation of this algorithm for a [blog
-post on matrix factorization](http://www.benfrederickson.com/matrix-factorization/). The other python
-packages were too slow, and integrating with a different language or framework was too cumbersome.
+#### Benchmarks
 
-The core of this package is written in Cython, leveraging OpenMP to
-parallelize computation. Linear Algebra is done using the BLAS and LAPACK
-libraries distributed with SciPy. This leads to extremely fast matrix factorization.
-
-On a simple [benchmark](https://github.com/benfred/implicit/blob/master/examples/benchmark.py), this
-library is about 1.8 times faster than the multithreaded C++ implementation provided by Quora's
-[QMF Library](https://github.com/quora/qmf) and at least 60,000 times faster than
-[implicit-mf](https://github.com/MrChrisJohnson/implicit-mf).
-
-A [follow up post](http://www.benfrederickson.com/fast-implicit-matrix-factorization/) describes
-further performance improvements based on the Conjugate Gradient method - that further boosts performance
-by 3x to over 19x depending on the number of factors used.
-
-This library has been tested with Python 2.7 and 3.5. Running 'tox' will
-run unittests on both versions, and verify that all python files pass flake8.
+Simple benchmarks comparing the ALS fitting time versus [Spark and QMF can be found here](https://github.com/benfred/implicit/tree/master/benchmarks).
 
 #### Optimal Configuration
 

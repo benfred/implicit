@@ -9,7 +9,7 @@ potentially missing relevant results:
 
 .. image:: recommendperf.png
 
-See `this post comparing the different ANN libraries 
+See `this post comparing the different ANN libraries
 <http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/>`_ for
 more details.
 
@@ -17,13 +17,16 @@ NMSLibAlternatingLeastSquares
 -----------------------------
 .. autoclass:: implicit.approximate_als.NMSLibAlternatingLeastSquares
    :members:
+   :show-inheritance:
 
 AnnoyAlternatingLeastSquares
 ----------------------------
 .. autoclass:: implicit.approximate_als.AnnoyAlternatingLeastSquares
    :members:
+   :show-inheritance:
 
 FaissAlternatingLeastSquares
 -----------------------------
 .. autoclass:: implicit.approximate_als.FaissAlternatingLeastSquares
    :members:
+   :show-inheritance:

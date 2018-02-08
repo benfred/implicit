@@ -1,7 +1,6 @@
 """ Implicit Alternating Least Squares """
 import functools
 import heapq
-import itertools
 import logging
 import time
 
@@ -10,13 +9,13 @@ import scipy
 import scipy.sparse
 
 from . import _als
-from .recommender_base import RecommenderBase
+from .recommender_base import MatrixFactorizationBase
 from .utils import check_blas_config, nonzeros
 
 log = logging.getLogger("implicit")
 
 
-class AlternatingLeastSquares(RecommenderBase):
+class AlternatingLeastSquares(MatrixFactorizationBase):
 
     """ Alternating Least Squares
 
@@ -59,6 +58,8 @@ class AlternatingLeastSquares(RecommenderBase):
     def __init__(self, factors=100, regularization=0.01, dtype=np.float32,
                  use_native=True, use_cg=True, use_gpu=False,
                  iterations=15, calculate_training_loss=False, num_threads=0):
+        super(AlternatingLeastSquares, self).__init__()
+
         # parameters on how to factorize
         self.factors = factors
         self.regularization = regularization
@@ -73,13 +74,6 @@ class AlternatingLeastSquares(RecommenderBase):
         self.num_threads = num_threads
         self.fit_callback = None
         self.cg_steps = 3
-
-        # learned parameters
-        self.item_factors = None
-        self.user_factors = None
-
-        # cache of item norms (useful for calculating similar items)
-        self._item_norms = None
 
         # cache for item factors squared
         self._YtY = None
@@ -192,27 +186,7 @@ class AlternatingLeastSquares(RecommenderBase):
         X.to_host(self.user_factors)
         Y.to_host(self.item_factors)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
-        user = self._user_factor(userid, user_items, recalculate_user)
-        # calculate the top N items, removing the users own liked items from the results
-        liked = set(user_items[userid].indices)
-        scores = self.item_factors.dot(user)
-        if filter_items:
-            liked.update(filter_items)
-
-        count = N + len(liked)
-        if count < len(scores):
-            ids = np.argpartition(scores, -count)[-count:]
-            best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
-        else:
-            best = sorted(enumerate(scores), key=lambda x: -x[1])
-        return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
-
-    recommend.__doc__ = RecommenderBase.recommend.__doc__
-
-    def _user_factor(self, userid, user_items, recalculate_user=False):
-        if not recalculate_user:
-            return self.user_factors[userid]
+    def recalculate_user(self, userid, user_items):
         return user_factor(self.item_factors, self.YtY,
                            user_items.tocsr(), userid,
                            self.regularization, self.factors)
@@ -274,21 +248,6 @@ class AlternatingLeastSquares(RecommenderBase):
         items = (heapq.heappop(h) for i in range(len(h)))
         top_contributions = list((i, s) for s, i in items)[::-1]
         return total_score, top_contributions, user_weights
-
-    def similar_items(self, itemid, N=10):
-        scores = self.item_factors.dot(self.item_factors[itemid]) / self.item_norms
-        best = np.argpartition(scores, -N)[-N:]
-        return sorted(zip(best, scores[best] / self.item_norms[itemid]), key=lambda x: -x[1])
-
-    similar_items.__doc__ = RecommenderBase.similar_items.__doc__
-
-    @property
-    def item_norms(self):
-        if self._item_norms is None:
-            self._item_norms = np.linalg.norm(self.item_factors, axis=-1)
-            # don't divide by zero in similar_items, replace with small value
-            self._item_norms[self._item_norms == 0] = 1e-10
-        return self._item_norms
 
     @property
     def solver(self):
