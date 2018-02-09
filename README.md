@@ -73,6 +73,11 @@ There are also several other blog posts about using Implicit to build recommenda
 This library requires SciPy version 0.16 or later. Running on OSX requires an OpenMP compiler,
 which can be installed with homebrew: ```brew install gcc```.
 
+GPU Support requires the [NVidia CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) and
+has only currently been tested with CUDA 8 and CUDA 9. The build will use the ```nvcc``` compiler
+that is found on the path, but this can be overriden by setting the CUDAHOME directory to point
+to your cuda installation.
+
 This library has been tested with Python 2.7, 3.5 and 3.6 on Ubuntu, OSX and Windows.
 
 #### Benchmarks
