@@ -43,9 +43,6 @@ def define_extensions(use_cython=False):
             compile_args.append("-fopenmp")
             link_args.append("-fopenmp")
 
-        compile_args.append("-std=c++11")
-        link_args.append("-std=c++11")
-
     src_ext = '.pyx' if use_cython else '.cpp'
     modules = [Extension("implicit." + name,
                          [os.path.join("implicit", name + src_ext)],

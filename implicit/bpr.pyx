@@ -4,9 +4,9 @@ import multiprocessing
 import random
 import time
 
+from cython cimport floating
 from cython.parallel import parallel, prange
 from libc.math cimport exp
-from libcpp.vector cimport vector
 
 import numpy as np
 import scipy.sparse
@@ -14,16 +14,10 @@ import scipy.sparse
 from .recommender_base import MatrixFactorizationBase
 
 
-cdef extern from "<random>" namespace "std":
-    cdef cppclass mt19937:
-        mt19937(unsigned int)
-
-    cdef cppclass uniform_int_distribution[T]:
-        uniform_int_distribution(int, int)
-        T operator()(mt19937) nogil
-
-
 log = logging.getLogger("implicit")
+
+cdef extern from "<stdlib.h>" nogil:
+    int rand_r(unsigned int * seed)
 
 # thin wrapper around omp_get_thread_num (since referencing directly will cause OSX
 # build to fail)
@@ -46,6 +40,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         The learning rate to apply for SGD updates during training
     regularization : float, optional
         The regularization factor to use
+    dtype : data-type, optional
+        Specifies whether to generate 64 bit or 32 bit floating point factors
     use_gpu : bool, optional
         Fit on the GPU if available
     iterations : int, optional
@@ -62,14 +58,15 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
     user_factors : ndarray
         Array of latent factors for each user in the training set
     """
-    def __init__(self, factors=100, learning_rate=0.05, regularization=0.01, iterations=100,
-                 use_gpu=False, num_threads=0):
+    def __init__(self, factors=100, learning_rate=0.05, regularization=0.01,
+                 iterations=100, dtype=np.float32, use_gpu=False, num_threads=0):
         super(BayesianPersonalizedRanking, self).__init__()
 
         self.factors = factors
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.regularization = regularization
+        self.dtype = dtype
         self.use_gpu = use_gpu
         self.num_threads = num_threads
 
@@ -95,9 +92,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             Ciu = Ciu.tocoo()
             log.debug("Converted input to COO in %.3fs", time.time() - s)
 
-        # for now, all we handle is float 32 values
-        if Ciu.dtype != np.float32:
-            Ciu = Ciu.astype(np.float32)
         # initialize factors
         items, users = Ciu.shape
 
@@ -105,10 +99,10 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # Note: the final dimension is for the item bias term - which is set to a 1 for all users
         # this simplifies interfacing with approximate nearest neighbours libraries etc
         if self.item_factors is None:
-            self.item_factors = np.random.rand(items, self.factors + 1).astype(np.float32)
+            self.item_factors = np.random.rand(items, self.factors + 1).astype(self.dtype)
 
         if self.user_factors is None:
-            self.user_factors = np.random.rand(users, self.factors + 1).astype(np.float32)
+            self.user_factors = np.random.rand(users, self.factors + 1).astype(self.dtype)
             self.user_factors[:, self.factors] = 1.0
 
         if self.use_gpu:
@@ -122,15 +116,11 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             num_threads = multiprocessing.cpu_count()
 
         # initialize RNG's, one per thread.
-        cdef vector[mt19937] rng
-        cdef vector[uniform_int_distribution[int]] dist
-        for i in range(num_threads):
-            rng.push_back(mt19937(np.random.randint(2**31)))
-            dist.push_back(uniform_int_distribution[int](0, len(Ciu.row) - 1))
+        seeds = np.random.randint(2**31, size=num_threads).astype(np.uint32)
 
         for epoch in range(self.iterations):
             start = time.time()
-            correct = bpr_update(rng, dist, Ciu.col, Ciu.row,
+            correct = bpr_update(seeds, Ciu.col, Ciu.row,
                                  self.user_factors, self.item_factors,
                                  self.learning_rate, self.regularization, num_threads)
             log.debug("fit epoch %i in %.3fs (%.2f%% ranked correctly)", epoch,
@@ -155,17 +145,17 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 
 @cython.cdivision(True)
 @cython.boundscheck(False)
-cdef bpr_update(vector[mt19937] & rng, vector[uniform_int_distribution[int]] & dist,
-                int[:] userids, int[:] itemids,
-                float[:, :] X, float[:, :] Y,
-                float learning_rate, float reg, int num_threads):
+def bpr_update(unsigned int[:] seeds,
+               int[:] userids, int[:] itemids,
+               floating[:, :] X, floating[:, :] Y,
+               float learning_rate, float reg, int num_threads):
     cdef int users = X.shape[0], items = Y.shape[0], samples = len(userids)
     cdef int i, j, liked_index, disliked_index, liked_id, disliked_id, thread_id, correct = 0
-    cdef float z, score, temp
+    cdef floating z, score, temp
 
-    cdef float * user
-    cdef float * liked
-    cdef float * disliked
+    cdef floating * user
+    cdef floating * liked
+    cdef floating * disliked
 
     cdef int factors = X.shape[1] - 1
 
@@ -173,8 +163,8 @@ cdef bpr_update(vector[mt19937] & rng, vector[uniform_int_distribution[int]] & d
 
         thread_id = get_thread_num()
         for i in prange(samples, schedule='guided'):
-            liked_index = dist[thread_id](rng[thread_id])
-            disliked_index = dist[thread_id](rng[thread_id])
+            liked_index = rand_r(&seeds[thread_id]) % samples
+            disliked_index = rand_r(&seeds[thread_id]) % samples
 
             liked_id = itemids[liked_index]
             disliked_id = itemids[disliked_index]
