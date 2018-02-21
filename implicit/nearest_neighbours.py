@@ -1,7 +1,7 @@
 import itertools
 
 import numpy
-from numpy import bincount, log, sqrt
+from numpy import bincount, log, log1p, sqrt
 from scipy.sparse import coo_matrix, csr_matrix
 
 from ._nearest_neighbours import all_pairs_knn
@@ -95,7 +95,7 @@ def tfidf_weight(X):
 
     # calculate IDF
     N = float(X.shape[0])
-    idf = log(N / (1 + bincount(X.col)))
+    idf = log(N) - log1p(bincount(X.col))
 
     # apply TF-IDF adjustment
     X.data = sqrt(X.data) * idf[X.col]
@@ -116,7 +116,7 @@ def bm25_weight(X, K1=100, B=0.8):
     X = coo_matrix(X)
 
     N = float(X.shape[0])
-    idf = log(N / (1 + bincount(X.col)))
+    idf = log(N) - log1p(bincount(X.col))
 
     # calculate length_norm per document (artist)
     row_sums = numpy.ravel(X.sum(axis=1))
