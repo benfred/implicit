@@ -1,6 +1,7 @@
 # Adapted from https://github.com/rmcgibbo/npcuda-example
 import logging
 import os
+import sys
 
 from setuptools.command.build_ext import build_ext as setuptools_build_ext
 
@@ -26,14 +27,20 @@ def locate_cuda():
 
     If nvcc can't be found, this returns None
     """
+    nvcc_bin = 'nvcc'
+    if sys.platform.startswith("win"):
+        nvcc_bin = 'nvcc.exe'
 
     # first check if the CUDAHOME env variable is in use
     if 'CUDAHOME' in os.environ:
         home = os.environ['CUDAHOME']
-        nvcc = os.path.join(home, 'bin', 'nvcc')
+        nvcc = os.path.join(home, 'bin', nvcc_bin)
+    elif 'CUDA_PATH' in os.environ:
+        home = os.environ['CUDA_PATH']
+        nvcc = os.path.join(home, 'bin', nvcc_bin)
     else:
         # otherwise, search the PATH for NVCC
-        nvcc = find_in_path('nvcc', os.environ['PATH'])
+        nvcc = find_in_path(nvcc_bin, os.environ['PATH'])
         if nvcc is None:
             logging.warning('The nvcc binary could not be located in your $PATH. Either add it to '
                             'your path, or set $CUDAHOME to enable CUDA extensions')
