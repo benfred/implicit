@@ -6,6 +6,7 @@ import numpy as np
 from scipy.sparse import csr_matrix
 
 from implicit.als import AlternatingLeastSquares
+from implicit.cuda import HAS_CUDA
 
 from .recommender_base_test import TestRecommenderBaseMixin
 
@@ -61,11 +62,8 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                    for native in (False, True)]
 
         # also try out GPU support if available
-        try:
-            import implicit.cuda  # noqa
+        if HAS_CUDA:
             options.append((np.float32, False, False, True))
-        except ImportError:
-            pass
 
         for dtype, use_cg, use_native, use_gpu in options:
             try:

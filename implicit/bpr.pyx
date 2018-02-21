@@ -11,6 +11,8 @@ from libcpp.vector cimport vector
 import numpy as np
 import scipy.sparse
 
+import implicit.cuda
+
 from .recommender_base import MatrixFactorizationBase
 
 
@@ -137,7 +139,9 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                       (time.time() - start), 100.0 * correct / len(Ciu.row))
 
     def _fit_gpu(self, Ciu_host):
-        import implicit.cuda
+        if not implicit.cuda.HAS_CUDA:
+            raise ValueError("No CUDA extension has been built, can't train on GPU.")
+
         Ciu = implicit.cuda.CuCOOMatrix(Ciu_host)
         X = implicit.cuda.CuDenseMatrix(self.user_factors.astype(np.float32))
         Y = implicit.cuda.CuDenseMatrix(self.item_factors.astype(np.float32))

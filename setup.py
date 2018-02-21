@@ -8,6 +8,7 @@ from setuptools import Extension, setup, find_packages
 
 from cuda_setup import CUDA, build_ext
 
+
 NAME = 'implicit'
 VERSION = '0.3.1'
 
@@ -66,6 +67,8 @@ def define_extensions(use_cython=False):
                                  libraries=['cudart', 'cublas', 'curand'],
                                  runtime_library_dirs=[CUDA['lib64']],
                                  include_dirs=[CUDA['include'], '.']))
+    else:
+        print("Failed to find CUDA toolkit. Building without GPU acceleration.")
 
     if use_cython:
         return cythonize(modules)

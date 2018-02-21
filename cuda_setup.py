@@ -35,8 +35,8 @@ def locate_cuda():
         # otherwise, search the PATH for NVCC
         nvcc = find_in_path('nvcc', os.environ['PATH'])
         if nvcc is None:
-            logging.info('The nvcc binary could not be located in your $PATH. Either add it to '
-                         'your path, or set $CUDAHOME to enable CUDA extensions')
+            logging.warning('The nvcc binary could not be located in your $PATH. Either add it to '
+                            'your path, or set $CUDAHOME to enable CUDA extensions')
             return None
         home = os.path.dirname(os.path.dirname(nvcc))
 

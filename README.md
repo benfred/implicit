@@ -84,9 +84,10 @@ Simple benchmarks comparing the ALS fitting time versus [Spark and QMF can be fo
 
 #### Optimal Configuration
 
-I'd recommend configure SciPy to use Intel's MKL matrix libraries. One easy way of doing this is by installing the Anaconda Python distribution.
+I'd recommend configuring SciPy to use Intel's MKL matrix libraries. One easy way of doing this is by installing the Anaconda Python distribution.
 
-For systems using OpenBLAS, I highly recommend setting 'export OPENBLAS_NUM_THREADS=1'. This disables its internal multithreading ability, which leads to
-substantial speedups for this package.
+For systems using OpenBLAS, I highly recommend setting 'export OPENBLAS_NUM_THREADS=1'. This
+disables its internal multithreading ability, which leads to substantial speedups for this
+package. Likewise for Intel MKL, setting 'export MKL_NUM_THREADS=1' should also be set.
 
 Released under the MIT License

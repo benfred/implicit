@@ -8,6 +8,8 @@ import numpy as np
 import scipy
 import scipy.sparse
 
+import implicit.cuda
+
 from . import _als
 from .recommender_base import MatrixFactorizationBase
 from .utils import check_blas_config, nonzeros
@@ -155,7 +157,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
     def _fit_gpu(self, Ciu_host, Cui_host):
         """ specialized training on the gpu. copies inputs to/from cuda device """
-        import implicit.cuda
+        if not implicit.cuda.HAS_CUDA:
+            raise ValueError("No CUDA extension has been built, can't train on GPU.")
+
         if self.dtype == np.float64:
             log.warning("Factors of dtype float64 aren't supported with gpu fitting. "
                         "Converting factors to float32")

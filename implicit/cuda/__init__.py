@@ -1,3 +1,7 @@
 from __future__ import absolute_import
 
-from ._cuda import *  # noqa
+try:
+    from ._cuda import *  # noqa
+    HAS_CUDA = True
+except ImportError:
+    HAS_CUDA = False
