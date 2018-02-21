@@ -65,7 +65,8 @@ def read_data(filename):
     logging.debug("reading data from %s", filename)
     data = pandas.read_table(filename,
                              usecols=[0, 2, 3],
-                             names=['user', 'artist', 'plays'])
+                             names=['user', 'artist', 'plays'],
+                             na_filter=False)
 
     # map each artist and user to a unique numeric value
     data['user'] = data['user'].astype("category")
