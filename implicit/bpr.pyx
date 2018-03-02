@@ -109,8 +109,15 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         if self.item_factors is None:
             self.item_factors = np.random.rand(items, self.factors + 1).astype(np.float32)
 
+            # set factors to all zeros for items without any ratings
+            self.item_factors[np.bincount(Ciu.row) == 0] = np.zeros(self.factors + 1)
+
         if self.user_factors is None:
             self.user_factors = np.random.rand(users, self.factors + 1).astype(np.float32)
+
+            # set factors to all zeros for users without any ratings
+            self.user_factors[np.bincount(Ciu.col) == 0] = np.zeros(self.factors + 1)
+
             self.user_factors[:, self.factors] = 1.0
 
         if self.use_gpu:

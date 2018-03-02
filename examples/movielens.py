@@ -19,6 +19,7 @@ import pandas
 from scipy.sparse import coo_matrix
 
 from implicit.als import AlternatingLeastSquares
+from implicit.bpr import BayesianPersonalizedRanking
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
 
@@ -51,6 +52,9 @@ def calculate_similar_movies(input_path, output_filename,
         # lets weight these models by bm25weight.
         logging.debug("weighting matrix by bm25_weight")
         m = bm25_weight(m,  B=0.9) * 5
+
+    elif model_name == "bpr":
+        model = BayesianPersonalizedRanking()
 
     elif model_name == "tfidf":
         model = TFIDFRecommender()
