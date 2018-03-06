@@ -13,6 +13,7 @@ https://github.com/benfred/bens-blog-code/blob/master/distance-metrics/musicdata
 from __future__ import print_function
 
 import argparse
+import codecs
 import logging
 import time
 
@@ -115,7 +116,7 @@ def calculate_similar_artists(input_filename, output_filename, model_name="als")
     to_generate = sorted(list(artists), key=lambda x: -user_count[x])
 
     # write out as a TSV of artistid, otherartistid, score
-    with open(output_filename, "w") as o:
+    with codecs.open(output_filename, "w", "utf8") as o:
         for artistid in to_generate:
             artist = artists[artistid]
             for other, score in model.similar_items(artistid, 11):
@@ -154,7 +155,7 @@ def calculate_recommendations(input_filename, output_filename, model_name="als")
     artists = dict(enumerate(df['artist'].cat.categories))
     start = time.time()
     user_plays = plays.T.tocsr()
-    with open(output_filename, "w") as o:
+    with codecs.open(output_filename, "w", "utf8") as o:
         for userid, username in enumerate(df['user'].cat.categories):
             for artistid, score in model.recommend(userid, user_plays):
                 o.write("%s\t%s\t%s\n" % (username, artists[artistid], score))

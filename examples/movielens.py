@@ -10,6 +10,7 @@ dataset
 from __future__ import print_function
 
 import argparse
+import codecs
 import logging
 import os
 import time
@@ -80,7 +81,7 @@ def calculate_similar_movies(input_path, output_filename,
     movie_lookup = dict((i, m) for i, m in zip(movies['movieId'], movies['title']))
     to_generate = sorted(list(movies['movieId']), key=lambda x: -user_count.get(x, 0))
 
-    with open(output_filename, "w") as o:
+    with codecs.open(output_filename, "w", "utf8") as o:
         for movieid in to_generate:
             # if this movie has no ratings, skip over (for instance 'Graffiti Bridge' has
             # no ratings > 4 meaning we've filtered out all data for it.
