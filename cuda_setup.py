@@ -1,8 +1,10 @@
-# Adapted from https://github.com/rmcgibbo/npcuda-example
+# Adapted from https://github.com/rmcgibbo/npcuda-example and
+# https://github.com/cupy/cupy/blob/master/cupy_setup_build.py
 import logging
 import os
 import sys
 
+from distutils import ccompiler, errors, msvccompiler, unixccompiler
 from setuptools.command.build_ext import build_ext as setuptools_build_ext
 
 
@@ -56,56 +58,122 @@ def locate_cuda():
             logging.warning('The CUDA %s path could not be located in %s', k, v)
             return None
 
+    post_args = ['-gencode=arch=compute_30,code=sm_30',
+                 '-gencode=arch=compute_50,code=sm_50',
+                 '-gencode=arch=compute_60,code=sm_60',
+                 '-gencode=arch=compute_60,code=compute_60',
+                 '--ptxas-options=-v', '-O2']
+
+    if sys.platform == "win32":
+        cudaconfig['lib64'] = os.path.join(home, 'lib', 'x64')
+        post_args += ['-Xcompiler', '/MD']
+    else:
+        post_args += ['-c', '--compiler-options', "'-fPIC'"]
+
+    cudaconfig['post_args'] = post_args
     return cudaconfig
 
 
-def customize_compiler_for_nvcc(self):
-    """inject deep into distutils to customize how the dispatch
-    to gcc/nvcc works.
+# This code to build .cu extensions with nvcc is taken from cupy:
+# https://github.com/cupy/cupy/blob/master/cupy_setup_build.py
+class _UnixCCompiler(unixccompiler.UnixCCompiler):
+    src_extensions = list(unixccompiler.UnixCCompiler.src_extensions)
+    src_extensions.append('.cu')
 
-    If you subclass UnixCCompiler, it's not trivial to get your subclass
-    injected in, and still have the right customizations (i.e.
-    distutils.sysconfig.customize_compiler) run on it. So instead of going
-    the OO route, I have this. Note, it's kindof like a wierd functional
-    subclassing going on."""
+    def _compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts):
+        # For sources other than CUDA C ones, just call the super class method.
+        if os.path.splitext(src)[1] != '.cu':
+            return unixccompiler.UnixCCompiler._compile(
+                self, obj, src, ext, cc_args, extra_postargs, pp_opts)
 
-    # tell the compiler it can processes .cu
-    self.src_extensions.append('.cu')
+        # For CUDA C source files, compile them with NVCC.
+        _compiler_so = self.compiler_so
+        try:
+            nvcc_path = CUDA['nvcc']
+            post_args = CUDA['post_args']
+            # TODO? base_opts = build.get_compiler_base_options()
+            self.set_executable('compiler_so', nvcc_path)
 
-    # save references to the default compiler_so and _comple methods
-    default_compiler_so = self.compiler_so
-    super = self._compile
-
-    # now redefine the _compile method. This gets executed for each
-    # object but distutils doesn't have the ability to change compilers
-    # based on source extension: we add it.
-    def _compile(obj, src, ext, cc_args, postargs, pp_opts):
-        if os.path.splitext(src)[1] == '.cu':
-            # use the cuda for .cu files
-            self.set_executable('compiler_so', CUDA['nvcc'])
-
-            # override compiler args for nvcc
-            postargs = ['-gencode=arch=compute_30,code=sm_30',
-                        '-gencode=arch=compute_35,code=sm_35',
-                        '-gencode=arch=compute_50,code=sm_50',
-                        '-gencode=arch=compute_52,code=sm_52',
-                        '-gencode=arch=compute_52,code=compute_52',
-                        '--ptxas-options=-v', '-O2',
-                        '-c', '--compiler-options', "'-fPIC'"]
-
-        super(obj, src, ext, cc_args, postargs, pp_opts)
-        # reset the default compiler_so, which we might have changed for cuda
-        self.compiler_so = default_compiler_so
-
-    # inject our redefined _compile method into the class
-    self._compile = _compile
+            return unixccompiler.UnixCCompiler._compile(
+                self, obj, src, ext, cc_args, post_args, pp_opts)
+        finally:
+            self.compiler_so = _compiler_so
 
 
-# run the customize_compiler
+class _MSVCCompiler(msvccompiler.MSVCCompiler):
+    _cu_extensions = ['.cu']
+
+    src_extensions = list(unixccompiler.UnixCCompiler.src_extensions)
+    src_extensions.extend(_cu_extensions)
+
+    def _compile_cu(self, sources, output_dir=None, macros=None,
+                    include_dirs=None, debug=0, extra_preargs=None,
+                    extra_postargs=None, depends=None):
+        # Compile CUDA C files, mainly derived from UnixCCompiler._compile().
+        macros, objects, extra_postargs, pp_opts, _build = \
+            self._setup_compile(output_dir, macros, include_dirs, sources,
+                                depends, extra_postargs)
+
+        compiler_so = CUDA['nvcc']
+        cc_args = self._get_cc_args(pp_opts, debug, extra_preargs)
+        post_args = CUDA['post_args']
+
+        for obj in objects:
+            try:
+                src, _ = _build[obj]
+            except KeyError:
+                continue
+            try:
+                self.spawn([compiler_so] + cc_args + [src, '-o', obj] + post_args)
+            except errors.DistutilsExecError as e:
+                raise errors.CompileError(str(e))
+
+        return objects
+
+    def compile(self, sources, **kwargs):
+        # Split CUDA C sources and others.
+        cu_sources = []
+        other_sources = []
+        for source in sources:
+            if os.path.splitext(source)[1] == '.cu':
+                cu_sources.append(source)
+            else:
+                other_sources.append(source)
+
+        # Compile source files other than CUDA C ones.
+        other_objects = msvccompiler.MSVCCompiler.compile(
+            self, other_sources, **kwargs)
+
+        # Compile CUDA C sources.
+        cu_objects = self._compile_cu(cu_sources, **kwargs)
+
+        # Return compiled object filenames.
+        return other_objects + cu_objects
+
+
 class cuda_build_ext(setuptools_build_ext):
-    def build_extensions(self):
-        customize_compiler_for_nvcc(self.compiler)
-        setuptools_build_ext.build_extensions(self)
+    """Custom `build_ext` command to include CUDA C source files."""
+
+    def run(self):
+        if CUDA is not None:
+            def wrap_new_compiler(func):
+                def _wrap_new_compiler(*args, **kwargs):
+                    try:
+                        return func(*args, **kwargs)
+                    except errors.DistutilsPlatformError:
+                        if not sys.platform == 'win32':
+                            CCompiler = _UnixCCompiler
+                        else:
+                            CCompiler = _MSVCCompiler
+                        return CCompiler(
+                            None, kwargs['dry_run'], kwargs['force'])
+                return _wrap_new_compiler
+            ccompiler.new_compiler = wrap_new_compiler(ccompiler.new_compiler)
+            # Intentionally causes DistutilsPlatformError in
+            # ccompiler.new_compiler() function to hook.
+            self.compiler = 'nvidia'
+
+        setuptools_build_ext.run(self)
 
 
 CUDA = locate_cuda()
