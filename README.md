@@ -19,7 +19,8 @@ Feedback Collaborative Filtering](https://pdfs.semanticscholar.org/bfdf/7af6cf7f
 All models have multi-threaded training routines, using Cython and OpenMP to fit the models in
 parallel among all available CPU cores.  In addition, the ALS and BPR models both have custom CUDA
 kernels - enabling fitting on compatible GPU's. Approximate nearest neighbours libraries such as [Annoy](https://github.com/spotify/annoy), [NMSLIB](https://github.com/searchivarius/nmslib)
-and [Faiss](https://github.com/facebookresearch/faiss) can also be used by Implicit to [speed up making recommendations](http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/).
+and [Faiss](https://github.com/facebookresearch/faiss) can also be used by Implicit to [speed up
+making recommendations](https://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/).
 
 To install:
 
@@ -55,11 +56,11 @@ For more information see the [documentation](http://implicit.readthedocs.io/).
 
 These blog posts describe the algorithms that power this library:
 
- * [Finding Similar Music with Matrix Factorization](http://www.benfrederickson.com/matrix-factorization/)
- * [Faster Implicit Matrix Factorization](http://www.benfrederickson.com/fast-implicit-matrix-factorization/)
- * [Implicit Matrix Factorization on the GPU](http://www.benfrederickson.com/implicit-matrix-factorization-on-the-gpu/)
- * [Approximate Nearest Neighbours for Recommender Systems](http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/)
- * [Distance Metrics for Fun and Profit](http://www.benfrederickson.com/distance-metrics/)
+ * [Finding Similar Music with Matrix Factorization](https://www.benfrederickson.com/matrix-factorization/)
+ * [Faster Implicit Matrix Factorization](https://www.benfrederickson.com/fast-implicit-matrix-factorization/)
+ * [Implicit Matrix Factorization on the GPU](https://www.benfrederickson.com/implicit-matrix-factorization-on-the-gpu/)
+ * [Approximate Nearest Neighbours for Recommender Systems](https://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/)
+ * [Distance Metrics for Fun and Profit](https://www.benfrederickson.com/distance-metrics/)
 
 There are also several other blog posts about using Implicit to build recommendation systems:
 
