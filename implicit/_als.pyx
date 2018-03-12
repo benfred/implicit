@@ -69,13 +69,11 @@ def least_squares(Cui, floating[:, :] X, floating[:, :] Y, double regularization
 
     cdef floating * A
     cdef floating * b
-    cdef int * pivot
 
     with nogil, parallel(num_threads=num_threads):
         # allocate temp memory for each thread
         A = <floating *> malloc(sizeof(floating) * factors * factors)
         b = <floating *> malloc(sizeof(floating) * factors)
-        pivot = <int *> malloc(sizeof(int) * factors)
         try:
             for u in prange(users, schedule='guided'):
                 # if we have no items for this user, skip and set to zero
@@ -107,22 +105,20 @@ def least_squares(Cui, floating[:, :] X, floating[:, :] Y, double regularization
                 err = 0
                 posv("U", &factors, &one, A, &factors, b, &factors, &err)
 
-                # fall back to using a LU decomposition if this fails
-                # TODO: I don't think this works since posv can modify A
-                if err:
-                    gesv(&factors, &one, A, &factors, pivot, b, &factors, &err)
-
                 if not err:
                     memcpy(&X[u, 0], b, sizeof(floating) * factors)
-
                 else:
+                    # I believe the only time this should happen is on trivial problems with no
+                    # regularization being used (posv requires a positive semi-definite matrix,
+                    # since a= Yt(Cu + regularization I)Y a is always positive. its also non
+                    # zero if the regularization factor > 0.
                     with gil:
-                        raise ValueError("Singular matrix (err=%i) on row %i" % (err, u))
+                        raise ValueError("cython_lapack.posv failed (err=%i) on row %i. Try "
+                                         "increasing the regularization parameter." % (err, u))
 
         finally:
             free(A)
             free(b)
-            free(pivot)
 
 
 @cython.cdivision(True)
