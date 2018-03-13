@@ -82,7 +82,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
     user_factors : ndarray
         Array of latent factors for each user in the training set
     """
-    def __init__(self, factors=100, learning_rate=0.05, regularization=0.01, dtype=np.float32,
+    def __init__(self, factors=100, learning_rate=0.01, regularization=0.01, dtype=np.float32,
                  iterations=100, use_gpu=False, num_threads=0):
         super(BayesianPersonalizedRanking, self).__init__()
 
