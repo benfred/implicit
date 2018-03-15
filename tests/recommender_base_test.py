@@ -66,6 +66,11 @@ class TestRecommenderBaseMixin(object):
         item_users[42] = 0
         item_users[:, 42] = 0
 
+        # also set the last row/column to 0 (test out problem reported here
+        # https://github.com/benfred/implicit/issues/86#issuecomment-373385686)
+        item_users[49] = 0
+        item_users[:, 49] = 0
+
         model = self._get_model()
         model.fit(csr_matrix(item_users))
 

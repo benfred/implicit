@@ -130,13 +130,15 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.item_factors = np.random.rand(items, self.factors + 1).astype(self.dtype)
 
             # set factors to all zeros for items without any ratings
-            self.item_factors[np.bincount(Ciu.row) == 0] = np.zeros(self.factors + 1)
+            item_counts = np.bincount(Ciu.row, minlength=items)
+            self.item_factors[item_counts == 0] = np.zeros(self.factors + 1)
 
         if self.user_factors is None:
             self.user_factors = np.random.rand(users, self.factors + 1).astype(self.dtype)
 
             # set factors to all zeros for users without any ratings
-            self.user_factors[np.bincount(Ciu.col) == 0] = np.zeros(self.factors + 1)
+            user_counts = np.bincount(Ciu.col, minlength=users)
+            self.user_factors[user_counts == 0] = np.zeros(self.factors + 1)
 
             self.user_factors[:, self.factors] = 1.0
 
