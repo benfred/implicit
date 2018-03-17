@@ -124,6 +124,48 @@ def calculate_similar_artists(input_filename, output_filename, model_name="als")
 
     logging.debug("generated similar artists in %0.2fs",  time.time() - start)
 
+def calculate_similar_users(input_filename, output_filename, model_name="als"):
+    """ generates a list of similar artists in lastfm by utiliizing the 'similar_items'
+    api of the models """
+    df, plays = read_data(input_filename)
+
+    # create a model from the input data
+    model = get_model(model_name)
+
+    # if we're training an ALS based model, weight input for last.fm
+    # by bm25
+    if issubclass(model.__class__, AlternatingLeastSquares):
+        # lets weight these models by bm25weight.
+        logging.debug("weighting matrix by bm25_weight")
+        plays = bm25_weight(plays, K1=100, B=0.8)
+
+        # also disable building approximate recommend index
+        model.approximate_recommend = False
+
+    # this is actually disturbingly expensive:
+    plays = plays.tocsr()
+
+    logging.debug("training model %s", model_name)
+    start = time.time()
+    model.fit(plays)
+    logging.debug("trained model '%s' in %0.2fs", model_name, time.time() - start)
+
+    # write out similar artists by popularity
+    users = dict(enumerate(df['user'].cat.categories))
+    start = time.time()
+    logging.debug("calculating top users")
+    artist_count = df.groupby('user').size()
+    to_generate = sorted(list(users), key=lambda x: -artist_count[x])
+
+    # write out as a TSV of artistid, otherartistid, score
+    with open(output_filename, "w") as o:
+        for userid in to_generate:
+            user = users[userid]
+            for other, score in model.similar_users(userid, 11):
+                o.write("%s\t%s\t%s\n" % (user, users[other], score))
+
+    logging.debug("generated similar users in %0.2fs",  time.time() - start)
+
 
 def calculate_recommendations(input_filename, output_filename, model_name="als"):
     """ Generates artist recommendations for each user in the dataset """
@@ -172,9 +214,9 @@ if __name__ == "__main__":
                         dest='outputfile', help='output file name')
     parser.add_argument('--model', type=str, default='als',
                         dest='model', help='model to calculate (%s)' % "/".join(MODELS.keys()))
-    parser.add_argument('--recommend',
-                        help='Recommend items for each user rather than calculate similar_items',
-                        action="store_true")
+    parser.add_argument('--recommend', type=str, default='recommend',
+                        dest='recommend',
+                        help='Recommend items for each user rather than calculate similar_items')
     parser.add_argument('--param', action='append',
                         help="Parameters to pass to the model, formatted as 'KEY=VALUE")
 
@@ -182,7 +224,9 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-    if args.recommend:
+    if args.recommend == 'recommend':
         calculate_recommendations(args.inputfile, args.outputfile, model_name=args.model)
-    else:
+    elif args.recommend == 'artists':
         calculate_similar_artists(args.inputfile, args.outputfile, model_name=args.model)
+    else:
+        calculate_similar_users(args.inputfile, args.outputfile, model_name=args.model)

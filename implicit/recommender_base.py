@@ -73,6 +73,14 @@ class RecommenderBase(object):
             List of (itemid, score) tuples
         """
         pass
+    
+    def similar_users(model, userid, N=10):
+        # note: recalculating norms per call is maybe not the most efficient
+        user_norms = np.linalg.norm(model.user_factors, axis=-1)
+
+        scores = model.user_factors.dot(model.user_factors[userid]) / user_norms
+        best = np.argpartition(scores, -N)[-N:]
+        return sorted(zip(best, scores[best] / user_norms[itemid]), key=lambda x: -x[1])
 
 
 class MatrixFactorizationBase(RecommenderBase):

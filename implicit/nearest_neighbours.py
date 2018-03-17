@@ -43,6 +43,14 @@ class ItemItemRecommender(RecommenderBase):
 
         return sorted(list(nonzeros(self.similarity, itemid)), key=lambda x: -x[1])[:N]
 
+    def similar_users(model, userid, N=10):
+        # note: recalculating norms per call is maybe not the most efficient
+        user_norms = np.linalg.norm(model.user_factors, axis=-1)
+
+        scores = model.user_factors.dot(model.user_factors[userid]) / user_norms
+        best = np.argpartition(scores, -N)[-N:]
+        return sorted(zip(best, scores[best] / user_norms[itemid]), key=lambda x: -x[1])
+    
     def save(self, filename):
         m = self.similarity
         numpy.savez(filename, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape,
