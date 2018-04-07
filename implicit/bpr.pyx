@@ -69,7 +69,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
     use_gpu : bool, optional
         Fit on the GPU if available
     iterations : int, optional
-        The number of training epochs tro use when fitting the data
+        The number of training epochs to use when fitting the data
     num_threads : int, optional
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
@@ -196,8 +196,8 @@ def bpr_update(RNGVector rng,
                floating[:, :] X, floating[:, :] Y,
                float learning_rate, float reg, int num_threads):
     cdef integral users = X.shape[0], items = Y.shape[0]
-    cdef long samples = len(userids), i, liked_index, disliked_index
-    cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+    cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0
+    cdef integral j, liked_id, disliked_id, thread_id
     cdef floating z, score, temp
 
     cdef floating * user

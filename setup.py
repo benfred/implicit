@@ -10,7 +10,7 @@ from cuda_setup import CUDA, build_ext
 
 
 NAME = 'implicit'
-VERSION = '0.3.3'
+VERSION = '0.3.4'
 
 try:
     from Cython.Build import cythonize

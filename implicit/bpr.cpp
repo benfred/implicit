@@ -2076,7 +2076,7 @@ static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate 
 static const char __pyx_k_Converting_input_to_COO_format[] = "Converting input to COO format";
 static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direct or indirect>";
 static const char __pyx_k_BayesianPersonalizedRanking_fit[] = "BayesianPersonalizedRanking.fit";
-static const char __pyx_k_Bayesian_Personalized_Ranking_A[] = " Bayesian Personalized Ranking\n\n    A recommender model that learns  a matrix factorization embedding based off minimizing the\n    pairwise ranking loss described in the paper `BPR: Bayesian Personalized Ranking from Implicit\n    Feedback <https://arxiv.org/pdf/1205.2618.pdf>`_.\n\n    Parameters\n    ----------\n    factors : int, optional\n        The number of latent factors to compute\n    learning_rate : float, optional\n        The learning rate to apply for SGD updates during training\n    regularization : float, optional\n        The regularization factor to use\n    dtype : data-type, optional\n        Specifies whether to generate 64 bit or 32 bit floating point factors\n    use_gpu : bool, optional\n        Fit on the GPU if available\n    iterations : int, optional\n        The number of training epochs tro use when fitting the data\n    num_threads : int, optional\n        The number of threads to use for fitting the model. This only\n        applies for the native extensions. Specifying 0 means to default\n        to the number of cores on the machine.\n\n    Attributes\n    ----------\n    item_factors : ndarray\n        Array of latent factors for each item in the training set\n    user_factors : ndarray\n        Array of latent factors for each user in the training set\n    ";
+static const char __pyx_k_Bayesian_Personalized_Ranking_A[] = " Bayesian Personalized Ranking\n\n    A recommender model that learns  a matrix factorization embedding based off minimizing the\n    pairwise ranking loss described in the paper `BPR: Bayesian Personalized Ranking from Implicit\n    Feedback <https://arxiv.org/pdf/1205.2618.pdf>`_.\n\n    Parameters\n    ----------\n    factors : int, optional\n        The number of latent factors to compute\n    learning_rate : float, optional\n        The learning rate to apply for SGD updates during training\n    regularization : float, optional\n        The regularization factor to use\n    dtype : data-type, optional\n        Specifies whether to generate 64 bit or 32 bit floating point factors\n    use_gpu : bool, optional\n        Fit on the GPU if available\n    iterations : int, optional\n        The number of training epochs to use when fitting the data\n    num_threads : int, optional\n        The number of threads to use for fitting the model. This only\n        applies for the native extensions. Specifying 0 means to default\n        to the number of cores on the machine.\n\n    Attributes\n    ----------\n    item_factors : ndarray\n        Array of latent factors for each item in the training set\n    user_factors : ndarray\n        Array of latent factors for each user in the training set\n    ";
 static const char __pyx_k_Factors_of_dtype_float64_aren_t[] = "Factors of dtype float64 aren't supported with gpu fitting. Converting factors to float32";
 static const char __pyx_k_BayesianPersonalizedRanking___in[] = "BayesianPersonalizedRanking.__init__";
 static const char __pyx_k_BayesianPersonalizedRanking__fit[] = "BayesianPersonalizedRanking._fit_gpu";
@@ -6974,11 +6974,11 @@ static PyObject *__pyx_pf_8implicit_3bpr_2bpr_update(CYTHON_UNUSED PyObject *__p
   CYTHON_UNUSED long __pyx_v_i;
   long __pyx_v_liked_index;
   long __pyx_v_disliked_index;
+  long __pyx_v_correct;
   short __pyx_v_j;
   short __pyx_v_liked_id;
   short __pyx_v_disliked_id;
   short __pyx_v_thread_id;
-  short __pyx_v_correct;
   float __pyx_v_z;
   float __pyx_v_score;
   float __pyx_v_temp;
@@ -7016,8 +7016,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_2bpr_update(CYTHON_UNUSED PyObject *__p
  *                floating[:, :] X, floating[:, :] Y,
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]             # <<<<<<<<<<<<<<
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0
+ *     cdef integral j, liked_id, disliked_id, thread_id
  */
   __pyx_v_users = (__pyx_v_X.shape[0]);
   __pyx_v_items = (__pyx_v_Y.shape[0]);
@@ -7025,8 +7025,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_2bpr_update(CYTHON_UNUSED PyObject *__p
   /* "implicit/bpr.pyx":199
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index             # <<<<<<<<<<<<<<
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0             # <<<<<<<<<<<<<<
+ *     cdef integral j, liked_id, disliked_id, thread_id
  *     cdef floating z, score, temp
  */
   __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_userids, 1, (PyObject *(*)(char *)) __pyx_memview_get_short, (int (*)(char *, PyObject *)) __pyx_memview_set_short, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
@@ -7034,14 +7034,6 @@ static PyObject *__pyx_pf_8implicit_3bpr_2bpr_update(CYTHON_UNUSED PyObject *__p
   __pyx_t_2 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_samples = __pyx_t_2;
-
-  /* "implicit/bpr.pyx":200
- *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0             # <<<<<<<<<<<<<<
- *     cdef floating z, score, temp
- * 
- */
   __pyx_v_correct = 0;
 
   /* "implicit/bpr.pyx":207
@@ -7366,7 +7358,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_2bpr_update(CYTHON_UNUSED PyObject *__p
  *     return correct             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_short(__pyx_v_correct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -7535,11 +7527,11 @@ static PyObject *__pyx_pf_8implicit_3bpr_4bpr_update(CYTHON_UNUSED PyObject *__p
   CYTHON_UNUSED long __pyx_v_i;
   long __pyx_v_liked_index;
   long __pyx_v_disliked_index;
+  long __pyx_v_correct;
   short __pyx_v_j;
   short __pyx_v_liked_id;
   short __pyx_v_disliked_id;
   short __pyx_v_thread_id;
-  short __pyx_v_correct;
   double __pyx_v_z;
   double __pyx_v_score;
   double __pyx_v_temp;
@@ -7577,8 +7569,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_4bpr_update(CYTHON_UNUSED PyObject *__p
  *                floating[:, :] X, floating[:, :] Y,
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]             # <<<<<<<<<<<<<<
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0
+ *     cdef integral j, liked_id, disliked_id, thread_id
  */
   __pyx_v_users = (__pyx_v_X.shape[0]);
   __pyx_v_items = (__pyx_v_Y.shape[0]);
@@ -7586,8 +7578,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_4bpr_update(CYTHON_UNUSED PyObject *__p
   /* "implicit/bpr.pyx":199
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index             # <<<<<<<<<<<<<<
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0             # <<<<<<<<<<<<<<
+ *     cdef integral j, liked_id, disliked_id, thread_id
  *     cdef floating z, score, temp
  */
   __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_userids, 1, (PyObject *(*)(char *)) __pyx_memview_get_short, (int (*)(char *, PyObject *)) __pyx_memview_set_short, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
@@ -7595,14 +7587,6 @@ static PyObject *__pyx_pf_8implicit_3bpr_4bpr_update(CYTHON_UNUSED PyObject *__p
   __pyx_t_2 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_samples = __pyx_t_2;
-
-  /* "implicit/bpr.pyx":200
- *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0             # <<<<<<<<<<<<<<
- *     cdef floating z, score, temp
- * 
- */
   __pyx_v_correct = 0;
 
   /* "implicit/bpr.pyx":207
@@ -7927,7 +7911,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_4bpr_update(CYTHON_UNUSED PyObject *__p
  *     return correct             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_short(__pyx_v_correct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -8096,11 +8080,11 @@ static PyObject *__pyx_pf_8implicit_3bpr_6bpr_update(CYTHON_UNUSED PyObject *__p
   CYTHON_UNUSED long __pyx_v_i;
   long __pyx_v_liked_index;
   long __pyx_v_disliked_index;
+  long __pyx_v_correct;
   int __pyx_v_j;
   int __pyx_v_liked_id;
   int __pyx_v_disliked_id;
   int __pyx_v_thread_id;
-  int __pyx_v_correct;
   float __pyx_v_z;
   float __pyx_v_score;
   float __pyx_v_temp;
@@ -8138,8 +8122,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_6bpr_update(CYTHON_UNUSED PyObject *__p
  *                floating[:, :] X, floating[:, :] Y,
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]             # <<<<<<<<<<<<<<
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0
+ *     cdef integral j, liked_id, disliked_id, thread_id
  */
   __pyx_v_users = (__pyx_v_X.shape[0]);
   __pyx_v_items = (__pyx_v_Y.shape[0]);
@@ -8147,8 +8131,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_6bpr_update(CYTHON_UNUSED PyObject *__p
   /* "implicit/bpr.pyx":199
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index             # <<<<<<<<<<<<<<
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0             # <<<<<<<<<<<<<<
+ *     cdef integral j, liked_id, disliked_id, thread_id
  *     cdef floating z, score, temp
  */
   __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_userids, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
@@ -8156,14 +8140,6 @@ static PyObject *__pyx_pf_8implicit_3bpr_6bpr_update(CYTHON_UNUSED PyObject *__p
   __pyx_t_2 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_samples = __pyx_t_2;
-
-  /* "implicit/bpr.pyx":200
- *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0             # <<<<<<<<<<<<<<
- *     cdef floating z, score, temp
- * 
- */
   __pyx_v_correct = 0;
 
   /* "implicit/bpr.pyx":207
@@ -8488,7 +8464,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_6bpr_update(CYTHON_UNUSED PyObject *__p
  *     return correct             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_correct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -8657,11 +8633,11 @@ static PyObject *__pyx_pf_8implicit_3bpr_8bpr_update(CYTHON_UNUSED PyObject *__p
   CYTHON_UNUSED long __pyx_v_i;
   long __pyx_v_liked_index;
   long __pyx_v_disliked_index;
+  long __pyx_v_correct;
   int __pyx_v_j;
   int __pyx_v_liked_id;
   int __pyx_v_disliked_id;
   int __pyx_v_thread_id;
-  int __pyx_v_correct;
   double __pyx_v_z;
   double __pyx_v_score;
   double __pyx_v_temp;
@@ -8699,8 +8675,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_8bpr_update(CYTHON_UNUSED PyObject *__p
  *                floating[:, :] X, floating[:, :] Y,
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]             # <<<<<<<<<<<<<<
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0
+ *     cdef integral j, liked_id, disliked_id, thread_id
  */
   __pyx_v_users = (__pyx_v_X.shape[0]);
   __pyx_v_items = (__pyx_v_Y.shape[0]);
@@ -8708,8 +8684,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_8bpr_update(CYTHON_UNUSED PyObject *__p
   /* "implicit/bpr.pyx":199
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index             # <<<<<<<<<<<<<<
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0             # <<<<<<<<<<<<<<
+ *     cdef integral j, liked_id, disliked_id, thread_id
  *     cdef floating z, score, temp
  */
   __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_userids, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
@@ -8717,14 +8693,6 @@ static PyObject *__pyx_pf_8implicit_3bpr_8bpr_update(CYTHON_UNUSED PyObject *__p
   __pyx_t_2 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_samples = __pyx_t_2;
-
-  /* "implicit/bpr.pyx":200
- *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0             # <<<<<<<<<<<<<<
- *     cdef floating z, score, temp
- * 
- */
   __pyx_v_correct = 0;
 
   /* "implicit/bpr.pyx":207
@@ -9049,7 +9017,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_8bpr_update(CYTHON_UNUSED PyObject *__p
  *     return correct             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_correct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -9218,11 +9186,11 @@ static PyObject *__pyx_pf_8implicit_3bpr_10bpr_update(CYTHON_UNUSED PyObject *__
   CYTHON_UNUSED long __pyx_v_i;
   long __pyx_v_liked_index;
   long __pyx_v_disliked_index;
+  long __pyx_v_correct;
   long __pyx_v_j;
   long __pyx_v_liked_id;
   long __pyx_v_disliked_id;
   long __pyx_v_thread_id;
-  long __pyx_v_correct;
   float __pyx_v_z;
   float __pyx_v_score;
   float __pyx_v_temp;
@@ -9259,8 +9227,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_10bpr_update(CYTHON_UNUSED PyObject *__
  *                floating[:, :] X, floating[:, :] Y,
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]             # <<<<<<<<<<<<<<
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0
+ *     cdef integral j, liked_id, disliked_id, thread_id
  */
   __pyx_v_users = (__pyx_v_X.shape[0]);
   __pyx_v_items = (__pyx_v_Y.shape[0]);
@@ -9268,8 +9236,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_10bpr_update(CYTHON_UNUSED PyObject *__
   /* "implicit/bpr.pyx":199
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index             # <<<<<<<<<<<<<<
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0             # <<<<<<<<<<<<<<
+ *     cdef integral j, liked_id, disliked_id, thread_id
  *     cdef floating z, score, temp
  */
   __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_userids, 1, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
@@ -9277,14 +9245,6 @@ static PyObject *__pyx_pf_8implicit_3bpr_10bpr_update(CYTHON_UNUSED PyObject *__
   __pyx_t_2 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_samples = __pyx_t_2;
-
-  /* "implicit/bpr.pyx":200
- *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0             # <<<<<<<<<<<<<<
- *     cdef floating z, score, temp
- * 
- */
   __pyx_v_correct = 0;
 
   /* "implicit/bpr.pyx":207
@@ -9778,11 +9738,11 @@ static PyObject *__pyx_pf_8implicit_3bpr_12bpr_update(CYTHON_UNUSED PyObject *__
   CYTHON_UNUSED long __pyx_v_i;
   long __pyx_v_liked_index;
   long __pyx_v_disliked_index;
+  long __pyx_v_correct;
   long __pyx_v_j;
   long __pyx_v_liked_id;
   long __pyx_v_disliked_id;
   long __pyx_v_thread_id;
-  long __pyx_v_correct;
   double __pyx_v_z;
   double __pyx_v_score;
   double __pyx_v_temp;
@@ -9819,8 +9779,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_12bpr_update(CYTHON_UNUSED PyObject *__
  *                floating[:, :] X, floating[:, :] Y,
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]             # <<<<<<<<<<<<<<
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0
+ *     cdef integral j, liked_id, disliked_id, thread_id
  */
   __pyx_v_users = (__pyx_v_X.shape[0]);
   __pyx_v_items = (__pyx_v_Y.shape[0]);
@@ -9828,8 +9788,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_12bpr_update(CYTHON_UNUSED PyObject *__
   /* "implicit/bpr.pyx":199
  *                float learning_rate, float reg, int num_threads):
  *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index             # <<<<<<<<<<<<<<
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0
+ *     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0             # <<<<<<<<<<<<<<
+ *     cdef integral j, liked_id, disliked_id, thread_id
  *     cdef floating z, score, temp
  */
   __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_userids, 1, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
@@ -9837,14 +9797,6 @@ static PyObject *__pyx_pf_8implicit_3bpr_12bpr_update(CYTHON_UNUSED PyObject *__
   __pyx_t_2 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_samples = __pyx_t_2;
-
-  /* "implicit/bpr.pyx":200
- *     cdef integral users = X.shape[0], items = Y.shape[0]
- *     cdef long samples = len(userids), i, liked_index, disliked_index
- *     cdef integral j, liked_id, disliked_id, thread_id, correct = 0             # <<<<<<<<<<<<<<
- *     cdef floating z, score, temp
- * 
- */
   __pyx_v_correct = 0;
 
   /* "implicit/bpr.pyx":207
@@ -24394,7 +24346,7 @@ static int __Pyx_InitCachedConstants(void) {
  *                integral[:] userids, integral[:] itemids,
  *                floating[:, :] X, floating[:, :] Y,
  */
-  __pyx_tuple__43 = PyTuple_Pack(26, __pyx_n_s_rng, __pyx_n_s_userids, __pyx_n_s_itemids, __pyx_n_s_X, __pyx_n_s_Y, __pyx_n_s_learning_rate, __pyx_n_s_reg, __pyx_n_s_num_threads, __pyx_n_s_users, __pyx_n_s_items, __pyx_n_s_samples, __pyx_n_s_i, __pyx_n_s_liked_index, __pyx_n_s_disliked_index, __pyx_n_s_j, __pyx_n_s_liked_id, __pyx_n_s_disliked_id, __pyx_n_s_thread_id, __pyx_n_s_correct, __pyx_n_s_z, __pyx_n_s_score, __pyx_n_s_temp, __pyx_n_s_user, __pyx_n_s_liked, __pyx_n_s_disliked, __pyx_n_s_factors); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(0, 194, __pyx_L1_error)
+  __pyx_tuple__43 = PyTuple_Pack(26, __pyx_n_s_rng, __pyx_n_s_userids, __pyx_n_s_itemids, __pyx_n_s_X, __pyx_n_s_Y, __pyx_n_s_learning_rate, __pyx_n_s_reg, __pyx_n_s_num_threads, __pyx_n_s_users, __pyx_n_s_items, __pyx_n_s_samples, __pyx_n_s_i, __pyx_n_s_liked_index, __pyx_n_s_disliked_index, __pyx_n_s_correct, __pyx_n_s_j, __pyx_n_s_liked_id, __pyx_n_s_disliked_id, __pyx_n_s_thread_id, __pyx_n_s_z, __pyx_n_s_score, __pyx_n_s_temp, __pyx_n_s_user, __pyx_n_s_liked, __pyx_n_s_disliked, __pyx_n_s_factors); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__43);
   __Pyx_GIVEREF(__pyx_tuple__43);
   __pyx_codeobj__44 = (PyObject*)__Pyx_PyCode_New(8, 0, 26, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__43, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_bpr_pyx, __pyx_n_s_bpr_update, 194, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__44)) __PYX_ERR(0, 194, __pyx_L1_error)
