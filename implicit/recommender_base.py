@@ -56,6 +56,33 @@ class RecommenderBase(object):
         pass
 
     @abstractmethod
+    def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
+        """
+        Rank given items for a user and returns sorted item list.
+
+        Parameters
+        ----------
+        userid : int
+            The userid to calculate recommendations for
+        user_items : csr_matrix
+            A sparse matrix of shape (number_users, number_items). This lets us look
+            up the liked items and their weights for the user. This is used to filter out
+            items that have already been liked from the output, and to also potentially
+            calculate the best items for this user.
+        selected_items : List of itemids
+        recalculate_user : bool, optional
+            When true, don't rely on stored user state and instead recalculate from the
+            passed in user_items
+
+        Returns
+        -------
+        list
+            List of (itemid, score) tuples. it only contains items that appears in
+            input parameter selected_items
+        """
+        pass
+
+    @abstractmethod
     def similar_items(self, itemid, N=10):
         """
         Calculates a list of similar items
@@ -109,6 +136,20 @@ class MatrixFactorizationBase(RecommenderBase):
         else:
             best = sorted(enumerate(scores), key=lambda x: -x[1])
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
+
+    def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
+        user = self._user_factor(userid, user_items, recalculate_user)
+
+        # check selected items are  in the model
+        if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:
+            raise IndexError("Some of selected itemids are not in the model")
+
+        item_factors = self.item_factors[selected_items]
+        # calculate relevance scores of given items w.r.t the user
+        scores = item_factors.dot(user)
+
+        # return sorted results
+        return sorted(zip(selected_items, scores), key=lambda x: -x[1])
 
     recommend.__doc__ = RecommenderBase.recommend.__doc__
 

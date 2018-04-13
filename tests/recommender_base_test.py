@@ -88,6 +88,33 @@ class TestRecommenderBaseMixin(object):
         model = self._get_model()
         model.fit(item_users.astype(np.float32))
 
+    def test_rank_items(self):
+        item_users = self.get_checker_board(50)
+        user_items = item_users.T.tocsr()
+
+        model = self._get_model()
+        model.fit(item_users)
+
+        for userid in range(50):
+            selected_items = np.random.randint(50, size=10).tolist()
+            ranked_list = model.rank_items(userid, user_items, selected_items)
+            ordered_items = [itemid for (itemid, score) in ranked_list]
+
+            # ranked list should have same items
+            self.assertEqual(set(ordered_items), set(selected_items))
+
+            wrong_neg_items = [-1, -3, -5]
+            wrong_pos_items = [51, 300, 200]
+
+            # rank_items should raise IndexError if selected items contains wrong itemids
+
+            with self.assertRaises(IndexError):
+                wrong_item_list = selected_items + wrong_neg_items
+                model.rank_items(userid, user_items, wrong_item_list)
+            with self.assertRaises(IndexError):
+                wrong_item_list = selected_items + wrong_pos_items
+                model.rank_items(userid, user_items, wrong_item_list)
+
     def get_checker_board(self, X):
         """ Returns a 'checkerboard' matrix: where every even userid has liked
         every even itemid and every odd userid has liked every odd itemid.
