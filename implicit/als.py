@@ -49,6 +49,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
         to the number of cores on the machine.
+    random_state : int, RandomState or None, optional
+        The random state for seeding the initial item and user factors.
+        Default is None.
 
     Attributes
     ----------
@@ -60,7 +63,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
     def __init__(self, factors=100, regularization=0.01, dtype=np.float32,
                  use_native=True, use_cg=True, use_gpu=implicit.cuda.HAS_CUDA,
-                 iterations=15, calculate_training_loss=False, num_threads=0):
+                 iterations=15, calculate_training_loss=False, num_threads=0,
+                 random_state=None):
+                 
         super(AlternatingLeastSquares, self).__init__()
 
         # currently there are some issues when training on the GPU when some of the warps
@@ -87,6 +92,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.num_threads = num_threads
         self.fit_callback = None
         self.cg_steps = 3
+        self.random_state = random_state
 
         # cache for item factors squared
         self._YtY = None
@@ -118,6 +124,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         show_progress : bool, optional
             Whether to show a progress bar during fitting
         """
+<<<<<<< HEAD
+=======
+        # initialize the random state
+        random_state = np.random.RandomState(self.random_state)
+
+>>>>>>> Permit seeding for ALS to control X, Y initialization
         Ciu = item_users
         if not isinstance(Ciu, scipy.sparse.csr_matrix):
             s = time.time()
@@ -137,9 +149,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         s = time.time()
         # Initialize the variables randomly if they haven't already been set
         if self.user_factors is None:
-            self.user_factors = np.random.rand(users, self.factors).astype(self.dtype) * 0.01
+            self.user_factors = random_state.rand(users, self.factors).astype(self.dtype) * 0.01
         if self.item_factors is None:
-            self.item_factors = np.random.rand(items, self.factors).astype(self.dtype) * 0.01
+            self.item_factors = random_state.rand(items, self.factors).astype(self.dtype) * 0.01
 
         log.debug("Initialized factors in %s", time.time() - s)
 
