@@ -13,7 +13,7 @@ import implicit.cuda
 
 from . import _als
 from .recommender_base import MatrixFactorizationBase
-from .utils import check_blas_config, nonzeros
+from .utils import check_blas_config, nonzeros, check_random_state
 
 log = logging.getLogger("implicit")
 
@@ -127,7 +127,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 <<<<<<< HEAD
 =======
         # initialize the random state
-        random_state = np.random.RandomState(self.random_state)
+        random_state = check_random_state(self.random_state)
 
 >>>>>>> Permit seeding for ALS to control X, Y initialization
         Ciu = item_users
