@@ -10,8 +10,8 @@ from cuda_setup import CUDA, build_ext
 
 
 NAME = 'implicit'
-VERSION = '0.3.4'
-
+VERSION = [l.split("'")[1] for l in open("implicit/__init__.py")
+           if l.startswith("__version__ =")][0]
 try:
     from Cython.Build import cythonize
     use_cython = True
@@ -119,10 +119,19 @@ def set_gcc():
 
 set_gcc()
 
+try:
+    # if we don't have pandoc installed, don't worry about it
+    import pypandoc
+    long_description = pypandoc.convert_file("README.md", "rst")
+except ImportError:
+    long_description = ''
+
+
 setup(
     name=NAME,
     version=VERSION,
     description='Collaborative Filtering for Implicit Datasets',
+    long_description=long_description,
     url='http://github.com/benfred/implicit/',
     author='Ben Frederickson',
     author_email='ben@benfrederickson.com',
