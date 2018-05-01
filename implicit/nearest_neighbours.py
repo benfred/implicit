@@ -36,6 +36,26 @@ class ItemItemRecommender(RecommenderBase):
 
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
 
+    def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
+        """ Rank given items for a user and returns sorted item list """
+        # check if selected_items contains itemids that are not in the model(user_items)
+        if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:
+            raise IndexError("Some of selected itemids are not in the model")
+
+        # calculate the relevance scores
+        liked_vector = user_items[userid]
+        recommendations = liked_vector.dot(self.similarity)
+
+        # remove items that are not in the selected_items
+        best = sorted(zip(recommendations.indices, recommendations.data), key=lambda x: -x[1])
+        ret = [rec for rec in best if rec[0] in selected_items]
+
+        # returned items should be equal to input selected items
+        for itemid in selected_items:
+            if itemid not in recommendations.indices:
+                ret.append((itemid, -1.0))
+        return ret
+
     def similar_items(self, itemid, N=10):
         """ Returns a list of the most similar other items """
         if itemid >= self.similarity.shape[0]:
