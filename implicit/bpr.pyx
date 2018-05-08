@@ -4,6 +4,7 @@ import logging
 import multiprocessing
 import random
 import time
+import tqdm
 
 from cython.parallel import parallel, prange
 from libc.math cimport exp
@@ -155,14 +156,14 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # initialize RNG's, one per thread.
         cdef long rows = len(Ciu.row) - 1
         cdef RNGVector rng = RNGVector(num_threads, rows)
-
-        for epoch in range(self.iterations):
-            start = time.time()
-            correct = bpr_update(rng, Ciu.col, Ciu.row,
-                                 self.user_factors, self.item_factors,
-                                 self.learning_rate, self.regularization, num_threads)
-            log.debug("fit epoch %i in %.3fs (%.2f%% ranked correctly)", epoch,
-                      (time.time() - start), 100.0 * correct / len(Ciu.row))
+        log.debug("Running %i BPR training epochs", self.iterations)
+        with tqdm.tqdm(total=self.iterations) as progress:
+            for epoch in range(self.iterations):
+                correct = bpr_update(rng, Ciu.col, Ciu.row,
+                                     self.user_factors, self.item_factors,
+                                     self.learning_rate, self.regularization, num_threads)
+                progress.update(1)
+                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})
 
     def _fit_gpu(self, Ciu_host):
         if not implicit.cuda.HAS_CUDA:
@@ -178,12 +179,13 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         X = implicit.cuda.CuDenseMatrix(self.user_factors)
         Y = implicit.cuda.CuDenseMatrix(self.item_factors)
 
-        for epoch in range(self.iterations):
-            start = time.time()
-            correct = implicit.cuda.cu_bpr_update(Ciu, X, Y, self.learning_rate,
-                                                  self.regularization, np.random.randint(2**31))
-            log.debug("fit epoch %i in %.3fs (%.2f%% ranked correctly)", epoch,
-                      (time.time() - start), 100.0 * correct / len(Ciu_host.row))
+        log.debug("Running %i BPR training epochs", self.iterations)
+        with tqdm.tqdm(total=self.iterations) as progress:
+            for epoch in range(self.iterations):
+                correct = implicit.cuda.cu_bpr_update(Ciu, X, Y, self.learning_rate,
+                                                      self.regularization, np.random.randint(2**31))
+                progress.update(1)
+                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})
 
         X.to_host(self.user_factors)
         Y.to_host(self.item_factors)

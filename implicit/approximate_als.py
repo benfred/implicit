@@ -11,6 +11,9 @@ import numpy
 from implicit.als import AlternatingLeastSquares
 
 
+log = logging.getLogger("implicit")
+
+
 def augment_inner_product_matrix(factors):
     """ This function transforms a factor matrix such that an angular nearest neighbours search
     will return top related items of the inner product.
@@ -65,9 +68,9 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
                  approximate_similar_items=True, approximate_recommend=True,
                  method='hnsw', index_params=None, query_params=None, *args, **kwargs):
         if index_params is None:
-            index_params = {'M': 32, 'post': 2, 'efConstruction': 800}
+            index_params = {'M': 32, 'post': 0, 'efConstruction': 800}
         if query_params is None:
-            query_params = {'ef': 50}
+            query_params = {'ef': 90}
 
         self.similar_items_index = None
         self.recommend_index = None
@@ -92,6 +95,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
 
         # create index for similar_items
         if self.approximate_similar_items:
+            log.debug("Building nmslib similar items index")
             self.similar_items_index = nmslib.init(
                 method=self.method, space='cosinesimil')
 
@@ -112,6 +116,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         # build up a separate index for the inner product (for recommend
         # methods)
         if self.approximate_recommend:
+            log.debug("Building nmslib recommendation index")
             self.max_norm, extra = augment_inner_product_matrix(
                 self.item_factors)
             self.recommend_index = nmslib.init(
@@ -205,19 +210,24 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
 
         # build up an Annoy Index with all the item_factors (for calculating
         # similar items)
-        self.similar_items_index = annoy.AnnoyIndex(
-            self.item_factors.shape[1], 'angular')
-        for i, row in enumerate(self.item_factors):
-            self.similar_items_index.add_item(i, row)
-        self.similar_items_index.build(self.n_trees)
+        if self.approximate_similar_items:
+            log.debug("Building annoy similar items index")
+
+            self.similar_items_index = annoy.AnnoyIndex(
+                self.item_factors.shape[1], 'angular')
+            for i, row in enumerate(self.item_factors):
+                self.similar_items_index.add_item(i, row)
+            self.similar_items_index.build(self.n_trees)
 
         # build up a separate index for the inner product (for recommend
         # methods)
-        self.max_norm, extra = augment_inner_product_matrix(self.item_factors)
-        self.recommend_index = annoy.AnnoyIndex(extra.shape[1], 'angular')
-        for i, row in enumerate(extra):
-            self.recommend_index.add_item(i, row)
-        self.recommend_index.build(self.n_trees)
+        if self.approximate_recommend:
+            log.debug("Building annoy recommendation index")
+            self.max_norm, extra = augment_inner_product_matrix(self.item_factors)
+            self.recommend_index = annoy.AnnoyIndex(extra.shape[1], 'angular')
+            for i, row in enumerate(extra):
+                self.recommend_index.add_item(i, row)
+            self.recommend_index.build(self.n_trees)
 
     def similar_items(self, itemid, N=10):
         if not self.approximate_similar_items:
@@ -316,8 +326,9 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         item_factors = self.item_factors.astype('float32')
 
         if self.approximate_recommend:
-            # build up a inner product index here
+            log.debug("Building faiss recommendation index")
 
+            # build up a inner product index here
             if self.gpu:
                 index = faiss.GpuIndexIVFFlat(self.gpu_resources, self.factors, self.nlist,
                                               faiss.METRIC_INNER_PRODUCT)
@@ -331,6 +342,8 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
             self.recommend_index = index
 
         if self.approximate_similar_items:
+            log.debug("Building faiss similar items index")
+
             # likewise build up cosine index for similar_items, using an inner product
             # index on normalized vectors`
             norms = numpy.linalg.norm(item_factors, axis=1)

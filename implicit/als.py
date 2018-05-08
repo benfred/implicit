@@ -3,6 +3,7 @@ import functools
 import heapq
 import logging
 import time
+import tqdm
 
 import numpy as np
 import scipy
@@ -127,7 +128,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         if self.item_factors is None:
             self.item_factors = np.random.rand(items, self.factors).astype(self.dtype) * 0.01
 
-        log.debug("initialize factors in %s", time.time() - s)
+        log.debug("Initialized factors in %s", time.time() - s)
 
         # invalidate cached norms and squared factors
         self._item_norms = None
@@ -137,23 +138,30 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             return self._fit_gpu(Ciu, Cui)
 
         solver = self.solver
-        # alternate between learning the user_factors from the item_factors and vice-versa
-        for iteration in range(self.iterations):
-            s = time.time()
-            solver(Cui, self.user_factors, self.item_factors, self.regularization,
-                   num_threads=self.num_threads)
-            solver(Ciu, self.item_factors, self.user_factors, self.regularization,
-                   num_threads=self.num_threads)
-            elapsed = time.time() - s
-            log.debug("finished iteration %i in %.3fs", iteration, elapsed)
 
-            if self.calculate_training_loss:
-                loss = _als.calculate_loss(Cui, self.user_factors, self.item_factors,
-                                           self.regularization, num_threads=self.num_threads)
-                log.debug("loss at iteration %i is %s", iteration, loss)
+        log.debug("Running %i ALS iterations", self.iterations)
+        with tqdm.tqdm(total=self.iterations) as progress:
+            # alternate between learning the user_factors from the item_factors and vice-versa
+            for iteration in range(self.iterations):
+                s = time.time()
+                solver(Cui, self.user_factors, self.item_factors, self.regularization,
+                       num_threads=self.num_threads)
+                progress.update(.5)
 
-            if self.fit_callback:
-                self.fit_callback(iteration, elapsed)
+                solver(Ciu, self.item_factors, self.user_factors, self.regularization,
+                       num_threads=self.num_threads)
+                progress.update(.5)
+
+                if self.calculate_training_loss:
+                    loss = _als.calculate_loss(Cui, self.user_factors, self.item_factors,
+                                               self.regularization, num_threads=self.num_threads)
+                    progress.set_postfix({"loss": loss})
+
+                if self.fit_callback:
+                    self.fit_callback(iteration, time.time() - s)
+
+        if self.calculate_training_loss:
+            log.info("Final training loss %.4f", loss)
 
     def _fit_gpu(self, Ciu_host, Cui_host):
         """ specialized training on the gpu. copies inputs to/from cuda device """
@@ -172,20 +180,24 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Y = implicit.cuda.CuDenseMatrix(self.item_factors.astype(np.float32))
 
         solver = implicit.cuda.CuLeastSquaresSolver(self.factors)
+        log.debug("Running %i ALS iterations", self.iterations)
+        with tqdm.tqdm(total=self.iterations) as progress:
+            for iteration in range(self.iterations):
+                s = time.time()
+                solver.least_squares(Ciu, Y, X, self.regularization, self.cg_steps)
+                progress.update(.5)
+                solver.least_squares(Cui, X, Y, self.regularization, self.cg_steps)
+                progress.update(.5)
 
-        for iteration in range(self.iterations):
-            s = time.time()
-            solver.least_squares(Ciu, Y, X, self.regularization, self.cg_steps)
-            solver.least_squares(Cui, X, Y, self.regularization, self.cg_steps)
-            elapsed = time.time() - s
-            log.debug("finished iteration %i in %.3fs", iteration, elapsed)
+                if self.fit_callback:
+                    self.fit_callback(iteration, time.time() - s)
 
-            if self.fit_callback:
-                self.fit_callback(iteration, elapsed)
+                if self.calculate_training_loss:
+                    loss = solver.calculate_loss(Cui, X, Y, self.regularization)
+                    progress.set_postfix({"loss": loss})
 
-            if self.calculate_training_loss:
-                loss = solver.calculate_loss(Cui, X, Y, self.regularization)
-                log.debug("loss at iteration %i is %s", iteration, loss)
+        if self.calculate_training_loss:
+            log.info("Final training loss %.4f", loss)
 
         X.to_host(self.user_factors)
         Y.to_host(self.item_factors)

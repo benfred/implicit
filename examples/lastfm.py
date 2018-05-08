@@ -10,6 +10,7 @@ import argparse
 import codecs
 import logging
 import time
+import tqdm
 
 import numpy as np
 
@@ -85,11 +86,13 @@ def calculate_similar_artists(output_filename, model_name="als"):
 
     # write out as a TSV of artistid, otherartistid, score
     logging.debug("writing similar items")
-    with codecs.open(output_filename, "w", "utf8") as o:
-        for artistid in to_generate:
-            artist = artists[artistid]
-            for other, score in model.similar_items(artistid, 11):
-                o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
+    with tqdm.tqdm(total=len(to_generate)) as progress:
+        with codecs.open(output_filename, "w", "utf8") as o:
+            for artistid in to_generate:
+                artist = artists[artistid]
+                for other, score in model.similar_items(artistid, 11):
+                    o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
+                progress.update(1)
 
     logging.debug("generated similar artists in %0.2fs",  time.time() - start)
 
@@ -123,10 +126,12 @@ def calculate_recommendations(output_filename, model_name="als"):
     # generate recommendations for each user and write out to a file
     start = time.time()
     user_plays = plays.T.tocsr()
-    with codecs.open(output_filename, "w", "utf8") as o:
-        for userid, username in enumerate(users):
-            for artistid, score in model.recommend(userid, user_plays):
-                o.write("%s\t%s\t%s\n" % (username, artists[artistid], score))
+    with tqdm.tqdm(total=len(users)) as progress:
+        with codecs.open(output_filename, "w", "utf8") as o:
+            for userid, username in enumerate(users):
+                for artistid, score in model.recommend(userid, user_plays):
+                    o.write("%s\t%s\t%s\n" % (username, artists[artistid], score))
+                progress.update(1)
     logging.debug("generated recommendations in %0.2fs",  time.time() - start)
 
 

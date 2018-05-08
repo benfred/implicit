@@ -1,6 +1,7 @@
 import cython
 import numpy as np
 import scipy.sparse
+import tqdm
 
 from cython.operator import dereference
 from cython.parallel import parallel, prange
@@ -45,33 +46,36 @@ def all_pairs_knn(items, unsigned int K=100, int num_threads=0):
     cdef long[:] rows = np.zeros(item_count * K, dtype=int)
     cdef long[:] cols = np.zeros(item_count * K, dtype=int)
 
-    with nogil, parallel(num_threads=num_threads):
-        # allocate memory per thread
-        neighbours = new SparseMatrixMultiplier[int, double](item_count)
-        topk = new TopK[int, double](K)
+    with tqdm.tqdm(total=item_count) as progress:
+        with nogil, parallel(num_threads=num_threads):
+            # allocate memory per thread
+            neighbours = new SparseMatrixMultiplier[int, double](item_count)
+            topk = new TopK[int, double](K)
 
-        try:
-            for i in prange(item_count, schedule='guided'):
-                for index1 in range(item_indptr[i], item_indptr[i+1]):
-                    u = item_indices[index1]
-                    w1 = item_data[index1]
+            try:
+                for i in prange(item_count, schedule='guided'):
+                    for index1 in range(item_indptr[i], item_indptr[i+1]):
+                        u = item_indices[index1]
+                        w1 = item_data[index1]
 
-                    for index2 in range(user_indptr[u], user_indptr[u+1]):
-                        neighbours.add(user_indices[index2], user_data[index2] * w1)
+                        for index2 in range(user_indptr[u], user_indptr[u+1]):
+                            neighbours.add(user_indices[index2], user_data[index2] * w1)
 
-                topk.results.clear()
-                neighbours.foreach(dereference(topk))
+                    topk.results.clear()
+                    neighbours.foreach(dereference(topk))
 
-                index2 = K * i
-                for result in topk.results:
-                    rows[index2] = i
-                    cols[index2] = result.second
-                    values[index2] = result.first
-                    index2 = index2 + 1
+                    index2 = K * i
+                    for result in topk.results:
+                        rows[index2] = i
+                        cols[index2] = result.second
+                        values[index2] = result.first
+                        index2 = index2 + 1
+                    with gil:
+                        progress.update(1)
 
-        finally:
-            del neighbours
-            del topk
+            finally:
+                del neighbours
+                del topk
 
     return scipy.sparse.coo_matrix((values, (rows, cols)),
                                    shape=(item_count, item_count))
