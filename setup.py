@@ -143,8 +143,8 @@ setup(
              'Collaborative Filtering, Recommender Systems',
 
     packages=find_packages(),
-    install_requires=['numpy', 'scipy>=0.16'],
-    setup_requires=["Cython >= 0.24"],
+    install_requires=['numpy', 'scipy>=0.16', 'h5py', 'tqdm'],
+    setup_requires=["Cython>=0.24"],
     ext_modules=define_extensions(use_cython),
     cmdclass={'build_ext': build_ext},
     test_suite="tests",
