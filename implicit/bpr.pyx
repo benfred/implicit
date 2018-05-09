@@ -185,7 +185,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 correct = implicit.cuda.cu_bpr_update(Ciu, X, Y, self.learning_rate,
                                                       self.regularization, np.random.randint(2**31))
                 progress.update(1)
-                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})
+                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu_host.row))})
 
         X.to_host(self.user_factors)
         Y.to_host(self.item_factors)

@@ -15,7 +15,6 @@
             "-std=c++11"
         ],
         "extra_link_args": [
-            "-Wl,-rpath,/usr/local/opt/gcc/lib/gcc/7/",
             "-fopenmp",
             "-std=c++11"
         ],
@@ -5557,7 +5556,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_27BayesianPersonalizedRanking_4_fit_gpu
  *                 correct = implicit.cuda.cu_bpr_update(Ciu, X, Y, self.learning_rate,
  *                                                       self.regularization, np.random.randint(2**31))             # <<<<<<<<<<<<<<
  *                 progress.update(1)
- *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})
+ *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu_host.row))})
  */
             __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_regularization); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L9_error)
             __Pyx_GOTREF(__pyx_t_1);
@@ -5642,7 +5641,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_27BayesianPersonalizedRanking_4_fit_gpu
  *                 correct = implicit.cuda.cu_bpr_update(Ciu, X, Y, self.learning_rate,
  *                                                       self.regularization, np.random.randint(2**31))
  *                 progress.update(1)             # <<<<<<<<<<<<<<
- *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})
+ *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu_host.row))})
  * 
  */
             __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_progress, __pyx_n_s_update); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 187, __pyx_L9_error)
@@ -5655,7 +5654,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_27BayesianPersonalizedRanking_4_fit_gpu
             /* "implicit/bpr.pyx":188
  *                                                       self.regularization, np.random.randint(2**31))
  *                 progress.update(1)
- *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})             # <<<<<<<<<<<<<<
+ *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu_host.row))})             # <<<<<<<<<<<<<<
  * 
  *         X.to_host(self.user_factors)
  */
@@ -5665,7 +5664,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_27BayesianPersonalizedRanking_4_fit_gpu
             __Pyx_GOTREF(__pyx_t_17);
             __pyx_t_16 = PyNumber_Multiply(__pyx_float_100_0, __pyx_v_correct); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 188, __pyx_L9_error)
             __Pyx_GOTREF(__pyx_t_16);
-            __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Ciu, __pyx_n_s_row); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L9_error)
+            __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Ciu_host, __pyx_n_s_row); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L9_error)
             __Pyx_GOTREF(__pyx_t_1);
             __pyx_t_18 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_18 == -1)) __PYX_ERR(0, 188, __pyx_L9_error)
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -5827,7 +5826,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_27BayesianPersonalizedRanking_4_fit_gpu
   }
 
   /* "implicit/bpr.pyx":190
- *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})
+ *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu_host.row))})
  * 
  *         X.to_host(self.user_factors)             # <<<<<<<<<<<<<<
  *         Y.to_host(self.item_factors)
@@ -24456,7 +24455,7 @@ static int __Pyx_InitCachedConstants(void) {
  *                 correct = implicit.cuda.cu_bpr_update(Ciu, X, Y, self.learning_rate,
  *                                                       self.regularization, np.random.randint(2**31))             # <<<<<<<<<<<<<<
  *                 progress.update(1)
- *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})
+ *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu_host.row))})
  */
   __pyx_tuple__10 = PyTuple_Pack(1, __pyx_int_2147483648); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__10);
@@ -24466,7 +24465,7 @@ static int __Pyx_InitCachedConstants(void) {
  *                 correct = implicit.cuda.cu_bpr_update(Ciu, X, Y, self.learning_rate,
  *                                                       self.regularization, np.random.randint(2**31))
  *                 progress.update(1)             # <<<<<<<<<<<<<<
- *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})
+ *                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu_host.row))})
  * 
  */
   __pyx_tuple__11 = PyTuple_Pack(1, __pyx_int_1); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 187, __pyx_L1_error)

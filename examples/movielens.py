@@ -47,7 +47,7 @@ def calculate_similar_movies(output_filename,
 
         # lets weight these models by bm25weight.
         logging.debug("weighting matrix by bm25_weight")
-        ratings = bm25_weight(ratings,  B=0.9) * 5
+        ratings = (bm25_weight(ratings,  B=0.9) * 5).tocsr()
 
     elif model_name == "bpr":
         model = BayesianPersonalizedRanking()
