@@ -16,7 +16,7 @@ URL = 'https://github.com/benfred/recommender_data/releases/download/v1.0/lastfm
 
 def get_lastfm():
     """ Returns the lastfm360k dataset, downloading locally if necessary.
-    Returns a tuple of (artistids, userids, plays) where plays is a COO matrix """
+    Returns a tuple of (artistids, userids, plays) where plays is a CSR matrix """
 
     filename = os.path.join(_download.LOCAL_CACHE_DIR, "lastfm_360k.hdf5")
     if not os.path.isfile(filename):
@@ -54,7 +54,7 @@ def _read_dataframe(filename):
     # read in triples of user/artist/playcount from the input dataset
     # get a model based off the input params
     start = time.time()
-    logging.debug("reading data from %s", filename)
+    log.debug("reading data from %s", filename)
     data = pandas.read_table(filename,
                              usecols=[0, 2, 3],
                              names=['user', 'artist', 'plays'],
@@ -65,7 +65,7 @@ def _read_dataframe(filename):
     data['artist'] = data['artist'].astype("category")
 
     # store as a CSR matrix
-    logging.debug("read data file in %s", time.time() - start)
+    log.debug("read data file in %s", time.time() - start)
 
     return data
 

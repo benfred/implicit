@@ -18,11 +18,8 @@ def download_file(url, local_filename):
     if not os.path.isdir(path):
         os.makedirs(path)
 
-    progress = tqdm(unit='B', unit_scale=True)
-    try:
+    with tqdm(unit='B', unit_scale=True) as progress:
         def report(chunk, chunksize, total):
             progress.total = total
             progress.update(chunksize)
         return urlretrieve(url, local_filename, reporthook=report)
-    finally:
-        progress.close()

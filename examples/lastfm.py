@@ -136,7 +136,7 @@ def calculate_recommendations(output_filename, model_name="als"):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generates similart artists on the last.fm dataset"
+    parser = argparse.ArgumentParser(description="Generates similar artists on the last.fm dataset"
                                      " or generates personalized recommendations for each user",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--output', type=str, default='similar-artists.tsv',

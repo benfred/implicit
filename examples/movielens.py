@@ -16,6 +16,7 @@ import argparse
 import codecs
 import logging
 import time
+import tqdm
 
 import numpy as np
 
@@ -25,6 +26,9 @@ from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
 
 from implicit.datasets.movielens import get_movielens
+
+
+log = logging.getLogger("implicit")
 
 
 def calculate_similar_movies(output_filename,
@@ -39,14 +43,14 @@ def calculate_similar_movies(output_filename,
     ratings.eliminate_zeros()
     ratings.data = np.ones(len(ratings.data))
 
-    logging.info("read data file in %s", time.time() - start)
+    log.info("read data file in %s", time.time() - start)
 
     # generate a recommender model based off the input params
     if model_name == "als":
         model = AlternatingLeastSquares()
 
         # lets weight these models by bm25weight.
-        logging.debug("weighting matrix by bm25_weight")
+        log.debug("weighting matrix by bm25_weight")
         ratings = (bm25_weight(ratings,  B=0.9) * 5).tocsr()
 
     elif model_name == "bpr":
@@ -65,25 +69,26 @@ def calculate_similar_movies(output_filename,
         raise NotImplementedError("TODO: model %s" % model_name)
 
     # train the model
-    logging.debug("training model %s", model_name)
+    log.debug("training model %s", model_name)
     start = time.time()
     model.fit(ratings)
-    logging.debug("trained model '%s' in %s", model_name, time.time() - start)
-    logging.debug("calculating top movies")
+    log.debug("trained model '%s' in %s", model_name, time.time() - start)
+    log.debug("calculating top movies")
 
     user_count = np.ediff1d(ratings.indptr)
     to_generate = sorted(np.arange(len(titles)), key=lambda x: -user_count[x])
 
-    with codecs.open(output_filename, "w", "utf8") as o:
-        for movieid in to_generate:
-            # if this movie has no ratings, skip over (for instance 'Graffiti Bridge' has
-            # no ratings > 4 meaning we've filtered out all data for it.
-            if ratings.indptr[movieid] == ratings.indptr[movieid + 1]:
-                continue
-
-            title = titles[movieid]
-            for other, score in model.similar_items(movieid, 11):
-                o.write("%s\t%s\t%s\n" % (title, titles[other], score))
+    log.debug("calculating similar movies")
+    with tqdm.tqdm(total=len(to_generate)) as progress:
+        with codecs.open(output_filename, "w", "utf8") as o:
+            for movieid in to_generate:
+                # if this movie has no ratings, skip over (for instance 'Graffiti Bridge' has
+                # no ratings > 4 meaning we've filtered out all data for it.
+                if ratings.indptr[movieid] != ratings.indptr[movieid + 1]:
+                    title = titles[movieid]
+                    for other, score in model.similar_items(movieid, 11):
+                        o.write("%s\t%s\t%s\n" % (title, titles[other], score))
+                progress.update(1)
 
 
 if __name__ == "__main__":
