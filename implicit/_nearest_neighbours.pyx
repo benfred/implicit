@@ -21,7 +21,7 @@ cdef extern from "nearest_neighbours.h" namespace "implicit" nogil:
 
 
 @cython.boundscheck(False)
-def all_pairs_knn(items, unsigned int K=100, int num_threads=0):
+def all_pairs_knn(items, unsigned int K=100, int num_threads=0, show_progress=True):
     """ Returns the top K nearest neighbours for each row in the matrix.
     """
     items = items.tocsr()
@@ -46,7 +46,7 @@ def all_pairs_knn(items, unsigned int K=100, int num_threads=0):
     cdef long[:] rows = np.zeros(item_count * K, dtype=int)
     cdef long[:] cols = np.zeros(item_count * K, dtype=int)
 
-    progress = tqdm.tqdm(total=item_count)
+    progress = tqdm.tqdm(total=item_count, disable=not show_progress)
     with nogil, parallel(num_threads=num_threads):
         # allocate memory per thread
         neighbours = new SparseMatrixMultiplier[int, double](item_count)

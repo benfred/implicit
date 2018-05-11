@@ -1653,6 +1653,7 @@ static const char __pyx_k_struct[] = "struct";
 static const char __pyx_k_unpack[] = "unpack";
 static const char __pyx_k_update[] = "update";
 static const char __pyx_k_values[] = "values";
+static const char __pyx_k_disable[] = "disable";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_indices[] = "indices";
 static const char __pyx_k_memview[] = "memview";
@@ -1688,6 +1689,7 @@ static const char __pyx_k_user_indices[] = "user_indices";
 static const char __pyx_k_all_pairs_knn[] = "all_pairs_knn";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
+static const char __pyx_k_show_progress[] = "show_progress";
 static const char __pyx_k_View_MemoryView[] = "View.MemoryView";
 static const char __pyx_k_allocate_buffer[] = "allocate_buffer";
 static const char __pyx_k_dtype_is_object[] = "dtype_is_object";
@@ -1756,6 +1758,7 @@ static PyObject *__pyx_kp_s_contiguous_and_indirect;
 static PyObject *__pyx_n_s_coo_matrix;
 static PyObject *__pyx_n_s_data;
 static PyObject *__pyx_n_s_dict;
+static PyObject *__pyx_n_s_disable;
 static PyObject *__pyx_n_s_dtype;
 static PyObject *__pyx_n_s_dtype_is_object;
 static PyObject *__pyx_n_s_encode;
@@ -1819,6 +1822,7 @@ static PyObject *__pyx_n_s_scipy_sparse;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_shape;
+static PyObject *__pyx_n_s_show_progress;
 static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_sparse;
 static PyObject *__pyx_n_s_start;
@@ -1847,7 +1851,7 @@ static PyObject *__pyx_n_s_values;
 static PyObject *__pyx_n_s_w1;
 static PyObject *__pyx_n_s_w2;
 static PyObject *__pyx_n_s_zeros;
-static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_items, unsigned int __pyx_v_K, int __pyx_v_num_threads); /* proto */
+static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_items, unsigned int __pyx_v_K, int __pyx_v_num_threads, PyObject *__pyx_v_show_progress); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -1931,7 +1935,7 @@ static PyObject *__pyx_codeobj__29;
 /* "implicit/_nearest_neighbours.pyx":24
  * 
  * @cython.boundscheck(False)
- * def all_pairs_knn(items, unsigned int K=100, int num_threads=0):             # <<<<<<<<<<<<<<
+ * def all_pairs_knn(items, unsigned int K=100, int num_threads=0, show_progress=True):             # <<<<<<<<<<<<<<
  *     """ Returns the top K nearest neighbours for each row in the matrix.
  *     """
  */
@@ -1944,16 +1948,20 @@ static PyObject *__pyx_pw_8implicit_19_nearest_neighbours_1all_pairs_knn(PyObjec
   PyObject *__pyx_v_items = 0;
   unsigned int __pyx_v_K;
   int __pyx_v_num_threads;
+  PyObject *__pyx_v_show_progress = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("all_pairs_knn (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_items,&__pyx_n_s_K,&__pyx_n_s_num_threads,0};
-    PyObject* values[3] = {0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_items,&__pyx_n_s_K,&__pyx_n_s_num_threads,&__pyx_n_s_show_progress,0};
+    PyObject* values[4] = {0,0,0,0};
+    values[3] = ((PyObject *)Py_True);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
@@ -1980,12 +1988,20 @@ static PyObject *__pyx_pw_8implicit_19_nearest_neighbours_1all_pairs_knn(PyObjec
           PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_num_threads);
           if (value) { values[2] = value; kw_args--; }
         }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (kw_args > 0) {
+          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_show_progress);
+          if (value) { values[3] = value; kw_args--; }
+        }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "all_pairs_knn") < 0)) __PYX_ERR(0, 24, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
@@ -2006,23 +2022,24 @@ static PyObject *__pyx_pw_8implicit_19_nearest_neighbours_1all_pairs_knn(PyObjec
     } else {
       __pyx_v_num_threads = ((int)0);
     }
+    __pyx_v_show_progress = values[3];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("all_pairs_knn", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 24, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("all_pairs_knn", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 24, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("implicit._nearest_neighbours.all_pairs_knn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(__pyx_self, __pyx_v_items, __pyx_v_K, __pyx_v_num_threads);
+  __pyx_r = __pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(__pyx_self, __pyx_v_items, __pyx_v_K, __pyx_v_num_threads, __pyx_v_show_progress);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_items, unsigned int __pyx_v_K, int __pyx_v_num_threads) {
+static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_items, unsigned int __pyx_v_K, int __pyx_v_num_threads, PyObject *__pyx_v_show_progress) {
   PyObject *__pyx_v_users = NULL;
   int __pyx_v_item_count;
   int __pyx_v_i;
@@ -2056,33 +2073,34 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
   __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
   int __pyx_t_10;
   int __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
-  int __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
-  int __pyx_t_15;
-  Py_ssize_t __pyx_t_16;
+  int __pyx_t_12;
+  Py_ssize_t __pyx_t_13;
+  int __pyx_t_14;
+  Py_ssize_t __pyx_t_15;
+  int __pyx_t_16;
   Py_ssize_t __pyx_t_17;
   Py_ssize_t __pyx_t_18;
-  int __pyx_t_19;
-  Py_ssize_t __pyx_t_20;
-  int __pyx_t_21;
-  Py_ssize_t __pyx_t_22;
+  Py_ssize_t __pyx_t_19;
+  int __pyx_t_20;
+  Py_ssize_t __pyx_t_21;
+  int __pyx_t_22;
   Py_ssize_t __pyx_t_23;
-  std::vector<std::pair<double,int> > ::iterator __pyx_t_24;
-  std::vector<std::pair<double,int> >  *__pyx_t_25;
-  std::pair<double,int>  __pyx_t_26;
-  Py_ssize_t __pyx_t_27;
+  Py_ssize_t __pyx_t_24;
+  std::vector<std::pair<double,int> > ::iterator __pyx_t_25;
+  std::vector<std::pair<double,int> >  *__pyx_t_26;
+  std::pair<double,int>  __pyx_t_27;
   Py_ssize_t __pyx_t_28;
-  double __pyx_t_29;
-  Py_ssize_t __pyx_t_30;
-  char const *__pyx_t_31;
-  PyObject *__pyx_t_32 = NULL;
+  Py_ssize_t __pyx_t_29;
+  double __pyx_t_30;
+  Py_ssize_t __pyx_t_31;
+  char const *__pyx_t_32;
   PyObject *__pyx_t_33 = NULL;
   PyObject *__pyx_t_34 = NULL;
   PyObject *__pyx_t_35 = NULL;
   PyObject *__pyx_t_36 = NULL;
   PyObject *__pyx_t_37 = NULL;
   PyObject *__pyx_t_38 = NULL;
+  PyObject *__pyx_t_39 = NULL;
   __Pyx_RefNannySetupContext("all_pairs_knn", 0);
   __Pyx_INCREF(__pyx_v_items);
 
@@ -2351,7 +2369,7 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  *     cdef long[:] rows = np.zeros(item_count * K, dtype=int)
  *     cdef long[:] cols = np.zeros(item_count * K, dtype=int)             # <<<<<<<<<<<<<<
  * 
- *     progress = tqdm.tqdm(total=item_count)
+ *     progress = tqdm.tqdm(total=item_count, disable=not show_progress)
  */
   __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2383,7 +2401,7 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
   /* "implicit/_nearest_neighbours.pyx":49
  *     cdef long[:] cols = np.zeros(item_count * K, dtype=int)
  * 
- *     progress = tqdm.tqdm(total=item_count)             # <<<<<<<<<<<<<<
+ *     progress = tqdm.tqdm(total=item_count, disable=not show_progress)             # <<<<<<<<<<<<<<
  *     with nogil, parallel(num_threads=num_threads):
  *         # allocate memory per thread
  */
@@ -2398,6 +2416,11 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
   __Pyx_GOTREF(__pyx_t_8);
   if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_total, __pyx_t_8) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_v_show_progress); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyBool_FromLong((!__pyx_t_10)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_disable, __pyx_t_8) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __pyx_t_8 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 49, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -2407,7 +2430,7 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
 
   /* "implicit/_nearest_neighbours.pyx":50
  * 
- *     progress = tqdm.tqdm(total=item_count)
+ *     progress = tqdm.tqdm(total=item_count, disable=not show_progress)
  *     with nogil, parallel(num_threads=num_threads):             # <<<<<<<<<<<<<<
  *         # allocate memory per thread
  *         neighbours = new SparseMatrixMultiplier[int, double](item_count)
@@ -2431,7 +2454,7 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
                 #define unlikely(x) (x)
             #endif
             #ifdef _OPENMP
-            #pragma omp parallel private(__pyx_v_neighbours, __pyx_v_topk) private(__pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16, __pyx_t_17, __pyx_t_18, __pyx_t_19, __pyx_t_20, __pyx_t_21, __pyx_t_22, __pyx_t_23, __pyx_t_24, __pyx_t_25, __pyx_t_26, __pyx_t_27, __pyx_t_28, __pyx_t_29, __pyx_t_30, __pyx_t_31, __pyx_t_4) firstprivate(__pyx_t_2, __pyx_t_32, __pyx_t_33, __pyx_t_34, __pyx_t_35, __pyx_t_36, __pyx_t_37, __pyx_t_8) private(__pyx_filename, __pyx_lineno, __pyx_clineno) shared(__pyx_parallel_why, __pyx_parallel_exc_type, __pyx_parallel_exc_value, __pyx_parallel_exc_tb) num_threads(__pyx_v_num_threads)
+            #pragma omp parallel private(__pyx_v_neighbours, __pyx_v_topk) private(__pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16, __pyx_t_17, __pyx_t_18, __pyx_t_19, __pyx_t_20, __pyx_t_21, __pyx_t_22, __pyx_t_23, __pyx_t_24, __pyx_t_25, __pyx_t_26, __pyx_t_27, __pyx_t_28, __pyx_t_29, __pyx_t_30, __pyx_t_31, __pyx_t_32, __pyx_t_4) firstprivate(__pyx_t_2, __pyx_t_33, __pyx_t_34, __pyx_t_35, __pyx_t_36, __pyx_t_37, __pyx_t_38, __pyx_t_8) private(__pyx_filename, __pyx_lineno, __pyx_clineno) shared(__pyx_parallel_why, __pyx_parallel_exc_type, __pyx_parallel_exc_value, __pyx_parallel_exc_tb) num_threads(__pyx_v_num_threads)
             #endif /* _OPENMP */
             {
                 #ifdef _OPENMP
@@ -2491,16 +2514,16 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
                       PyObject *__pyx_parallel_exc_type = NULL, *__pyx_parallel_exc_value = NULL, *__pyx_parallel_exc_tb = NULL;
                       int __pyx_parallel_why;
                       __pyx_parallel_why = 0;
-                      __pyx_t_11 = (__pyx_t_4 - 0 + 1 - 1/abs(1)) / 1;
-                      if (__pyx_t_11 > 0)
+                      __pyx_t_12 = (__pyx_t_4 - 0 + 1 - 1/abs(1)) / 1;
+                      if (__pyx_t_12 > 0)
                       {
                           #ifdef _OPENMP
                           #pragma omp for firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index1) lastprivate(__pyx_v_index2) lastprivate(__pyx_v_result) lastprivate(__pyx_v_u) lastprivate(__pyx_v_w1) schedule(guided)
                           #endif /* _OPENMP */
-                          for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_11; __pyx_t_10++){
+                          for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_12; __pyx_t_11++){
                               if (__pyx_parallel_why < 2)
                               {
-                                  __pyx_v_i = (int)(0 + 1 * __pyx_t_10);
+                                  __pyx_v_i = (int)(0 + 1 * __pyx_t_11);
                                   /* Initialize private variables to invalid values */
                                   __pyx_v_index1 = ((int)0xbad0bad0);
                                   __pyx_v_index2 = ((int)0xbad0bad0);
@@ -2514,13 +2537,13 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  *                     u = item_indices[index1]
  *                     w1 = item_data[index1]
  */
-                                  __pyx_t_12 = (__pyx_v_i + 1);
-                                  if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_item_indptr.shape[0];
-                                  __pyx_t_13 = (*((int *) ( /* dim=0 */ (__pyx_v_item_indptr.data + __pyx_t_12 * __pyx_v_item_indptr.strides[0]) )));
-                                  __pyx_t_14 = __pyx_v_i;
-                                  if (__pyx_t_14 < 0) __pyx_t_14 += __pyx_v_item_indptr.shape[0];
-                                  for (__pyx_t_15 = (*((int *) ( /* dim=0 */ (__pyx_v_item_indptr.data + __pyx_t_14 * __pyx_v_item_indptr.strides[0]) ))); __pyx_t_15 < __pyx_t_13; __pyx_t_15+=1) {
-                                    __pyx_v_index1 = __pyx_t_15;
+                                  __pyx_t_13 = (__pyx_v_i + 1);
+                                  if (__pyx_t_13 < 0) __pyx_t_13 += __pyx_v_item_indptr.shape[0];
+                                  __pyx_t_14 = (*((int *) ( /* dim=0 */ (__pyx_v_item_indptr.data + __pyx_t_13 * __pyx_v_item_indptr.strides[0]) )));
+                                  __pyx_t_15 = __pyx_v_i;
+                                  if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_item_indptr.shape[0];
+                                  for (__pyx_t_16 = (*((int *) ( /* dim=0 */ (__pyx_v_item_indptr.data + __pyx_t_15 * __pyx_v_item_indptr.strides[0]) ))); __pyx_t_16 < __pyx_t_14; __pyx_t_16+=1) {
+                                    __pyx_v_index1 = __pyx_t_16;
 
                                     /* "implicit/_nearest_neighbours.pyx":58
  *             for i in prange(item_count, schedule='guided'):
@@ -2529,9 +2552,9 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  *                     w1 = item_data[index1]
  * 
  */
-                                    __pyx_t_16 = __pyx_v_index1;
-                                    if (__pyx_t_16 < 0) __pyx_t_16 += __pyx_v_item_indices.shape[0];
-                                    __pyx_v_u = (*((int *) ( /* dim=0 */ (__pyx_v_item_indices.data + __pyx_t_16 * __pyx_v_item_indices.strides[0]) )));
+                                    __pyx_t_17 = __pyx_v_index1;
+                                    if (__pyx_t_17 < 0) __pyx_t_17 += __pyx_v_item_indices.shape[0];
+                                    __pyx_v_u = (*((int *) ( /* dim=0 */ (__pyx_v_item_indices.data + __pyx_t_17 * __pyx_v_item_indices.strides[0]) )));
 
                                     /* "implicit/_nearest_neighbours.pyx":59
  *                 for index1 in range(item_indptr[i], item_indptr[i+1]):
@@ -2540,9 +2563,9 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  * 
  *                     for index2 in range(user_indptr[u], user_indptr[u+1]):
  */
-                                    __pyx_t_17 = __pyx_v_index1;
-                                    if (__pyx_t_17 < 0) __pyx_t_17 += __pyx_v_item_data.shape[0];
-                                    __pyx_v_w1 = (*((double *) ( /* dim=0 */ (__pyx_v_item_data.data + __pyx_t_17 * __pyx_v_item_data.strides[0]) )));
+                                    __pyx_t_18 = __pyx_v_index1;
+                                    if (__pyx_t_18 < 0) __pyx_t_18 += __pyx_v_item_data.shape[0];
+                                    __pyx_v_w1 = (*((double *) ( /* dim=0 */ (__pyx_v_item_data.data + __pyx_t_18 * __pyx_v_item_data.strides[0]) )));
 
                                     /* "implicit/_nearest_neighbours.pyx":61
  *                     w1 = item_data[index1]
@@ -2551,13 +2574,13 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  *                         neighbours.add(user_indices[index2], user_data[index2] * w1)
  * 
  */
-                                    __pyx_t_18 = (__pyx_v_u + 1);
-                                    if (__pyx_t_18 < 0) __pyx_t_18 += __pyx_v_user_indptr.shape[0];
-                                    __pyx_t_19 = (*((int *) ( /* dim=0 */ (__pyx_v_user_indptr.data + __pyx_t_18 * __pyx_v_user_indptr.strides[0]) )));
-                                    __pyx_t_20 = __pyx_v_u;
-                                    if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_user_indptr.shape[0];
-                                    for (__pyx_t_21 = (*((int *) ( /* dim=0 */ (__pyx_v_user_indptr.data + __pyx_t_20 * __pyx_v_user_indptr.strides[0]) ))); __pyx_t_21 < __pyx_t_19; __pyx_t_21+=1) {
-                                      __pyx_v_index2 = __pyx_t_21;
+                                    __pyx_t_19 = (__pyx_v_u + 1);
+                                    if (__pyx_t_19 < 0) __pyx_t_19 += __pyx_v_user_indptr.shape[0];
+                                    __pyx_t_20 = (*((int *) ( /* dim=0 */ (__pyx_v_user_indptr.data + __pyx_t_19 * __pyx_v_user_indptr.strides[0]) )));
+                                    __pyx_t_21 = __pyx_v_u;
+                                    if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_user_indptr.shape[0];
+                                    for (__pyx_t_22 = (*((int *) ( /* dim=0 */ (__pyx_v_user_indptr.data + __pyx_t_21 * __pyx_v_user_indptr.strides[0]) ))); __pyx_t_22 < __pyx_t_20; __pyx_t_22+=1) {
+                                      __pyx_v_index2 = __pyx_t_22;
 
                                       /* "implicit/_nearest_neighbours.pyx":62
  * 
@@ -2566,11 +2589,11 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  * 
  *                 topk.results.clear()
  */
-                                      __pyx_t_22 = __pyx_v_index2;
-                                      if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_user_indices.shape[0];
                                       __pyx_t_23 = __pyx_v_index2;
-                                      if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_user_data.shape[0];
-                                      __pyx_v_neighbours->add((*((int *) ( /* dim=0 */ (__pyx_v_user_indices.data + __pyx_t_22 * __pyx_v_user_indices.strides[0]) ))), ((*((double *) ( /* dim=0 */ (__pyx_v_user_data.data + __pyx_t_23 * __pyx_v_user_data.strides[0]) ))) * __pyx_v_w1));
+                                      if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_user_indices.shape[0];
+                                      __pyx_t_24 = __pyx_v_index2;
+                                      if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_user_data.shape[0];
+                                      __pyx_v_neighbours->add((*((int *) ( /* dim=0 */ (__pyx_v_user_indices.data + __pyx_t_23 * __pyx_v_user_indices.strides[0]) ))), ((*((double *) ( /* dim=0 */ (__pyx_v_user_data.data + __pyx_t_24 * __pyx_v_user_data.strides[0]) ))) * __pyx_v_w1));
                                     }
                                   }
 
@@ -2608,13 +2631,13 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  *                     rows[index2] = i
  *                     cols[index2] = result.second
  */
-                                  __pyx_t_25 = &__pyx_v_topk->results;
-                                  __pyx_t_24 = __pyx_t_25->begin();
+                                  __pyx_t_26 = &__pyx_v_topk->results;
+                                  __pyx_t_25 = __pyx_t_26->begin();
                                   for (;;) {
-                                    if (!(__pyx_t_24 != __pyx_t_25->end())) break;
-                                    __pyx_t_26 = *__pyx_t_24;
-                                    ++__pyx_t_24;
-                                    __pyx_v_result = __pyx_t_26;
+                                    if (!(__pyx_t_25 != __pyx_t_26->end())) break;
+                                    __pyx_t_27 = *__pyx_t_25;
+                                    ++__pyx_t_25;
+                                    __pyx_v_result = __pyx_t_27;
 
                                     /* "implicit/_nearest_neighbours.pyx":69
  *                 index2 = K * i
@@ -2623,9 +2646,9 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  *                     cols[index2] = result.second
  *                     values[index2] = result.first
  */
-                                    __pyx_t_27 = __pyx_v_index2;
-                                    if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_rows.shape[0];
-                                    *((long *) ( /* dim=0 */ (__pyx_v_rows.data + __pyx_t_27 * __pyx_v_rows.strides[0]) )) = __pyx_v_i;
+                                    __pyx_t_28 = __pyx_v_index2;
+                                    if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_rows.shape[0];
+                                    *((long *) ( /* dim=0 */ (__pyx_v_rows.data + __pyx_t_28 * __pyx_v_rows.strides[0]) )) = __pyx_v_i;
 
                                     /* "implicit/_nearest_neighbours.pyx":70
  *                 for result in topk.results:
@@ -2634,10 +2657,10 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  *                     values[index2] = result.first
  *                     index2 = index2 + 1
  */
-                                    __pyx_t_13 = __pyx_v_result.second;
-                                    __pyx_t_28 = __pyx_v_index2;
-                                    if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_cols.shape[0];
-                                    *((long *) ( /* dim=0 */ (__pyx_v_cols.data + __pyx_t_28 * __pyx_v_cols.strides[0]) )) = __pyx_t_13;
+                                    __pyx_t_14 = __pyx_v_result.second;
+                                    __pyx_t_29 = __pyx_v_index2;
+                                    if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_cols.shape[0];
+                                    *((long *) ( /* dim=0 */ (__pyx_v_cols.data + __pyx_t_29 * __pyx_v_cols.strides[0]) )) = __pyx_t_14;
 
                                     /* "implicit/_nearest_neighbours.pyx":71
  *                     rows[index2] = i
@@ -2646,10 +2669,10 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  *                     index2 = index2 + 1
  *                 with gil:
  */
-                                    __pyx_t_29 = __pyx_v_result.first;
-                                    __pyx_t_30 = __pyx_v_index2;
-                                    if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_values.shape[0];
-                                    *((double *) ( /* dim=0 */ (__pyx_v_values.data + __pyx_t_30 * __pyx_v_values.strides[0]) )) = __pyx_t_29;
+                                    __pyx_t_30 = __pyx_v_result.first;
+                                    __pyx_t_31 = __pyx_v_index2;
+                                    if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_values.shape[0];
+                                    *((double *) ( /* dim=0 */ (__pyx_v_values.data + __pyx_t_31 * __pyx_v_values.strides[0]) )) = __pyx_t_30;
 
                                     /* "implicit/_nearest_neighbours.pyx":72
  *                     cols[index2] = result.second
@@ -2742,7 +2765,7 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
                                   goto __pyx_L30;
                                   __pyx_L30:;
                                   #ifdef _OPENMP
-                                  #pragma omp critical(__pyx_parallel_lastprivates6)
+                                  #pragma omp critical(__pyx_parallel_lastprivates0)
                                   #endif /* _OPENMP */
                                   {
                                       __pyx_parallel_temp0 = __pyx_v_i;
@@ -2816,7 +2839,7 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
                     PyGILState_STATE __pyx_gilstate_save;
                     #endif
                     __pyx_L13_error:;
-                    __pyx_t_32 = 0; __pyx_t_33 = 0; __pyx_t_34 = 0; __pyx_t_35 = 0; __pyx_t_36 = 0; __pyx_t_37 = 0;
+                    __pyx_t_33 = 0; __pyx_t_34 = 0; __pyx_t_35 = 0; __pyx_t_36 = 0; __pyx_t_37 = 0; __pyx_t_38 = 0;
                     #ifdef WITH_THREAD
                     __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
                     #endif
@@ -2829,15 +2852,15 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
                     __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
                     __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
                     __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-                    if (PY_MAJOR_VERSION >= 3) __Pyx_ExceptionSwap(&__pyx_t_35, &__pyx_t_36, &__pyx_t_37);
-                    if ((PY_MAJOR_VERSION < 3) || unlikely(__Pyx_GetException(&__pyx_t_32, &__pyx_t_33, &__pyx_t_34) < 0)) __Pyx_ErrFetch(&__pyx_t_32, &__pyx_t_33, &__pyx_t_34);
-                    __Pyx_XGOTREF(__pyx_t_32);
+                    if (PY_MAJOR_VERSION >= 3) __Pyx_ExceptionSwap(&__pyx_t_36, &__pyx_t_37, &__pyx_t_38);
+                    if ((PY_MAJOR_VERSION < 3) || unlikely(__Pyx_GetException(&__pyx_t_33, &__pyx_t_34, &__pyx_t_35) < 0)) __Pyx_ErrFetch(&__pyx_t_33, &__pyx_t_34, &__pyx_t_35);
                     __Pyx_XGOTREF(__pyx_t_33);
                     __Pyx_XGOTREF(__pyx_t_34);
                     __Pyx_XGOTREF(__pyx_t_35);
                     __Pyx_XGOTREF(__pyx_t_36);
                     __Pyx_XGOTREF(__pyx_t_37);
-                    __pyx_t_11 = __pyx_lineno; __pyx_t_10 = __pyx_clineno; __pyx_t_31 = __pyx_filename;
+                    __Pyx_XGOTREF(__pyx_t_38);
+                    __pyx_t_12 = __pyx_lineno; __pyx_t_11 = __pyx_clineno; __pyx_t_32 = __pyx_filename;
                     #ifdef WITH_THREAD
                     __Pyx_PyGILState_Release(__pyx_gilstate_save);
                     #endif
@@ -2866,20 +2889,20 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
                     #endif
                     __Pyx_PyThreadState_assign
                     if (PY_MAJOR_VERSION >= 3) {
-                      __Pyx_XGIVEREF(__pyx_t_35);
                       __Pyx_XGIVEREF(__pyx_t_36);
                       __Pyx_XGIVEREF(__pyx_t_37);
-                      __Pyx_ExceptionReset(__pyx_t_35, __pyx_t_36, __pyx_t_37);
+                      __Pyx_XGIVEREF(__pyx_t_38);
+                      __Pyx_ExceptionReset(__pyx_t_36, __pyx_t_37, __pyx_t_38);
                     }
-                    __Pyx_XGIVEREF(__pyx_t_32);
                     __Pyx_XGIVEREF(__pyx_t_33);
                     __Pyx_XGIVEREF(__pyx_t_34);
-                    __Pyx_ErrRestore(__pyx_t_32, __pyx_t_33, __pyx_t_34);
+                    __Pyx_XGIVEREF(__pyx_t_35);
+                    __Pyx_ErrRestore(__pyx_t_33, __pyx_t_34, __pyx_t_35);
                     #ifdef WITH_THREAD
                     __Pyx_PyGILState_Release(__pyx_gilstate_save);
                     #endif
-                    __pyx_t_32 = 0; __pyx_t_33 = 0; __pyx_t_34 = 0; __pyx_t_35 = 0; __pyx_t_36 = 0; __pyx_t_37 = 0;
-                    __pyx_lineno = __pyx_t_11; __pyx_clineno = __pyx_t_10; __pyx_filename = __pyx_t_31;
+                    __pyx_t_33 = 0; __pyx_t_34 = 0; __pyx_t_35 = 0; __pyx_t_36 = 0; __pyx_t_37 = 0; __pyx_t_38 = 0;
+                    __pyx_lineno = __pyx_t_12; __pyx_clineno = __pyx_t_11; __pyx_filename = __pyx_t_32;
                     goto __pyx_L8_error;
                   }
                   __pyx_L14:;
@@ -2916,8 +2939,6 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
                 /* Clean up any temporaries */
                 __Pyx_XDECREF(__pyx_t_2);
                 __pyx_t_2 = NULL;
-                __Pyx_XDECREF(__pyx_t_32);
-                __pyx_t_32 = NULL;
                 __Pyx_XDECREF(__pyx_t_33);
                 __pyx_t_33 = NULL;
                 __Pyx_XDECREF(__pyx_t_34);
@@ -2928,6 +2949,8 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
                 __pyx_t_36 = NULL;
                 __Pyx_XDECREF(__pyx_t_37);
                 __pyx_t_37 = NULL;
+                __Pyx_XDECREF(__pyx_t_38);
+                __pyx_t_38 = NULL;
                 __Pyx_XDECREF(__pyx_t_8);
                 __pyx_t_8 = NULL;
                 #ifdef WITH_THREAD
@@ -2969,7 +2992,7 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
 
       /* "implicit/_nearest_neighbours.pyx":50
  * 
- *     progress = tqdm.tqdm(total=item_count)
+ *     progress = tqdm.tqdm(total=item_count, disable=not show_progress)
  *     with nogil, parallel(num_threads=num_threads):             # <<<<<<<<<<<<<<
  *         # allocate memory per thread
  *         neighbours = new SparseMatrixMultiplier[int, double](item_count)
@@ -3076,16 +3099,16 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
   __Pyx_GOTREF(__pyx_t_8);
   __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_item_count); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_38 = PyTuple_New(2); if (unlikely(!__pyx_t_38)) __PYX_ERR(0, 81, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_38);
+  __pyx_t_39 = PyTuple_New(2); if (unlikely(!__pyx_t_39)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_39);
   __Pyx_GIVEREF(__pyx_t_8);
-  PyTuple_SET_ITEM(__pyx_t_38, 0, __pyx_t_8);
+  PyTuple_SET_ITEM(__pyx_t_39, 0, __pyx_t_8);
   __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_38, 1, __pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_39, 1, __pyx_t_1);
   __pyx_t_8 = 0;
   __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_shape, __pyx_t_38) < 0) __PYX_ERR(0, 81, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_38); __pyx_t_38 = 0;
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_shape, __pyx_t_39) < 0) __PYX_ERR(0, 81, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_39); __pyx_t_39 = 0;
 
   /* "implicit/_nearest_neighbours.pyx":80
  *             del topk
@@ -3093,19 +3116,19 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
  *     return scipy.sparse.coo_matrix((values, (rows, cols)),             # <<<<<<<<<<<<<<
  *                                    shape=(item_count, item_count))
  */
-  __pyx_t_38 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, __pyx_t_3); if (unlikely(!__pyx_t_38)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_38);
+  __pyx_t_39 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, __pyx_t_3); if (unlikely(!__pyx_t_39)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_39);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_r = __pyx_t_38;
-  __pyx_t_38 = 0;
+  __pyx_r = __pyx_t_39;
+  __pyx_t_39 = 0;
   goto __pyx_L0;
 
   /* "implicit/_nearest_neighbours.pyx":24
  * 
  * @cython.boundscheck(False)
- * def all_pairs_knn(items, unsigned int K=100, int num_threads=0):             # <<<<<<<<<<<<<<
+ * def all_pairs_knn(items, unsigned int K=100, int num_threads=0, show_progress=True):             # <<<<<<<<<<<<<<
  *     """ Returns the top K nearest neighbours for each row in the matrix.
  *     """
  */
@@ -3120,7 +3143,7 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
   __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __Pyx_XDECREF(__pyx_t_38);
+  __Pyx_XDECREF(__pyx_t_39);
   __Pyx_AddTraceback("implicit._nearest_neighbours.all_pairs_knn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -16682,6 +16705,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_coo_matrix, __pyx_k_coo_matrix, sizeof(__pyx_k_coo_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_data, __pyx_k_data, sizeof(__pyx_k_data), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
+  {&__pyx_n_s_disable, __pyx_k_disable, sizeof(__pyx_k_disable), 0, 0, 1, 1},
   {&__pyx_n_s_dtype, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
   {&__pyx_n_s_dtype_is_object, __pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 0, 1, 1},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
@@ -16745,6 +16769,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
+  {&__pyx_n_s_show_progress, __pyx_k_show_progress, sizeof(__pyx_k_show_progress), 0, 0, 1, 1},
   {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
   {&__pyx_n_s_sparse, __pyx_k_sparse, sizeof(__pyx_k_sparse), 0, 0, 1, 1},
   {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
@@ -17010,14 +17035,14 @@ static int __Pyx_InitCachedConstants(void) {
   /* "implicit/_nearest_neighbours.pyx":24
  * 
  * @cython.boundscheck(False)
- * def all_pairs_knn(items, unsigned int K=100, int num_threads=0):             # <<<<<<<<<<<<<<
+ * def all_pairs_knn(items, unsigned int K=100, int num_threads=0, show_progress=True):             # <<<<<<<<<<<<<<
  *     """ Returns the top K nearest neighbours for each row in the matrix.
  *     """
  */
-  __pyx_tuple__21 = PyTuple_Pack(25, __pyx_n_s_items, __pyx_n_s_K, __pyx_n_s_num_threads, __pyx_n_s_users, __pyx_n_s_item_count, __pyx_n_s_i, __pyx_n_s_u, __pyx_n_s_index1, __pyx_n_s_index2, __pyx_n_s_j, __pyx_n_s_w1, __pyx_n_s_w2, __pyx_n_s_item_indptr, __pyx_n_s_item_indices, __pyx_n_s_item_data, __pyx_n_s_user_indptr, __pyx_n_s_user_indices, __pyx_n_s_user_data, __pyx_n_s_neighbours, __pyx_n_s_topk, __pyx_n_s_result, __pyx_n_s_values, __pyx_n_s_rows, __pyx_n_s_cols, __pyx_n_s_progress); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_tuple__21 = PyTuple_Pack(26, __pyx_n_s_items, __pyx_n_s_K, __pyx_n_s_num_threads, __pyx_n_s_show_progress, __pyx_n_s_users, __pyx_n_s_item_count, __pyx_n_s_i, __pyx_n_s_u, __pyx_n_s_index1, __pyx_n_s_index2, __pyx_n_s_j, __pyx_n_s_w1, __pyx_n_s_w2, __pyx_n_s_item_indptr, __pyx_n_s_item_indices, __pyx_n_s_item_data, __pyx_n_s_user_indptr, __pyx_n_s_user_indices, __pyx_n_s_user_data, __pyx_n_s_neighbours, __pyx_n_s_topk, __pyx_n_s_result, __pyx_n_s_values, __pyx_n_s_rows, __pyx_n_s_cols, __pyx_n_s_progress); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(3, 0, 25, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit__nearest_neighbours_pyx, __pyx_n_s_all_pairs_knn, 24, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(4, 0, 26, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit__nearest_neighbours_pyx, __pyx_n_s_all_pairs_knn, 24, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 24, __pyx_L1_error)
 
   /* "View.MemoryView":284
  *         return self.name
@@ -17279,7 +17304,7 @@ PyMODINIT_FUNC PyInit__nearest_neighbours(void)
   /* "implicit/_nearest_neighbours.pyx":24
  * 
  * @cython.boundscheck(False)
- * def all_pairs_knn(items, unsigned int K=100, int num_threads=0):             # <<<<<<<<<<<<<<
+ * def all_pairs_knn(items, unsigned int K=100, int num_threads=0, show_progress=True):             # <<<<<<<<<<<<<<
  *     """ Returns the top K nearest neighbours for each row in the matrix.
  *     """
  */

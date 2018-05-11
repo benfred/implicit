@@ -15,10 +15,11 @@ class ItemItemRecommender(RecommenderBase):
     def __init__(self, K=20):
         self.similarity = None
         self.K = K
+        self.show_progress = True
 
     def fit(self, weighted):
         """ Computes and stores the similarity matrix """
-        self.similarity = all_pairs_knn(weighted, self.K).tocsr()
+        self.similarity = all_pairs_knn(weighted, self.K, show_progress=self.show_progress).tocsr()
 
     def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
         """ returns the best N recommendations for a user given its id"""

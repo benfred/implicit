@@ -39,7 +39,7 @@ class NearestNeighboursTest(unittest.TestCase):
         # compute all neighbours using matrix dot product
         all_neighbours = counts.dot(counts.T).tocsr()
         K = 3
-        knn = implicit.nearest_neighbours.all_pairs_knn(counts, K).tocsr()
+        knn = implicit.nearest_neighbours.all_pairs_knn(counts, K, show_progress=False).tocsr()
 
         for rowid in range(counts.shape[0]):
             # make sure values match

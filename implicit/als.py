@@ -78,6 +78,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.fit_callback = None
         self.cg_steps = 3
 
+        # show a progress bar during model fit (disabled for unittests)
+        self.show_progress = True
+
         # cache for item factors squared
         self._YtY = None
 
@@ -104,7 +107,6 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             the rows of the matrix are the item, the columns are the users that liked that item,
             and the value is the confidence that the user liked the item.
         """
-
         Ciu = item_users
         if not isinstance(Ciu, scipy.sparse.csr_matrix):
             s = time.time()
@@ -140,7 +142,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         solver = self.solver
 
         log.debug("Running %i ALS iterations", self.iterations)
-        with tqdm.tqdm(total=self.iterations) as progress:
+        with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
             # alternate between learning the user_factors from the item_factors and vice-versa
             for iteration in range(self.iterations):
                 s = time.time()
@@ -181,7 +183,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         solver = implicit.cuda.CuLeastSquaresSolver(self.factors)
         log.debug("Running %i ALS iterations", self.iterations)
-        with tqdm.tqdm(total=self.iterations) as progress:
+        with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
             for iteration in range(self.iterations):
                 s = time.time()
                 solver.least_squares(Ciu, Y, X, self.regularization, self.cg_steps)

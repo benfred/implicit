@@ -94,6 +94,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.dtype = dtype
         self.use_gpu = use_gpu
         self.num_threads = num_threads
+        self.show_progress = True
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
@@ -157,7 +158,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         cdef long rows = len(Ciu.row) - 1
         cdef RNGVector rng = RNGVector(num_threads, rows)
         log.debug("Running %i BPR training epochs", self.iterations)
-        with tqdm.tqdm(total=self.iterations) as progress:
+        with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
             for epoch in range(self.iterations):
                 correct = bpr_update(rng, Ciu.col, Ciu.row,
                                      self.user_factors, self.item_factors,
@@ -180,7 +181,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         Y = implicit.cuda.CuDenseMatrix(self.item_factors)
 
         log.debug("Running %i BPR training epochs", self.iterations)
-        with tqdm.tqdm(total=self.iterations) as progress:
+        with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
             for epoch in range(self.iterations):
                 correct = implicit.cuda.cu_bpr_update(Ciu, X, Y, self.learning_rate,
                                                       self.regularization, np.random.randint(2**31))

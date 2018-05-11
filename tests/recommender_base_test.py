@@ -18,6 +18,7 @@ class TestRecommenderBaseMixin(object):
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
+        model.show_progress = False
         model.fit(item_users)
 
         for userid in range(50):
@@ -54,6 +55,7 @@ class TestRecommenderBaseMixin(object):
 
     def test_similar_items(self):
         model = self._get_model()
+        model.show_progress = False
         model.fit(self.get_checker_board(50))
         for itemid in range(50):
             recs = model.similar_items(itemid, N=10)
@@ -72,6 +74,7 @@ class TestRecommenderBaseMixin(object):
         item_users[:, 49] = 0
 
         model = self._get_model()
+        model.show_progress = False
         model.fit(csr_matrix(item_users))
 
         # item 42 has no users, shouldn't be similar to anything
@@ -83,9 +86,11 @@ class TestRecommenderBaseMixin(object):
         # models should be able to accept input of either float32 or float64
         item_users = self.get_checker_board(50)
         model = self._get_model()
+        model.show_progress = False
         model.fit(item_users.astype(np.float64))
 
         model = self._get_model()
+        model.show_progress = False
         model.fit(item_users.astype(np.float32))
 
     def test_rank_items(self):
@@ -93,6 +98,7 @@ class TestRecommenderBaseMixin(object):
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
+        model.show_progress = False
         model.fit(item_users)
 
         for userid in range(50):

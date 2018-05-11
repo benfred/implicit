@@ -38,6 +38,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                             dtype=np.float64,
                                             use_native=use_native,
                                             use_cg=True)
+            model.show_progress = False
             model.fit(counts)
             rows, cols = model.item_factors, model.user_factors
 
@@ -74,6 +75,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                                 use_cg=use_cg,
                                                 use_gpu=use_gpu)
                 np.random.seed(23)
+                model.show_progress = False
                 model.fit(user_items)
                 rows, cols = model.item_factors, model.user_factors
 
@@ -109,6 +111,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                         use_cg=False,
                                         iterations=100)
         np.random.seed(23)
+        model.show_progress = False
         model.fit(user_items)
 
         userid = 0
