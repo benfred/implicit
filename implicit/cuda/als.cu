@@ -66,7 +66,7 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
             if (rsnew < 1e-10) break;
             p[threadIdx.x] = r[threadIdx.x] + (rsnew/rsold) * p[threadIdx.x];
             rsold = rsnew;
-
+            __syncthreads();
         }
 
         // this shouldn't happen - but if we hit a NaN in the above code then complain
