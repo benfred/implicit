@@ -40,7 +40,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     use_cg : bool, optional
         Use a faster Conjugate Gradient solver to calculate factors
     use_gpu : bool, optional
-        Fit on the GPU if available
+        Fit on the GPU if available, default is to run on GPU only if available
     iterations : int, optional
         The number of ALS iterations to use when fitting data
     calculate_training_loss : bool, optional
@@ -59,7 +59,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     """
 
     def __init__(self, factors=100, regularization=0.01, dtype=np.float32,
-                 use_native=True, use_cg=True, use_gpu=False,
+                 use_native=True, use_cg=True, use_gpu=implicit.cuda.HAS_CUDA,
                  iterations=15, calculate_training_loss=False, num_threads=0):
         super(AlternatingLeastSquares, self).__init__()
 

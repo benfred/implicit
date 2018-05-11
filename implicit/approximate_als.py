@@ -9,6 +9,7 @@ import logging
 import numpy
 
 from implicit.als import AlternatingLeastSquares
+import implicit.cuda
 
 
 log = logging.getLogger("implicit")
@@ -279,7 +280,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         The number of cells to use when building the Faiss index.
     nprobe : int, optional
         The number of cells to visit to perform a search.
-    gpu : bool, optional
+    use_gpu : bool, optional
         Whether or not to enable run Faiss on the GPU. Requires faiss to have been
         built with GPU support.
     approximate_similar_items : bool, optional
@@ -299,18 +300,17 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
     """
 
     def __init__(self, approximate_similar_items=True, approximate_recommend=True,
-                 nlist=400, nprobe=20, gpu=False, *args, **kwargs):
+                 nlist=400, nprobe=20, use_gpu=implicit.cuda.HAS_CUDA, *args, **kwargs):
         self.similar_items_index = None
         self.recommend_index = None
 
         self.approximate_similar_items = approximate_similar_items
         self.approximate_recommend = approximate_recommend
-        self.gpu = gpu
 
         # hyper-parameters for FAISS
         self.nlist = nlist
         self.nprobe = nprobe
-        super(FaissAlternatingLeastSquares, self).__init__(*args, **kwargs)
+        super(FaissAlternatingLeastSquares, self).__init__(*args, use_gpu=use_gpu, **kwargs)
 
     def fit(self, Ciu):
         import faiss
@@ -320,7 +320,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
 
         self.quantizer = faiss.IndexFlat(self.factors)
 
-        if self.gpu:
+        if self.use_gpu:
             self.gpu_resources = faiss.StandardGpuResources()
 
         item_factors = self.item_factors.astype('float32')
@@ -329,7 +329,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
             log.debug("Building faiss recommendation index")
 
             # build up a inner product index here
-            if self.gpu:
+            if self.use_gpu:
                 index = faiss.GpuIndexIVFFlat(self.gpu_resources, self.factors, self.nlist,
                                               faiss.METRIC_INNER_PRODUCT)
             else:
@@ -350,7 +350,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
             norms[norms == 0] = 1e-10
 
             normalized = (item_factors.T / norms).T.astype('float32')
-            if self.gpu:
+            if self.use_gpu:
                 index = faiss.GpuIndexIVFFlat(self.gpu_resources, self.factors, self.nlist,
                                               faiss.METRIC_INNER_PRODUCT)
             else:
