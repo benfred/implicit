@@ -10,35 +10,55 @@ from implicit.datasets import _download
 log = logging.getLogger("implicit")
 
 
-URL = 'https://github.com/benfred/recommender_data/releases/download/v1.0/movielens_20m.hdf5'
+URL_BASE = 'https://github.com/benfred/recommender_data/releases/download/v1.0/'
 
 
-def get_movielens():
-    """ Returns the lastfm360k dataset, downloading locally if necessary.
-    Returns a tuple of (artistids, userids, plays) where plays is a COO matrix """
+def get_movielens(variant="20m"):
+    """ Gets movielens datasets
 
-    filename = os.path.join(_download.LOCAL_CACHE_DIR, "movielens_20m.hdf5")
-    if not os.path.isfile(filename):
-        log.info("Downloading dataset to '%s'", filename)
-        _download.download_file(URL, filename)
+    Parameters
+    ---------
+    variant : string
+        Which version of the movielens dataset to download. Should be one of '20m', '10m' or '1m'
+
+    Returns
+    -------
+    movies : ndarray
+        An array of the movie titles.
+    ratings : csr_matrix
+        A sparse matrix where the row is the movieId, the column is the userId and the value is
+        the rating.
+    """
+    filename = "movielens_%s.hdf5" % variant
+
+    path = os.path.join(_download.LOCAL_CACHE_DIR, filename)
+    if not os.path.isfile(path):
+        log.info("Downloading dataset to '%s'", path)
+        _download.download_file(URL_BASE + filename, path)
     else:
-        log.info("Using cached dataset at '%s'", filename)
+        log.info("Using cached dataset at '%s'", path)
 
-    with h5py.File(filename, 'r') as f:
+    with h5py.File(path, 'r') as f:
         m = f.get('movie_user_ratings')
         plays = csr_matrix((m.get('data'), m.get('indices'), m.get('indptr')))
         return np.array(f['movie']), plays
 
 
-def generate_dataset(path, outputfilename):
+def generate_dataset(path, variant='20m', outputpath="."):
     """ Generates a hdf5 movielens datasetfile from the raw datafiles found at:
     https://grouplens.org/datasets/movielens/20m/
 
     You shouldn't have to run this yourself, and can instead just download the
     output using the 'get_movielens' funciton./
     """
-    ratings, movies = _read_dataframes_20M(path)
-    _hfd5_from_dataframe(ratings, movies, outputfilename)
+    filename = os.path.join(outputpath, "movielens_%s.hdf5" % variant)
+
+    if variant == '20m':
+        ratings, movies = _read_dataframes_20M(path)
+    else:
+        ratings, movies = _read_dataframes(path)
+
+    _hfd5_from_dataframe(ratings, movies, filename)
 
 
 def _read_dataframes_20M(path):
@@ -48,6 +68,15 @@ def _read_dataframes_20M(path):
     ratings = pandas.read_csv(os.path.join(path, "ratings.csv"))
     movies = pandas.read_csv(os.path.join(path, "movies.csv"))
 
+    return ratings, movies
+
+
+def _read_dataframes(path):
+    import pandas
+    ratings = pandas.read_csv(os.path.join(path, "ratings.dat"),  delimiter="::",
+                              names=['userId', 'movieId', 'rating', 'timestamp'])
+    movies = pandas.read_table(os.path.join(path, "movies.dat"), delimiter="::",
+                               names=['movieId', 'title', 'genres'])
     return ratings, movies
 
 

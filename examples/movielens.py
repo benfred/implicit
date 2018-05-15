@@ -32,10 +32,11 @@ log = logging.getLogger("implicit")
 
 
 def calculate_similar_movies(output_filename,
-                             model_name="als", min_rating=4.0):
+                             model_name="als", min_rating=4.0,
+                             variant='20m'):
     # read in the input data file
     start = time.time()
-    titles, ratings = get_movielens()
+    titles, ratings = get_movielens(variant)
 
     # remove things < min_rating, and convert to implicit dataset
     # by considering ratings as a binary preference only
@@ -100,6 +101,8 @@ if __name__ == "__main__":
                         dest='outputfile', help='output file name')
     parser.add_argument('--model', type=str, default='als',
                         dest='model', help='model to calculate (als/bm25/tfidf/cosine)')
+    parser.add_argument('--variant', type=str, default='20m',
+                        dest='variant', help='Whether to use the 20m, 10m or 1m movielens dataset')
     parser.add_argument('--min_rating', type=float, default=4.0, dest='min_rating',
                         help='Minimum rating to assume that a rating is positive')
     args = parser.parse_args()
@@ -108,4 +111,4 @@ if __name__ == "__main__":
 
     calculate_similar_movies(args.outputfile,
                              model_name=args.model,
-                             min_rating=args.min_rating)
+                             min_rating=args.min_rating, variant=args.variant)
