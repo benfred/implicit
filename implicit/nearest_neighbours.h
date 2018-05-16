@@ -76,8 +76,9 @@ class SparseMatrixMultiplier {
 
     Index nnz() const { return length; }
 
- protected:
     std::vector<Value> sums;
+
+ protected:
     std::vector<Index> nonzeros;
     Index head, length;
 };

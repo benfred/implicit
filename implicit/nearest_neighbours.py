@@ -4,7 +4,7 @@ import numpy
 from numpy import bincount, log, log1p, sqrt
 from scipy.sparse import coo_matrix, csr_matrix
 
-from ._nearest_neighbours import all_pairs_knn
+from ._nearest_neighbours import all_pairs_knn, NearestNeighboursScorer
 from .recommender_base import RecommenderBase
 from .utils import nonzeros
 
@@ -16,25 +16,28 @@ class ItemItemRecommender(RecommenderBase):
         self.similarity = None
         self.K = K
         self.show_progress = True
+        self.scorer = None
 
     def fit(self, weighted):
         """ Computes and stores the similarity matrix """
         self.similarity = all_pairs_knn(weighted, self.K, show_progress=self.show_progress).tocsr()
+        self.scorer = NearestNeighboursScorer(self.similarity)
 
     def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
         """ returns the best N recommendations for a user given its id"""
         # recalculate_user is ignored because this is not a model based algorithm
-        liked_vector = user_items[userid]
-
-        # calculate the top related items
-        recommendations = liked_vector.dot(self.similarity)
-        best = sorted(zip(recommendations.indices, recommendations.data), key=lambda x: -x[1])
-
-        # remove users own liked items from the output
-        liked = set(liked_vector.indices)
+        items = N
         if filter_items:
-            liked.update(filter_items)
+            items += len(filter_items)
 
+        indices, data = self.scorer.recommend(userid, user_items.indptr, user_items.indices,
+                                              user_items.data, K=items)
+        best = sorted(zip(indices, data), key=lambda x: -x[1])
+
+        if not filter_items:
+            return best
+
+        liked = set(filter_items)
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
 
     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
