@@ -5,6 +5,8 @@ from __future__ import print_function
 import numpy as np
 from scipy.sparse import csr_matrix
 
+from implicit.evaluation import precision_at_k
+
 
 class TestRecommenderBaseMixin(object):
     """ Mixin to test a bunch of common functionality in models
@@ -52,6 +54,20 @@ class TestRecommenderBaseMixin(object):
         # https://github.com/benfred/implicit/issues/26
         recs = model.recommend(0, user_items, N=1, filter_items=[0])
         self.assertTrue(0 not in dict(recs))
+
+    def test_evaluation(self):
+        item_users = self.get_checker_board(50)
+        user_items = item_users.T.tocsr()
+
+        model = self._get_model()
+        model.show_progress = False
+        model.fit(item_users)
+
+        # we've withheld the diagnoal for testing, and have verified that in test_recommend
+        # it is returned for each user. So p@1 should be 1.0
+        p = precision_at_k(model, user_items.tocsr(), csr_matrix(np.eye(50)), K=1,
+                           show_progress=False)
+        self.assertEqual(p, 1)
 
     def test_similar_items(self):
         model = self._get_model()
