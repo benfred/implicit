@@ -14,7 +14,7 @@ from .recommender_base_test import TestRecommenderBaseMixin
 class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
     def _get_model(self):
-        return AlternatingLeastSquares(factors=3, regularization=0)
+        return AlternatingLeastSquares(factors=3, regularization=0, use_gpu=False)
 
     def test_cg_nan(self):
         # test issue with CG code that was causing NaN values in output:
@@ -37,7 +37,8 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                             regularization=0.01,
                                             dtype=np.float64,
                                             use_native=use_native,
-                                            use_cg=True)
+                                            use_cg=True,
+                                            use_gpu=False)
             model.show_progress = False
             model.fit(counts)
             rows, cols = model.item_factors, model.user_factors

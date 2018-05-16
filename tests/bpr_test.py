@@ -9,7 +9,7 @@ from .recommender_base_test import TestRecommenderBaseMixin
 class BPRTest(unittest.TestCase, TestRecommenderBaseMixin):
 
     def _get_model(self):
-        return BayesianPersonalizedRanking(factors=3, regularization=0)
+        return BayesianPersonalizedRanking(factors=3, regularization=0, use_gpu=False)
 
 
 if HAS_CUDA:

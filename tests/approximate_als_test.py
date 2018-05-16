@@ -13,7 +13,7 @@ try:
 
     class AnnoyALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
-            return AnnoyAlternatingLeastSquares(factors=2, regularization=0)
+            return AnnoyAlternatingLeastSquares(factors=2, regularization=0, use_gpu=False)
 except ImportError:
     pass
 
@@ -23,7 +23,7 @@ try:
     class NMSLibALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
             return NMSLibAlternatingLeastSquares(factors=2, regularization=0,
-                                                 index_params={'post': 2})
+                                                 index_params={'post': 2}, use_gpu=False)
 except ImportError:
     pass
 
@@ -32,7 +32,8 @@ try:
 
     class FaissALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
-            return FaissAlternatingLeastSquares(nlist=1, nprobe=1, factors=2, regularization=0)
+            return FaissAlternatingLeastSquares(nlist=1, nprobe=1, factors=2, regularization=0,
+                                                use_gpu=False)
 except ImportError:
     pass
 
