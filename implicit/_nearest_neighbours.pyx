@@ -1,13 +1,18 @@
 import cython
+from cython cimport floating, integral
 import numpy as np
 import scipy.sparse
-import tqdm
+import threading
 
 from cython.operator import dereference
 from cython.parallel import parallel, prange
 
+from libcpp cimport bool
 from libcpp.vector cimport vector
 from libcpp.utility cimport pair
+
+import tqdm
+
 
 cdef extern from "nearest_neighbours.h" namespace "implicit" nogil:
     cdef cppclass TopK[Index, Value]:
@@ -18,6 +23,75 @@ cdef extern from "nearest_neighbours.h" namespace "implicit" nogil:
         SparseMatrixMultiplier(Index item_count)
         void add(Index index, Value value)
         void foreach[Function](Function & f)
+        vector[Value] sums
+
+
+cdef class NearestNeighboursScorer(object):
+    """ Class to return the top K items from multipying a users likes
+    by a precomputed similarity vector. """
+    cdef SparseMatrixMultiplier[int, double] * neighbours
+
+    cdef int[:] similarity_indptr
+    cdef int[:] similarity_indices
+    cdef double[:] similarity_data
+
+    cdef object lock
+
+    def __cinit__(self, similarity):
+        self.neighbours = new SparseMatrixMultiplier[int, double](similarity.shape[0])
+        self.similarity_indptr = similarity.indptr
+        self.similarity_indices = similarity.indices
+        self.similarity_data = similarity.data.astype(np.float64)
+        self.lock = threading.RLock()
+
+    @cython.boundscheck(False)
+    def recommend(self, int u, int[:] user_indptr, int[:] user_indices, floating[:] user_data,
+                  int K=10, bool remove_own_likes=True):
+        cdef int index1, index2, i, count
+        cdef double weight
+        cdef double temp
+        cdef pair[double, int] result
+
+        cdef int[:] indices
+        cdef double[:] data
+
+        cdef TopK[int, double] * topK = new TopK[int, double](K)
+        try:
+            with self.lock:
+                with nogil:
+                    for index1 in range(user_indptr[u], user_indptr[u+1]):
+                        i = user_indices[index1]
+                        weight = user_data[index1]
+
+                        for index2 in range(self.similarity_indptr[i], self.similarity_indptr[i+1]):
+                            self.neighbours.add(self.similarity_indices[index2],
+                                                self.similarity_data[index2] * weight)
+
+                    if remove_own_likes:
+                        # set the score to 0 for things already liked
+                        for index1 in range(user_indptr[u], user_indptr[u+1]):
+                            i = user_indices[index1]
+                            self.neighbours.sums[i] = 0
+
+                    self.neighbours.foreach(dereference(topK))
+
+            count = topK.results.size()
+            indices = ret_indices = np.zeros(count, dtype=np.int32)
+            data = ret_data = np.zeros(count)
+
+            with nogil:
+                i = 0
+                for result in topK.results:
+                    indices[i] = result.second
+                    data[i] = result.first
+                    i += 1
+            return ret_indices, ret_data
+
+        finally:
+            del topK
+
+    def __dealloc__(self):
+        del self.neighbours
 
 
 @cython.boundscheck(False)
