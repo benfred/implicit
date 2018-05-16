@@ -101,8 +101,8 @@ if __name__ == "__main__":
                         dest='outputfile', help='output file name')
     parser.add_argument('--model', type=str, default='als',
                         dest='model', help='model to calculate (als/bm25/tfidf/cosine)')
-    parser.add_argument('--variant', type=str, default='20m',
-                        dest='variant', help='Whether to use the 20m, 10m or 1m movielens dataset')
+    parser.add_argument('--variant', type=str, default='20m', dest='variant',
+                        help='Whether to use the 20m, 10m, 1m or 100k movielens dataset')
     parser.add_argument('--min_rating', type=float, default=4.0, dest='min_rating',
                         help='Minimum rating to assume that a rating is positive')
     args = parser.parse_args()

@@ -19,7 +19,8 @@ def get_movielens(variant="20m"):
     Parameters
     ---------
     variant : string
-        Which version of the movielens dataset to download. Should be one of '20m', '10m' or '1m'
+        Which version of the movielens dataset to download. Should be one of '20m', '10m',
+        '1m' or '100k'.
 
     Returns
     -------
@@ -55,6 +56,8 @@ def generate_dataset(path, variant='20m', outputpath="."):
 
     if variant == '20m':
         ratings, movies = _read_dataframes_20M(path)
+    elif variant == '100k':
+        ratings, movies = _read_dataframes_100k(path)
     else:
         ratings, movies = _read_dataframes(path)
 
@@ -71,10 +74,27 @@ def _read_dataframes_20M(path):
     return ratings, movies
 
 
+def _read_dataframes_100k(path):
+    """ reads in the movielens 100k dataset"""
+    import pandas
+
+    ratings = pandas.read_table(os.path.join(path, "u.data"),
+                                names=['userId', 'movieId', 'rating', 'timestamp'])
+
+    movies = pandas.read_csv(os.path.join(path, "u.item"),
+                             names=['movieId', 'title'],
+                             usecols=[0, 1],
+                             delimiter='|',
+                             encoding='ISO-8859-1')
+
+    return ratings, movies
+
+
 def _read_dataframes(path):
     import pandas
     ratings = pandas.read_csv(os.path.join(path, "ratings.dat"),  delimiter="::",
                               names=['userId', 'movieId', 'rating', 'timestamp'])
+
     movies = pandas.read_table(os.path.join(path, "movies.dat"), delimiter="::",
                                names=['movieId', 'title', 'genres'])
     return ratings, movies
