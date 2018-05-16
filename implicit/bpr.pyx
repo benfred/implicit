@@ -87,6 +87,12 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                  iterations=100, use_gpu=implicit.cuda.HAS_CUDA, num_threads=0):
         super(BayesianPersonalizedRanking, self).__init__()
 
+        if use_gpu and (factors + 1) % 32:
+            padding = 32 - (factors + 1) % 32
+            log.warning("GPU training requires factor size to be a multiple of 32 - 1."
+                        " Increasing factors from %i to %i.", factors, factors + padding)
+            factors += padding
+
         self.factors = factors
         self.learning_rate = learning_rate
         self.iterations = iterations
