@@ -175,7 +175,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                         "Converting factors to float32")
             self.user_factors = self.user_factors.astype(np.float32)
             self.item_factors = self.item_factors.astype(np.float32)
-        
+
         Ciu = implicit.cuda.CuCOOMatrix(Ciu_host)
         X = implicit.cuda.CuDenseMatrix(self.user_factors)
         Y = implicit.cuda.CuDenseMatrix(self.item_factors)
