@@ -69,7 +69,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
                  approximate_similar_items=True, approximate_recommend=True,
                  method='hnsw', index_params=None, query_params=None, *args, **kwargs):
         if index_params is None:
-            index_params = {'M': 32, 'post': 0, 'efConstruction': 800}
+            index_params = {'M': 16, 'post': 0, 'efConstruction': 400}
         if query_params is None:
             query_params = {'ef': 90}
 
@@ -111,7 +111,8 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
             ids = ids[norms != 0]
 
             self.similar_items_index.addDataPointBatch(item_factors, ids=ids)
-            self.similar_items_index.createIndex(self.index_params)
+            self.similar_items_index.createIndex(self.index_params,
+                                                 print_progress=self.show_progress)
             self.similar_items_index.setQueryTimeParams(self.query_params)
 
         # build up a separate index for the inner product (for recommend
@@ -123,7 +124,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
             self.recommend_index = nmslib.init(
                 method='hnsw', space='cosinesimil')
             self.recommend_index.addDataPointBatch(extra)
-            self.recommend_index.createIndex(self.index_params)
+            self.recommend_index.createIndex(self.index_params, print_progress=self.show_progress)
             self.recommend_index.setQueryTimeParams(self.query_params)
 
     def similar_items(self, itemid, N=10):
