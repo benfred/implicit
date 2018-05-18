@@ -8,7 +8,9 @@ import tqdm
 
 from cython.parallel import parallel, prange
 from libc.math cimport exp
+from libcpp cimport bool
 from libcpp.vector cimport vector
+from libcpp.algorithm cimport binary_search
 
 import numpy as np
 import scipy.sparse
@@ -33,6 +35,14 @@ log = logging.getLogger("implicit")
 # build to fail)
 cdef extern from "bpr.h" namespace "implicit" nogil:
     cdef int get_thread_num()
+
+
+@cython.boundscheck(False)
+cdef bool has_non_zero(integral[:] indptr, integral[:] indices,
+                       integral rowid, integral colid) nogil:
+    """ Given a CSR matrix, returns whether the [rowid, colid] contains a non zero.
+    Assumes the CSR matrix has sorted indices """
+    return binary_search(&indices[indptr[rowid]], &indices[indptr[rowid + 1]], colid)
 
 
 cdef class RNGVector(object):
@@ -71,6 +81,10 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         Fit on the GPU if available
     iterations : int, optional
         The number of training epochs to use when fitting the data
+    verify_negative_samples: bool, optional
+        When sampling negative items, check if the randomly picked negative item has actually
+        been liked by the user. This check increases the time needed to train but usually leads
+        to better predictions.
     num_threads : int, optional
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
@@ -84,7 +98,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         Array of latent factors for each user in the training set
     """
     def __init__(self, factors=100, learning_rate=0.01, regularization=0.01, dtype=np.float32,
-                 iterations=100, use_gpu=implicit.cuda.HAS_CUDA, num_threads=0):
+                 iterations=100, use_gpu=implicit.cuda.HAS_CUDA, num_threads=0,
+                 verify_negative_samples=True):
         super(BayesianPersonalizedRanking, self).__init__()
 
         if use_gpu and (factors + 1) % 32:
@@ -100,6 +115,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.dtype = dtype
         self.use_gpu = use_gpu
         self.num_threads = num_threads
+        self.verify_negative_samples = verify_negative_samples
         self.show_progress = True
 
     @cython.cdivision(True)
@@ -115,21 +131,23 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             BPR ignores the weight value of the matrix right now - it treats non zero entries
             as a binary signal that the user liked the item.
         """
-
-        # we need a COO matrix here to do this efficiently, convert if necessary
-        Ciu = item_users
-        if not isinstance(Ciu, scipy.sparse.coo_matrix):
-            s = time.time()
-            log.debug("Converting input to COO format")
-            Ciu = Ciu.tocoo()
-            log.debug("Converted input to COO in %.3fs", time.time() - s)
-
         # for now, all we handle is float 32 values
-        if Ciu.dtype != np.float32:
-            Ciu = Ciu.astype(np.float32)
+        if item_users.dtype != np.float32:
+            item_users = item_users.astype(np.float32)
 
-        # initialize factors
-        items, users = Ciu.shape
+        items, users = item_users.shape
+
+        # We need efficient user lookup for case of removing own likes
+        # TODO: might make more sense to just changes inputs to be users by items instead
+        # but that would be a major breaking API change
+        user_items = item_users.T.tocsr()
+        if not user_items.has_sorted_indices:
+            user_items.sort_indices()
+
+        # this basically calculates the 'row' attribute of a COO matrix
+        # without requiring us to get the whole COO matrix
+        user_counts = np.ediff1d(user_items.indptr)
+        userids = np.repeat(np.arange(users), user_counts).astype(user_items.indices.dtype)
 
         # create factors if not already created.
         # Note: the final dimension is for the item bias term - which is set to a 1 for all users
@@ -138,20 +156,19 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.item_factors = np.random.rand(items, self.factors + 1).astype(self.dtype)
 
             # set factors to all zeros for items without any ratings
-            item_counts = np.bincount(Ciu.row, minlength=items)
+            item_counts = np.bincount(user_items.indices, minlength=items)
             self.item_factors[item_counts == 0] = np.zeros(self.factors + 1)
 
         if self.user_factors is None:
             self.user_factors = np.random.rand(users, self.factors + 1).astype(self.dtype)
 
             # set factors to all zeros for users without any ratings
-            user_counts = np.bincount(Ciu.col, minlength=users)
             self.user_factors[user_counts == 0] = np.zeros(self.factors + 1)
 
             self.user_factors[:, self.factors] = 1.0
 
         if self.use_gpu:
-            return self._fit_gpu(Ciu)
+            return self._fit_gpu(user_items, userids)
 
         # we accept num_threads = 0 as indicating to create as many threads as we have cores,
         # but in that case we need the number of cores, since we need to initialize RNG state per
@@ -161,18 +178,20 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             num_threads = multiprocessing.cpu_count()
 
         # initialize RNG's, one per thread.
-        cdef long rows = len(Ciu.row) - 1
-        cdef RNGVector rng = RNGVector(num_threads, rows)
+        cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1)
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
             for epoch in range(self.iterations):
-                correct = bpr_update(rng, Ciu.col, Ciu.row,
-                                     self.user_factors, self.item_factors,
-                                     self.learning_rate, self.regularization, num_threads)
+                correct, skipped = bpr_update(rng, userids, user_items.indices, user_items.indptr,
+                                              self.user_factors, self.item_factors,
+                                              self.learning_rate, self.regularization, num_threads,
+                                              self.verify_negative_samples)
                 progress.update(1)
-                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu.row))})
+                total = len(user_items.data)
+                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
+                                      "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
-    def _fit_gpu(self, Ciu_host):
+    def _fit_gpu(self, user_items, userids_host):
         if not implicit.cuda.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
@@ -182,17 +201,25 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.user_factors = self.user_factors.astype(np.float32)
             self.item_factors = self.item_factors.astype(np.float32)
 
-        Ciu = implicit.cuda.CuCOOMatrix(Ciu_host)
+        userids = implicit.cuda.CuIntVector(userids_host)
+        itemids = implicit.cuda.CuIntVector(user_items.indices)
+        indptr = implicit.cuda.CuIntVector(user_items.indptr)
+
         X = implicit.cuda.CuDenseMatrix(self.user_factors)
         Y = implicit.cuda.CuDenseMatrix(self.item_factors)
 
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
             for epoch in range(self.iterations):
-                correct = implicit.cuda.cu_bpr_update(Ciu, X, Y, self.learning_rate,
-                                                      self.regularization, np.random.randint(2**31))
+                correct, skipped = implicit.cuda.cu_bpr_update(userids, itemids, indptr,
+                                                               X, Y, self.learning_rate,
+                                                               self.regularization,
+                                                               np.random.randint(2**31),
+                                                               self.verify_negative_samples)
                 progress.update(1)
-                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / len(Ciu_host.row))})
+                total = len(user_items.data)
+                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
+                                      "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
         X.to_host(self.user_factors)
         Y.to_host(self.item_factors)
@@ -201,11 +228,12 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 @cython.cdivision(True)
 @cython.boundscheck(False)
 def bpr_update(RNGVector rng,
-               integral[:] userids, integral[:] itemids,
+               integral[:] userids, integral[:] itemids, integral[:] indptr,
                floating[:, :] X, floating[:, :] Y,
-               float learning_rate, float reg, int num_threads):
+               float learning_rate, float reg, int num_threads,
+               bool verify_neg):
     cdef integral users = X.shape[0], items = Y.shape[0]
-    cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0
+    cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0, skipped = 0
     cdef integral j, liked_id, disliked_id, thread_id
     cdef floating z, score, temp
 
@@ -220,10 +248,15 @@ def bpr_update(RNGVector rng,
         thread_id = get_thread_num()
         for i in prange(samples, schedule='guided'):
             liked_index = rng.generate(thread_id)
-            disliked_index = rng.generate(thread_id)
-
             liked_id = itemids[liked_index]
+
+            # if the user has liked the item, skip this for now
+            disliked_index = rng.generate(thread_id)
             disliked_id = itemids[disliked_index]
+
+            if verify_neg and has_non_zero(indptr, itemids, userids[liked_index], disliked_id):
+                skipped += 1
+                continue
 
             # get pointers to the relevant factors
             user, liked, disliked = &X[userids[liked_index], 0], &Y[liked_id, 0], &Y[disliked_id, 0]
@@ -248,4 +281,4 @@ def bpr_update(RNGVector rng,
             liked[factors] += learning_rate * (z - reg * liked[factors])
             disliked[factors] += learning_rate * (-z - reg * disliked[factors])
 
-    return correct
+    return correct, skipped

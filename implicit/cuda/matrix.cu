@@ -6,6 +6,23 @@
 #include "implicit/cuda/utils.cuh"
 
 namespace implicit {
+template <typename T>
+CudaVector<T>::CudaVector(int size, const T * host_data)
+    : size(size) {
+    CHECK_CUDA(cudaMalloc(&data, size * sizeof(T)));
+    if (host_data) {
+        CHECK_CUDA(cudaMemcpy(data, host_data, size * sizeof(T), cudaMemcpyHostToDevice));
+    }
+}
+
+
+template <typename T>
+CudaVector<T>::~CudaVector() {
+    CHECK_CUDA(cudaFree(data));
+}
+
+template struct CudaVector<int>;
+template struct CudaVector<float>;
 
 CudaDenseMatrix::CudaDenseMatrix(int rows, int cols, const float * host_data)
     : rows(rows), cols(cols) {
