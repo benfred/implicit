@@ -3,10 +3,16 @@ import numpy as np
 import cython
 from cython.operator import dereference
 
+from libcpp cimport bool
+from libcpp.utility cimport pair
+
 cdef extern from "als.h" namespace "implicit" nogil:
     cdef cppclass CudaCSRMatrix:
         CudaCSRMatrix(int rows, int cols, int nonzeros,
                       const int * indptr, const int * indices, const float * data) except +
+
+    cdef cppclass CudaVector[T]:
+        CudaVector(int size, T * data)
 
     cdef cppclass CudaCOOMatrix:
         CudaCOOMatrix(int rows, int cols, int nonzeros,
@@ -26,10 +32,13 @@ cdef extern from "als.h" namespace "implicit" nogil:
 
 
 cdef extern from "bpr.h" namespace "implicit" nogil:
-    cdef int bpr_update(const CudaCOOMatrix & Ciu,
-                        CudaDenseMatrix * X,
-                        CudaDenseMatrix * Y,
-                        float learning_rate, float regularization, long seed) except +
+    cdef pair[int, int] bpr_update(const CudaVector[int] & userids,
+                                   const CudaVector[int] & itemids,
+                                   const CudaVector[int] & indptr,
+                                   CudaDenseMatrix * X,
+                                   CudaDenseMatrix * Y,
+                                   float learning_rate, float regularization, long seed,
+                                   bool verify_negative_samples) except +
 
 
 cdef class CuDenseMatrix(object):
@@ -43,6 +52,15 @@ cdef class CuDenseMatrix(object):
 
     def __dealloc__(self):
         del self.c_matrix
+
+cdef class CuIntVector(object):
+    cdef CudaVector[int] * c_vector
+
+    def __cinit__(self, int[:] data):
+        self.c_vector = new CudaVector[int](len(data), &data[0])
+
+    def __dealloc__(self):
+        del self.c_vector
 
 
 cdef class CuCSRMatrix(object):
@@ -93,7 +111,12 @@ cdef class CuLeastSquaresSolver(object):
         del self.c_solver
 
 
-def cu_bpr_update(CuCOOMatrix ciu, CuDenseMatrix X, CuDenseMatrix Y,
-                  float learning_rate, float regularization, long seed):
-    return bpr_update(dereference(ciu.c_matrix), X.c_matrix, Y.c_matrix,
-                      learning_rate, regularization, seed)
+def cu_bpr_update(CuIntVector userids, CuIntVector itemids, CuIntVector indptr,
+                  CuDenseMatrix X, CuDenseMatrix Y,
+                  float learning_rate, float regularization, long seed, bool verify_negative):
+    ret = bpr_update(dereference(userids.c_vector),
+                     dereference(itemids.c_vector),
+                     dereference(indptr.c_vector),
+                     X.c_matrix, Y.c_matrix,
+                     learning_rate, regularization, seed, verify_negative)
+    return ret.first, ret.second

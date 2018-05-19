@@ -2,8 +2,16 @@
 #define IMPLICIT_CUDA_MATRIX_H_
 
 namespace implicit {
-
 /// Thin wrappers of CUDA memory: copies to from host, frees in destructor
+template <typename T>
+struct CudaVector {
+    CudaVector(int size, const T * elements);
+    ~CudaVector();
+
+    int size;
+    T * data;
+};
+
 struct CudaCSRMatrix {
     CudaCSRMatrix(int rows, int cols, int nonzeros,
                   const int * indptr, const int * indices, const float * data);
