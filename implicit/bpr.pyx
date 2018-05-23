@@ -153,14 +153,16 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # Note: the final dimension is for the item bias term - which is set to a 1 for all users
         # this simplifies interfacing with approximate nearest neighbours libraries etc
         if self.item_factors is None:
-            self.item_factors = np.random.rand(items, self.factors + 1).astype(self.dtype)
+            self.item_factors = (np.random.rand(items, self.factors + 1).astype(self.dtype) - .5)
+            self.item_factors /= self.factors
 
             # set factors to all zeros for items without any ratings
             item_counts = np.bincount(user_items.indices, minlength=items)
             self.item_factors[item_counts == 0] = np.zeros(self.factors + 1)
 
         if self.user_factors is None:
-            self.user_factors = np.random.rand(users, self.factors + 1).astype(self.dtype)
+            self.user_factors = (np.random.rand(users, self.factors + 1).astype(self.dtype) - .5)
+            self.user_factors /= self.factors
 
             # set factors to all zeros for users without any ratings
             self.user_factors[user_counts == 0] = np.zeros(self.factors + 1)
