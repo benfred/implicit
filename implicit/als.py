@@ -358,6 +358,8 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
 
         p = r.copy()
         rsold = r.dot(r)
+        if rsold < 1e-20:
+            continue
 
         for it in range(cg_steps):
             # calculate Ap = YtCuYp - without actually calculating YtCuY
@@ -370,7 +372,7 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
             x += alpha * p
             r -= alpha * Ap
             rsnew = r.dot(r)
-            if rsnew < 1e-10:
+            if rsnew < 1e-20:
                 break
             p = r + (rsnew / rsold) * p
             rsold = rsnew

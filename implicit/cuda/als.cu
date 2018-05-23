@@ -46,6 +46,7 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
         p[threadIdx.x] = r[threadIdx.x] = temp;
 
         float rsold = dot(r, r);
+        if (rsold < 1e-20) continue;
 
         for (int it = 0; it < cg_steps; ++it) {
             // calculate Ap = YtCuYp - without actually calculating YtCuY
@@ -63,7 +64,7 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
             x[threadIdx.x] += alpha * p[threadIdx.x];
             r[threadIdx.x] -= alpha * Ap[threadIdx.x];
             float rsnew = dot(r, r);
-            if (rsnew < 1e-10) break;
+            if (rsnew < 1e-20) break;
             p[threadIdx.x] = r[threadIdx.x] + (rsnew/rsold) * p[threadIdx.x];
             rsold = rsnew;
             __syncthreads();

@@ -176,6 +176,9 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
                 memcpy(p, r, sizeof(floating) * N)
                 rsold = dot(&N, r, &one, r, &one)
 
+                if rsold < 1e-20:
+                    continue
+
                 for it in range(cg_steps):
                     # calculate Ap = YtCuYp - without actually calculating YtCuY
                     temp = 1.0
@@ -198,7 +201,7 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
                     axpy(&N, &temp, Ap, &one, r, &one)
 
                     rsnew = dot(&N, r, &one, r, &one)
-                    if rsnew < 1e-10:
+                    if rsnew < 1e-20:
                         break
 
                     # p = r + (rsnew/rsold) * p
