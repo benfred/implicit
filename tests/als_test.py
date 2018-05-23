@@ -3,7 +3,7 @@ from __future__ import print_function
 import unittest
 
 import numpy as np
-from scipy.sparse import csr_matrix
+from scipy.sparse import csr_matrix, random
 
 from implicit.als import AlternatingLeastSquares
 from implicit.cuda import HAS_CUDA
@@ -45,6 +45,24 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
             self.assertFalse(np.isnan(np.sum(cols)))
             self.assertFalse(np.isnan(np.sum(rows)))
+
+    def test_cg_nan2(self):
+        # test out Nan appearing in CG code (from https://github.com/benfred/implicit/issues/106)
+        Ciu = random(m=100, n=100, density=0.0005, format='coo', dtype=np.float32,
+                     random_state=42, data_rvs=None).T.tocsr()
+
+        configs = [{'use_native': True, 'use_gpu': False}, {'use_native': False, 'use_gpu': False}]
+        if HAS_CUDA:
+            configs.append({'use_gpu': True})
+
+        for options in configs:
+            model = AlternatingLeastSquares(factors=32, regularization=10, iterations=10,
+                                            dtype=np.float32,  **options)
+            model.show_progress = False
+            model.fit(Ciu)
+
+            self.assertTrue(np.isfinite(model.item_factors).all())
+            self.assertTrue(np.isfinite(model.user_factors).all())
 
     def test_factorize(self):
         counts = csr_matrix([[1, 1, 0, 1, 0, 0],
