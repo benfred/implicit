@@ -53,11 +53,6 @@ def locate_cuda():
                   'nvcc': nvcc,
                   'include': os.path.join(home, 'include'),
                   'lib64':   os.path.join(home, 'lib64')}
-    for k, v in cudaconfig.items():
-        if not os.path.exists(v):
-            logging.warning('The CUDA %s path could not be located in %s', k, v)
-            return None
-
     post_args = ['-gencode=arch=compute_30,code=sm_30',
                  '-gencode=arch=compute_50,code=sm_50',
                  '-gencode=arch=compute_60,code=sm_60',
@@ -69,6 +64,11 @@ def locate_cuda():
         post_args += ['-Xcompiler', '/MD']
     else:
         post_args += ['-c', '--compiler-options', "'-fPIC'"]
+
+    for k, v in cudaconfig.items():
+        if not os.path.exists(v):
+            logging.warning('The CUDA %s path could not be located in %s', k, v)
+            return None
 
     cudaconfig['post_args'] = post_args
     return cudaconfig
