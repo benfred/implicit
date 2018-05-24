@@ -65,7 +65,6 @@ def define_extensions(use_cython=False):
                                  extra_link_args=link_args,
                                  library_dirs=[CUDA['lib64']],
                                  libraries=['cudart', 'cublas', 'curand'],
-                                 runtime_library_dirs=[CUDA['lib64']],
                                  include_dirs=[CUDA['include'], '.']))
     else:
         print("Failed to find CUDA toolkit. Building without GPU acceleration.")
