@@ -41,7 +41,13 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
         for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
             const float * Yi = &Y[indices[index] * factors];
             float confidence = data[index];
-            temp += (confidence - (confidence - 1) * dot(Yi, x)) * Yi[threadIdx.x];
+
+            if (confidence > 0) {
+                temp += (confidence - (confidence - 1) * dot(Yi, x)) * Yi[threadIdx.x];
+            } else {
+                confidence *= -1;
+                temp += (- (confidence - 1) * dot(Yi, x)) * Yi[threadIdx.x];
+            }
         }
         p[threadIdx.x] = r[threadIdx.x] = temp;
 
@@ -56,7 +62,10 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
             }
             for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
                 const float * Yi = &Y[indices[index] * factors];
-                Ap[threadIdx.x] += (data[index] - 1) * dot(Yi, p) * Yi[threadIdx.x];
+                float confidence = data[index];
+                if (confidence < 0) confidence *= -1;
+
+                Ap[threadIdx.x] += (confidence - 1) * dot(Yi, p) * Yi[threadIdx.x];
             }
 
             // standard CG update
@@ -160,7 +169,12 @@ void calculate_loss_kernel(int factors, int user_count, int item_count,
         for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
             const float * Yi = &Y[indices[index] * factors];
             float confidence = data[index];
-            temp += ((confidence - 1 ) * dot(Yi, x) - 2 * confidence) * Yi[threadIdx.x];
+            if (confidence > 0) {
+                temp += ((confidence - 1 ) * dot(Yi, x) - 2 * confidence) * Yi[threadIdx.x];
+            } else {
+                confidence *= -1;
+                temp += ((confidence - 1 ) * dot(Yi, x)) * Yi[threadIdx.x];
+            }
             loss += confidence;
             total_confidence += confidence;
         }
