@@ -1,6 +1,6 @@
 import tqdm
 import numpy as np
-from scipy.sparse import coo_matrix
+from scipy.sparse import coo_matrix, csr_matrix
 import cython
 from cython.operator import dereference
 from cython.parallel import parallel, prange
@@ -33,11 +33,11 @@ def train_test_split(ratings, train_percentage=0.8):
 
     train = coo_matrix((ratings.data[train_index],
                        (ratings.row[train_index], ratings.col[train_index])),
-                       shape=ratings.shape, dtype=ratings.dtype)
+                       shape=ratings.shape, dtype=ratings.dtype).tocsr()
 
     test = coo_matrix((ratings.data[test_index],
                       (ratings.row[test_index], ratings.col[test_index])),
-                      shape=ratings.shape, dtype=ratings.dtype)
+                      shape=ratings.shape, dtype=ratings.dtype).tocsr()
     return train, test
 
 
@@ -69,6 +69,12 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
     float
         the calculated p@k
     """
+    if not isinstance(train_user_items, csr_matrix):
+        train_user_items = train_user_items.tocsr()
+
+    if not isinstance(test_user_items, csr_matrix):
+        test_user_items = test_user_items.tocsr()
+
     cdef int users = test_user_items.shape[0], u, i
     cdef double relevant = 0, total = 0
     cdef int[:] test_indptr = test_user_items.indptr
@@ -144,6 +150,12 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
     """
     # TODO: there is a fair amount of boilerplate here that is cut and paste
     # from precision_at_k. refactor it out.
+    if not isinstance(train_user_items, csr_matrix):
+        train_user_items = train_user_items.tocsr()
+
+    if not isinstance(test_user_items, csr_matrix):
+        test_user_items = test_user_items.tocsr()
+
     cdef int users = test_user_items.shape[0], u, i, total = 0
     cdef double mean_ap = 0, ap = 0, relevant = 0
     cdef int[:] test_indptr = test_user_items.indptr
