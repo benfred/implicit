@@ -23,21 +23,21 @@ def train_test_split(ratings, train_percentage=0.8):
 
     Returns
     -------
-    (train, test) : coo_matrix, coo_matrix
-        A tuple of coo_matrices for training/testing """
+    (train, test) : csr_matrix, csr_matrix
+        A tuple of csr_matrices for training/testing """
     ratings = ratings.tocoo()
 
     random_index = np.random.random(len(ratings.data))
     train_index = random_index < train_percentage
     test_index = random_index >= train_percentage
 
-    train = coo_matrix((ratings.data[train_index],
+    train = csr_matrix((ratings.data[train_index],
                        (ratings.row[train_index], ratings.col[train_index])),
-                       shape=ratings.shape, dtype=ratings.dtype).tocsr()
+                       shape=ratings.shape, dtype=ratings.dtype)
 
-    test = coo_matrix((ratings.data[test_index],
+    test = csr_matrix((ratings.data[test_index],
                       (ratings.row[test_index], ratings.col[test_index])),
-                      shape=ratings.shape, dtype=ratings.dtype).tocsr()
+                      shape=ratings.shape, dtype=ratings.dtype)
     return train, test
 
 
