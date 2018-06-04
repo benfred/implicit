@@ -263,6 +263,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         total_score = 0.0
         h = []
         for i, (itemid, confidence) in enumerate(nonzeros(user_items, userid)):
+            if confidence < 0:
+                continue
+
             factor = self.item_factors[itemid]
             # s_u^ij = (y_i^t W^u) y_j
             score = weighted_item.dot(factor) * confidence
@@ -332,8 +335,13 @@ def user_linear_equation(Y, YtY, Cui, u, regularization, n_factors):
 
     for i, confidence in nonzeros(Cui, u):
         factor = Y[i]
+
+        if confidence > 0:
+            b += confidence * factor
+        else:
+            confidence *= -1
+
         A += (confidence - 1) * np.outer(factor, factor)
-        b += confidence * factor
     return A, b
 
 
@@ -354,7 +362,11 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
         # calculate residual error r = (YtCuPu - (YtCuY.dot(Xu)
         r = -YtY.dot(x)
         for i, confidence in nonzeros(Cui, u):
-            r += (confidence - (confidence - 1) * Y[i].dot(x)) * Y[i]
+            if confidence > 0:
+                r += (confidence - (confidence - 1) * Y[i].dot(x)) * Y[i]
+            else:
+                confidence *= -1
+                r += - (confidence - 1) * Y[i].dot(x) * Y[i]
 
         p = r.copy()
         rsold = r.dot(r)
@@ -365,6 +377,9 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
             # calculate Ap = YtCuYp - without actually calculating YtCuY
             Ap = YtY.dot(p)
             for i, confidence in nonzeros(Cui, u):
+                if confidence < 0:
+                    confidence *= -1
+
                 Ap += (confidence - 1) * Y[i].dot(p) * Y[i]
 
             # standard CG update
