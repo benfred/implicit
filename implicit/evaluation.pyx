@@ -38,6 +38,10 @@ def train_test_split(ratings, train_percentage=0.8):
     test = csr_matrix((ratings.data[test_index],
                       (ratings.row[test_index], ratings.col[test_index])),
                       shape=ratings.shape, dtype=ratings.dtype)
+
+    test.data[test.data < 0] = 0
+    test.eliminate_zeros()
+
     return train, test
 
 
