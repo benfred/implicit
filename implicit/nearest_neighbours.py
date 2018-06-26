@@ -83,6 +83,7 @@ class ItemItemRecommender(RecommenderBase):
 
         ret = cls()
         ret.similarity = similarity
+        ret.scorer = NearestNeighboursScorer(similarity)
         ret.K = m['K']
         return ret
 
