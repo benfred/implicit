@@ -2476,7 +2476,7 @@ static PyObject *__pyx_pf_8implicit_10evaluation_train_test_split(CYTHON_UNUSED 
  *                       (ratings.row[test_index], ratings.col[test_index])),
  *                       shape=ratings.shape, dtype=ratings.dtype)             # <<<<<<<<<<<<<<
  * 
- *     test.data[test.data < 0]  = 0
+ *     test.data[test.data < 0] = 0
  */
   __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
@@ -2507,7 +2507,7 @@ static PyObject *__pyx_pf_8implicit_10evaluation_train_test_split(CYTHON_UNUSED 
   /* "implicit/evaluation.pyx":42
  *                       shape=ratings.shape, dtype=ratings.dtype)
  * 
- *     test.data[test.data < 0]  = 0             # <<<<<<<<<<<<<<
+ *     test.data[test.data < 0] = 0             # <<<<<<<<<<<<<<
  *     test.eliminate_zeros()
  * 
  */
@@ -2523,7 +2523,7 @@ static PyObject *__pyx_pf_8implicit_10evaluation_train_test_split(CYTHON_UNUSED 
 
   /* "implicit/evaluation.pyx":43
  * 
- *     test.data[test.data < 0]  = 0
+ *     test.data[test.data < 0] = 0
  *     test.eliminate_zeros()             # <<<<<<<<<<<<<<
  * 
  *     return train, test

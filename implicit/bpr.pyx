@@ -1,3 +1,8 @@
+# @Author: ita
+# @Email : ita9@ryencatcher.com
+# @Last modified by: ita
+# @Last modified at: 2018-07-03
+
 import cython
 from cython cimport floating, integral
 import logging
@@ -99,7 +104,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
     """
     def __init__(self, factors=100, learning_rate=0.01, regularization=0.01, dtype=np.float32,
                  iterations=100, use_gpu=implicit.cuda.HAS_CUDA, num_threads=0,
-                 verify_negative_samples=True):
+                 verify_negative_samples=True,
+                 use_negative_sample=False):
         super(BayesianPersonalizedRanking, self).__init__()
 
         if use_gpu and (factors + 1) % 32:
@@ -116,6 +122,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.use_gpu = use_gpu
         self.num_threads = num_threads
         self.verify_negative_samples = verify_negative_samples
+        self.use_negative_sample = use_negative_sample
         self.show_progress = True
 
     @cython.cdivision(True)
@@ -143,6 +150,15 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         user_items = item_users.T.tocsr()
         if not user_items.has_sorted_indices:
             user_items.sort_indices()
+
+        pos_user_items = user_items.copy()
+        neg_user_items = user_items.copy()
+
+        pos_user_items[pos_user_items < 0] = 0
+        pos_user_items.eliminate_zeros()
+        neg_user_items[neg_user_items < 0] = 0
+        neg_user_items.eliminate_zeros()
+
 
         # this basically calculates the 'row' attribute of a COO matrix
         # without requiring us to get the whole COO matrix
@@ -184,10 +200,23 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
             for epoch in range(self.iterations):
-                correct, skipped = bpr_update(rng, userids, user_items.indices, user_items.indptr,
+                #do original update
+                if self.use_negative_sample is True:
+                    correct, skipped = __bpr_update(rng, userids,
+                        user_items.data, user_items.indices, user_items.indptr,
+                        pos_user_items.indices, pos_user_items.indptr,
+                        neg_user_items.indices, neg_user_items.indptr,
+                        self.user_factors, self.item_factors,
+                        self.learning_rate, self.regularization, num_threads,
+                        self.verify_negative_samples)
+                else:
+                    correct, skipped = bpr_update(rng, userids, user_items.indices, user_items.indptr,
                                               self.user_factors, self.item_factors,
                                               self.learning_rate, self.regularization, num_threads,
                                               self.verify_negative_samples)
+
+
+
                 progress.update(1)
                 total = len(user_items.data)
                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
@@ -284,3 +313,79 @@ def bpr_update(RNGVector rng,
             disliked[factors] += learning_rate * (-z - reg * disliked[factors])
 
     return correct, skipped
+
+
+@cython.cdivision(True)
+@cython.boundscheck(False)
+def __bpr_update(RNGVector rng,
+               integral[:] userids,
+               floating[:] data, integral[:] itemids, integral[:] indptr,
+               integral[:] pos_itemids, integral[:] pos_indptr,
+               integral[:] neg_itemids, integral[:] neg_indptr,
+               floating[:, :] X, floating[:, :] Y,
+               float learning_rate, float reg, int num_threads,
+               bool verify_neg):
+    cdef integral users = X.shape[0], items = Y.shape[0]
+    cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0, skipped
+    cdef integral j, user_id, liked_id, disliked_id, thread_id
+    cdef floating z, score, temp
+
+    cdef floating * user
+    cdef floating * liked
+    cdef floating * disliked
+
+    cdef integral factors = X.shape[1] - 1
+
+
+    cdef long _
+
+    cdef integral i_index, j_index, i_id, j_id
+    skipped = 0
+    with nogil, parallel(num_threads=num_threads):
+
+        thread_id = get_thread_num()
+        for _ in prange(samples, schedule='guided'):
+            i_index = rng.generate(thread_id)
+            i_id = itemids[i_index]
+            user_id = userids[i_index]
+
+            # if the user has liked the item, skip this for now
+            j_index = rng.generate(thread_id)
+            j_id = itemids[j_index]
+
+            if data[i_index] > 0:
+                if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
+                    #skipped += 1
+                    continue
+                liked_id, disliked_id = i_id, j_id
+            else:
+                if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
+                    #skipped += 1
+                    continue
+                liked_id, disliked_id = j_id, i_id
+
+            # get pointers to the relevant factors
+            user, liked, disliked = &X[user_id, 0], &Y[liked_id, 0], &Y[disliked_id, 0]
+
+            # compute the score
+            score = 0
+            for j in range(factors + 1):
+                score = score + user[j] * (liked[j] - disliked[j])
+            z = 1.0 / (1.0 + exp(score))
+
+            if z < .5:
+                correct += 1
+
+            # update the factors via sgd.
+            for j in range(factors):
+                temp = user[j]
+                user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
+                liked[j] += learning_rate * (z * temp - reg * liked[j])
+                disliked[j] += learning_rate * (-z * temp - reg * disliked[j])
+
+            # update item bias terms (last column of factorized matrix)
+            liked[factors] += learning_rate * (z - reg * liked[factors])
+            disliked[factors] += learning_rate * (-z - reg * disliked[factors])
+
+    return correct, skipped
+
