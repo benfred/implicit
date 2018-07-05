@@ -13446,33 +13446,33 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                 if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_itemids.shape[0];
                                 __pyx_v_j_id = (*((short *) ( /* dim=0 */ (__pyx_v_itemids.data + __pyx_t_7 * __pyx_v_itemids.strides[0]) )));
 
-                                /* "implicit/bpr.pyx":362
- * 
+                                /* "implicit/bpr.pyx":363
  *             # including  "skipped += 1" brings error. but I don't know why...
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1             # <<<<<<<<<<<<<<
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + 1);
 
-                                /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                 __pyx_t_8 = __pyx_v_i_index;
                                 if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_data.shape[0];
                                 __pyx_t_9 = (((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_8 * __pyx_v_data.strides[0]) ))) > 0.0) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":364
+                                  /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
                                   if (__pyx_t_10) {
@@ -13486,25 +13486,25 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                   if (__pyx_t_9) {
 
                                     /* "implicit/bpr.pyx":366
+ *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  */
                                     goto __pyx_L10_continue;
 
-                                    /* "implicit/bpr.pyx":364
+                                    /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   }
 
                                   /* "implicit/bpr.pyx":367
- *                     #skipped += 1
+ *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = i_id, j_id             # <<<<<<<<<<<<<<
  *             else:
@@ -13515,12 +13515,12 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_liked_id = __pyx_t_11;
                                   __pyx_v_disliked_id = __pyx_t_12;
 
-                                  /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                  /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                   goto __pyx_L14;
                                 }
@@ -13529,8 +13529,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                 /*else*/ {
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
@@ -13544,9 +13544,9 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_L19_bool_binop_done:;
                                   if (__pyx_t_9) {
 
-                                    /* "implicit/bpr.pyx":371
+                                    /* "implicit/bpr.pyx":370
+ *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1
@@ -13557,13 +13557,13 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                   }
 
-                                  /* "implicit/bpr.pyx":372
- *                     #skipped += 1
+                                  /* "implicit/bpr.pyx":371
+ *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id             # <<<<<<<<<<<<<<
  *             skipped += -1
@@ -13576,7 +13576,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                 }
                                 __pyx_L14:;
 
-                                /* "implicit/bpr.pyx":373
+                                /* "implicit/bpr.pyx":372
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1             # <<<<<<<<<<<<<<
@@ -13585,7 +13585,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + -1L);
 
-                                /* "implicit/bpr.pyx":376
+                                /* "implicit/bpr.pyx":375
  * 
  *             # get pointers to the relevant factors
  *             user, liked, disliked = &X[user_id, 0], &Y[liked_id, 0], &Y[disliked_id, 0]             # <<<<<<<<<<<<<<
@@ -13611,7 +13611,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_v_liked = __pyx_t_18;
                                 __pyx_v_disliked = __pyx_t_21;
 
-                                /* "implicit/bpr.pyx":379
+                                /* "implicit/bpr.pyx":378
  * 
  *             # compute the score
  *             score = 0             # <<<<<<<<<<<<<<
@@ -13620,7 +13620,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_score = 0.0;
 
-                                /* "implicit/bpr.pyx":380
+                                /* "implicit/bpr.pyx":379
  *             # compute the score
  *             score = 0
  *             for j in range(factors + 1):             # <<<<<<<<<<<<<<
@@ -13632,7 +13632,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_23; __pyx_t_11+=1) {
                                   __pyx_v_j = __pyx_t_11;
 
-                                  /* "implicit/bpr.pyx":381
+                                  /* "implicit/bpr.pyx":380
  *             score = 0
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])             # <<<<<<<<<<<<<<
@@ -13642,7 +13642,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_score = (__pyx_v_score + ((__pyx_v_user[__pyx_v_j]) * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))));
                                 }
 
-                                /* "implicit/bpr.pyx":382
+                                /* "implicit/bpr.pyx":381
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])
  *             z = 1.0 / (1.0 + exp(score))             # <<<<<<<<<<<<<<
@@ -13651,7 +13651,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_z = (1.0 / (1.0 + exp(__pyx_v_score)));
 
-                                /* "implicit/bpr.pyx":384
+                                /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -13661,7 +13661,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_9 = ((__pyx_v_z < .5) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":385
+                                  /* "implicit/bpr.pyx":384
  * 
  *             if z < .5:
  *                 correct += 1             # <<<<<<<<<<<<<<
@@ -13670,7 +13670,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_correct = (__pyx_v_correct + 1);
 
-                                  /* "implicit/bpr.pyx":384
+                                  /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -13679,7 +13679,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
  */
                                 }
 
-                                /* "implicit/bpr.pyx":388
+                                /* "implicit/bpr.pyx":387
  * 
  *             # update the factors via sgd.
  *             for j in range(factors):             # <<<<<<<<<<<<<<
@@ -13691,7 +13691,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_12; __pyx_t_24+=1) {
                                   __pyx_v_j = __pyx_t_24;
 
-                                  /* "implicit/bpr.pyx":389
+                                  /* "implicit/bpr.pyx":388
  *             # update the factors via sgd.
  *             for j in range(factors):
  *                 temp = user[j]             # <<<<<<<<<<<<<<
@@ -13700,7 +13700,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_temp = (__pyx_v_user[__pyx_v_j]);
 
-                                  /* "implicit/bpr.pyx":390
+                                  /* "implicit/bpr.pyx":389
  *             for j in range(factors):
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])             # <<<<<<<<<<<<<<
@@ -13710,7 +13710,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_25 = __pyx_v_j;
                                   (__pyx_v_user[__pyx_t_25]) = ((__pyx_v_user[__pyx_t_25]) + (__pyx_v_learning_rate * ((__pyx_v_z * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))) - (__pyx_v_reg * (__pyx_v_user[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":391
+                                  /* "implicit/bpr.pyx":390
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])             # <<<<<<<<<<<<<<
@@ -13720,7 +13720,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_25 = __pyx_v_j;
                                   (__pyx_v_liked[__pyx_t_25]) = ((__pyx_v_liked[__pyx_t_25]) + (__pyx_v_learning_rate * ((__pyx_v_z * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":392
+                                  /* "implicit/bpr.pyx":391
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])
  *                 disliked[j] += learning_rate * (-z * temp - reg * disliked[j])             # <<<<<<<<<<<<<<
@@ -13731,7 +13731,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                   (__pyx_v_disliked[__pyx_t_25]) = ((__pyx_v_disliked[__pyx_t_25]) + (__pyx_v_learning_rate * (((-__pyx_v_z) * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_disliked[__pyx_v_j])))));
                                 }
 
-                                /* "implicit/bpr.pyx":395
+                                /* "implicit/bpr.pyx":394
  * 
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])             # <<<<<<<<<<<<<<
@@ -13741,7 +13741,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_11 = __pyx_v_factors;
                                 (__pyx_v_liked[__pyx_t_11]) = ((__pyx_v_liked[__pyx_t_11]) + (__pyx_v_learning_rate * (__pyx_v_z - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_factors])))));
 
-                                /* "implicit/bpr.pyx":396
+                                /* "implicit/bpr.pyx":395
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])             # <<<<<<<<<<<<<<
@@ -13787,17 +13787,17 @@ static PyObject *__pyx_pf_8implicit_3bpr_18bpr_update_with_negative(CYTHON_UNUSE
       }
   }
 
-  /* "implicit/bpr.pyx":398
+  /* "implicit/bpr.pyx":397
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])
  * 
  *     return correct, skipped             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_26 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_26 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
-  __pyx_t_27 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_27 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_27);
-  __pyx_t_28 = PyTuple_New(2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_28 = PyTuple_New(2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
   __Pyx_GIVEREF(__pyx_t_26);
   PyTuple_SET_ITEM(__pyx_t_28, 0, __pyx_t_26);
@@ -14267,33 +14267,33 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                 if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_itemids.shape[0];
                                 __pyx_v_j_id = (*((short *) ( /* dim=0 */ (__pyx_v_itemids.data + __pyx_t_7 * __pyx_v_itemids.strides[0]) )));
 
-                                /* "implicit/bpr.pyx":362
- * 
+                                /* "implicit/bpr.pyx":363
  *             # including  "skipped += 1" brings error. but I don't know why...
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1             # <<<<<<<<<<<<<<
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + 1);
 
-                                /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                 __pyx_t_8 = __pyx_v_i_index;
                                 if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_data.shape[0];
                                 __pyx_t_9 = (((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_8 * __pyx_v_data.strides[0]) ))) > 0.0) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":364
+                                  /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
                                   if (__pyx_t_10) {
@@ -14307,25 +14307,25 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                   if (__pyx_t_9) {
 
                                     /* "implicit/bpr.pyx":366
+ *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  */
                                     goto __pyx_L10_continue;
 
-                                    /* "implicit/bpr.pyx":364
+                                    /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   }
 
                                   /* "implicit/bpr.pyx":367
- *                     #skipped += 1
+ *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = i_id, j_id             # <<<<<<<<<<<<<<
  *             else:
@@ -14336,12 +14336,12 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_liked_id = __pyx_t_11;
                                   __pyx_v_disliked_id = __pyx_t_12;
 
-                                  /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                  /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                   goto __pyx_L14;
                                 }
@@ -14350,8 +14350,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                 /*else*/ {
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
@@ -14365,9 +14365,9 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_L19_bool_binop_done:;
                                   if (__pyx_t_9) {
 
-                                    /* "implicit/bpr.pyx":371
+                                    /* "implicit/bpr.pyx":370
+ *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1
@@ -14378,13 +14378,13 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                   }
 
-                                  /* "implicit/bpr.pyx":372
- *                     #skipped += 1
+                                  /* "implicit/bpr.pyx":371
+ *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id             # <<<<<<<<<<<<<<
  *             skipped += -1
@@ -14397,7 +14397,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                 }
                                 __pyx_L14:;
 
-                                /* "implicit/bpr.pyx":373
+                                /* "implicit/bpr.pyx":372
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1             # <<<<<<<<<<<<<<
@@ -14406,7 +14406,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + -1L);
 
-                                /* "implicit/bpr.pyx":376
+                                /* "implicit/bpr.pyx":375
  * 
  *             # get pointers to the relevant factors
  *             user, liked, disliked = &X[user_id, 0], &Y[liked_id, 0], &Y[disliked_id, 0]             # <<<<<<<<<<<<<<
@@ -14432,7 +14432,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_v_liked = __pyx_t_18;
                                 __pyx_v_disliked = __pyx_t_21;
 
-                                /* "implicit/bpr.pyx":379
+                                /* "implicit/bpr.pyx":378
  * 
  *             # compute the score
  *             score = 0             # <<<<<<<<<<<<<<
@@ -14441,7 +14441,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_score = 0.0;
 
-                                /* "implicit/bpr.pyx":380
+                                /* "implicit/bpr.pyx":379
  *             # compute the score
  *             score = 0
  *             for j in range(factors + 1):             # <<<<<<<<<<<<<<
@@ -14453,7 +14453,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_23; __pyx_t_11+=1) {
                                   __pyx_v_j = __pyx_t_11;
 
-                                  /* "implicit/bpr.pyx":381
+                                  /* "implicit/bpr.pyx":380
  *             score = 0
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])             # <<<<<<<<<<<<<<
@@ -14463,7 +14463,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_score = (__pyx_v_score + ((__pyx_v_user[__pyx_v_j]) * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))));
                                 }
 
-                                /* "implicit/bpr.pyx":382
+                                /* "implicit/bpr.pyx":381
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])
  *             z = 1.0 / (1.0 + exp(score))             # <<<<<<<<<<<<<<
@@ -14472,7 +14472,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_z = (1.0 / (1.0 + exp(__pyx_v_score)));
 
-                                /* "implicit/bpr.pyx":384
+                                /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -14482,7 +14482,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_9 = ((__pyx_v_z < .5) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":385
+                                  /* "implicit/bpr.pyx":384
  * 
  *             if z < .5:
  *                 correct += 1             # <<<<<<<<<<<<<<
@@ -14491,7 +14491,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_correct = (__pyx_v_correct + 1);
 
-                                  /* "implicit/bpr.pyx":384
+                                  /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -14500,7 +14500,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
  */
                                 }
 
-                                /* "implicit/bpr.pyx":388
+                                /* "implicit/bpr.pyx":387
  * 
  *             # update the factors via sgd.
  *             for j in range(factors):             # <<<<<<<<<<<<<<
@@ -14512,7 +14512,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_12; __pyx_t_24+=1) {
                                   __pyx_v_j = __pyx_t_24;
 
-                                  /* "implicit/bpr.pyx":389
+                                  /* "implicit/bpr.pyx":388
  *             # update the factors via sgd.
  *             for j in range(factors):
  *                 temp = user[j]             # <<<<<<<<<<<<<<
@@ -14521,7 +14521,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_temp = (__pyx_v_user[__pyx_v_j]);
 
-                                  /* "implicit/bpr.pyx":390
+                                  /* "implicit/bpr.pyx":389
  *             for j in range(factors):
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])             # <<<<<<<<<<<<<<
@@ -14531,7 +14531,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_25 = __pyx_v_j;
                                   (__pyx_v_user[__pyx_t_25]) = ((__pyx_v_user[__pyx_t_25]) + (__pyx_v_learning_rate * ((__pyx_v_z * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))) - (__pyx_v_reg * (__pyx_v_user[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":391
+                                  /* "implicit/bpr.pyx":390
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])             # <<<<<<<<<<<<<<
@@ -14541,7 +14541,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_25 = __pyx_v_j;
                                   (__pyx_v_liked[__pyx_t_25]) = ((__pyx_v_liked[__pyx_t_25]) + (__pyx_v_learning_rate * ((__pyx_v_z * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":392
+                                  /* "implicit/bpr.pyx":391
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])
  *                 disliked[j] += learning_rate * (-z * temp - reg * disliked[j])             # <<<<<<<<<<<<<<
@@ -14552,7 +14552,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                   (__pyx_v_disliked[__pyx_t_25]) = ((__pyx_v_disliked[__pyx_t_25]) + (__pyx_v_learning_rate * (((-__pyx_v_z) * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_disliked[__pyx_v_j])))));
                                 }
 
-                                /* "implicit/bpr.pyx":395
+                                /* "implicit/bpr.pyx":394
  * 
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])             # <<<<<<<<<<<<<<
@@ -14562,7 +14562,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_11 = __pyx_v_factors;
                                 (__pyx_v_liked[__pyx_t_11]) = ((__pyx_v_liked[__pyx_t_11]) + (__pyx_v_learning_rate * (__pyx_v_z - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_factors])))));
 
-                                /* "implicit/bpr.pyx":396
+                                /* "implicit/bpr.pyx":395
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])             # <<<<<<<<<<<<<<
@@ -14608,17 +14608,17 @@ static PyObject *__pyx_pf_8implicit_3bpr_20bpr_update_with_negative(CYTHON_UNUSE
       }
   }
 
-  /* "implicit/bpr.pyx":398
+  /* "implicit/bpr.pyx":397
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])
  * 
  *     return correct, skipped             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_26 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_26 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
-  __pyx_t_27 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_27 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_27);
-  __pyx_t_28 = PyTuple_New(2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_28 = PyTuple_New(2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
   __Pyx_GIVEREF(__pyx_t_26);
   PyTuple_SET_ITEM(__pyx_t_28, 0, __pyx_t_26);
@@ -15088,33 +15088,33 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                 if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_itemids.shape[0];
                                 __pyx_v_j_id = (*((int *) ( /* dim=0 */ (__pyx_v_itemids.data + __pyx_t_7 * __pyx_v_itemids.strides[0]) )));
 
-                                /* "implicit/bpr.pyx":362
- * 
+                                /* "implicit/bpr.pyx":363
  *             # including  "skipped += 1" brings error. but I don't know why...
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1             # <<<<<<<<<<<<<<
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + 1);
 
-                                /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                 __pyx_t_8 = __pyx_v_i_index;
                                 if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_data.shape[0];
                                 __pyx_t_9 = (((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_8 * __pyx_v_data.strides[0]) ))) > 0.0) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":364
+                                  /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
                                   if (__pyx_t_10) {
@@ -15128,25 +15128,25 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                   if (__pyx_t_9) {
 
                                     /* "implicit/bpr.pyx":366
+ *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  */
                                     goto __pyx_L10_continue;
 
-                                    /* "implicit/bpr.pyx":364
+                                    /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   }
 
                                   /* "implicit/bpr.pyx":367
- *                     #skipped += 1
+ *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = i_id, j_id             # <<<<<<<<<<<<<<
  *             else:
@@ -15157,12 +15157,12 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_liked_id = __pyx_t_11;
                                   __pyx_v_disliked_id = __pyx_t_12;
 
-                                  /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                  /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                   goto __pyx_L14;
                                 }
@@ -15171,8 +15171,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                 /*else*/ {
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
@@ -15186,9 +15186,9 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_L19_bool_binop_done:;
                                   if (__pyx_t_9) {
 
-                                    /* "implicit/bpr.pyx":371
+                                    /* "implicit/bpr.pyx":370
+ *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1
@@ -15199,13 +15199,13 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                   }
 
-                                  /* "implicit/bpr.pyx":372
- *                     #skipped += 1
+                                  /* "implicit/bpr.pyx":371
+ *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id             # <<<<<<<<<<<<<<
  *             skipped += -1
@@ -15218,7 +15218,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                 }
                                 __pyx_L14:;
 
-                                /* "implicit/bpr.pyx":373
+                                /* "implicit/bpr.pyx":372
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1             # <<<<<<<<<<<<<<
@@ -15227,7 +15227,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + -1L);
 
-                                /* "implicit/bpr.pyx":376
+                                /* "implicit/bpr.pyx":375
  * 
  *             # get pointers to the relevant factors
  *             user, liked, disliked = &X[user_id, 0], &Y[liked_id, 0], &Y[disliked_id, 0]             # <<<<<<<<<<<<<<
@@ -15253,7 +15253,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_v_liked = __pyx_t_18;
                                 __pyx_v_disliked = __pyx_t_21;
 
-                                /* "implicit/bpr.pyx":379
+                                /* "implicit/bpr.pyx":378
  * 
  *             # compute the score
  *             score = 0             # <<<<<<<<<<<<<<
@@ -15262,7 +15262,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_score = 0.0;
 
-                                /* "implicit/bpr.pyx":380
+                                /* "implicit/bpr.pyx":379
  *             # compute the score
  *             score = 0
  *             for j in range(factors + 1):             # <<<<<<<<<<<<<<
@@ -15274,7 +15274,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_23; __pyx_t_11+=1) {
                                   __pyx_v_j = __pyx_t_11;
 
-                                  /* "implicit/bpr.pyx":381
+                                  /* "implicit/bpr.pyx":380
  *             score = 0
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])             # <<<<<<<<<<<<<<
@@ -15284,7 +15284,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_score = (__pyx_v_score + ((__pyx_v_user[__pyx_v_j]) * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))));
                                 }
 
-                                /* "implicit/bpr.pyx":382
+                                /* "implicit/bpr.pyx":381
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])
  *             z = 1.0 / (1.0 + exp(score))             # <<<<<<<<<<<<<<
@@ -15293,7 +15293,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_z = (1.0 / (1.0 + exp(__pyx_v_score)));
 
-                                /* "implicit/bpr.pyx":384
+                                /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -15303,7 +15303,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_9 = ((__pyx_v_z < .5) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":385
+                                  /* "implicit/bpr.pyx":384
  * 
  *             if z < .5:
  *                 correct += 1             # <<<<<<<<<<<<<<
@@ -15312,7 +15312,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_correct = (__pyx_v_correct + 1);
 
-                                  /* "implicit/bpr.pyx":384
+                                  /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -15321,7 +15321,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
  */
                                 }
 
-                                /* "implicit/bpr.pyx":388
+                                /* "implicit/bpr.pyx":387
  * 
  *             # update the factors via sgd.
  *             for j in range(factors):             # <<<<<<<<<<<<<<
@@ -15333,7 +15333,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_12; __pyx_t_24+=1) {
                                   __pyx_v_j = __pyx_t_24;
 
-                                  /* "implicit/bpr.pyx":389
+                                  /* "implicit/bpr.pyx":388
  *             # update the factors via sgd.
  *             for j in range(factors):
  *                 temp = user[j]             # <<<<<<<<<<<<<<
@@ -15342,7 +15342,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_temp = (__pyx_v_user[__pyx_v_j]);
 
-                                  /* "implicit/bpr.pyx":390
+                                  /* "implicit/bpr.pyx":389
  *             for j in range(factors):
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])             # <<<<<<<<<<<<<<
@@ -15352,7 +15352,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_25 = __pyx_v_j;
                                   (__pyx_v_user[__pyx_t_25]) = ((__pyx_v_user[__pyx_t_25]) + (__pyx_v_learning_rate * ((__pyx_v_z * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))) - (__pyx_v_reg * (__pyx_v_user[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":391
+                                  /* "implicit/bpr.pyx":390
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])             # <<<<<<<<<<<<<<
@@ -15362,7 +15362,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_25 = __pyx_v_j;
                                   (__pyx_v_liked[__pyx_t_25]) = ((__pyx_v_liked[__pyx_t_25]) + (__pyx_v_learning_rate * ((__pyx_v_z * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":392
+                                  /* "implicit/bpr.pyx":391
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])
  *                 disliked[j] += learning_rate * (-z * temp - reg * disliked[j])             # <<<<<<<<<<<<<<
@@ -15373,7 +15373,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                   (__pyx_v_disliked[__pyx_t_25]) = ((__pyx_v_disliked[__pyx_t_25]) + (__pyx_v_learning_rate * (((-__pyx_v_z) * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_disliked[__pyx_v_j])))));
                                 }
 
-                                /* "implicit/bpr.pyx":395
+                                /* "implicit/bpr.pyx":394
  * 
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])             # <<<<<<<<<<<<<<
@@ -15383,7 +15383,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_11 = __pyx_v_factors;
                                 (__pyx_v_liked[__pyx_t_11]) = ((__pyx_v_liked[__pyx_t_11]) + (__pyx_v_learning_rate * (__pyx_v_z - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_factors])))));
 
-                                /* "implicit/bpr.pyx":396
+                                /* "implicit/bpr.pyx":395
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])             # <<<<<<<<<<<<<<
@@ -15429,17 +15429,17 @@ static PyObject *__pyx_pf_8implicit_3bpr_22bpr_update_with_negative(CYTHON_UNUSE
       }
   }
 
-  /* "implicit/bpr.pyx":398
+  /* "implicit/bpr.pyx":397
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])
  * 
  *     return correct, skipped             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_26 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_26 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
-  __pyx_t_27 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_27 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_27);
-  __pyx_t_28 = PyTuple_New(2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_28 = PyTuple_New(2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
   __Pyx_GIVEREF(__pyx_t_26);
   PyTuple_SET_ITEM(__pyx_t_28, 0, __pyx_t_26);
@@ -15909,33 +15909,33 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                 if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_itemids.shape[0];
                                 __pyx_v_j_id = (*((int *) ( /* dim=0 */ (__pyx_v_itemids.data + __pyx_t_7 * __pyx_v_itemids.strides[0]) )));
 
-                                /* "implicit/bpr.pyx":362
- * 
+                                /* "implicit/bpr.pyx":363
  *             # including  "skipped += 1" brings error. but I don't know why...
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1             # <<<<<<<<<<<<<<
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + 1);
 
-                                /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                 __pyx_t_8 = __pyx_v_i_index;
                                 if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_data.shape[0];
                                 __pyx_t_9 = (((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_8 * __pyx_v_data.strides[0]) ))) > 0.0) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":364
+                                  /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
                                   if (__pyx_t_10) {
@@ -15949,25 +15949,25 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                   if (__pyx_t_9) {
 
                                     /* "implicit/bpr.pyx":366
+ *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  */
                                     goto __pyx_L10_continue;
 
-                                    /* "implicit/bpr.pyx":364
+                                    /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   }
 
                                   /* "implicit/bpr.pyx":367
- *                     #skipped += 1
+ *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = i_id, j_id             # <<<<<<<<<<<<<<
  *             else:
@@ -15978,12 +15978,12 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_liked_id = __pyx_t_11;
                                   __pyx_v_disliked_id = __pyx_t_12;
 
-                                  /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                  /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                   goto __pyx_L14;
                                 }
@@ -15992,8 +15992,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                 /*else*/ {
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
@@ -16007,9 +16007,9 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_L19_bool_binop_done:;
                                   if (__pyx_t_9) {
 
-                                    /* "implicit/bpr.pyx":371
+                                    /* "implicit/bpr.pyx":370
+ *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1
@@ -16020,13 +16020,13 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                   }
 
-                                  /* "implicit/bpr.pyx":372
- *                     #skipped += 1
+                                  /* "implicit/bpr.pyx":371
+ *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id             # <<<<<<<<<<<<<<
  *             skipped += -1
@@ -16039,7 +16039,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                 }
                                 __pyx_L14:;
 
-                                /* "implicit/bpr.pyx":373
+                                /* "implicit/bpr.pyx":372
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1             # <<<<<<<<<<<<<<
@@ -16048,7 +16048,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + -1L);
 
-                                /* "implicit/bpr.pyx":376
+                                /* "implicit/bpr.pyx":375
  * 
  *             # get pointers to the relevant factors
  *             user, liked, disliked = &X[user_id, 0], &Y[liked_id, 0], &Y[disliked_id, 0]             # <<<<<<<<<<<<<<
@@ -16074,7 +16074,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_v_liked = __pyx_t_18;
                                 __pyx_v_disliked = __pyx_t_21;
 
-                                /* "implicit/bpr.pyx":379
+                                /* "implicit/bpr.pyx":378
  * 
  *             # compute the score
  *             score = 0             # <<<<<<<<<<<<<<
@@ -16083,7 +16083,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_score = 0.0;
 
-                                /* "implicit/bpr.pyx":380
+                                /* "implicit/bpr.pyx":379
  *             # compute the score
  *             score = 0
  *             for j in range(factors + 1):             # <<<<<<<<<<<<<<
@@ -16095,7 +16095,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_23; __pyx_t_11+=1) {
                                   __pyx_v_j = __pyx_t_11;
 
-                                  /* "implicit/bpr.pyx":381
+                                  /* "implicit/bpr.pyx":380
  *             score = 0
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])             # <<<<<<<<<<<<<<
@@ -16105,7 +16105,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_score = (__pyx_v_score + ((__pyx_v_user[__pyx_v_j]) * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))));
                                 }
 
-                                /* "implicit/bpr.pyx":382
+                                /* "implicit/bpr.pyx":381
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])
  *             z = 1.0 / (1.0 + exp(score))             # <<<<<<<<<<<<<<
@@ -16114,7 +16114,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_z = (1.0 / (1.0 + exp(__pyx_v_score)));
 
-                                /* "implicit/bpr.pyx":384
+                                /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -16124,7 +16124,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_9 = ((__pyx_v_z < .5) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":385
+                                  /* "implicit/bpr.pyx":384
  * 
  *             if z < .5:
  *                 correct += 1             # <<<<<<<<<<<<<<
@@ -16133,7 +16133,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_correct = (__pyx_v_correct + 1);
 
-                                  /* "implicit/bpr.pyx":384
+                                  /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -16142,7 +16142,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
  */
                                 }
 
-                                /* "implicit/bpr.pyx":388
+                                /* "implicit/bpr.pyx":387
  * 
  *             # update the factors via sgd.
  *             for j in range(factors):             # <<<<<<<<<<<<<<
@@ -16154,7 +16154,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_12; __pyx_t_24+=1) {
                                   __pyx_v_j = __pyx_t_24;
 
-                                  /* "implicit/bpr.pyx":389
+                                  /* "implicit/bpr.pyx":388
  *             # update the factors via sgd.
  *             for j in range(factors):
  *                 temp = user[j]             # <<<<<<<<<<<<<<
@@ -16163,7 +16163,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_temp = (__pyx_v_user[__pyx_v_j]);
 
-                                  /* "implicit/bpr.pyx":390
+                                  /* "implicit/bpr.pyx":389
  *             for j in range(factors):
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])             # <<<<<<<<<<<<<<
@@ -16173,7 +16173,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_25 = __pyx_v_j;
                                   (__pyx_v_user[__pyx_t_25]) = ((__pyx_v_user[__pyx_t_25]) + (__pyx_v_learning_rate * ((__pyx_v_z * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))) - (__pyx_v_reg * (__pyx_v_user[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":391
+                                  /* "implicit/bpr.pyx":390
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])             # <<<<<<<<<<<<<<
@@ -16183,7 +16183,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_25 = __pyx_v_j;
                                   (__pyx_v_liked[__pyx_t_25]) = ((__pyx_v_liked[__pyx_t_25]) + (__pyx_v_learning_rate * ((__pyx_v_z * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":392
+                                  /* "implicit/bpr.pyx":391
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])
  *                 disliked[j] += learning_rate * (-z * temp - reg * disliked[j])             # <<<<<<<<<<<<<<
@@ -16194,7 +16194,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                   (__pyx_v_disliked[__pyx_t_25]) = ((__pyx_v_disliked[__pyx_t_25]) + (__pyx_v_learning_rate * (((-__pyx_v_z) * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_disliked[__pyx_v_j])))));
                                 }
 
-                                /* "implicit/bpr.pyx":395
+                                /* "implicit/bpr.pyx":394
  * 
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])             # <<<<<<<<<<<<<<
@@ -16204,7 +16204,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_11 = __pyx_v_factors;
                                 (__pyx_v_liked[__pyx_t_11]) = ((__pyx_v_liked[__pyx_t_11]) + (__pyx_v_learning_rate * (__pyx_v_z - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_factors])))));
 
-                                /* "implicit/bpr.pyx":396
+                                /* "implicit/bpr.pyx":395
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])             # <<<<<<<<<<<<<<
@@ -16250,17 +16250,17 @@ static PyObject *__pyx_pf_8implicit_3bpr_24bpr_update_with_negative(CYTHON_UNUSE
       }
   }
 
-  /* "implicit/bpr.pyx":398
+  /* "implicit/bpr.pyx":397
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])
  * 
  *     return correct, skipped             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_26 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_26 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
-  __pyx_t_27 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_27 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_27);
-  __pyx_t_28 = PyTuple_New(2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_28 = PyTuple_New(2); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
   __Pyx_GIVEREF(__pyx_t_26);
   PyTuple_SET_ITEM(__pyx_t_28, 0, __pyx_t_26);
@@ -16728,33 +16728,33 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                 if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_itemids.shape[0];
                                 __pyx_v_j_id = (*((long *) ( /* dim=0 */ (__pyx_v_itemids.data + __pyx_t_7 * __pyx_v_itemids.strides[0]) )));
 
-                                /* "implicit/bpr.pyx":362
- * 
+                                /* "implicit/bpr.pyx":363
  *             # including  "skipped += 1" brings error. but I don't know why...
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1             # <<<<<<<<<<<<<<
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + 1);
 
-                                /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                 __pyx_t_8 = __pyx_v_i_index;
                                 if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_data.shape[0];
                                 __pyx_t_9 = (((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_8 * __pyx_v_data.strides[0]) ))) > 0.0) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":364
+                                  /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
                                   if (__pyx_t_10) {
@@ -16768,25 +16768,25 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                   if (__pyx_t_9) {
 
                                     /* "implicit/bpr.pyx":366
+ *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  */
                                     goto __pyx_L10_continue;
 
-                                    /* "implicit/bpr.pyx":364
+                                    /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   }
 
                                   /* "implicit/bpr.pyx":367
- *                     #skipped += 1
+ *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = i_id, j_id             # <<<<<<<<<<<<<<
  *             else:
@@ -16797,12 +16797,12 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_liked_id = __pyx_t_11;
                                   __pyx_v_disliked_id = __pyx_t_12;
 
-                                  /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                  /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                   goto __pyx_L14;
                                 }
@@ -16811,8 +16811,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                 /*else*/ {
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
@@ -16826,9 +16826,9 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_L19_bool_binop_done:;
                                   if (__pyx_t_9) {
 
-                                    /* "implicit/bpr.pyx":371
+                                    /* "implicit/bpr.pyx":370
+ *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1
@@ -16839,13 +16839,13 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                   }
 
-                                  /* "implicit/bpr.pyx":372
- *                     #skipped += 1
+                                  /* "implicit/bpr.pyx":371
+ *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id             # <<<<<<<<<<<<<<
  *             skipped += -1
@@ -16858,7 +16858,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                 }
                                 __pyx_L14:;
 
-                                /* "implicit/bpr.pyx":373
+                                /* "implicit/bpr.pyx":372
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1             # <<<<<<<<<<<<<<
@@ -16867,7 +16867,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + -1L);
 
-                                /* "implicit/bpr.pyx":376
+                                /* "implicit/bpr.pyx":375
  * 
  *             # get pointers to the relevant factors
  *             user, liked, disliked = &X[user_id, 0], &Y[liked_id, 0], &Y[disliked_id, 0]             # <<<<<<<<<<<<<<
@@ -16893,7 +16893,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_v_liked = __pyx_t_18;
                                 __pyx_v_disliked = __pyx_t_21;
 
-                                /* "implicit/bpr.pyx":379
+                                /* "implicit/bpr.pyx":378
  * 
  *             # compute the score
  *             score = 0             # <<<<<<<<<<<<<<
@@ -16902,7 +16902,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_score = 0.0;
 
-                                /* "implicit/bpr.pyx":380
+                                /* "implicit/bpr.pyx":379
  *             # compute the score
  *             score = 0
  *             for j in range(factors + 1):             # <<<<<<<<<<<<<<
@@ -16914,7 +16914,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_12; __pyx_t_22+=1) {
                                   __pyx_v_j = __pyx_t_22;
 
-                                  /* "implicit/bpr.pyx":381
+                                  /* "implicit/bpr.pyx":380
  *             score = 0
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])             # <<<<<<<<<<<<<<
@@ -16924,7 +16924,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_score = (__pyx_v_score + ((__pyx_v_user[__pyx_v_j]) * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))));
                                 }
 
-                                /* "implicit/bpr.pyx":382
+                                /* "implicit/bpr.pyx":381
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])
  *             z = 1.0 / (1.0 + exp(score))             # <<<<<<<<<<<<<<
@@ -16933,7 +16933,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_z = (1.0 / (1.0 + exp(__pyx_v_score)));
 
-                                /* "implicit/bpr.pyx":384
+                                /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -16943,7 +16943,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_9 = ((__pyx_v_z < .5) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":385
+                                  /* "implicit/bpr.pyx":384
  * 
  *             if z < .5:
  *                 correct += 1             # <<<<<<<<<<<<<<
@@ -16952,7 +16952,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_correct = (__pyx_v_correct + 1);
 
-                                  /* "implicit/bpr.pyx":384
+                                  /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -16961,7 +16961,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
  */
                                 }
 
-                                /* "implicit/bpr.pyx":388
+                                /* "implicit/bpr.pyx":387
  * 
  *             # update the factors via sgd.
  *             for j in range(factors):             # <<<<<<<<<<<<<<
@@ -16973,7 +16973,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_12; __pyx_t_22+=1) {
                                   __pyx_v_j = __pyx_t_22;
 
-                                  /* "implicit/bpr.pyx":389
+                                  /* "implicit/bpr.pyx":388
  *             # update the factors via sgd.
  *             for j in range(factors):
  *                 temp = user[j]             # <<<<<<<<<<<<<<
@@ -16982,7 +16982,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_temp = (__pyx_v_user[__pyx_v_j]);
 
-                                  /* "implicit/bpr.pyx":390
+                                  /* "implicit/bpr.pyx":389
  *             for j in range(factors):
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])             # <<<<<<<<<<<<<<
@@ -16992,7 +16992,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_23 = __pyx_v_j;
                                   (__pyx_v_user[__pyx_t_23]) = ((__pyx_v_user[__pyx_t_23]) + (__pyx_v_learning_rate * ((__pyx_v_z * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))) - (__pyx_v_reg * (__pyx_v_user[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":391
+                                  /* "implicit/bpr.pyx":390
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])             # <<<<<<<<<<<<<<
@@ -17002,7 +17002,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_23 = __pyx_v_j;
                                   (__pyx_v_liked[__pyx_t_23]) = ((__pyx_v_liked[__pyx_t_23]) + (__pyx_v_learning_rate * ((__pyx_v_z * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":392
+                                  /* "implicit/bpr.pyx":391
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])
  *                 disliked[j] += learning_rate * (-z * temp - reg * disliked[j])             # <<<<<<<<<<<<<<
@@ -17013,7 +17013,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                   (__pyx_v_disliked[__pyx_t_23]) = ((__pyx_v_disliked[__pyx_t_23]) + (__pyx_v_learning_rate * (((-__pyx_v_z) * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_disliked[__pyx_v_j])))));
                                 }
 
-                                /* "implicit/bpr.pyx":395
+                                /* "implicit/bpr.pyx":394
  * 
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])             # <<<<<<<<<<<<<<
@@ -17023,7 +17023,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_11 = __pyx_v_factors;
                                 (__pyx_v_liked[__pyx_t_11]) = ((__pyx_v_liked[__pyx_t_11]) + (__pyx_v_learning_rate * (__pyx_v_z - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_factors])))));
 
-                                /* "implicit/bpr.pyx":396
+                                /* "implicit/bpr.pyx":395
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])             # <<<<<<<<<<<<<<
@@ -17069,17 +17069,17 @@ static PyObject *__pyx_pf_8implicit_3bpr_26bpr_update_with_negative(CYTHON_UNUSE
       }
   }
 
-  /* "implicit/bpr.pyx":398
+  /* "implicit/bpr.pyx":397
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])
  * 
  *     return correct, skipped             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_24 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_24 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
-  __pyx_t_25 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_25 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_25);
-  __pyx_t_26 = PyTuple_New(2); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_26 = PyTuple_New(2); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
   __Pyx_GIVEREF(__pyx_t_24);
   PyTuple_SET_ITEM(__pyx_t_26, 0, __pyx_t_24);
@@ -17547,33 +17547,33 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                 if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_itemids.shape[0];
                                 __pyx_v_j_id = (*((long *) ( /* dim=0 */ (__pyx_v_itemids.data + __pyx_t_7 * __pyx_v_itemids.strides[0]) )));
 
-                                /* "implicit/bpr.pyx":362
- * 
+                                /* "implicit/bpr.pyx":363
  *             # including  "skipped += 1" brings error. but I don't know why...
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1             # <<<<<<<<<<<<<<
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + 1);
 
-                                /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                 __pyx_t_8 = __pyx_v_i_index;
                                 if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_data.shape[0];
                                 __pyx_t_9 = (((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_8 * __pyx_v_data.strides[0]) ))) > 0.0) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":364
+                                  /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
                                   if (__pyx_t_10) {
@@ -17587,25 +17587,25 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                   if (__pyx_t_9) {
 
                                     /* "implicit/bpr.pyx":366
+ *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  */
                                     goto __pyx_L10_continue;
 
-                                    /* "implicit/bpr.pyx":364
+                                    /* "implicit/bpr.pyx":365
  *             skipped += 1
  *             if data[i_index] > 0:
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = i_id, j_id
  */
                                   }
 
                                   /* "implicit/bpr.pyx":367
- *                     #skipped += 1
+ *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = i_id, j_id             # <<<<<<<<<<<<<<
  *             else:
@@ -17616,12 +17616,12 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_liked_id = __pyx_t_11;
                                   __pyx_v_disliked_id = __pyx_t_12;
 
-                                  /* "implicit/bpr.pyx":363
- *             # including  "skipped += 1" brings error. but I don't know why...
+                                  /* "implicit/bpr.pyx":364
+ *             # thus I implemented bit verbosed skipped calculation.
  *             skipped += 1
  *             if data[i_index] > 0:             # <<<<<<<<<<<<<<
  *                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
- *                     #skipped += 1
+ *                     continue
  */
                                   goto __pyx_L14;
                                 }
@@ -17630,8 +17630,8 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                 /*else*/ {
                                   __pyx_t_10 = (__pyx_v_verify_neg != 0);
@@ -17645,9 +17645,9 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_L19_bool_binop_done:;
                                   if (__pyx_t_9) {
 
-                                    /* "implicit/bpr.pyx":371
+                                    /* "implicit/bpr.pyx":370
+ *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
- *                     #skipped += 1
  *                     continue             # <<<<<<<<<<<<<<
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1
@@ -17658,13 +17658,13 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
  *                 liked_id, disliked_id = i_id, j_id
  *             else:
  *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):             # <<<<<<<<<<<<<<
- *                     #skipped += 1
  *                     continue
+ *                 liked_id, disliked_id = j_id, i_id
  */
                                   }
 
-                                  /* "implicit/bpr.pyx":372
- *                     #skipped += 1
+                                  /* "implicit/bpr.pyx":371
+ *                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id             # <<<<<<<<<<<<<<
  *             skipped += -1
@@ -17677,7 +17677,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                 }
                                 __pyx_L14:;
 
-                                /* "implicit/bpr.pyx":373
+                                /* "implicit/bpr.pyx":372
  *                     continue
  *                 liked_id, disliked_id = j_id, i_id
  *             skipped += -1             # <<<<<<<<<<<<<<
@@ -17686,7 +17686,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_skipped = (__pyx_v_skipped + -1L);
 
-                                /* "implicit/bpr.pyx":376
+                                /* "implicit/bpr.pyx":375
  * 
  *             # get pointers to the relevant factors
  *             user, liked, disliked = &X[user_id, 0], &Y[liked_id, 0], &Y[disliked_id, 0]             # <<<<<<<<<<<<<<
@@ -17712,7 +17712,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_v_liked = __pyx_t_18;
                                 __pyx_v_disliked = __pyx_t_21;
 
-                                /* "implicit/bpr.pyx":379
+                                /* "implicit/bpr.pyx":378
  * 
  *             # compute the score
  *             score = 0             # <<<<<<<<<<<<<<
@@ -17721,7 +17721,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_score = 0.0;
 
-                                /* "implicit/bpr.pyx":380
+                                /* "implicit/bpr.pyx":379
  *             # compute the score
  *             score = 0
  *             for j in range(factors + 1):             # <<<<<<<<<<<<<<
@@ -17733,7 +17733,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_12; __pyx_t_22+=1) {
                                   __pyx_v_j = __pyx_t_22;
 
-                                  /* "implicit/bpr.pyx":381
+                                  /* "implicit/bpr.pyx":380
  *             score = 0
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])             # <<<<<<<<<<<<<<
@@ -17743,7 +17743,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_v_score = (__pyx_v_score + ((__pyx_v_user[__pyx_v_j]) * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))));
                                 }
 
-                                /* "implicit/bpr.pyx":382
+                                /* "implicit/bpr.pyx":381
  *             for j in range(factors + 1):
  *                 score = score + user[j] * (liked[j] - disliked[j])
  *             z = 1.0 / (1.0 + exp(score))             # <<<<<<<<<<<<<<
@@ -17752,7 +17752,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
  */
                                 __pyx_v_z = (1.0 / (1.0 + exp(__pyx_v_score)));
 
-                                /* "implicit/bpr.pyx":384
+                                /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -17762,7 +17762,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_9 = ((__pyx_v_z < .5) != 0);
                                 if (__pyx_t_9) {
 
-                                  /* "implicit/bpr.pyx":385
+                                  /* "implicit/bpr.pyx":384
  * 
  *             if z < .5:
  *                 correct += 1             # <<<<<<<<<<<<<<
@@ -17771,7 +17771,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_correct = (__pyx_v_correct + 1);
 
-                                  /* "implicit/bpr.pyx":384
+                                  /* "implicit/bpr.pyx":383
  *             z = 1.0 / (1.0 + exp(score))
  * 
  *             if z < .5:             # <<<<<<<<<<<<<<
@@ -17780,7 +17780,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
  */
                                 }
 
-                                /* "implicit/bpr.pyx":388
+                                /* "implicit/bpr.pyx":387
  * 
  *             # update the factors via sgd.
  *             for j in range(factors):             # <<<<<<<<<<<<<<
@@ -17792,7 +17792,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                 for (__pyx_t_22 = 0; __pyx_t_22 < __pyx_t_12; __pyx_t_22+=1) {
                                   __pyx_v_j = __pyx_t_22;
 
-                                  /* "implicit/bpr.pyx":389
+                                  /* "implicit/bpr.pyx":388
  *             # update the factors via sgd.
  *             for j in range(factors):
  *                 temp = user[j]             # <<<<<<<<<<<<<<
@@ -17801,7 +17801,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
  */
                                   __pyx_v_temp = (__pyx_v_user[__pyx_v_j]);
 
-                                  /* "implicit/bpr.pyx":390
+                                  /* "implicit/bpr.pyx":389
  *             for j in range(factors):
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])             # <<<<<<<<<<<<<<
@@ -17811,7 +17811,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_23 = __pyx_v_j;
                                   (__pyx_v_user[__pyx_t_23]) = ((__pyx_v_user[__pyx_t_23]) + (__pyx_v_learning_rate * ((__pyx_v_z * ((__pyx_v_liked[__pyx_v_j]) - (__pyx_v_disliked[__pyx_v_j]))) - (__pyx_v_reg * (__pyx_v_user[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":391
+                                  /* "implicit/bpr.pyx":390
  *                 temp = user[j]
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])             # <<<<<<<<<<<<<<
@@ -17821,7 +17821,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                   __pyx_t_23 = __pyx_v_j;
                                   (__pyx_v_liked[__pyx_t_23]) = ((__pyx_v_liked[__pyx_t_23]) + (__pyx_v_learning_rate * ((__pyx_v_z * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_j])))));
 
-                                  /* "implicit/bpr.pyx":392
+                                  /* "implicit/bpr.pyx":391
  *                 user[j] += learning_rate * (z * (liked[j] - disliked[j]) - reg * user[j])
  *                 liked[j] += learning_rate * (z * temp - reg * liked[j])
  *                 disliked[j] += learning_rate * (-z * temp - reg * disliked[j])             # <<<<<<<<<<<<<<
@@ -17832,7 +17832,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                   (__pyx_v_disliked[__pyx_t_23]) = ((__pyx_v_disliked[__pyx_t_23]) + (__pyx_v_learning_rate * (((-__pyx_v_z) * __pyx_v_temp) - (__pyx_v_reg * (__pyx_v_disliked[__pyx_v_j])))));
                                 }
 
-                                /* "implicit/bpr.pyx":395
+                                /* "implicit/bpr.pyx":394
  * 
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])             # <<<<<<<<<<<<<<
@@ -17842,7 +17842,7 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
                                 __pyx_t_11 = __pyx_v_factors;
                                 (__pyx_v_liked[__pyx_t_11]) = ((__pyx_v_liked[__pyx_t_11]) + (__pyx_v_learning_rate * (__pyx_v_z - (__pyx_v_reg * (__pyx_v_liked[__pyx_v_factors])))));
 
-                                /* "implicit/bpr.pyx":396
+                                /* "implicit/bpr.pyx":395
  *             # update item bias terms (last column of factorized matrix)
  *             liked[factors] += learning_rate * (z - reg * liked[factors])
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])             # <<<<<<<<<<<<<<
@@ -17888,17 +17888,17 @@ static PyObject *__pyx_pf_8implicit_3bpr_28bpr_update_with_negative(CYTHON_UNUSE
       }
   }
 
-  /* "implicit/bpr.pyx":398
+  /* "implicit/bpr.pyx":397
  *             disliked[factors] += learning_rate * (-z - reg * disliked[factors])
  * 
  *     return correct, skipped             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_24 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_24 = __Pyx_PyInt_From_long(__pyx_v_correct); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_24);
-  __pyx_t_25 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_25 = __Pyx_PyInt_From_long(__pyx_v_skipped); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_25);
-  __pyx_t_26 = PyTuple_New(2); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 398, __pyx_L1_error)
+  __pyx_t_26 = PyTuple_New(2); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 397, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_26);
   __Pyx_GIVEREF(__pyx_t_24);
   PyTuple_SET_ITEM(__pyx_t_26, 0, __pyx_t_24);

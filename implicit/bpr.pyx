@@ -363,12 +363,10 @@ def bpr_update_with_negative(RNGVector rng,
             skipped += 1
             if data[i_index] > 0:
                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
-                    #skipped += 1
                     continue
                 liked_id, disliked_id = i_id, j_id
             else:
                 if verify_neg and has_non_zero(neg_indptr, neg_itemids, user_id, j_id):
-                    #skipped += 1
                     continue
                 liked_id, disliked_id = j_id, i_id
             skipped += -1
