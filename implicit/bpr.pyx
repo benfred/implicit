@@ -147,12 +147,10 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # We need efficient user lookup for case of removing own likes
         # TODO: might make more sense to just changes inputs to be users by items instead
         # but that would be a major breaking API change
+
         user_items = item_users.T.tocsr()
         if not user_items.has_sorted_indices:
             user_items.sort_indices()
-
-
-
         # this basically calculates the 'row' attribute of a COO matrix
         # without requiring us to get the whole COO matrix
         user_counts = np.ediff1d(user_items.indptr)
@@ -192,34 +190,40 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1)
         log.debug("Running %i BPR training epochs", self.iterations)
 
-
         # I don't know how to implement capturing indices whose val < 0
         # so i explicitly created (verbose!)
-        pos_user_items = user_items.copy()
-        neg_user_items = user_items.copy()
-        pos_user_items[pos_user_items < 0] = 0
-        pos_user_items.eliminate_zeros()
-        neg_user_items[neg_user_items < 0] = 0
-        neg_user_items.eliminate_zeros()
+        if self.use_negative_sample is True:
+            pos_user_items = user_items.copy()
+            pos_user_items[pos_user_items < 0] = 0
+            pos_user_items.eliminate_zeros()
+            neg_user_items = user_items.copy()
+            neg_user_items[neg_user_items < 0] = 0
+            neg_user_items.eliminate_zeros()
 
         with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
             for epoch in range(self.iterations):
-                #do original update
+                # with negative sample included
                 if self.use_negative_sample is True:
-                    correct, skipped = __bpr_update(rng, userids,
-                        user_items.data, user_items.indices, user_items.indptr,
-                        pos_user_items.indices, pos_user_items.indptr,
-                        neg_user_items.indices, neg_user_items.indptr,
-                        self.user_factors, self.item_factors,
-                        self.learning_rate, self.regularization, num_threads,
-                        self.verify_negative_samples)
+                    correct, skipped = bpr_update_with_negative(rng, userids,
+                                                                user_items.data,
+                                                                user_items.indices,
+                                                                user_items.indptr,
+                                                                pos_user_items.indices,
+                                                                pos_user_items.indptr,
+                                                                neg_user_items.indices,
+                                                                neg_user_items.indptr,
+                                                                self.user_factors,
+                                                                self.item_factors,
+                                                                self.learning_rate,
+                                                                self.regularization, num_threads,
+                                                                self.verify_negative_samples)
+                # do original update
                 else:
-                    correct, skipped = bpr_update(rng, userids, user_items.indices, user_items.indptr,
-                                              self.user_factors, self.item_factors,
-                                              self.learning_rate, self.regularization, num_threads,
-                                              self.verify_negative_samples)
-
-
+                    correct, skipped = bpr_update(rng, userids, user_items.indices,
+                                                  user_items.indptr, self.user_factors,
+                                                  self.item_factors, self.learning_rate,
+                                                  self.regularization, num_threads,
+                                                  self.verify_negative_samples)
 
                 progress.update(1)
                 total = len(user_items.data)
@@ -321,17 +325,18 @@ def bpr_update(RNGVector rng,
 
 @cython.cdivision(True)
 @cython.boundscheck(False)
-def __bpr_update(RNGVector rng,
-               integral[:] userids,
-               floating[:] data, integral[:] itemids, integral[:] indptr,
-               integral[:] pos_itemids, integral[:] pos_indptr,
-               integral[:] neg_itemids, integral[:] neg_indptr,
-               floating[:, :] X, floating[:, :] Y,
-               float learning_rate, float reg, int num_threads,
-               bool verify_neg):
+def bpr_update_with_negative(RNGVector rng,
+                             integral[:] userids,
+                             floating[:] data, integral[:] itemids, integral[:] indptr,
+                             integral[:] pos_itemids, integral[:] pos_indptr,
+                             integral[:] neg_itemids, integral[:] neg_indptr,
+                             floating[:, :] X, floating[:, :] Y,
+                             float learning_rate, float reg, int num_threads,
+                             bool verify_neg):
     cdef integral users = X.shape[0], items = Y.shape[0]
     cdef long samples = len(userids), i, liked_index, disliked_index, correct = 0, skipped
     cdef integral j, user_id, liked_id, disliked_id, thread_id
+    cdef integral i_index, j_index, i_id, j_id
     cdef floating z, score, temp
 
     cdef floating * user
@@ -340,15 +345,11 @@ def __bpr_update(RNGVector rng,
 
     cdef integral factors = X.shape[1] - 1
 
-
-    cdef long _
-
-    cdef integral i_index, j_index, i_id, j_id
     skipped = 0
     with nogil, parallel(num_threads=num_threads):
 
         thread_id = get_thread_num()
-        for _ in prange(samples, schedule='guided'):
+        for i in prange(samples, schedule='guided'):
             i_index = rng.generate(thread_id)
             i_id = itemids[i_index]
             user_id = userids[i_index]
@@ -357,9 +358,9 @@ def __bpr_update(RNGVector rng,
             j_index = rng.generate(thread_id)
             j_id = itemids[j_index]
 
-
             # including  "skipped += 1" brings error. but I don't know why...
-            #
+            # thus I implemented bit verbosed skipped calculation.
+            skipped += 1
             if data[i_index] > 0:
                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
                     #skipped += 1
@@ -370,6 +371,7 @@ def __bpr_update(RNGVector rng,
                     #skipped += 1
                     continue
                 liked_id, disliked_id = j_id, i_id
+            skipped += -1
 
             # get pointers to the relevant factors
             user, liked, disliked = &X[user_id, 0], &Y[liked_id, 0], &Y[disliked_id, 0]
@@ -395,4 +397,3 @@ def __bpr_update(RNGVector rng,
             disliked[factors] += learning_rate * (-z - reg * disliked[factors])
 
     return correct, skipped
-
