@@ -151,13 +151,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         if not user_items.has_sorted_indices:
             user_items.sort_indices()
 
-        pos_user_items = user_items.copy()
-        neg_user_items = user_items.copy()
-
-        pos_user_items[pos_user_items < 0] = 0
-        pos_user_items.eliminate_zeros()
-        neg_user_items[neg_user_items < 0] = 0
-        neg_user_items.eliminate_zeros()
 
 
         # this basically calculates the 'row' attribute of a COO matrix
@@ -198,6 +191,17 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # initialize RNG's, one per thread.
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1)
         log.debug("Running %i BPR training epochs", self.iterations)
+
+
+        # I don't know how to implement capturing indices whose val < 0
+        # so i explicitly created (verbose!)
+        pos_user_items = user_items.copy()
+        neg_user_items = user_items.copy()
+        pos_user_items[pos_user_items < 0] = 0
+        pos_user_items.eliminate_zeros()
+        neg_user_items[neg_user_items < 0] = 0
+        neg_user_items.eliminate_zeros()
+
         with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
             for epoch in range(self.iterations):
                 #do original update
@@ -353,6 +357,9 @@ def __bpr_update(RNGVector rng,
             j_index = rng.generate(thread_id)
             j_id = itemids[j_index]
 
+
+            # including  "skipped += 1" brings error. but I don't know why...
+            #
             if data[i_index] > 0:
                 if verify_neg and has_non_zero(pos_indptr, pos_itemids, user_id, j_id):
                     #skipped += 1
