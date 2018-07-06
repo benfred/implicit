@@ -204,26 +204,19 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             for epoch in range(self.iterations):
                 # with negative sample included
                 if self.use_negative_sample is True:
-                    correct, skipped = bpr_update_with_negative(rng, userids,
-                                                                user_items.data,
-                                                                user_items.indices,
-                                                                user_items.indptr,
-                                                                pos_user_items.indices,
-                                                                pos_user_items.indptr,
-                                                                neg_user_items.indices,
-                                                                neg_user_items.indptr,
-                                                                self.user_factors,
-                                                                self.item_factors,
-                                                                self.learning_rate,
-                                                                self.regularization, num_threads,
-                                                                self.verify_negative_samples)
+                    correct, skipped = bpr_update_with_negative(
+                        rng, userids,
+                        user_items.data, user_items.indices, user_items.indptr,
+                        pos_user_items.indices, pos_user_items.indptr,
+                        neg_user_items.indices, neg_user_items.indptr,
+                        self.user_factors, self.item_factors, self.learning_rate,
+                        self.regularization, num_threads, self.verify_negative_samples)
                 # do original update
                 else:
-                    correct, skipped = bpr_update(rng, userids, user_items.indices,
-                                                  user_items.indptr, self.user_factors,
-                                                  self.item_factors, self.learning_rate,
-                                                  self.regularization, num_threads,
-                                                  self.verify_negative_samples)
+                    correct, skipped = bpr_update(
+                        rng, userids, user_items.indices, user_items.indptr, self.user_factors,
+                        self.item_factors, self.learning_rate, self.regularization, num_threads,
+                        self.verify_negative_samples)
 
                 progress.update(1)
                 total = len(user_items.data)
