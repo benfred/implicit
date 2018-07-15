@@ -60,6 +60,9 @@ class ItemItemRecommender(RecommenderBase):
                 ret.append((itemid, -1.0))
         return ret
 
+    def similar_users(self, userid, N=10):
+        raise NotImplementedError("Not implemented Yet")
+
     def similar_items(self, itemid, N=10):
         """ Returns a list of the most similar other items """
         if itemid >= self.similarity.shape[0]:
