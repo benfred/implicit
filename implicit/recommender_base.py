@@ -1,4 +1,4 @@
-""" Base class for recommendation algorithms in this package """
+t1""" Base class for recommendation algorithms in this package """
 
 import itertools
 from abc import ABCMeta, abstractmethod
@@ -25,7 +25,8 @@ class RecommenderBase(object):
         pass
 
     @abstractmethod
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items,
+                  N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
         """
         Recommends items for a user
 
@@ -120,11 +121,15 @@ class MatrixFactorizationBase(RecommenderBase):
         # cache of item norms (useful for calculating similar items)
         self._item_norms = None
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items,
+                  N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
         user = self._user_factor(userid, user_items, recalculate_user)
 
         # calculate the top N items, removing the users own liked items from the results
-        liked = set(user_items[userid].indices)
+        if filter_already_liked_items is True:
+            liked = set(user_items[userid].indices)
+        else:
+            liked = set()
         scores = self.item_factors.dot(user)
         if filter_items:
             liked.update(filter_items)

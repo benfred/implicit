@@ -23,7 +23,8 @@ class ItemItemRecommender(RecommenderBase):
         self.similarity = all_pairs_knn(weighted, self.K, show_progress=self.show_progress).tocsr()
         self.scorer = NearestNeighboursScorer(self.similarity)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items,
+                  N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
         """ returns the best N recommendations for a user given its id"""
         # recalculate_user is ignored because this is not a model based algorithm
         items = N
@@ -31,7 +32,8 @@ class ItemItemRecommender(RecommenderBase):
             items += len(filter_items)
 
         indices, data = self.scorer.recommend(userid, user_items.indptr, user_items.indices,
-                                              user_items.data, K=items)
+                                              user_items.data, K=items,
+                                              remove_own_likes=filter_already_liked_items)
         best = sorted(zip(indices, data), key=lambda x: -x[1])
 
         if not filter_items:
