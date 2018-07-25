@@ -84,6 +84,25 @@ class RecommenderBase(object):
         pass
 
     @abstractmethod
+    def similar_users(self, userid, N=10):
+        """
+        Calculates a list of similar items
+
+        Parameters
+        ----------
+        userid : int
+            The row id of the user to retrieve similar users for
+        N : int, optional
+            The number of similar users to return
+
+        Returns
+        -------
+        list
+            List of (userid, score) tuples
+        """
+        pass
+
+    @abstractmethod
     def similar_items(self, itemid, N=10):
         """
         Calculates a list of similar items
@@ -118,8 +137,8 @@ class MatrixFactorizationBase(RecommenderBase):
         self.item_factors = None
         self.user_factors = None
 
-        # cache of item norms (useful for calculating similar items)
-        self._item_norms = None
+        # cache of user, item norms (useful for calculating similar items)
+        self._user_norms, self._item_norms = None, None
 
     def recommend(self, userid, user_items,
                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
@@ -167,12 +186,36 @@ class MatrixFactorizationBase(RecommenderBase):
     def recalculate_user(self, userid, user_items):
         raise NotImplementedError("recalculate_user is not supported with this model")
 
+    def similar_users(self, userid, N=10):
+        factor = self.user_factors[userid]
+        factors = self.user_factors
+        norms = self.user_norms
+
+        return self._get_similarity_score(factor, factors, norms, N)
+
+    similar_users.__doc__ = RecommenderBase.similar_users.__doc__
+
     def similar_items(self, itemid, N=10):
-        scores = self.item_factors.dot(self.item_factors[itemid]) / self.item_norms
-        best = np.argpartition(scores, -N)[-N:]
-        return sorted(zip(best, scores[best] / self.item_norms[itemid]), key=lambda x: -x[1])
+        factor = self.item_factors[itemid]
+        factors = self.item_factors
+        norms = self.item_norms
+
+        return self._get_similarity_score(factor, factors, norms, N)
 
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
+
+    def _get_similarity_score(self, factor, factors, norms, N):
+        scores = factors.dot(factor) / norms
+        best = np.argpartition(scores, -N)[-N:]
+        return sorted(zip(best, scores[best]), key=lambda x: -x[1])
+
+    @property
+    def user_norms(self):
+        if self._user_norms is None:
+            self._user_norms = np.linalg.norm(self.user_factors, axis=-1)
+            # don't divide by zero in similar_items, replace with small value
+            self._user_norms[self._user_norms == 0] = 1e-10
+        return self._user_norms
 
     @property
     def item_norms(self):
