@@ -364,7 +364,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
             self.similar_items_index = index
 
     def similar_items(self, itemid, N=10):
-        if not self.approximate_similar_items:
+        if not self.approximate_similar_items or (self.use_gpu and N >= 1024):
             return super(FaissAlternatingLeastSquares, self).similar_items(itemid, N)
 
         factors = self.item_factors[itemid]
@@ -388,6 +388,14 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         if filter_items:
             liked.update(filter_items)
         count = N + len(liked)
+
+        # the GPU variant of faiss doesn't support returning more than 1024 results.
+        # fall back to the exact match when this happens
+        if self.use_gpu and count >= 1024:
+            return super(FaissAlternatingLeastSquares,
+                         self).recommend(userid, user_items, N=N,
+                                         filter_items=filter_items,
+                                         recalculate_user=recalculate_user)
 
         # faiss expects multiple queries - convert query to a matrix
         # and results back to single vectors

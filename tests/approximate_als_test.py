@@ -4,6 +4,7 @@ import unittest
 
 from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlternatingLeastSquares,
                                       NMSLibAlternatingLeastSquares)
+from implicit.cuda import HAS_CUDA
 
 from .recommender_base_test import TestRecommenderBaseMixin
 
@@ -34,6 +35,41 @@ try:
         def _get_model(self):
             return FaissAlternatingLeastSquares(nlist=1, nprobe=1, factors=2, regularization=0,
                                                 use_gpu=False)
+
+    if HAS_CUDA:
+        class FaissALSGPUTest(unittest.TestCase, TestRecommenderBaseMixin):
+            __regularization = 0
+
+            def _get_model(self):
+                return FaissAlternatingLeastSquares(nlist=1, nprobe=1, factors=32,
+                                                    regularization=self.__regularization,
+                                                    use_gpu=True)
+
+            def test_similar_items(self):
+                # For the GPU version, we currently have to have factors be a multiple of 32
+                # (limitation that I think is caused by how we are currently calculating the
+                # dot product in CUDA, TODO: eventually should fix that code).
+                # this causes the test_similar_items call to fail if we set regularization to 0
+                self.__regularization = 1.0
+                try:
+                    super(FaissALSGPUTest, self).test_similar_items()
+                finally:
+                    self.__regularization = 0.0
+
+            def test_large_recommend(self):
+                # the GPU version of FAISS can't return more than 1K result (and will assert/exit)
+                # this tests out that we fall back in this case to the exact version and don't die
+                plays = self.get_checker_board(2048)
+                model = self._get_model()
+                model.show_progress = False
+                model.fit(plays)
+
+                recs = model.similar_items(0, N=1050)
+                self.assertEqual(recs[0][0], 0)
+
+                recs = model.recommend(0, plays.T.tocsr(), N=1050)
+                self.assertEqual(recs[0][0], 0)
+
 except ImportError:
     pass
 

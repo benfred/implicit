@@ -25,6 +25,9 @@ class ItemItemRecommender(RecommenderBase):
 
     def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
         """ returns the best N recommendations for a user given its id"""
+        if userid >= user_items.shape[0]:
+            raise ValueError("userid is out of bounds of the user_items matrix")
+
         # recalculate_user is ignored because this is not a model based algorithm
         items = N
         if filter_items:
