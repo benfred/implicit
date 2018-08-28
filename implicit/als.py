@@ -88,15 +88,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.fit_callback = None
         self.cg_steps = 3
 
-        # show a progress bar during model fit (disabled for unittests)
-        self.show_progress = True
-
         # cache for item factors squared
         self._YtY = None
 
         check_blas_config()
 
-    def fit(self, item_users):
+    def fit(self, item_users, show_progress=True):
         """ Factorizes the item_users matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
@@ -116,6 +113,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             Matrix of confidences for the liked items. This matrix should be a csr_matrix where
             the rows of the matrix are the item, the columns are the users that liked that item,
             and the value is the confidence that the user liked the item.
+        show_progress : bool, optional
+            Whether to show a progress bar during fitting
         """
         Ciu = item_users
         if not isinstance(Ciu, scipy.sparse.csr_matrix):
@@ -147,12 +146,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self._YtY = None
 
         if self.use_gpu:
-            return self._fit_gpu(Ciu, Cui)
+            return self._fit_gpu(Ciu, Cui, show_progress)
 
         solver = self.solver
 
         log.debug("Running %i ALS iterations", self.iterations)
-        with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
+        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
             # alternate between learning the user_factors from the item_factors and vice-versa
             for iteration in range(self.iterations):
                 s = time.time()
@@ -175,7 +174,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)
 
-    def _fit_gpu(self, Ciu_host, Cui_host):
+    def _fit_gpu(self, Ciu_host, Cui_host, show_progress=True):
         """ specialized training on the gpu. copies inputs to/from cuda device """
         if not implicit.cuda.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
@@ -193,7 +192,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         solver = implicit.cuda.CuLeastSquaresSolver(self.factors)
         log.debug("Running %i ALS iterations", self.iterations)
-        with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
+        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
             for iteration in range(self.iterations):
                 s = time.time()
                 solver.least_squares(Cui, X, Y, self.regularization, self.cg_steps)

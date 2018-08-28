@@ -116,11 +116,10 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.use_gpu = use_gpu
         self.num_threads = num_threads
         self.verify_negative_samples = verify_negative_samples
-        self.show_progress = True
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, item_users):
+    def fit(self, item_users, show_progress=True):
         """ Factorizes the item_users matrix
 
         Parameters
@@ -130,6 +129,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             the rows of the matrix are the item, and the columns are the users that liked that item.
             BPR ignores the weight value of the matrix right now - it treats non zero entries
             as a binary signal that the user liked the item.
+	show_progress : bool, optional
+	    Whether to show a progress bar
         """
         # for now, all we handle is float 32 values
         if item_users.dtype != np.float32:
@@ -170,7 +171,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.user_factors[:, self.factors] = 1.0
 
         if self.use_gpu:
-            return self._fit_gpu(user_items, userids)
+            return self._fit_gpu(user_items, userids, show_progress)
 
         # we accept num_threads = 0 as indicating to create as many threads as we have cores,
         # but in that case we need the number of cores, since we need to initialize RNG state per
@@ -182,7 +183,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # initialize RNG's, one per thread.
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1)
         log.debug("Running %i BPR training epochs", self.iterations)
-        with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
+        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
                 correct, skipped = bpr_update(rng, userids, user_items.indices, user_items.indptr,
                                               self.user_factors, self.item_factors,
@@ -193,7 +194,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
                                       "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
-    def _fit_gpu(self, user_items, userids_host):
+    def _fit_gpu(self, user_items, userids_host, show_progress=True):
         if not implicit.cuda.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
@@ -211,7 +212,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         Y = implicit.cuda.CuDenseMatrix(self.item_factors)
 
         log.debug("Running %i BPR training epochs", self.iterations)
-        with tqdm.tqdm(total=self.iterations, disable=not self.show_progress) as progress:
+        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
                 correct, skipped = implicit.cuda.cu_bpr_update(userids, itemids, indptr,
                                                                X, Y, self.learning_rate,

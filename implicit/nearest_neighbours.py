@@ -15,12 +15,11 @@ class ItemItemRecommender(RecommenderBase):
     def __init__(self, K=20):
         self.similarity = None
         self.K = K
-        self.show_progress = True
         self.scorer = None
 
-    def fit(self, weighted):
+    def fit(self, weighted, show_progress=True):
         """ Computes and stores the similarity matrix """
-        self.similarity = all_pairs_knn(weighted, self.K, show_progress=self.show_progress).tocsr()
+        self.similarity = all_pairs_knn(weighted, self.K, show_progress=show_progress).tocsr()
         self.scorer = NearestNeighboursScorer(self.similarity)
 
     def recommend(self, userid, user_items,
@@ -98,16 +97,16 @@ class ItemItemRecommender(RecommenderBase):
 
 class CosineRecommender(ItemItemRecommender):
     """ An Item-Item Recommender on Cosine distances between items """
-    def fit(self, counts):
+    def fit(self, counts, show_progress=True):
         # cosine distance is just the dot-product of a normalized matrix
-        ItemItemRecommender.fit(self, normalize(counts))
+        ItemItemRecommender.fit(self, normalize(counts), show_progress)
 
 
 class TFIDFRecommender(ItemItemRecommender):
     """ An Item-Item Recommender on TF-IDF distances between items """
-    def fit(self, counts):
+    def fit(self, counts, show_progress=True):
         weighted = normalize(tfidf_weight(counts))
-        ItemItemRecommender.fit(self, weighted)
+        ItemItemRecommender.fit(self, weighted, show_progress)
 
 
 class BM25Recommender(ItemItemRecommender):
@@ -117,9 +116,9 @@ class BM25Recommender(ItemItemRecommender):
         self.K1 = K1
         self.B = B
 
-    def fit(self, counts):
+    def fit(self, counts, show_progress):
         weighted = bm25_weight(counts, self.K1, self.B)
-        ItemItemRecommender.fit(self, weighted)
+        ItemItemRecommender.fit(self, weighted, show_progress)
 
 
 def tfidf_weight(X):

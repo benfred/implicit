@@ -21,8 +21,7 @@ class TestRecommenderBaseMixin(object):
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
-        model.show_progress = False
-        model.fit(item_users)
+        model.fit(item_users, show_progress=False)
 
         for userid in range(50):
             recs = model.recommend(userid, user_items, N=1)
@@ -49,8 +48,7 @@ class TestRecommenderBaseMixin(object):
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
-        model.show_progress = False
-        model.fit(item_users)
+        model.fit(item_users, show_progress=False)
 
         for userid in range(item_users.shape[1]):
             recs = model.recommend(userid, user_items, N=1)
@@ -76,8 +74,7 @@ class TestRecommenderBaseMixin(object):
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
-        model.show_progress = False
-        model.fit(item_users)
+        model.fit(item_users, show_progress=False)
 
         # we've withheld the diagnoal for testing, and have verified that in test_recommend
         # it is returned for each user. So p@1 should be 1.0
@@ -91,8 +88,7 @@ class TestRecommenderBaseMixin(object):
         # calculating similar users in nearest-neighbours is not implemented yet
         if isinstance(model, ItemItemRecommender):
             return
-        model.show_progress = False
-        model.fit(self.get_checker_board(50))
+        model.fit(self.get_checker_board(50), show_progress=False)
         for userid in range(50):
             recs = model.similar_users(userid, N=10)
             for r, _ in recs:
@@ -100,8 +96,7 @@ class TestRecommenderBaseMixin(object):
 
     def test_similar_items(self):
         model = self._get_model()
-        model.show_progress = False
-        model.fit(self.get_checker_board(50))
+        model.fit(self.get_checker_board(50), show_progress=False)
         for itemid in range(50):
             recs = model.similar_items(itemid, N=10)
             for r, _ in recs:
@@ -119,8 +114,7 @@ class TestRecommenderBaseMixin(object):
         item_users[:, 49] = 0
 
         model = self._get_model()
-        model.show_progress = False
-        model.fit(csr_matrix(item_users))
+        model.fit(csr_matrix(item_users), show_progress=False)
 
         # item 42 has no users, shouldn't be similar to anything
         for itemid in range(40):
@@ -131,20 +125,17 @@ class TestRecommenderBaseMixin(object):
         # models should be able to accept input of either float32 or float64
         item_users = self.get_checker_board(50)
         model = self._get_model()
-        model.show_progress = False
-        model.fit(item_users.astype(np.float64))
+        model.fit(item_users.astype(np.float64), show_progress=False)
 
         model = self._get_model()
-        model.show_progress = False
-        model.fit(item_users.astype(np.float32))
+        model.fit(item_users.astype(np.float32), show_progress=False)
 
     def test_rank_items(self):
         item_users = self.get_checker_board(50)
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
-        model.show_progress = False
-        model.fit(item_users)
+        model.fit(item_users, show_progress=False)
 
         for userid in range(50):
             selected_items = np.random.randint(50, size=10).tolist()

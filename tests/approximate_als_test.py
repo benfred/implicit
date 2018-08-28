@@ -61,8 +61,7 @@ try:
                 # this tests out that we fall back in this case to the exact version and don't die
                 plays = self.get_checker_board(2048)
                 model = self._get_model()
-                model.show_progress = False
-                model.fit(plays)
+                model.fit(plays, show_progress=False)
 
                 recs = model.similar_items(0, N=1050)
                 self.assertEqual(recs[0][0], 0)

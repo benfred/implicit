@@ -39,8 +39,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                             use_native=use_native,
                                             use_cg=True,
                                             use_gpu=False)
-            model.show_progress = False
-            model.fit(counts)
+            model.fit(counts, show_progress=False)
             rows, cols = model.item_factors, model.user_factors
 
             self.assertFalse(np.isnan(np.sum(cols)))
@@ -58,8 +57,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         for options in configs:
             model = AlternatingLeastSquares(factors=32, regularization=10, iterations=10,
                                             dtype=np.float32,  **options)
-            model.show_progress = False
-            model.fit(Ciu)
+            model.fit(Ciu, show_progress=False)
 
             self.assertTrue(np.isfinite(model.item_factors).all())
             self.assertTrue(np.isfinite(model.user_factors).all())
@@ -94,8 +92,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                                 use_cg=use_cg,
                                                 use_gpu=use_gpu)
                 np.random.seed(23)
-                model.show_progress = False
-                model.fit(user_items)
+                model.fit(user_items, show_progress=False)
                 rows, cols = model.item_factors, model.user_factors
 
             except Exception as e:
@@ -130,8 +127,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                         use_cg=False,
                                         iterations=100)
         np.random.seed(23)
-        model.show_progress = False
-        model.fit(user_items)
+        model.fit(user_items, show_progress=False)
 
         userid = 0
 
