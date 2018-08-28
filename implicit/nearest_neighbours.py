@@ -23,7 +23,8 @@ class ItemItemRecommender(RecommenderBase):
         self.similarity = all_pairs_knn(weighted, self.K, show_progress=self.show_progress).tocsr()
         self.scorer = NearestNeighboursScorer(self.similarity)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items,
+                  N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
         """ returns the best N recommendations for a user given its id"""
         if userid >= user_items.shape[0]:
             raise ValueError("userid is out of bounds of the user_items matrix")
@@ -34,7 +35,8 @@ class ItemItemRecommender(RecommenderBase):
             items += len(filter_items)
 
         indices, data = self.scorer.recommend(userid, user_items.indptr, user_items.indices,
-                                              user_items.data, K=items)
+                                              user_items.data, K=items,
+                                              remove_own_likes=filter_already_liked_items)
         best = sorted(zip(indices, data), key=lambda x: -x[1])
 
         if not filter_items:
@@ -63,6 +65,9 @@ class ItemItemRecommender(RecommenderBase):
                 ret.append((itemid, -1.0))
         return ret
 
+    def similar_users(self, userid, N=10):
+        raise NotImplementedError("Not implemented Yet")
+
     def similar_items(self, itemid, N=10):
         """ Returns a list of the most similar other items """
         if itemid >= self.similarity.shape[0]:
@@ -86,6 +91,7 @@ class ItemItemRecommender(RecommenderBase):
 
         ret = cls()
         ret.similarity = similarity
+        ret.scorer = NearestNeighboursScorer(similarity)
         ret.K = m['K']
         return ret
 

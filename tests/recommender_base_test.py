@@ -6,6 +6,7 @@ import numpy as np
 from scipy.sparse import csr_matrix
 
 from implicit.evaluation import precision_at_k
+from implicit.nearest_neighbours import ItemItemRecommender
 
 
 class TestRecommenderBaseMixin(object):
@@ -83,6 +84,19 @@ class TestRecommenderBaseMixin(object):
         p = precision_at_k(model, user_items.tocsr(), csr_matrix(np.eye(50)), K=1,
                            show_progress=False)
         self.assertEqual(p, 1)
+
+    def test_similar_users(self):
+
+        model = self._get_model()
+        # calculating similar users in nearest-neighbours is not implemented yet
+        if isinstance(model, ItemItemRecommender):
+            return
+        model.show_progress = False
+        model.fit(self.get_checker_board(50))
+        for userid in range(50):
+            recs = model.similar_users(userid, N=10)
+            for r, _ in recs:
+                self.assertEqual(r % 2, userid % 2)
 
     def test_similar_items(self):
         model = self._get_model()

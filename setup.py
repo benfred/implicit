@@ -136,7 +136,7 @@ setup(
     author_email='ben@benfrederickson.com',
     license='MIT',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Natural Language :: English',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
@@ -151,7 +151,7 @@ setup(
              'Collaborative Filtering, Recommender Systems',
 
     packages=find_packages(),
-    install_requires=['numpy', 'scipy>=0.16', 'h5py', 'tqdm'],
+    install_requires=['numpy', 'scipy>=0.16', 'tqdm'],
     setup_requires=["Cython>=0.24"],
     ext_modules=define_extensions(use_cython),
     cmdclass={'build_ext': build_ext},
