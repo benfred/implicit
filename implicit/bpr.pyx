@@ -129,8 +129,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             the rows of the matrix are the item, and the columns are the users that liked that item.
             BPR ignores the weight value of the matrix right now - it treats non zero entries
             as a binary signal that the user liked the item.
-	show_progress : bool, optional
-	    Whether to show a progress bar
+        show_progress : bool, optional
+            Whether to show a progress bar
         """
         # for now, all we handle is float 32 values
         if item_users.dtype != np.float32:
