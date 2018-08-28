@@ -32,18 +32,6 @@ class TestRecommenderBaseMixin(object):
             # all the other similar users
             self.assertEqual(recs[0][0], userid)
 
-            # we should get the same item if we recalculate_user
-
-            user_vector = user_items[userid]
-            try:
-                recs_from_liked = model.recommend(userid=0, user_items=user_vector,
-                                                  N=1, recalculate_user=True)
-                self.assertEqual(recs[0][0], recs_from_liked[0][0])
-                self.assertAlmostEqual(recs[0][1], recs_from_liked[0][1], places=5)
-            except NotImplementedError:
-                # some models don't support recalculating user on the fly, and thats ok
-                pass
-
         # try asking for more items than possible,
         # should return only the available items
         # https://github.com/benfred/implicit/issues/22
@@ -54,6 +42,33 @@ class TestRecommenderBaseMixin(object):
         # https://github.com/benfred/implicit/issues/26
         recs = model.recommend(0, user_items, N=1, filter_items=[0])
         self.assertTrue(0 not in dict(recs))
+
+    def test_recalculate_user(self):
+        item_users = self.get_checker_board(50)
+        user_items = item_users.T.tocsr()
+
+        model = self._get_model()
+        model.show_progress = False
+        model.fit(item_users)
+
+        for userid in range(item_users.shape[1]):
+            recs = model.recommend(userid, user_items, N=1)
+            self.assertEqual(len(recs), 1)
+            user_vector = user_items[userid]
+
+            # we should get the same item if we recalculate_user
+            try:
+                recs_from_liked = model.recommend(userid=0, user_items=user_vector,
+                                                  N=1, recalculate_user=True)
+                self.assertEqual(recs[0][0], recs_from_liked[0][0])
+
+                # TODO: if we set regularization for the model to be sufficiently high, the
+                # scores from recalculate_user are slightly different. Investigate
+                # (could be difference between CG and cholesky optimizers?)
+                self.assertAlmostEqual(recs[0][1], recs_from_liked[0][1], places=4)
+            except NotImplementedError:
+                # some models don't support recalculating user on the fly, and thats ok
+                pass
 
     def test_evaluation(self):
         item_users = self.get_checker_board(50)
