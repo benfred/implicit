@@ -10,8 +10,8 @@ from cuda_setup import CUDA, build_ext
 
 
 NAME = 'implicit'
-VERSION = [l.split("'")[1] for l in open("implicit/__init__.py")
-           if l.startswith("__version__ =")][0]
+VERSION = "0.3.6"
+
 try:
     from Cython.Build import cythonize
     use_cython = True
