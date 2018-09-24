@@ -96,6 +96,8 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
             for u in prange(users, schedule='guided'):
                 # if we don't have any test items, skip this user
                 if test_indptr[u] == test_indptr[u+1]:
+                    with gil:
+                        progress.update(1)
                     continue
                 memset(ids, 0, sizeof(int) * K)
 
@@ -177,6 +179,8 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
             for u in prange(users, schedule='guided'):
                 # if we don't have any test items, skip this user
                 if test_indptr[u] == test_indptr[u+1]:
+                    with gil:
+                        progress.update(1)
                     continue
                 memset(ids, 0, sizeof(int) * K)
 
