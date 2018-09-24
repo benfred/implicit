@@ -116,7 +116,7 @@ class BM25Recommender(ItemItemRecommender):
         self.K1 = K1
         self.B = B
 
-    def fit(self, counts, show_progress):
+    def fit(self, counts, show_progress=True):
         weighted = bm25_weight(counts, self.K1, self.B)
         ItemItemRecommender.fit(self, weighted, show_progress)
 
