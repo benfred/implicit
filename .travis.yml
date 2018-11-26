@@ -30,9 +30,6 @@ before_install:
   PIP=pip
   PY=python
   if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for Xcode-9.3"
-    brew update
-    brew install gcc
     PIP=pip2
     PY=python2
     if  [ "${PYTHON:0:1}" = "3" ]; then
