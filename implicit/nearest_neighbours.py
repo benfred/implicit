@@ -11,15 +11,28 @@ from .utils import nonzeros
 
 class ItemItemRecommender(RecommenderBase):
     """ Base class for Item-Item Nearest Neighbour recommender models
-    here """
-    def __init__(self, K=20):
+    here.
+
+    Parameters
+    ----------
+    K : int, optional
+        The number of neighbours to include when calculating the item-item
+        similarity matrix
+    num_threads : int, optional
+        The number of threads to use for fitting the model. Specifying 0
+        means to default to the number of cores on the machine.
+    """
+    def __init__(self, K=20, num_threads=0):
         self.similarity = None
         self.K = K
+        self.num_threads = num_threads
         self.scorer = None
 
     def fit(self, weighted, show_progress=True):
         """ Computes and stores the similarity matrix """
-        self.similarity = all_pairs_knn(weighted, self.K, show_progress=show_progress).tocsr()
+        self.similarity = all_pairs_knn(weighted, self.K,
+                                        show_progress=show_progress,
+                                        num_threads=self.num_threads).tocsr()
         self.scorer = NearestNeighboursScorer(self.similarity)
 
     def recommend(self, userid, user_items,
@@ -111,8 +124,8 @@ class TFIDFRecommender(ItemItemRecommender):
 
 class BM25Recommender(ItemItemRecommender):
     """ An Item-Item Recommender on BM25 distance between items """
-    def __init__(self, K=20, K1=1.2, B=.75):
-        super(BM25Recommender, self).__init__(K)
+    def __init__(self, K=20, K1=1.2, B=.75, num_threads=0):
+        super(BM25Recommender, self).__init__(K, num_threads)
         self.K1 = K1
         self.B = B
 
