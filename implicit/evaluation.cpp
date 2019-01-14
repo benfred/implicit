@@ -1963,7 +1963,6 @@ static const char __pyx_k_test_indptr[] = "test_indptr";
 static const char __pyx_k_train_index[] = "train_index";
 static const char __pyx_k_user_factor[] = "_user_factor";
 static const char __pyx_k_users_items[] = "users_items";
-static const char __pyx_k_allrecommend[] = "allrecommend";
 static const char __pyx_k_item_factors[] = "item_factors";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_random_index[] = "random_index";
@@ -1987,6 +1986,7 @@ static const char __pyx_k_recalculate_user[] = "recalculate_user";
 static const char __pyx_k_train_percentage[] = "train_percentage";
 static const char __pyx_k_train_test_split[] = "train_test_split";
 static const char __pyx_k_train_user_items[] = "train_user_items";
+static const char __pyx_k_ALS_recommend_all[] = "ALS_recommend_all";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
@@ -2017,6 +2017,7 @@ static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing ex
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
 static PyObject *__pyx_n_s_A;
+static PyObject *__pyx_n_s_ALS_recommend_all;
 static PyObject *__pyx_n_s_ASCII;
 static PyObject *__pyx_n_s_A_mv;
 static PyObject *__pyx_n_s_A_mv_p;
@@ -2048,7 +2049,6 @@ static PyObject *__pyx_kp_s_Unable_to_convert_item_to_object;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_View_MemoryView;
 static PyObject *__pyx_n_s_allocate_buffer;
-static PyObject *__pyx_n_s_allrecommend;
 static PyObject *__pyx_n_s_ap;
 static PyObject *__pyx_n_s_asarray;
 static PyObject *__pyx_n_s_base;
@@ -2187,7 +2187,7 @@ static PyObject *__pyx_n_s_zeros;
 static PyObject *__pyx_pf_8implicit_10evaluation_train_test_split(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_ratings, PyObject *__pyx_v_train_percentage); /* proto */
 static PyObject *__pyx_pf_8implicit_10evaluation_2precision_at_k(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_model, PyObject *__pyx_v_train_user_items, PyObject *__pyx_v_test_user_items, int __pyx_v_K, PyObject *__pyx_v_show_progress, int __pyx_v_num_threads); /* proto */
 static PyObject *__pyx_pf_8implicit_10evaluation_4mean_average_precision_at_k(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_model, PyObject *__pyx_v_train_user_items, PyObject *__pyx_v_test_user_items, int __pyx_v_K, PyObject *__pyx_v_show_progress, int __pyx_v_num_threads); /* proto */
-static PyObject *__pyx_pf_8implicit_10evaluation_6allrecommend(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_model, PyObject *__pyx_v_users_items, int __pyx_v_k, int __pyx_v_threads, PyObject *__pyx_v_show_progress, PyObject *__pyx_v_recalculate_user); /* proto */
+static PyObject *__pyx_pf_8implicit_10evaluation_6ALS_recommend_all(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_model, PyObject *__pyx_v_users_items, int __pyx_v_k, int __pyx_v_threads, PyObject *__pyx_v_show_progress, PyObject *__pyx_v_recalculate_user); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -5106,15 +5106,15 @@ static PyObject *__pyx_pf_8implicit_10evaluation_4mean_average_precision_at_k(CY
 /* "implicit/evaluation.pyx":225
  * @cython.wraparound(False)
  * @cython.nonecheck(False)
- * def allrecommend(             # <<<<<<<<<<<<<<
+ * def ALS_recommend_all(             # <<<<<<<<<<<<<<
  *         model
  *         , users_items
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_10evaluation_7allrecommend(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_10evaluation_7allrecommend = {"allrecommend", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_10evaluation_7allrecommend, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8implicit_10evaluation_7allrecommend(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8implicit_10evaluation_7ALS_recommend_all(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_10evaluation_7ALS_recommend_all = {"ALS_recommend_all", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_10evaluation_7ALS_recommend_all, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8implicit_10evaluation_7ALS_recommend_all(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_model = 0;
   PyObject *__pyx_v_users_items = 0;
   int __pyx_v_k;
@@ -5123,7 +5123,7 @@ static PyObject *__pyx_pw_8implicit_10evaluation_7allrecommend(PyObject *__pyx_s
   PyObject *__pyx_v_recalculate_user = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("allrecommend (wrapper)", 0);
+  __Pyx_RefNannySetupContext("ALS_recommend_all (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_model,&__pyx_n_s_users_items,&__pyx_n_s_k,&__pyx_n_s_threads,&__pyx_n_s_show_progress,&__pyx_n_s_recalculate_user,0};
     PyObject* values[6] = {0,0,0,0,0,0};
@@ -5173,7 +5173,7 @@ static PyObject *__pyx_pw_8implicit_10evaluation_7allrecommend(PyObject *__pyx_s
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_users_items)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("allrecommend", 0, 2, 6, 1); __PYX_ERR(0, 225, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("ALS_recommend_all", 0, 2, 6, 1); __PYX_ERR(0, 225, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -5201,7 +5201,7 @@ static PyObject *__pyx_pw_8implicit_10evaluation_7allrecommend(PyObject *__pyx_s
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "allrecommend") < 0)) __PYX_ERR(0, 225, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "ALS_recommend_all") < 0)) __PYX_ERR(0, 225, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -5236,18 +5236,18 @@ static PyObject *__pyx_pw_8implicit_10evaluation_7allrecommend(PyObject *__pyx_s
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("allrecommend", 0, 2, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 225, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("ALS_recommend_all", 0, 2, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 225, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.evaluation.allrecommend", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.evaluation.ALS_recommend_all", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_10evaluation_6allrecommend(__pyx_self, __pyx_v_model, __pyx_v_users_items, __pyx_v_k, __pyx_v_threads, __pyx_v_show_progress, __pyx_v_recalculate_user);
+  __pyx_r = __pyx_pf_8implicit_10evaluation_6ALS_recommend_all(__pyx_self, __pyx_v_model, __pyx_v_users_items, __pyx_v_k, __pyx_v_threads, __pyx_v_show_progress, __pyx_v_recalculate_user);
 
   /* "implicit/evaluation.pyx":225
  * @cython.wraparound(False)
  * @cython.nonecheck(False)
- * def allrecommend(             # <<<<<<<<<<<<<<
+ * def ALS_recommend_all(             # <<<<<<<<<<<<<<
  *         model
  *         , users_items
  */
@@ -5257,7 +5257,7 @@ static PyObject *__pyx_pw_8implicit_10evaluation_7allrecommend(PyObject *__pyx_s
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_10evaluation_6allrecommend(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_model, PyObject *__pyx_v_users_items, int __pyx_v_k, int __pyx_v_threads, PyObject *__pyx_v_show_progress, PyObject *__pyx_v_recalculate_user) {
+static PyObject *__pyx_pf_8implicit_10evaluation_6ALS_recommend_all(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_model, PyObject *__pyx_v_users_items, int __pyx_v_k, int __pyx_v_threads, PyObject *__pyx_v_show_progress, PyObject *__pyx_v_recalculate_user) {
   PyObject *__pyx_v_factors_items = NULL;
   int __pyx_v_users_c;
   int __pyx_v_items_c;
@@ -5303,7 +5303,7 @@ static PyObject *__pyx_pf_8implicit_10evaluation_6allrecommend(CYTHON_UNUSED PyO
   PyObject *__pyx_t_23 = NULL;
   int __pyx_t_24;
   PyObject *__pyx_t_25 = NULL;
-  __Pyx_RefNannySetupContext("allrecommend", 0);
+  __Pyx_RefNannySetupContext("ALS_recommend_all", 0);
   __Pyx_INCREF(__pyx_v_users_items);
 
   /* "implicit/evaluation.pyx":233
@@ -5951,7 +5951,7 @@ static PyObject *__pyx_pf_8implicit_10evaluation_6allrecommend(CYTHON_UNUSED PyO
   /* "implicit/evaluation.pyx":225
  * @cython.wraparound(False)
  * @cython.nonecheck(False)
- * def allrecommend(             # <<<<<<<<<<<<<<
+ * def ALS_recommend_all(             # <<<<<<<<<<<<<<
  *         model
  *         , users_items
  */
@@ -5968,7 +5968,7 @@ static PyObject *__pyx_pf_8implicit_10evaluation_6allrecommend(CYTHON_UNUSED PyO
   __Pyx_XDECREF(__pyx_t_22);
   __Pyx_XDECREF(__pyx_t_23);
   __Pyx_XDECREF(__pyx_t_25);
-  __Pyx_AddTraceback("implicit.evaluation.allrecommend", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.evaluation.ALS_recommend_all", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_factors_items);
@@ -19475,6 +19475,7 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_A, __pyx_k_A, sizeof(__pyx_k_A), 0, 0, 1, 1},
+  {&__pyx_n_s_ALS_recommend_all, __pyx_k_ALS_recommend_all, sizeof(__pyx_k_ALS_recommend_all), 0, 0, 1, 1},
   {&__pyx_n_s_ASCII, __pyx_k_ASCII, sizeof(__pyx_k_ASCII), 0, 0, 1, 1},
   {&__pyx_n_s_A_mv, __pyx_k_A_mv, sizeof(__pyx_k_A_mv), 0, 0, 1, 1},
   {&__pyx_n_s_A_mv_p, __pyx_k_A_mv_p, sizeof(__pyx_k_A_mv_p), 0, 0, 1, 1},
@@ -19506,7 +19507,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_View_MemoryView, __pyx_k_View_MemoryView, sizeof(__pyx_k_View_MemoryView), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
-  {&__pyx_n_s_allrecommend, __pyx_k_allrecommend, sizeof(__pyx_k_allrecommend), 0, 0, 1, 1},
   {&__pyx_n_s_ap, __pyx_k_ap, sizeof(__pyx_k_ap), 0, 0, 1, 1},
   {&__pyx_n_s_asarray, __pyx_k_asarray, sizeof(__pyx_k_asarray), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
@@ -19893,14 +19893,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "implicit/evaluation.pyx":225
  * @cython.wraparound(False)
  * @cython.nonecheck(False)
- * def allrecommend(             # <<<<<<<<<<<<<<
+ * def ALS_recommend_all(             # <<<<<<<<<<<<<<
  *         model
  *         , users_items
  */
   __pyx_tuple__25 = PyTuple_Pack(24, __pyx_n_s_model, __pyx_n_s_users_items, __pyx_n_s_k, __pyx_n_s_threads, __pyx_n_s_show_progress, __pyx_n_s_recalculate_user, __pyx_n_s_factors_items, __pyx_n_s_users_c, __pyx_n_s_items_c, __pyx_n_s_u_b, __pyx_n_s_u_low, __pyx_n_s_u_high, __pyx_n_s_u_len, __pyx_n_s_u, __pyx_n_s_batch, __pyx_n_s_A, __pyx_n_s_users_c_b, __pyx_n_s_A_mv, __pyx_n_s_A_mv_p, __pyx_n_s_B_mv, __pyx_n_s_B_mv_p, __pyx_n_s_progress, __pyx_n_s_users_factors, __pyx_n_s_u); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(6, 0, 24, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_evaluation_pyx, __pyx_n_s_allrecommend, 225, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 225, __pyx_L1_error)
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(6, 0, 24, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_evaluation_pyx, __pyx_n_s_ALS_recommend_all, 225, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 225, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -20419,13 +20419,13 @@ if (!__Pyx_RefNanny) {
   /* "implicit/evaluation.pyx":225
  * @cython.wraparound(False)
  * @cython.nonecheck(False)
- * def allrecommend(             # <<<<<<<<<<<<<<
+ * def ALS_recommend_all(             # <<<<<<<<<<<<<<
  *         model
  *         , users_items
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8implicit_10evaluation_7allrecommend, NULL, __pyx_n_s_implicit_evaluation); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8implicit_10evaluation_7ALS_recommend_all, NULL, __pyx_n_s_implicit_evaluation); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_allrecommend, __pyx_t_1) < 0) __PYX_ERR(0, 225, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ALS_recommend_all, __pyx_t_1) < 0) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "implicit/evaluation.pyx":1

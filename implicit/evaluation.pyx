@@ -15,7 +15,7 @@ from libcpp.unordered_set cimport unordered_set
 
 from math import ceil
 cdef extern from "topnc.h":
-    cdef void fargsort_c ( float A[], int n_row, int m_row, int m_cols, int ktop, int B[] ) nogil;
+    cdef void fargsort_c(float A[], int n_row, int m_row, int m_cols, int ktop, int B[]) nogil
 
 
 def train_test_split(ratings, train_percentage=0.8):
@@ -39,11 +39,11 @@ def train_test_split(ratings, train_percentage=0.8):
     test_index = random_index >= train_percentage
 
     train = csr_matrix((ratings.data[train_index],
-                       (ratings.row[train_index], ratings.col[train_index])),
+                        (ratings.row[train_index], ratings.col[train_index])),
                        shape=ratings.shape, dtype=ratings.dtype)
 
     test = csr_matrix((ratings.data[test_index],
-                      (ratings.row[test_index], ratings.col[test_index])),
+                       (ratings.row[test_index], ratings.col[test_index])),
                       shape=ratings.shape, dtype=ratings.dtype)
 
     test.data[test.data < 0] = 0
@@ -62,9 +62,11 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
     model : RecommenderBase
         The fitted recommendation model to test
     train_user_items : csr_matrix
-        Sparse matrix of user by item that contains elements that were used in training the model
+        Sparse matrix of user by item that contains elements that were used
+            in training the model
     test_user_items : csr_matrix
-        Sparse matrix of user by item that contains withheld elements to test on
+        Sparse matrix of user by item that contains withheld elements to
+        test on
     K : int
         Number of items to test on
     show_progress : bool, optional
@@ -97,7 +99,7 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
     progress = tqdm.tqdm(total=users, disable=not show_progress)
 
     with nogil, parallel(num_threads=num_threads):
-        ids = <int *> malloc(sizeof(int) * K)
+        ids = <int * > malloc(sizeof(int) * K)
         likes = new unordered_set[int]()
         try:
             for u in prange(users, schedule='guided'):
@@ -180,7 +182,7 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
     progress = tqdm.tqdm(total=users, disable=not show_progress)
 
     with nogil, parallel(num_threads=num_threads):
-        ids = <int *> malloc(sizeof(int) * K)
+        ids = <int * > malloc(sizeof(int) * K)
         likes = new unordered_set[int]()
         try:
             for u in prange(users, schedule='guided'):
@@ -222,26 +224,23 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.nonecheck(False)
-def allrecommend(
-        model
-        , users_items
-        , int k=10
-        , int threads=1
-        , show_progress=True
-        , recalculate_user=False):
+def ALS_recommend_all(
+        model, users_items, int k=10, int threads=1, show_progress=True, recalculate_user=False):
 
     if not isinstance(users_items, csr_matrix):
         users_items = users_items.tocsr()
     factors_items = model.item_factors.T
 
-    cdef int users_c = users_items.shape[0], items_c = users_items.shape[1], u_b, u_low, u_high, u_len, u, batch = threads * 10
+    cdef:
+        int users_c = users_items.shape[0], items_c = users_items.shape[1], batch = threads * 10
+        int u_b, u_low, u_high, u_len, u
     A = np.zeros((batch, items_c), dtype=np.float32)
     cdef:
         int users_c_b = ceil(users_c / batch)
-        float[:,::1] A_mv = A
-        float* A_mv_p = &A_mv[0,0]
-        int[:,::1] B_mv = np.zeros((users_c, k), dtype=np.intc)
-        int* B_mv_p = &B_mv[0,0]
+        float[:, ::1] A_mv = A
+        float * A_mv_p = &A_mv[0, 0]
+        int[:, ::1] B_mv = np.zeros((users_c, k), dtype=np.intc)
+        int * B_mv_p = &B_mv[0, 0]
 
     progress = tqdm.tqdm(total=users_c, disable=not show_progress)
     for u_b in range(users_c_b):
