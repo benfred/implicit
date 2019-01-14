@@ -222,7 +222,7 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.nonecheck(False)
-def allrecommend(
+def ALS_recommend_all(
         model
         , users_items
         , int k=10
