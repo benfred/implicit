@@ -1,3 +1,6 @@
+# distutils: language = c++
+# cython: language_level=3
+
 import tqdm
 import numpy as np
 from scipy.sparse import coo_matrix, csr_matrix
@@ -9,6 +12,10 @@ from libc.string cimport memset
 from libc.math cimport fmin
 
 from libcpp.unordered_set cimport unordered_set
+
+from math import ceil
+cdef extern from "topnc.h":
+    cdef void fargsort_c ( float A[], int n_row, int m_row, int m_cols, int ktop, int B[] ) nogil;
 
 
 def train_test_split(ratings, train_percentage=0.8):
@@ -210,3 +217,45 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
 
     progress.close()
     return mean_ap / total
+
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.nonecheck(False)
+def allrecommend(
+        model
+        , users_items
+        , int k=10
+        , int threads=1
+        , show_progress=True
+        , recalculate_user=False):
+
+    if not isinstance(users_items, csr_matrix):
+        users_items = users_items.tocsr()
+    factors_items = model.item_factors.T
+
+    cdef int users_c = users_items.shape[0], items_c = users_items.shape[1], u_b, u_low, u_high, u_len, u, batch = threads * 10
+    A = np.zeros((batch, items_c), dtype=np.float32)
+    cdef:
+        int users_c_b = ceil(users_c / batch)
+        float[:,::1] A_mv = A
+        float* A_mv_p = &A_mv[0,0]
+        int[:,::1] B_mv = np.zeros((users_c, k), dtype=np.intc)
+        int* B_mv_p = &B_mv[0,0]
+
+    progress = tqdm.tqdm(total=users_c, disable=not show_progress)
+    for u_b in range(users_c_b):
+        u_low = u_b * batch
+        u_high = min([(u_b + 1) * batch, users_c])
+        u_len = u_high - u_low
+        users_factors = np.vstack([
+            model._user_factor(u, users_items, recalculate_user)
+            for u
+            in range(u_low, u_high, 1)
+        ])
+        A[:u_len] = users_factors.dot(factors_items)
+        for u in prange(u_len, nogil=True, num_threads=threads, schedule='dynamic'):
+            fargsort_c(A_mv_p, u, batch * u_b + u, items_c, k, B_mv_p)
+        progress.update(u_len)
+    progress.close()
+    return np.asarray(B_mv)
