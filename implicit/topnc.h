@@ -1,6 +1,7 @@
-#ifndef UTILS_CPPCLASS_H
-#define UTILS_CPPCLASS_H
+/* "Copyright [2019] <Tych0n>"  [legal/copyright] */
+#ifndef IMPLICIT_TOPNC_H_
+#define IMPLICIT_TOPNC_H_
 
-extern void fargsort_c ( float A[], int n_row, int m_row, int m_cols, int ktop, int B[] );
+extern void fargsort_c(float A[], int n_row, int m_row, int m_cols, int ktop, int B[]);
 
-#endif //UTILS_CPPCLASS_H
+#endif  // IMPLICIT_TOPNC_H_
