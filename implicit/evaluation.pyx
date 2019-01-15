@@ -231,7 +231,9 @@ def ALS_recommend_all(
         users_items = users_items.tocsr()
     factors_items = model.item_factors.T
 
-    cdef int users_c = users_items.shape[0], items_c = users_items.shape[1], u_b, u_low, u_high, u_len, u, batch = threads * 10
+    cdef:
+        int users_c = users_items.shape[0], items_c = users_items.shape[1], batch = threads * 10
+        int u_b, u_low, u_high, u_len, u
     A = np.zeros((batch, items_c), dtype=np.float32)
     cdef:
         int users_c_b = ceil(users_c / batch)
