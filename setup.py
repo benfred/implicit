@@ -54,12 +54,10 @@ def define_extensions(use_cython=False):
                          extra_compile_args=compile_args, extra_link_args=link_args)
                for name in ['_als', '_nearest_neighbours', 'bpr']]
     modules.append(Extension("implicit." + 'evaluation',
-                         [
-                             os.path.join("implicit", 'evaluation' + src_ext)
-                             , os.path.join("implicit", 'topnc.cpp')
-                         ],
-                         language='c++',
-                         extra_compile_args=compile_args, extra_link_args=link_args))
+                             [os.path.join("implicit", 'evaluation' + src_ext),
+                              os.path.join("implicit", 'topnc.cpp')],
+                             language='c++',
+                             extra_compile_args=compile_args, extra_link_args=link_args))
 
     if CUDA:
         modules.append(Extension("implicit.cuda._cuda",
