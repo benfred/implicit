@@ -47,9 +47,13 @@ class Recommender:
         if optimization == 'annoy':
             from annoy_als import AnnoyALSWrapper
             self.recommender = AnnoyALSWrapper(model=self.model)
+            self.recommender.initialize()
         elif optimization == 'nmslib':
             from nmslib_als import NMSLibALSWrapper
             self.recommender = NMSLibALSWrapper(model=self.model)
+            self.recommender.initialize()
+        elif optimization is None:
+            self.recommender = self.model
         else:
             raise RecommenderException("Unsupported optimization " + optimization)
 
