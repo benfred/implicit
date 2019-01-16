@@ -1,8 +1,8 @@
-import annoy
 import itertools
 import logging
-import numpy
 
+import annoy
+import numpy
 from implicit.als import AlternatingLeastSquares
 from implicit.approximate_als import augment_inner_product_matrix
 
@@ -10,7 +10,6 @@ log = logging.getLogger("implicit")
 
 
 class AnnoyALSWrapper:
-
     """A wrapper of the :class:`~implicit.als.AlternatingLeastSquares` that uses an
     `Annoy <https://github.com/spotify/annoy>`_ index to calculate similar items and
     recommend items.
@@ -40,6 +39,7 @@ class AnnoyALSWrapper:
         Annoy index for looking up similar items in the inner product space formed by the latent
         item_factors
     """
+
     def __init__(self, model: AlternatingLeastSquares, approximate_similar_items=True, approximate_recommend=True,
                  n_trees=50, search_k=-1):
         self.model = model
@@ -97,11 +97,16 @@ class AnnoyALSWrapper:
         # transform distances back to cosine from euclidean distance
         return zip(neighbours, 1 - (numpy.array(dist) ** 2) / 2)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False,
+                  filter_already_liked_items=False):
         if not self.approximate_recommend:
             return self.model.recommend(userid, user_items, N=N,
                                         filter_items=filter_items,
-                                        recalculate_user=recalculate_user)
+                                        recalculate_user=recalculate_user,
+                                        filter_already_liked_items=filter_already_liked_items)
+
+        if filter_already_liked_items:
+            log.warning("filter_already_liked_items=True not supported by NMSLibWrapper")
 
         user = self.model._user_factor(userid, user_items, recalculate_user)
 

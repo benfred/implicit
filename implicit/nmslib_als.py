@@ -2,7 +2,6 @@ import itertools
 import logging
 
 import numpy
-
 from implicit.als import AlternatingLeastSquares
 from implicit.approximate_als import augment_inner_product_matrix
 
@@ -110,11 +109,16 @@ class NMSLibALSWrapper:
             self.model.item_factors[itemid], N)
         return zip(neighbours, 1.0 - distances)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False,
+                  filter_already_liked_items=False):
         if not self.approximate_recommend:
             return self.model.recommend(userid, user_items, N=N,
                                         filter_items=filter_items,
-                                        recalculate_user=recalculate_user)
+                                        recalculate_user=recalculate_user,
+                                        filter_already_liked_items=filter_already_liked_items)
+
+        if filter_already_liked_items:
+            log.warning("filter_already_liked_items=True not supported by NMSLibWrapper")
 
         user = self.model._user_factor(userid, user_items, recalculate_user)
 

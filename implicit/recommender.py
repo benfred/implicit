@@ -1,7 +1,7 @@
 import numpy as np
+from implicit.als import AlternatingLeastSquares
 from scipy import sparse
 
-from implicit.als import AlternatingLeastSquares
 
 def read_from_file(file_name: str):
     """
