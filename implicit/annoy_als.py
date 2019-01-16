@@ -9,7 +9,7 @@ from implicit.approximate_als import augment_inner_product_matrix
 log = logging.getLogger("implicit")
 
 
-class AnnoyAlternatingLeastSquares:
+class AnnoyALSWrapper:
 
     """A wrapper of the :class:`~implicit.als.AlternatingLeastSquares` that uses an
     `Annoy <https://github.com/spotify/annoy>`_ index to calculate similar items and

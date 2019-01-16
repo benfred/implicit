@@ -3,13 +3,12 @@ import functools
 import heapq
 import logging
 import time
-import tqdm
 
+import implicit.cuda
 import numpy as np
 import scipy
 import scipy.sparse
-
-import implicit.cuda
+import tqdm
 
 from . import _als
 from .recommender_base import MatrixFactorizationBase
@@ -19,7 +18,6 @@ log = logging.getLogger("implicit")
 
 
 class AlternatingLeastSquares(MatrixFactorizationBase):
-
     """ Alternating Least Squares
 
     A Recommendation Model based off the algorithms described in the paper 'Collaborative

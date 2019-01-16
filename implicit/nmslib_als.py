@@ -12,7 +12,7 @@ logging.getLogger('nmslib').setLevel(logging.WARNING)
 import nmslib
 
 
-class NMSLibAlternatingLeastSquares:
+class NMSLibALSWrapper:
     """A wrapper of the :class:`~implicit.als.AlternatingLeastSquares` that uses
     `NMSLib <https://github.com/searchivarius/nmslib>`_ to create approximate nearest neighbours
     indices of the latent factors.
