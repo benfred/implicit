@@ -2,7 +2,6 @@ import itertools
 import logging
 
 import numpy
-
 from implicit.als import AlternatingLeastSquares
 from implicit.approximate_als import augment_inner_product_matrix
 
@@ -12,7 +11,7 @@ logging.getLogger('nmslib').setLevel(logging.WARNING)
 import nmslib
 
 
-class NMSLibAlternatingLeastSquares:
+class NMSLibALSWrapper:
     """A wrapper of the :class:`~implicit.als.AlternatingLeastSquares` that uses
     `NMSLib <https://github.com/searchivarius/nmslib>`_ to create approximate nearest neighbours
     indices of the latent factors.
@@ -110,20 +109,22 @@ class NMSLibAlternatingLeastSquares:
             self.model.item_factors[itemid], N)
         return zip(neighbours, 1.0 - distances)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False,
+                  filter_already_liked_items=False):
         if not self.approximate_recommend:
             return self.model.recommend(userid, user_items, N=N,
                                         filter_items=filter_items,
-                                        recalculate_user=recalculate_user)
+                                        recalculate_user=recalculate_user,
+                                        filter_already_liked_items=filter_already_liked_items)
 
         user = self.model._user_factor(userid, user_items, recalculate_user)
 
         # calculate the top N items, removing the users own liked items from
         # the results
-        liked = set(user_items[userid].indices)
-        if filter_items:
-            liked.update(filter_items)
-        count = N + len(liked)
+        item_filter = set(filter_items) if filter_items else set()
+        if filter_already_liked_items:
+            item_filter.update(user_items[userid].indices)
+        count = N + len(item_filter)
 
         query = numpy.append(user, 0)
         ids, dist = self.recommend_index.knnQuery(query, count)
@@ -132,4 +133,4 @@ class NMSLibAlternatingLeastSquares:
         # and then rescale the cosine distance to go back to inner product
         scaling = self.max_norm * numpy.linalg.norm(query)
         dist = scaling * (1.0 - dist)
-        return list(itertools.islice((rec for rec in zip(ids, dist) if rec[0] not in liked), N))
+        return list(itertools.islice((rec for rec in zip(ids, dist) if rec[0] not in item_filter), N))

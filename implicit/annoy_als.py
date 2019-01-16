@@ -1,16 +1,15 @@
-import annoy
 import itertools
 import logging
-import numpy
 
+import annoy
+import numpy
 from implicit.als import AlternatingLeastSquares
 from implicit.approximate_als import augment_inner_product_matrix
 
 log = logging.getLogger("implicit")
 
 
-class AnnoyAlternatingLeastSquares:
-
+class AnnoyALSWrapper:
     """A wrapper of the :class:`~implicit.als.AlternatingLeastSquares` that uses an
     `Annoy <https://github.com/spotify/annoy>`_ index to calculate similar items and
     recommend items.
@@ -40,6 +39,7 @@ class AnnoyAlternatingLeastSquares:
         Annoy index for looking up similar items in the inner product space formed by the latent
         item_factors
     """
+
     def __init__(self, model: AlternatingLeastSquares, approximate_similar_items=True, approximate_recommend=True,
                  n_trees=50, search_k=-1):
         self.model = model
@@ -97,20 +97,22 @@ class AnnoyAlternatingLeastSquares:
         # transform distances back to cosine from euclidean distance
         return zip(neighbours, 1 - (numpy.array(dist) ** 2) / 2)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False,
+                  filter_already_liked_items=False):
         if not self.approximate_recommend:
             return self.model.recommend(userid, user_items, N=N,
                                         filter_items=filter_items,
-                                        recalculate_user=recalculate_user)
+                                        recalculate_user=recalculate_user,
+                                        filter_already_liked_items=filter_already_liked_items)
 
         user = self.model._user_factor(userid, user_items, recalculate_user)
 
         # calculate the top N items, removing the users own liked items from
         # the results
-        liked = set(user_items[userid].indices)
-        if filter_items:
-            liked.update(filter_items)
-        count = N + len(liked)
+        item_filter = set(filter_items) if filter_items else set()
+        if filter_already_liked_items:
+            item_filter.update(user_items[userid].indices)
+        count = N + len(item_filter)
 
         query = numpy.append(user, 0)
         ids, dist = self.recommend_index.get_nns_by_vector(query, count, include_distances=True,
@@ -120,4 +122,4 @@ class AnnoyAlternatingLeastSquares:
         # and then rescale the cosine distance to go back to inner product
         scaling = self.max_norm * numpy.linalg.norm(query)
         dist = scaling * (1 - (numpy.array(dist) ** 2) / 2)
-        return list(itertools.islice((rec for rec in zip(ids, dist) if rec[0] not in liked), N))
+        return list(itertools.islice((rec for rec in zip(ids, dist) if rec[0] not in item_filter), N))
