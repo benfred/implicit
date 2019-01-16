@@ -45,11 +45,11 @@ class Recommender:
 
     def optimize(self, optimization: str):
         if optimization == 'annoy':
-            from annoy_als import AnnoyALSWrapper
+            from implicit.annoy_als import AnnoyALSWrapper
             self.recommender = AnnoyALSWrapper(model=self.model)
             self.recommender.initialize()
         elif optimization == 'nmslib':
-            from nmslib_als import NMSLibALSWrapper
+            from implicit.nmslib_als import NMSLibALSWrapper
             self.recommender = NMSLibALSWrapper(model=self.model)
             self.recommender.initialize()
         elif optimization is None:
