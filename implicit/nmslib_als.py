@@ -117,17 +117,14 @@ class NMSLibALSWrapper:
                                         recalculate_user=recalculate_user,
                                         filter_already_liked_items=filter_already_liked_items)
 
-        if filter_already_liked_items:
-            log.warning("filter_already_liked_items=True not supported by NMSLibWrapper")
-
         user = self.model._user_factor(userid, user_items, recalculate_user)
 
         # calculate the top N items, removing the users own liked items from
         # the results
-        liked = set(user_items[userid].indices)
-        if filter_items:
-            liked.update(filter_items)
-        count = N + len(liked)
+        item_filter = set(filter_items) if filter_items else set()
+        if filter_already_liked_items:
+            item_filter.update(user_items[userid].indices)
+        count = N + len(item_filter)
 
         query = numpy.append(user, 0)
         ids, dist = self.recommend_index.knnQuery(query, count)
@@ -136,4 +133,4 @@ class NMSLibALSWrapper:
         # and then rescale the cosine distance to go back to inner product
         scaling = self.max_norm * numpy.linalg.norm(query)
         dist = scaling * (1.0 - dist)
-        return list(itertools.islice((rec for rec in zip(ids, dist) if rec[0] not in liked), N))
+        return list(itertools.islice((rec for rec in zip(ids, dist) if rec[0] not in item_filter), N))
