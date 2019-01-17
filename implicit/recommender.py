@@ -1,6 +1,7 @@
 import numpy as np
-from implicit.als import AlternatingLeastSquares
 from scipy import sparse
+
+from implicit.als import AlternatingLeastSquares
 
 
 def read_from_file(file_name: str):
@@ -43,14 +44,16 @@ class Recommender:
     def get_user_id(self, user_label):
         return self.user_labels[user_label]
 
-    def optimize(self, optimization: str):
+    def optimize(self, optimization: str, approximate_similar_items=True, approximate_recommend=True):
         if optimization == 'annoy':
             from implicit.annoy_als import AnnoyALSWrapper
-            self.recommender = AnnoyALSWrapper(model=self.model)
+            self.recommender = AnnoyALSWrapper(model=self.model, approximate_similar_items=approximate_similar_items,
+                                               approximate_recommend=approximate_recommend)
             self.recommender.initialize()
         elif optimization == 'nmslib':
             from implicit.nmslib_als import NMSLibALSWrapper
-            self.recommender = NMSLibALSWrapper(model=self.model)
+            self.recommender = NMSLibALSWrapper(model=self.model, approximate_similar_items=approximate_similar_items,
+                                                approximate_recommend=approximate_recommend)
             self.recommender.initialize()
         elif optimization is None:
             self.recommender = self.model
