@@ -8,7 +8,6 @@ from implicit.approximate_als import augment_inner_product_matrix
 log = logging.getLogger("implicit")
 
 logging.getLogger('nmslib').setLevel(logging.WARNING)
-import nmslib
 
 
 class NMSLibALSWrapper:
@@ -45,6 +44,7 @@ class NMSLibALSWrapper:
     def __init__(self, model: AlternatingLeastSquares,
                  approximate_similar_items=True, approximate_recommend=True,
                  method='hnsw', index_params=None, query_params=None):
+        import nmslib # delay import in case the library is not installed
         self.model = model
         if index_params is None:
             index_params = {'M': 16, 'post': 0, 'efConstruction': 400}

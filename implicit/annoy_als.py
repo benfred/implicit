@@ -1,7 +1,6 @@
 import itertools
 import logging
 
-import annoy
 import numpy
 from implicit.als import AlternatingLeastSquares
 from implicit.approximate_als import augment_inner_product_matrix
@@ -42,6 +41,7 @@ class AnnoyALSWrapper:
 
     def __init__(self, model: AlternatingLeastSquares, approximate_similar_items=True, approximate_recommend=True,
                  n_trees=50, search_k=-1):
+        import annoy # delay import in case the library is not installed
         self.model = model
 
         self.similar_items_index = None
