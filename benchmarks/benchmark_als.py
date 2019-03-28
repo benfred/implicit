@@ -7,10 +7,10 @@ import json
 import logging
 from collections import defaultdict
 
-import matplotlib.pyplot as plt
 import scipy.io
-import seaborn
 
+import matplotlib.pyplot as plt
+import seaborn
 from implicit._als import calculate_loss
 from implicit.als import AlternatingLeastSquares
 from implicit.nearest_neighbours import bm25_weight

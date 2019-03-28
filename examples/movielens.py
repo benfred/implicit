@@ -16,17 +16,15 @@ import argparse
 import codecs
 import logging
 import time
-import tqdm
 
 import numpy as np
+import tqdm
 
 from implicit.als import AlternatingLeastSquares
 from implicit.bpr import BayesianPersonalizedRanking
+from implicit.datasets.movielens import get_movielens
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
-
-from implicit.datasets.movielens import get_movielens
-
 
 log = logging.getLogger("implicit")
 
