@@ -3,11 +3,11 @@ import functools
 import heapq
 import logging
 import time
-import tqdm
 
 import numpy as np
 import scipy
 import scipy.sparse
+import tqdm
 
 import implicit.cuda
 

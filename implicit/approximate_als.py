@@ -8,9 +8,8 @@ import logging
 
 import numpy
 
-from implicit.als import AlternatingLeastSquares
 import implicit.cuda
-
+from implicit.als import AlternatingLeastSquares
 
 log = logging.getLogger("implicit")
 
