@@ -14,6 +14,7 @@ from libc.math cimport fmin
 from libcpp.unordered_set cimport unordered_set
 
 from math import ceil
+# Define wrapper for C++ sorting function
 cdef extern from "topnc.h":
     cdef void fargsort_c(float A[], int n_row, int m_row, int m_cols, int ktop, int B[]) nogil
 
@@ -226,6 +227,38 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
 @cython.nonecheck(False)
 def ALS_recommend_all(model, users_items, int k=10, int threads=1, show_progress=True,
                       recalculate_user=False, filter_already_liked_items=False):
+    """
+    Recommends items for all users
+
+    Calculates the k best recommendations for all users, and returns numpy ndarray of
+    shape (number_users, k) with scores.
+
+    Parameters
+    ----------
+    model : implicit.als.AlternatingLeastSquares
+        The fitted recommendation model
+    users_items : csr_matrix
+        A sparse matrix of shape (number_users, number_items). This lets us look
+        up the liked items and their weights for the user. This is used to filter out
+        items that have already been liked from the output, and to also potentially
+        calculate the best items for this user.
+    k : int, optional
+        The number of results to return
+    threads : int, optional
+        The number of threads to use for sorting scores in parallel by users.
+    show_progress : bool, optional
+        Whether to show a progress bar
+    recalculate_user : bool, optional
+        When true, don't rely on stored user state and instead recalculate from the
+        passed in users_items
+    filter_already_liked_items : bool, optional
+        This is used to filter out items that have already been liked from the users_items
+
+    Returns
+    -------
+    numpy ndarray
+        Array of (number_users, k) with scores
+    """
 
     if not isinstance(users_items, csr_matrix):
         users_items = users_items.tocsr()
@@ -243,18 +276,22 @@ def ALS_recommend_all(model, users_items, int k=10, int threads=1, show_progress
         int * B_mv_p = &B_mv[0, 0]
 
     progress = tqdm.tqdm(total=users_c, disable=not show_progress)
+    # Separate all users in batches
     for u_b in range(users_c_b):
         u_low = u_b * batch
         u_high = min([(u_b + 1) * batch, users_c])
         u_len = u_high - u_low
+        # Prepare array with scores for batch of users
         users_factors = np.vstack([
             model._user_factor(u, users_items, recalculate_user)
             for u
             in range(u_low, u_high, 1)
         ]).astype(np.float32)
         users_factors.dot(factors_items, out=A[:u_len])
+        # Filter out items from users_items if needed
         if filter_already_liked_items:
             A[users_items[u_low:u_high].nonzero()] = 0
+        # Sort array of scores in parallel
         for u in prange(u_len, nogil=True, num_threads=threads, schedule='dynamic'):
             fargsort_c(A_mv_p, u, batch * u_b + u, items_c, k, B_mv_p)
         progress.update(u_len)
