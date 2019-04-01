@@ -43,6 +43,9 @@ class RecommenderBase(object):
             calculate the best items for this user.
         N : int, optional
             The number of results to return
+        filter_already_liked_items: bool, optional
+            When true, don't return items present in the training set that were rated
+            by the specificed user.
         filter_items : sequence of ints, optional
             List of extra item ids to filter out from the output
         recalculate_user : bool, optional
