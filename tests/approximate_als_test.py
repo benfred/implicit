@@ -72,6 +72,7 @@ try:
 except ImportError:
     pass
 
+
 class DoNothingTest(unittest.TestCase):
     # it's because build error
     def test_nothing(self):
