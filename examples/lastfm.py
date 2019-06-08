@@ -10,17 +10,17 @@ import argparse
 import codecs
 import logging
 import time
-import tqdm
 
 import numpy as np
+import tqdm
 
 from implicit.als import AlternatingLeastSquares
 from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlternatingLeastSquares,
                                       NMSLibAlternatingLeastSquares)
 from implicit.bpr import BayesianPersonalizedRanking
+from implicit.datasets.lastfm import get_lastfm
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
-from implicit.datasets.lastfm import get_lastfm
 
 # maps command line model argument to class name
 MODELS = {"als":  AlternatingLeastSquares,

@@ -4,7 +4,7 @@ import numpy
 from numpy import bincount, log, log1p, sqrt
 from scipy.sparse import coo_matrix, csr_matrix
 
-from ._nearest_neighbours import all_pairs_knn, NearestNeighboursScorer
+from ._nearest_neighbours import NearestNeighboursScorer, all_pairs_knn
 from .recommender_base import RecommenderBase
 from .utils import nonzeros
 
