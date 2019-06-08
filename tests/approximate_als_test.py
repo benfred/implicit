@@ -74,7 +74,7 @@ except ImportError:
 
 
 class DoNothingTest(unittest.TestCase):
-    # it's because build error
+    # XXX it's because CI error. should be fixed.
     def test_nothing(self):
         pass
 
