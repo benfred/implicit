@@ -43,6 +43,9 @@ class RecommenderBase(object):
             calculate the best items for this user.
         N : int, optional
             The number of results to return
+        filter_already_liked_items: bool, optional
+            When true, don't return items present in the training set that were rated
+            by the specificed user.
         filter_items : sequence of ints, optional
             List of extra item ids to filter out from the output
         recalculate_user : bool, optional
@@ -144,14 +147,14 @@ class MatrixFactorizationBase(RecommenderBase):
                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
         user = self._user_factor(userid, user_items, recalculate_user)
 
-        # calculate the top N items, removing the users own liked items from the results
-        if filter_already_liked_items is True:
-            liked = set(user_items[userid].indices)
-        else:
-            liked = set()
-        scores = self.item_factors.dot(user)
+        liked = set()
+        if filter_already_liked_items:
+            liked.update(user_items[userid].indices)
         if filter_items:
             liked.update(filter_items)
+
+        # calculate the top N items, removing the users own liked items from the results
+        scores = self.item_factors.dot(user)
 
         count = N + len(liked)
         if count < len(scores):
