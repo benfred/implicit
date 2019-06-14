@@ -48,7 +48,7 @@ install:
 script:
   - flake8
   - flake8 --filename='*.pyx,*.px*' --ignore E901,E225,E226,E227,E999
-  - isort -c --thirdparty=seaborn,matplotlib **/*.py
+  - isort -c --thirdparty=seaborn --thirdparty=matplotlib  *.py
   - cpplint --linelength 100 **/*.h
   - $PY --version
   - $PY setup.py test
