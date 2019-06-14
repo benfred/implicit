@@ -174,13 +174,13 @@ class MatrixFactorizationBase(RecommenderBase):
         else:
             best = sorted(enumerate(scores), key=lambda x: -x[1])
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
-        
+
     @cython.boundscheck(False)
     @cython.wraparound(False)
     @cython.nonecheck(False)
-    def recommend_all(self, user_items, int N=10
-                      , recalculate_user=False, filter_already_liked_items=False, filter_items=None
-                      , int num_threads=0, show_progress=True, int batch_size=0):
+    def recommend_all(self, user_items, int N=10,
+                      recalculate_user=False, filter_already_liked_items=False, filter_items=None,
+                      int num_threads=0, show_progress=True, int batch_size=0):
         """
         Recommends items for all users
 
@@ -211,9 +211,9 @@ class MatrixFactorizationBase(RecommenderBase):
         show_progress : bool, optional
             Whether to show a progress bar
         batch_size : int, optional
-            To optimise memory usage while matrix multiplication, users are separated into groups 
+            To optimise memory usage while matrix multiplication, users are separated into groups
             and scored iteratively. By default batch_size == num_threads * 100
-            
+
         Returns
         -------
         numpy ndarray
@@ -221,7 +221,7 @@ class MatrixFactorizationBase(RecommenderBase):
         """
         if num_threads==0:
             num_threads=multiprocessing.cpu_count()
-        
+
         if not isinstance(user_items, csr_matrix):
             user_items = user_items.tocsr()
 
