@@ -190,7 +190,7 @@ class MatrixFactorizationBase(RecommenderBase):
         Parameters
         ----------
         self : implicit.als.AlternatingLeastSquares
-            The fitted recommendation self
+            The fitted recommendation model
         user_items : csr_matrix
             A sparse matrix of shape (number_users, number_items). This lets us look
             up the liked items and their weights for the user. This is used to filter out
@@ -219,6 +219,17 @@ class MatrixFactorizationBase(RecommenderBase):
         numpy ndarray
             Array of (number_users, N) with item's ids in reversed probability order
         """
+
+        # Check N possibility
+        if filter_already_liked_items:
+            max_row_n = user_items.getnnz(axis=1).max()
+            if max_row_n > user_items.shape[1] - N:
+                raise ValueError(f"filter_already_liked_items: cannot filter {max_row_n} and recommend {N} items out of {user_items.shape[1]} available.")
+        if filter_items:
+            filter_items = list(set(filter_items)) # Counter dups
+            if len(filter_items) > user_items.shape[1] - N:
+                raise ValueError(f"filter_items: cannot filter {len(filter_items)} and recommend {N} items out of {user_items.shape[1]} available.")
+
         if num_threads==0:
             num_threads=multiprocessing.cpu_count()
 
@@ -252,12 +263,15 @@ class MatrixFactorizationBase(RecommenderBase):
                 in range(u_low, u_high, 1)
             ]).astype(np.float32)
             users_factors.dot(factors_items, out=A[:u_len])
+            # Precalculate min if needed later
+            if filter_already_liked_items or filter_items:
+                A_min = np.amin(A)
             # Filter out items from user_items if needed
             if filter_already_liked_items:
-                A[user_items[u_low:u_high].nonzero()] = 0
+                A[user_items[u_low:u_high].nonzero()] = A_min - 1
             # Filter out constant items
             if filter_items:
-                A[:, filter_items] = 0
+                A[:, filter_items] = A_min - 1
             # Sort array of scores in parallel
             for u in prange(u_len, nogil=True, num_threads=num_threads, schedule='dynamic'):
                 fargsort_c(A_mv_p, u, batch * u_b + u, items_c, N, B_mv_p)
