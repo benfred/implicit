@@ -228,7 +228,7 @@ class MatrixFactorizationBase(RecommenderBase):
                 cannot filter {max_row_n} and recommend {N} items\
                 out of {user_items.shape[1]} available.")
         if filter_items:
-            filter_items = list(set(filter_items)) # Counter dups
+            filter_items = list(set(filter_items))
             if len(filter_items) > user_items.shape[1] - N:
                 raise ValueError(f"filter_items:\
                 cannot filter {len(filter_items)} and recommend {N} items\
