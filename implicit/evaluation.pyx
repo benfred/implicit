@@ -1,3 +1,6 @@
+# distutils: language = c++
+# cython: language_level=3
+
 import tqdm
 import numpy as np
 from scipy.sparse import coo_matrix, csr_matrix
@@ -32,11 +35,11 @@ def train_test_split(ratings, train_percentage=0.8):
     test_index = random_index >= train_percentage
 
     train = csr_matrix((ratings.data[train_index],
-                       (ratings.row[train_index], ratings.col[train_index])),
+                        (ratings.row[train_index], ratings.col[train_index])),
                        shape=ratings.shape, dtype=ratings.dtype)
 
     test = csr_matrix((ratings.data[test_index],
-                      (ratings.row[test_index], ratings.col[test_index])),
+                       (ratings.row[test_index], ratings.col[test_index])),
                       shape=ratings.shape, dtype=ratings.dtype)
 
     test.data[test.data < 0] = 0
@@ -55,9 +58,11 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
     model : RecommenderBase
         The fitted recommendation model to test
     train_user_items : csr_matrix
-        Sparse matrix of user by item that contains elements that were used in training the model
+        Sparse matrix of user by item that contains elements that were used
+            in training the model
     test_user_items : csr_matrix
-        Sparse matrix of user by item that contains withheld elements to test on
+        Sparse matrix of user by item that contains withheld elements to
+        test on
     K : int
         Number of items to test on
     show_progress : bool, optional
@@ -90,7 +95,7 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
     progress = tqdm.tqdm(total=users, disable=not show_progress)
 
     with nogil, parallel(num_threads=num_threads):
-        ids = <int *> malloc(sizeof(int) * K)
+        ids = <int * > malloc(sizeof(int) * K)
         likes = new unordered_set[int]()
         try:
             for u in prange(users, schedule='guided'):
@@ -173,7 +178,7 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
     progress = tqdm.tqdm(total=users, disable=not show_progress)
 
     with nogil, parallel(num_threads=num_threads):
-        ids = <int *> malloc(sizeof(int) * K)
+        ids = <int * > malloc(sizeof(int) * K)
         likes = new unordered_set[int]()
         try:
             for u in prange(users, schedule='guided'):
@@ -212,7 +217,6 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
     return mean_ap / total
 
 
-@cython.boundscheck(False)
 def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
               show_progress=True, int num_threads=1):
     """ Calculates ndcg@K for a given trained model
