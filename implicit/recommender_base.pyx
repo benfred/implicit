@@ -217,18 +217,22 @@ class MatrixFactorizationBase(RecommenderBase):
         Returns
         -------
         numpy ndarray
-            Array of (number_users, N) with item's ids in reversed probability order
+            Array of (number_users, N) with item's ids in descending probability order
         """
 
         # Check N possibility
         if filter_already_liked_items:
             max_row_n = user_items.getnnz(axis=1).max()
             if max_row_n > user_items.shape[1] - N:
-                raise ValueError(f"filter_already_liked_items: cannot filter {max_row_n} and recommend {N} items out of {user_items.shape[1]} available.")
+                raise ValueError(f"filter_already_liked_items:\
+                cannot filter {max_row_n} and recommend {N} items\
+                out of {user_items.shape[1]} available.")
         if filter_items:
             filter_items = list(set(filter_items)) # Counter dups
             if len(filter_items) > user_items.shape[1] - N:
-                raise ValueError(f"filter_items: cannot filter {len(filter_items)} and recommend {N} items out of {user_items.shape[1]} available.")
+                raise ValueError(f"filter_items:\
+                cannot filter {len(filter_items)} and recommend {N} items\
+                out of {user_items.shape[1]} available.")
 
         if num_threads==0:
             num_threads=multiprocessing.cpu_count()
