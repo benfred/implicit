@@ -5755,7 +5755,7 @@ static PyObject *__pyx_pf_8implicit_19_nearest_neighbours_all_pairs_knn(CYTHON_U
                                   goto __pyx_L30;
                                   __pyx_L30:;
                                   #ifdef _OPENMP
-                                  #pragma omp critical(__pyx_parallel_lastprivates9)
+                                  #pragma omp critical(__pyx_parallel_lastprivates0)
                                   #endif /* _OPENMP */
                                   {
                                       __pyx_parallel_temp0 = __pyx_v_i;
