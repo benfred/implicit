@@ -9,12 +9,12 @@ import time
 import matplotlib.pyplot as plt
 import numpy
 import scipy.io
-
-import implicit
 import seaborn
 from pyspark import SparkConf, SparkContext
 from pyspark.ml.recommendation import ALS
 from pyspark.sql import Row, SparkSession
+
+import implicit
 
 
 def convert_sparse_to_dataframe(spark, context, sparse_matrix):

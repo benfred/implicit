@@ -164,7 +164,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
         model = self._get_model()
         model.fit(item_users, show_progress=False)
-        
+
         recs = model.recommend_all(user_items, N=1, show_progress=False)
         for userid in range(50):
             self.assertEqual(len(recs[userid]), 1)
@@ -177,8 +177,8 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         # try asking for more items than possible
         self.assertRaises(ValueError, model.recommend_all, user_items, N=10000, show_progress=False)
         self.assertRaises(
-            ValueError, model.recommend_all, user_items, filter_items=list(range(10000))
-            , show_progress=False)
+            ValueError, model.recommend_all, user_items, filter_items=list(range(10000)),
+			show_progress=False)
 
         # filter recommended items using an additional filter list
         recs = model.recommend_all(user_items, N=1, filter_items=[0], show_progress=False)
