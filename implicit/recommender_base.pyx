@@ -179,7 +179,7 @@ class MatrixFactorizationBase(RecommenderBase):
     @cython.wraparound(False)
     @cython.nonecheck(False)
     def recommend_all(self, user_items, int N=10,
-                      recalculate_user=False, filter_already_liked_items=False, filter_items=None,
+                      recalculate_user=False, filter_already_liked_items=True, filter_items=None,
                       int num_threads=0, show_progress=True, int batch_size=0):
         """
         Recommends items for all users
@@ -248,7 +248,7 @@ class MatrixFactorizationBase(RecommenderBase):
             int u_b, u_low, u_high, u_len, u
         A = np.zeros((batch, items_c), dtype=np.float32)
         cdef:
-            int users_c_b = ceil(users_c / batch)
+            int users_c_b = ceil(users_c / float(batch))
             float[:, ::1] A_mv = A
             float * A_mv_p = &A_mv[0, 0]
             int[:, ::1] B_mv = np.zeros((users_c, N), dtype=np.intc)

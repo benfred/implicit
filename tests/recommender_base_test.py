@@ -43,31 +43,6 @@ class TestRecommenderBaseMixin(object):
         recs = model.recommend(0, user_items, N=1, filter_items=[0])
         self.assertTrue(0 not in dict(recs))
 
-    def test_recommend_all(self):
-        item_users = self.get_checker_board(50)
-        user_items = item_users.T.tocsr()
-
-        model = self._get_model()
-        model.fit(item_users, show_progress=False)
-        
-        recs = model.recommend_all(user_items, N=1)
-        for userid in range(50):
-            self.assertEqual(len(recs[userid]), 1)
-
-            # the top item recommended should be the same as the userid:
-            # its the one withheld item for the user that is liked by
-            # all the other similar users
-            self.assertEqual(recs[userid][0], userid)
-
-        # try asking for more items than possible
-        self.assertRaises(ValueError, model.recommend_all, user_items, N=10000)
-        self.assertRaises(
-            ValueError, model.recommend_all, user_items, filter_items=list(range(10000)))
-
-        # filter recommended items using an additional filter list
-        recs = model.recommend_all(user_items, N=1, filter_items=[0])
-        self.assertTrue(0 not in dict(recs.flatten()))
-
     def test_recalculate_user(self):
         item_users = self.get_checker_board(50)
         user_items = item_users.T.tocsr()
