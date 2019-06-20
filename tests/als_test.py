@@ -178,7 +178,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         self.assertRaises(ValueError, model.recommend_all, user_items, N=10000, show_progress=False)
         self.assertRaises(
             ValueError, model.recommend_all, user_items, filter_items=list(range(10000)),
-			show_progress=False)
+            show_progress=False)
 
         # filter recommended items using an additional filter list
         recs = model.recommend_all(user_items, N=1, filter_items=[0], show_progress=False)
