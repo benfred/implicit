@@ -15,7 +15,7 @@ install:
   - conda info -a
   - conda create --name implicit numpy scipy
   - activate implicit
-  - pip install -r requirements.txt
+  - pip install -r requirements.txt --ignore-installed flake8 isort cpplint nmslib
   - pip install -e .
 
 test_script:

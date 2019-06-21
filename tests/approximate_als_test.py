@@ -73,11 +73,5 @@ except ImportError:
     pass
 
 
-class DoNothingTest(unittest.TestCase):
-    # XXX it's because CI error. should be fixed.
-    def test_nothing(self):
-        pass
-
-
 if __name__ == "__main__":
     unittest.main()
