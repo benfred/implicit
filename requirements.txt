@@ -2,4 +2,4 @@ scipy>=0.16.0
 Cython>=0.24.0
 annoy>=1.15.2
 nmslib>=1.8
-faiss>=1.5.3
+faiss
