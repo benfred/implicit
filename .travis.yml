@@ -41,7 +41,7 @@ before_install:
   fi
 install:
   - travis_wait travis_retry $PIP uninstall numpy -y
-  - travis_wait travis_retry $PIP install -r requirements.txt --ignore-installed flake8 isort cpplint annoy
+  - travis_wait travis_retry $PIP install -r requirements.txt --ignore-installed flake8 isort cpplint
   #- travis_wait travis_retry $PIP install isort==4.3.20
   - travis_retry $PIP install -e .
 
