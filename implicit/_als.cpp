@@ -5134,7 +5134,7 @@ static PyObject *__pyx_pf_8implicit_4_als_12_least_squares(CYTHON_UNUSED PyObjec
                                   goto __pyx_L31;
                                   __pyx_L31:;
                                   #ifdef _OPENMP
-                                  #pragma omp critical(__pyx_parallel_lastprivates3)
+                                  #pragma omp critical(__pyx_parallel_lastprivates0)
                                   #endif /* _OPENMP */
                                   {
                                       __pyx_parallel_temp0 = __pyx_v_confidence;
@@ -6297,7 +6297,7 @@ static PyObject *__pyx_pf_8implicit_4_als_14_least_squares(CYTHON_UNUSED PyObjec
                                   goto __pyx_L31;
                                   __pyx_L31:;
                                   #ifdef _OPENMP
-                                  #pragma omp critical(__pyx_parallel_lastprivates4)
+                                  #pragma omp critical(__pyx_parallel_lastprivates1)
                                   #endif /* _OPENMP */
                                   {
                                       __pyx_parallel_temp0 = __pyx_v_confidence;
@@ -7460,7 +7460,7 @@ static PyObject *__pyx_pf_8implicit_4_als_16_least_squares(CYTHON_UNUSED PyObjec
                                   goto __pyx_L31;
                                   __pyx_L31:;
                                   #ifdef _OPENMP
-                                  #pragma omp critical(__pyx_parallel_lastprivates5)
+                                  #pragma omp critical(__pyx_parallel_lastprivates2)
                                   #endif /* _OPENMP */
                                   {
                                       __pyx_parallel_temp0 = __pyx_v_confidence;
@@ -8623,7 +8623,7 @@ static PyObject *__pyx_pf_8implicit_4_als_18_least_squares(CYTHON_UNUSED PyObjec
                                   goto __pyx_L31;
                                   __pyx_L31:;
                                   #ifdef _OPENMP
-                                  #pragma omp critical(__pyx_parallel_lastprivates6)
+                                  #pragma omp critical(__pyx_parallel_lastprivates3)
                                   #endif /* _OPENMP */
                                   {
                                       __pyx_parallel_temp0 = __pyx_v_confidence;
@@ -9786,7 +9786,7 @@ static PyObject *__pyx_pf_8implicit_4_als_20_least_squares(CYTHON_UNUSED PyObjec
                                   goto __pyx_L31;
                                   __pyx_L31:;
                                   #ifdef _OPENMP
-                                  #pragma omp critical(__pyx_parallel_lastprivates7)
+                                  #pragma omp critical(__pyx_parallel_lastprivates4)
                                   #endif /* _OPENMP */
                                   {
                                       __pyx_parallel_temp0 = __pyx_v_confidence;
@@ -10949,7 +10949,7 @@ static PyObject *__pyx_pf_8implicit_4_als_22_least_squares(CYTHON_UNUSED PyObjec
                                   goto __pyx_L31;
                                   __pyx_L31:;
                                   #ifdef _OPENMP
-                                  #pragma omp critical(__pyx_parallel_lastprivates8)
+                                  #pragma omp critical(__pyx_parallel_lastprivates5)
                                   #endif /* _OPENMP */
                                   {
                                       __pyx_parallel_temp0 = __pyx_v_confidence;
