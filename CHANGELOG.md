@@ -1,3 +1,23 @@
+## v0.3.9
+
+* Add ability to pickle nearest neighbours recommenders (#191)[https://github.com/benfred/implicit/issues/191]
+* add NDCG method to evaluation (#212)[https://github.com/benfred/implicit/pull/212]
+* Add a 'recommend_all' method for matrix factorization models (#179[https://github.com/benfred/implicit/pull/179]
+
+## v0.3.8
+
+* Ensure progress bar hits 100% during xval
+* Fix bm25recommender missing default parameter on fit
+
+## v0.3.7
+
+* Fix GPU faiss model with > 1024 results (#149)[https://github.com/benfred/implicit/issues/149]
+* Add a reddit votes dataseet
+* Add similar users calculation in MF modeles (#139)[https://github.com/benfred/implicit/pull/139]
+* Add an option to whether to include previously liked items or not (#131)[https://github.com/benfred/implicit/issues/131]
+* Add option for negative preferences to ALS modele (#119)[https://github.com/benfred/implicit/issues/119)
+* Add filtering negative feedback in test set (#124)[https://github.com/benfred/implicit/issues/124)
+
 ## v0.3.6
 
 * Adds evaluation functionality with functions for computing P@k and MAP@K and generating a train/test split

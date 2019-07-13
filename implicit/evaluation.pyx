@@ -217,6 +217,7 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
     return mean_ap / total
 
 
+@cython.boundscheck(False)
 def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
               show_progress=True, int num_threads=1):
     """ Calculates ndcg@K for a given trained model
