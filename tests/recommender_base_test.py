@@ -2,6 +2,8 @@
 
 from __future__ import print_function
 
+import pickle
+
 import numpy as np
 from scipy.sparse import csr_matrix
 
@@ -156,6 +158,14 @@ class TestRecommenderBaseMixin(object):
             with self.assertRaises(IndexError):
                 wrong_item_list = selected_items + wrong_pos_items
                 model.rank_items(userid, user_items, wrong_item_list)
+
+    def test_pickle(self):
+        item_users = self.get_checker_board(50)
+        model = self._get_model()
+        model.fit(item_users, show_progress=False)
+
+        pickled = pickle.dumps(model)
+        pickle.loads(pickled)
 
     def get_checker_board(self, X):
         """ Returns a 'checkerboard' matrix: where every even userid has liked

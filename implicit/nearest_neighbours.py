@@ -87,6 +87,19 @@ class ItemItemRecommender(RecommenderBase):
 
         return sorted(list(nonzeros(self.similarity, itemid)), key=lambda x: -x[1])[:N]
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        # scorer isn't picklable
+        del state['scorer']
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        if self.similarity is not None:
+            self.scorer = NearestNeighboursScorer(self.similarity)
+        else:
+            self.scorer = None
+
     def save(self, filename):
         m = self.similarity
         numpy.savez(filename, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape,

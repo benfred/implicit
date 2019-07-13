@@ -15,6 +15,11 @@ try:
     class AnnoyALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
             return AnnoyAlternatingLeastSquares(factors=2, regularization=0, use_gpu=False)
+
+        def test_pickle(self):
+            # pickle isn't supported on annoy indices
+            pass
+
 except ImportError:
     pass
 
@@ -25,6 +30,11 @@ try:
         def _get_model(self):
             return NMSLibAlternatingLeastSquares(factors=2, regularization=0,
                                                  index_params={'post': 2}, use_gpu=False)
+
+        def test_pickle(self):
+            # pickle isn't supported on nmslib indices
+            pass
+
 except ImportError:
     pass
 
@@ -35,6 +45,10 @@ try:
         def _get_model(self):
             return FaissAlternatingLeastSquares(nlist=1, nprobe=1, factors=2, regularization=0,
                                                 use_gpu=False)
+
+        def test_pickle(self):
+            # pickle isn't supported on faiss indices
+            pass
 
     if HAS_CUDA:
         class FaissALSGPUTest(unittest.TestCase, TestRecommenderBaseMixin):
@@ -68,6 +82,10 @@ try:
 
                 recs = model.recommend(0, plays.T.tocsr(), N=1050)
                 self.assertEqual(recs[0][0], 0)
+
+            def test_pickle(self):
+                # pickle isn't supported on faiss indices
+                pass
 
 except ImportError:
     pass
