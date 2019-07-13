@@ -29,6 +29,8 @@ def locate_cuda():
 
     If nvcc can't be found, this returns None
     """
+    if 'NO_CUDA' in os.environ:
+        return None
     nvcc_bin = 'nvcc'
     if sys.platform.startswith("win"):
         nvcc_bin = 'nvcc.exe'
