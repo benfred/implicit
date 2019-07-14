@@ -21,6 +21,7 @@ import scipy.sparse
 
 from .recommender_base import MatrixFactorizationBase
 
+from rng cimport RNGVector
 
 cdef extern from "<random>" namespace "std":
     cdef cppclass mt19937:
@@ -43,7 +44,6 @@ cdef class RNGVector(object):
 
     cdef inline long generate(self, int thread_id) nogil:
         return self.dist[thread_id](self.rng[thread_id])
-
 
 
 log = logging.getLogger("implicit")
@@ -145,7 +145,6 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         # item factors[-1] = item bias
         # This significantly simplifies both training, and serving
 
-        print("HERE")
         if self.item_factors is None:
             self.item_factors = np.random.normal(size=(items, self.factors + 2)).astype(np.float32)
             # set factors to all zeros for items without any ratings
@@ -153,20 +152,17 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
             self.item_factors[item_counts == 0] = np.zeros(self.factors + 2)
 
-        print("THERE")
         if self.user_factors is None:
             self.user_factors = np.random.normal(size=(users, self.factors + 2)).astype(np.float32)
             self.user_factors[:, -2] = 1.0
             # set factors to all zeros for users without any ratings
             self.user_factors[user_counts == 0] = np.zeros(self.factors + 2)
-        print("ACHI")
+
         # For Adagrad update
         self.user_vec_deriv_sum = np.zeros((users, self.factors + 2)).astype(np.float32)
         self.item_vec_deriv_sum = np.zeros((items, self.factors + 2)).astype(np.float32)
-        print("KOKOMADE")
-        # we accept num_threads = 0 as indicating to create as many threads as we have cores,
-        # but in that case we need the number of cores, since we need to initialize RNG state per
-        # thread. Get the appropiate value back from openmp
+
+
         cdef int num_threads = self.num_threads
         if not num_threads:
             num_threads = multiprocessing.cpu_count()

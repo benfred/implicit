@@ -6,7 +6,7 @@ import random
 import time
 import tqdm
 
-from cython.parallel import parallel, prange
+from cython.parallel import parallel, prange, threadid
 from libc.math cimport exp
 from libcpp cimport bool
 from libcpp.vector cimport vector
@@ -18,7 +18,6 @@ import scipy.sparse
 import implicit.cuda
 
 from .recommender_base import MatrixFactorizationBase
-
 
 cdef extern from "<random>" namespace "std":
     cdef cppclass mt19937:
@@ -248,7 +247,7 @@ def bpr_update(RNGVector rng,
 
     with nogil, parallel(num_threads=num_threads):
 
-        thread_id = get_thread_num()
+        thread_id = threadid()
         for i in prange(samples, schedule='guided'):
             liked_index = rng.generate(thread_id)
             liked_id = itemids[liked_index]
