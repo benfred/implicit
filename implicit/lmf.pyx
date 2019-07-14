@@ -204,43 +204,46 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
     with nogil, parallel(num_threads=num_threads):
         deriv = <floating*> malloc(sizeof(floating) * n_factors)
         thread_id = threadid()
-        for u in prange(n_users, schedule='guided'):
-            if indptr[u] == indptr[u + 1]:
-                continue
-            user_seen_item = indptr[u + 1] - indptr[u]
+        try:
+            for u in prange(n_users, schedule='guided'):
+                if indptr[u] == indptr[u + 1]:
+                    continue
+                user_seen_item = indptr[u + 1] - indptr[u]
 
-            memset(deriv, 0, sizeof(floating) * n_factors)
+                memset(deriv, 0, sizeof(floating) * n_factors)
 
-            # Positive item indices: c_ui* y_i
-            for index in range(indptr[u], indptr[u + 1]):
-                i = indices[index]
-                for _ in range(n_factors):
-                    deriv[_] += data[index] * item_vectors[i, _]
+                # Positive item indices: c_ui* y_i
+                for index in range(indptr[u], indptr[u + 1]):
+                    i = indices[index]
+                    for _ in range(n_factors):
+                        deriv[_] += data[index] * item_vectors[i, _]
 
-            # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
-            for index in range(indptr[u], indptr[u + 1]):
-                exp_r = 0
-                i = indices[index]
-                for _ in range(n_factors):
-                    exp_r += user_vectors[u, _] * item_vectors[i, _]
-                exp_r = exp(exp_r)
-                z = (data[index] * exp_r) / (1 + exp_r)
-                for _ in range(n_factors):
-                    deriv[_] -= z * item_vectors[i, _]
+                # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+                for index in range(indptr[u], indptr[u + 1]):
+                    exp_r = 0
+                    i = indices[index]
+                    for _ in range(n_factors):
+                        exp_r += user_vectors[u, _] * item_vectors[i, _]
+                    exp_r = exp(exp_r)
+                    z = (data[index] * exp_r) / (1 + exp_r)
+                    for _ in range(n_factors):
+                        deriv[_] -= z * item_vectors[i, _]
 
-            # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
-            for _ in range(min(n_items, user_seen_item * neg_prop)):
-                index = rng.generate(thread_id)
-                i = indices[index]
-                exp_r = 0
-                for _ in range(n_factors):
-                    exp_r += user_vectors[u, _] * item_vectors[i, _]
-                exp_r = exp(exp_r)
-                z = exp_r / (1 + exp_r)
-                for _ in range(n_factors):
-                    deriv[_] -= z * item_vectors[i, _]
+                # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+                for _ in range(min(n_items, user_seen_item * neg_prop)):
+                    index = rng.generate(thread_id)
+                    i = indices[index]
+                    exp_r = 0
+                    for _ in range(n_factors):
+                        exp_r += user_vectors[u, _] * item_vectors[i, _]
+                    exp_r = exp(exp_r)
+                    z = exp_r / (1 + exp_r)
+                    for _ in range(n_factors):
+                        deriv[_] -= z * item_vectors[i, _]
 
-            for _ in range(n_factors):
-                deriv[_] -= reg * user_vectors[u, _]
-                deriv_sum_sq[u, _] += deriv[_] * deriv[_]
-                user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+                for _ in range(n_factors):
+                    deriv[_] -= reg * user_vectors[u, _]
+                    deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+                    user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+        finally:
+            free(deriv)
