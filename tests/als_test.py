@@ -56,7 +56,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
         for options in configs:
             model = AlternatingLeastSquares(factors=32, regularization=10, iterations=10,
-                                            dtype=np.float32,  **options)
+                                            dtype=np.float32, **options)
             model.fit(Ciu, show_progress=False)
 
             self.assertTrue(np.isfinite(model.item_factors).all())
