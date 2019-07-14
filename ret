@@ -1,0 +1,118 @@
+Failed to find CUDA toolkit. Building without GPU acceleration.
+Compiling implicit/lmf.pyx because it changed.
+[1/1] Cythonizing implicit/lmf.pyx
+running install
+running bdist_egg
+running egg_info
+writing implicit.egg-info/PKG-INFO
+writing dependency_links to implicit.egg-info/dependency_links.txt
+writing requirements to implicit.egg-info/requires.txt
+writing top-level names to implicit.egg-info/top_level.txt
+reading manifest file 'implicit.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'implicit.egg-info/SOURCES.txt'
+installing library code to build/bdist.linux-x86_64/egg
+running install_lib
+running build_py
+running build_ext
+building 'implicit.lmf' extension
+gcc -pthread -B /home/ita/anaconda3/compiler_compat -Wl,--sysroot=/ -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -I/home/ita/anaconda3/include/python3.6m -c implicit/lmf.cpp -o build/temp.linux-x86_64-3.6/implicit/lmf.o -Wno-unused-function -Wno-maybe-uninitialized -O3 -ffast-math -fopenmp -std=c++11
+g++ -pthread -shared -B /home/ita/anaconda3/compiler_compat -L/home/ita/anaconda3/lib -Wl,-rpath=/home/ita/anaconda3/lib -Wl,--no-as-needed -Wl,--sysroot=/ build/temp.linux-x86_64-3.6/implicit/lmf.o -o build/lib.linux-x86_64-3.6/implicit/lmf.cpython-36m-x86_64-linux-gnu.so -fopenmp -std=c++11
+creating build/bdist.linux-x86_64/egg
+creating build/bdist.linux-x86_64/egg/tests
+copying build/lib.linux-x86_64-3.6/tests/__init__.py -> build/bdist.linux-x86_64/egg/tests
+copying build/lib.linux-x86_64-3.6/tests/knn_test.py -> build/bdist.linux-x86_64/egg/tests
+copying build/lib.linux-x86_64-3.6/tests/bpr_test.py -> build/bdist.linux-x86_64/egg/tests
+copying build/lib.linux-x86_64-3.6/tests/approximate_als_test.py -> build/bdist.linux-x86_64/egg/tests
+copying build/lib.linux-x86_64-3.6/tests/recommender_base_test.py -> build/bdist.linux-x86_64/egg/tests
+copying build/lib.linux-x86_64-3.6/tests/als_test.py -> build/bdist.linux-x86_64/egg/tests
+creating build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/approximate_als.py -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/als.py -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/nearest_neighbours.py -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/__init__.py -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/lmf.cpython-36m-x86_64-linux-gnu.so -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/utils.py -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/_als.cpython-36m-x86_64-linux-gnu.so -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/evaluation.cpython-36m-x86_64-linux-gnu.so -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/recommender_base.cpython-36m-x86_64-linux-gnu.so -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/_nearest_neighbours.cpython-36m-x86_64-linux-gnu.so -> build/bdist.linux-x86_64/egg/implicit
+copying build/lib.linux-x86_64-3.6/implicit/bpr.cpython-36m-x86_64-linux-gnu.so -> build/bdist.linux-x86_64/egg/implicit
+creating build/bdist.linux-x86_64/egg/implicit/cuda
+copying build/lib.linux-x86_64-3.6/implicit/cuda/__init__.py -> build/bdist.linux-x86_64/egg/implicit/cuda
+creating build/bdist.linux-x86_64/egg/implicit/datasets
+copying build/lib.linux-x86_64-3.6/implicit/datasets/__init__.py -> build/bdist.linux-x86_64/egg/implicit/datasets
+copying build/lib.linux-x86_64-3.6/implicit/datasets/sketchfab.py -> build/bdist.linux-x86_64/egg/implicit/datasets
+copying build/lib.linux-x86_64-3.6/implicit/datasets/_download.py -> build/bdist.linux-x86_64/egg/implicit/datasets
+copying build/lib.linux-x86_64-3.6/implicit/datasets/million_song_dataset.py -> build/bdist.linux-x86_64/egg/implicit/datasets
+copying build/lib.linux-x86_64-3.6/implicit/datasets/movielens.py -> build/bdist.linux-x86_64/egg/implicit/datasets
+copying build/lib.linux-x86_64-3.6/implicit/datasets/reddit.py -> build/bdist.linux-x86_64/egg/implicit/datasets
+copying build/lib.linux-x86_64-3.6/implicit/datasets/lastfm.py -> build/bdist.linux-x86_64/egg/implicit/datasets
+byte-compiling build/bdist.linux-x86_64/egg/tests/__init__.py to __init__.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/tests/knn_test.py to knn_test.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/tests/bpr_test.py to bpr_test.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/tests/approximate_als_test.py to approximate_als_test.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/tests/recommender_base_test.py to recommender_base_test.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/tests/als_test.py to als_test.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/approximate_als.py to approximate_als.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/als.py to als.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/nearest_neighbours.py to nearest_neighbours.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/__init__.py to __init__.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/utils.py to utils.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/cuda/__init__.py to __init__.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/datasets/__init__.py to __init__.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/datasets/sketchfab.py to sketchfab.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/datasets/_download.py to _download.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/datasets/million_song_dataset.py to million_song_dataset.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/datasets/movielens.py to movielens.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/datasets/reddit.py to reddit.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/datasets/lastfm.py to lastfm.cpython-36.pyc
+creating stub loader for implicit/_als.cpython-36m-x86_64-linux-gnu.so
+creating stub loader for implicit/_nearest_neighbours.cpython-36m-x86_64-linux-gnu.so
+creating stub loader for implicit/bpr.cpython-36m-x86_64-linux-gnu.so
+creating stub loader for implicit/evaluation.cpython-36m-x86_64-linux-gnu.so
+creating stub loader for implicit/lmf.cpython-36m-x86_64-linux-gnu.so
+creating stub loader for implicit/recommender_base.cpython-36m-x86_64-linux-gnu.so
+byte-compiling build/bdist.linux-x86_64/egg/implicit/_als.py to _als.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/_nearest_neighbours.py to _nearest_neighbours.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/bpr.py to bpr.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/evaluation.py to evaluation.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/lmf.py to lmf.cpython-36.pyc
+byte-compiling build/bdist.linux-x86_64/egg/implicit/recommender_base.py to recommender_base.cpython-36.pyc
+creating build/bdist.linux-x86_64/egg/EGG-INFO
+copying implicit.egg-info/PKG-INFO -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying implicit.egg-info/SOURCES.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying implicit.egg-info/dependency_links.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying implicit.egg-info/requires.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying implicit.egg-info/top_level.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+writing build/bdist.linux-x86_64/egg/EGG-INFO/native_libs.txt
+creating 'dist/implicit-0.3.8-py3.6-linux-x86_64.egg' and adding 'build/bdist.linux-x86_64/egg' to it
+removing 'build/bdist.linux-x86_64/egg' (and everything under it)
+Processing implicit-0.3.8-py3.6-linux-x86_64.egg
+removing '/home/ita/anaconda3/lib/python3.6/site-packages/implicit-0.3.8-py3.6-linux-x86_64.egg' (and everything under it)
+creating /home/ita/anaconda3/lib/python3.6/site-packages/implicit-0.3.8-py3.6-linux-x86_64.egg
+Extracting implicit-0.3.8-py3.6-linux-x86_64.egg to /home/ita/anaconda3/lib/python3.6/site-packages
+implicit 0.3.8 is already the active version in easy-install.pth
+
+Installed /home/ita/anaconda3/lib/python3.6/site-packages/implicit-0.3.8-py3.6-linux-x86_64.egg
+Processing dependencies for implicit==0.3.8
+Searching for tqdm==4.31.1
+Best match: tqdm 4.31.1
+Adding tqdm 4.31.1 to easy-install.pth file
+Installing tqdm script to /home/ita/anaconda3/bin
+
+Using /home/ita/anaconda3/lib/python3.6/site-packages
+Searching for scipy==1.2.1
+Best match: scipy 1.2.1
+Adding scipy 1.2.1 to easy-install.pth file
+
+Using /home/ita/anaconda3/lib/python3.6/site-packages
+Searching for numpy==1.16.4
+Best match: numpy 1.16.4
+Adding numpy 1.16.4 to easy-install.pth file
+Installing f2py script to /home/ita/anaconda3/bin
+Installing f2py3 script to /home/ita/anaconda3/bin
+Installing f2py3.6 script to /home/ita/anaconda3/bin
+
+Using /home/ita/anaconda3/lib/python3.6/site-packages
+Finished processing dependencies for implicit==0.3.8
