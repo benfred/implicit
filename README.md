@@ -14,6 +14,8 @@ Feedback Collaborative Filtering](https://pdfs.semanticscholar.org/bfdf/7af6cf7f
 
  * [Bayesian Personalized Ranking](https://arxiv.org/pdf/1205.2618.pdf).
 
+ * [Logistic Matrix Factorization](https://web.stanford.edu/~rezab/nips2014workshop/submits/logmat.pdf)
+
  * Item-Item Nearest Neighbour models using Cosine, TFIDF or BM25 as a distance metric.
 
 All models have multi-threaded training routines, using Cython and OpenMP to fit the models in
