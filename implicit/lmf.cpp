@@ -6128,7 +6128,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
+ *         try:
  */
                 __pyx_v_deriv = ((float *)malloc(((sizeof(float)) * __pyx_v_n_factors)));
 
@@ -6136,8 +6136,8 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -6149,439 +6149,465 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
                 /* "implicit/lmf.pyx":207
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
+ *         try:             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
  */
-                __pyx_t_2 = __pyx_v_n_users;
-                if (1 == 0) abort();
-                {
-                    __pyx_t_4 = (__pyx_t_2 - 0 + 1 - 1/abs(1)) / 1;
-                    if (__pyx_t_4 > 0)
-                    {
-                        #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
-                        #endif /* _OPENMP */
-                        for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
-                            {
-                                __pyx_v_u = (short)(0 + 1 * __pyx_t_3);
-                                /* Initialize private variables to invalid values */
-                                __pyx_v__ = ((short)0xbad0bad0);
-                                __pyx_v_exp_r = ((float)__PYX_NAN());
-                                __pyx_v_i = ((short)0xbad0bad0);
-                                __pyx_v_index = ((short)0xbad0bad0);
-                                __pyx_v_user_seen_item = ((int)0xbad0bad0);
-                                __pyx_v_z = ((float)__PYX_NAN());
+                /*try:*/ {
 
-                                /* "implicit/lmf.pyx":208
+                  /* "implicit/lmf.pyx":208
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
  */
-                                __pyx_t_5 = __pyx_v_u;
-                                if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
-                                __pyx_t_6 = (__pyx_v_u + 1);
-                                if (__pyx_t_6 < 0) __pyx_t_6 += __pyx_v_indptr.shape[0];
-                                __pyx_t_7 = (((*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) ))) == (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_6 * __pyx_v_indptr.strides[0]) )))) != 0);
-                                if (__pyx_t_7) {
+                  __pyx_t_2 = __pyx_v_n_users;
+                  if (1 == 0) abort();
+                  {
+                      __pyx_t_4 = (__pyx_t_2 - 0 + 1 - 1/abs(1)) / 1;
+                      if (__pyx_t_4 > 0)
+                      {
+                          #ifdef _OPENMP
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #endif /* _OPENMP */
+                          for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
+                              {
+                                  __pyx_v_u = (short)(0 + 1 * __pyx_t_3);
+                                  /* Initialize private variables to invalid values */
+                                  __pyx_v__ = ((short)0xbad0bad0);
+                                  __pyx_v_exp_r = ((float)__PYX_NAN());
+                                  __pyx_v_i = ((short)0xbad0bad0);
+                                  __pyx_v_index = ((short)0xbad0bad0);
+                                  __pyx_v_user_seen_item = ((int)0xbad0bad0);
+                                  __pyx_v_z = ((float)__PYX_NAN());
 
                                   /* "implicit/lmf.pyx":209
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
- *                 continue             # <<<<<<<<<<<<<<
- *             user_seen_item = indptr[u + 1] - indptr[u]
- * 
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                  goto __pyx_L10_continue;
+                                  __pyx_t_5 = __pyx_v_u;
+                                  if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_6 = (__pyx_v_u + 1);
+                                  if (__pyx_t_6 < 0) __pyx_t_6 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_7 = (((*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) ))) == (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_6 * __pyx_v_indptr.strides[0]) )))) != 0);
+                                  if (__pyx_t_7) {
 
-                                  /* "implicit/lmf.pyx":208
- *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                    /* "implicit/lmf.pyx":210
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue             # <<<<<<<<<<<<<<
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
+ * 
  */
-                                }
+                                    goto __pyx_L15_continue;
 
-                                /* "implicit/lmf.pyx":210
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
- * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)
+                                    /* "implicit/lmf.pyx":209
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                __pyx_t_8 = (__pyx_v_u + 1);
-                                if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
-                                __pyx_t_9 = __pyx_v_u;
-                                if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
-                                __pyx_v_user_seen_item = ((*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))) - (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) ))));
+                                  }
 
-                                /* "implicit/lmf.pyx":212
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                  /* "implicit/lmf.pyx":211
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
  * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
- * 
- *             # Positive item indices: c_ui* y_i
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)
  */
-                                (void)(memset(__pyx_v_deriv, 0, ((sizeof(float)) * __pyx_v_n_factors)));
+                                  __pyx_t_8 = (__pyx_v_u + 1);
+                                  if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_9 = __pyx_v_u;
+                                  if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
+                                  __pyx_v_user_seen_item = ((*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))) - (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) ))));
 
-                                /* "implicit/lmf.pyx":215
+                                  /* "implicit/lmf.pyx":213
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  * 
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
+ * 
+ *                 # Positive item indices: c_ui* y_i
  */
-                                __pyx_t_10 = (__pyx_v_u + 1);
-                                if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_indptr.shape[0];
-                                __pyx_t_11 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_10 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_12 = __pyx_v_u;
-                                if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_indptr.shape[0];
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_12 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v_index = __pyx_t_14;
+                                  (void)(memset(__pyx_v_deriv, 0, ((sizeof(float)) * __pyx_v_n_factors)));
 
                                   /* "implicit/lmf.pyx":216
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]
- */
-                                  __pyx_t_15 = __pyx_v_index;
-                                  if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_15 * __pyx_v_indices.strides[0]) )));
-
-                                  /* "implicit/lmf.pyx":217
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] += data[index] * item_vectors[i, _]
  * 
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                  __pyx_t_10 = (__pyx_v_u + 1);
+                                  if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_11 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_10 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_12 = __pyx_v_u;
+                                  if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_12 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v_index = __pyx_t_14;
+
+                                    /* "implicit/lmf.pyx":217
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]
+ */
+                                    __pyx_t_15 = __pyx_v_index;
+                                    if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_15 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":218
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] += data[index] * item_vectors[i, _]
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_20 = __pyx_v_index;
-                                    if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_data.shape[0];
-                                    __pyx_t_21 = __pyx_v_i;
-                                    __pyx_t_22 = __pyx_v__;
-                                    if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) + ((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_20 * __pyx_v_data.strides[0]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_21 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_22 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":221
+                                      /* "implicit/lmf.pyx":219
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 i = indices[index]
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_23 = (__pyx_v_u + 1);
-                                if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
-                                __pyx_t_11 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_24 = __pyx_v_u;
-                                if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indptr.shape[0];
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_24 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v_index = __pyx_t_14;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_20 = __pyx_v_index;
+                                      if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_data.shape[0];
+                                      __pyx_t_21 = __pyx_v_i;
+                                      __pyx_t_22 = __pyx_v__;
+                                      if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) + ((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_20 * __pyx_v_data.strides[0]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_21 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_22 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":222
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ * 
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     i = indices[index]
  */
-                                  __pyx_v_exp_r = 0.0;
+                                  __pyx_t_23 = (__pyx_v_u + 1);
+                                  if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_11 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_24 = __pyx_v_u;
+                                  if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_24 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v_index = __pyx_t_14;
 
-                                  /* "implicit/lmf.pyx":223
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":223
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_25 = __pyx_v_index;
-                                  if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_25 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_exp_r = 0.0;
 
-                                  /* "implicit/lmf.pyx":224
- *                 exp_r = 0
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":224
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_t_25 = __pyx_v_index;
+                                    if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_25 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":225
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
+ *                     exp_r = 0
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_26 = __pyx_v_u;
-                                    __pyx_t_27 = __pyx_v__;
-                                    if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_28 = __pyx_v_i;
-                                    __pyx_t_29 = __pyx_v__;
-                                    if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_26 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_27 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_28 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_29 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                  /* "implicit/lmf.pyx":226
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":226
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_26 = __pyx_v_u;
+                                      __pyx_t_27 = __pyx_v__;
+                                      if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_28 = __pyx_v_i;
+                                      __pyx_t_29 = __pyx_v__;
+                                      if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_26 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_27 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_28 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_29 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":227
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":227
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_30 = __pyx_v_index;
-                                  if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_data.shape[0];
-                                  __pyx_v_z = (((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_30 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":228
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":228
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_t_30 = __pyx_v_index;
+                                    if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_data.shape[0];
+                                    __pyx_v_z = (((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_30 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":229
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_31 = __pyx_v_i;
-                                    __pyx_t_32 = __pyx_v__;
-                                    if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_31 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_32 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":232
+                                      /* "implicit/lmf.pyx":230
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_1 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
-                                __pyx_t_11 = __pyx_v_n_items;
-                                if (((__pyx_t_1 < __pyx_t_11) != 0)) {
-                                  __pyx_t_33 = __pyx_t_1;
-                                } else {
-                                  __pyx_t_33 = __pyx_t_11;
-                                }
-                                __pyx_t_1 = __pyx_t_33;
-                                __pyx_t_33 = __pyx_t_1;
-                                for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_33; __pyx_t_11+=1) {
-                                  __pyx_v__ = __pyx_t_11;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_31 = __pyx_v_i;
+                                      __pyx_t_32 = __pyx_v__;
+                                      if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_31 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_32 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":233
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 exp_r = 0
+ * 
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
  */
-                                  __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
+                                  __pyx_t_1 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
+                                  __pyx_t_11 = __pyx_v_n_items;
+                                  if (((__pyx_t_1 < __pyx_t_11) != 0)) {
+                                    __pyx_t_33 = __pyx_t_1;
+                                  } else {
+                                    __pyx_t_33 = __pyx_t_11;
+                                  }
+                                  __pyx_t_1 = __pyx_t_33;
+                                  __pyx_t_33 = __pyx_t_1;
+                                  for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_33; __pyx_t_11+=1) {
+                                    __pyx_v__ = __pyx_t_11;
 
-                                  /* "implicit/lmf.pyx":234
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 for _ in range(n_factors):
+                                    /* "implicit/lmf.pyx":234
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     exp_r = 0
  */
-                                  __pyx_t_34 = __pyx_v_index;
-                                  if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_34 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
-                                  /* "implicit/lmf.pyx":235
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":235
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_exp_r = 0.0;
+                                    __pyx_t_34 = __pyx_v_index;
+                                    if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_34 * __pyx_v_indices.strides[0]) )));
 
-                                  /* "implicit/lmf.pyx":236
- *                 i = indices[index]
- *                 exp_r = 0
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":236
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_13 = __pyx_v_n_factors;
-                                  __pyx_t_14 = __pyx_t_13;
-                                  for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_14; __pyx_t_16+=1) {
-                                    __pyx_v__ = __pyx_t_16;
+                                    __pyx_v_exp_r = 0.0;
 
                                     /* "implicit/lmf.pyx":237
- *                 exp_r = 0
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
+ *                     i = indices[index]
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_35 = __pyx_v_u;
-                                    __pyx_t_36 = __pyx_v__;
-                                    if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_37 = __pyx_v_i;
-                                    __pyx_t_38 = __pyx_v__;
-                                    if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_35 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_36 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_37 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_38 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_13 = __pyx_v_n_factors;
+                                    __pyx_t_14 = __pyx_t_13;
+                                    for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_14; __pyx_t_16+=1) {
+                                      __pyx_v__ = __pyx_t_16;
 
-                                  /* "implicit/lmf.pyx":238
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":238
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_35 = __pyx_v_u;
+                                      __pyx_t_36 = __pyx_v__;
+                                      if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_37 = __pyx_v_i;
+                                      __pyx_t_38 = __pyx_v__;
+                                      if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_35 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_36 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_37 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_38 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":239
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":239
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":240
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":240
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_13 = __pyx_v_n_factors;
-                                  __pyx_t_14 = __pyx_t_13;
-                                  for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_14; __pyx_t_16+=1) {
-                                    __pyx_v__ = __pyx_t_16;
+                                    __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":241
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
  */
-                                    __pyx_t_17 = __pyx_v__;
-                                    __pyx_t_39 = __pyx_v_i;
-                                    __pyx_t_40 = __pyx_v__;
-                                    if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_17]) = ((__pyx_v_deriv[__pyx_t_17]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_39 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_40 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_13 = __pyx_v_n_factors;
+                                    __pyx_t_14 = __pyx_t_13;
+                                    for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_14; __pyx_t_16+=1) {
+                                      __pyx_v__ = __pyx_t_16;
 
-                                /* "implicit/lmf.pyx":243
- *                     deriv[_] -= z * item_vectors[i, _]
+                                      /* "implicit/lmf.pyx":242
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                 for _ in range(n_factors):
  */
-                                __pyx_t_11 = __pyx_v_n_factors;
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v__ = __pyx_t_14;
+                                      __pyx_t_17 = __pyx_v__;
+                                      __pyx_t_39 = __pyx_v_i;
+                                      __pyx_t_40 = __pyx_v__;
+                                      if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_17]) = ((__pyx_v_deriv[__pyx_t_17]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_39 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_40 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":244
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
  */
-                                  __pyx_t_16 = __pyx_v__;
-                                  __pyx_t_41 = __pyx_v_u;
-                                  __pyx_t_42 = __pyx_v__;
-                                  if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_user_vectors.shape[1];
-                                  (__pyx_v_deriv[__pyx_t_16]) = ((__pyx_v_deriv[__pyx_t_16]) - (__pyx_v_reg * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_41 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_42 * __pyx_v_user_vectors.strides[1]) )))));
+                                  __pyx_t_11 = __pyx_v_n_factors;
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v__ = __pyx_t_14;
 
-                                  /* "implicit/lmf.pyx":245
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+                                    /* "implicit/lmf.pyx":245
+ * 
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
  */
-                                  __pyx_t_43 = __pyx_v_u;
-                                  __pyx_t_44 = __pyx_v__;
-                                  if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[1];
-                                  *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+                                    __pyx_t_16 = __pyx_v__;
+                                    __pyx_t_41 = __pyx_v_u;
+                                    __pyx_t_42 = __pyx_v__;
+                                    if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_user_vectors.shape[1];
+                                    (__pyx_v_deriv[__pyx_t_16]) = ((__pyx_v_deriv[__pyx_t_16]) - (__pyx_v_reg * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_41 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_42 * __pyx_v_user_vectors.strides[1]) )))));
 
-                                  /* "implicit/lmf.pyx":246
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+                                    /* "implicit/lmf.pyx":246
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
  */
-                                  __pyx_t_45 = __pyx_v_u;
-                                  __pyx_t_46 = __pyx_v__;
-                                  if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_deriv_sum_sq.shape[1];
-                                  __pyx_t_47 = __pyx_v_u;
-                                  __pyx_t_48 = __pyx_v__;
-                                  if (__pyx_t_47 < 0) __pyx_t_47 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_48 < 0) __pyx_t_48 += __pyx_v_user_vectors.shape[1];
-                                  *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_47 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_48 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_45 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_46 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
-                                }
-                                goto __pyx_L34;
-                                __pyx_L10_continue:;
-                                goto __pyx_L34;
-                                __pyx_L34:;
-                            }
-                        }
-                    }
+                                    __pyx_t_43 = __pyx_v_u;
+                                    __pyx_t_44 = __pyx_v__;
+                                    if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[1];
+                                    *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+
+                                    /* "implicit/lmf.pyx":247
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+ *         finally:
+ *             free(deriv)
+ */
+                                    __pyx_t_45 = __pyx_v_u;
+                                    __pyx_t_46 = __pyx_v__;
+                                    if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_deriv_sum_sq.shape[1];
+                                    __pyx_t_47 = __pyx_v_u;
+                                    __pyx_t_48 = __pyx_v__;
+                                    if (__pyx_t_47 < 0) __pyx_t_47 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_48 < 0) __pyx_t_48 += __pyx_v_user_vectors.shape[1];
+                                    *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_47 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_48 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_45 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_46 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
+                                  }
+                                  goto __pyx_L39;
+                                  __pyx_L15_continue:;
+                                  goto __pyx_L39;
+                                  __pyx_L39:;
+                              }
+                          }
+                      }
+                  }
+                }
+
+                /* "implicit/lmf.pyx":249
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
+ *             free(deriv)             # <<<<<<<<<<<<<<
+ */
+                /*finally:*/ {
+                  /*normal exit:*/{
+                    free(__pyx_v_deriv);
+                    goto __pyx_L14;
+                  }
+                  __pyx_L14:;
                 }
             }
         }
@@ -6923,7 +6949,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
+ *         try:
  */
                 __pyx_v_deriv = ((float *)malloc(((sizeof(float)) * __pyx_v_n_factors)));
 
@@ -6931,8 +6957,8 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -6944,439 +6970,465 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
                 /* "implicit/lmf.pyx":207
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
+ *         try:             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
  */
-                __pyx_t_1 = __pyx_v_n_users;
-                if (1 == 0) abort();
-                {
-                    __pyx_t_3 = (__pyx_t_1 - 0 + 1 - 1/abs(1)) / 1;
-                    if (__pyx_t_3 > 0)
-                    {
-                        #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
-                        #endif /* _OPENMP */
-                        for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_3; __pyx_t_2++){
-                            {
-                                __pyx_v_u = (int)(0 + 1 * __pyx_t_2);
-                                /* Initialize private variables to invalid values */
-                                __pyx_v__ = ((int)0xbad0bad0);
-                                __pyx_v_exp_r = ((float)__PYX_NAN());
-                                __pyx_v_i = ((int)0xbad0bad0);
-                                __pyx_v_index = ((int)0xbad0bad0);
-                                __pyx_v_user_seen_item = ((int)0xbad0bad0);
-                                __pyx_v_z = ((float)__PYX_NAN());
+                /*try:*/ {
 
-                                /* "implicit/lmf.pyx":208
+                  /* "implicit/lmf.pyx":208
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
  */
-                                __pyx_t_4 = __pyx_v_u;
-                                if (__pyx_t_4 < 0) __pyx_t_4 += __pyx_v_indptr.shape[0];
-                                __pyx_t_5 = (__pyx_v_u + 1);
-                                if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
-                                __pyx_t_6 = (((*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_4 * __pyx_v_indptr.strides[0]) ))) == (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) )))) != 0);
-                                if (__pyx_t_6) {
+                  __pyx_t_1 = __pyx_v_n_users;
+                  if (1 == 0) abort();
+                  {
+                      __pyx_t_3 = (__pyx_t_1 - 0 + 1 - 1/abs(1)) / 1;
+                      if (__pyx_t_3 > 0)
+                      {
+                          #ifdef _OPENMP
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #endif /* _OPENMP */
+                          for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_3; __pyx_t_2++){
+                              {
+                                  __pyx_v_u = (int)(0 + 1 * __pyx_t_2);
+                                  /* Initialize private variables to invalid values */
+                                  __pyx_v__ = ((int)0xbad0bad0);
+                                  __pyx_v_exp_r = ((float)__PYX_NAN());
+                                  __pyx_v_i = ((int)0xbad0bad0);
+                                  __pyx_v_index = ((int)0xbad0bad0);
+                                  __pyx_v_user_seen_item = ((int)0xbad0bad0);
+                                  __pyx_v_z = ((float)__PYX_NAN());
 
                                   /* "implicit/lmf.pyx":209
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
- *                 continue             # <<<<<<<<<<<<<<
- *             user_seen_item = indptr[u + 1] - indptr[u]
- * 
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                  goto __pyx_L10_continue;
+                                  __pyx_t_4 = __pyx_v_u;
+                                  if (__pyx_t_4 < 0) __pyx_t_4 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_5 = (__pyx_v_u + 1);
+                                  if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_6 = (((*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_4 * __pyx_v_indptr.strides[0]) ))) == (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) )))) != 0);
+                                  if (__pyx_t_6) {
 
-                                  /* "implicit/lmf.pyx":208
- *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                    /* "implicit/lmf.pyx":210
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue             # <<<<<<<<<<<<<<
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
+ * 
  */
-                                }
+                                    goto __pyx_L15_continue;
 
-                                /* "implicit/lmf.pyx":210
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
- * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)
+                                    /* "implicit/lmf.pyx":209
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                __pyx_t_7 = (__pyx_v_u + 1);
-                                if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_indptr.shape[0];
-                                __pyx_t_8 = __pyx_v_u;
-                                if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
-                                __pyx_v_user_seen_item = ((*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_7 * __pyx_v_indptr.strides[0]) ))) - (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))));
+                                  }
 
-                                /* "implicit/lmf.pyx":212
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                  /* "implicit/lmf.pyx":211
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
  * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
- * 
- *             # Positive item indices: c_ui* y_i
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)
  */
-                                (void)(memset(__pyx_v_deriv, 0, ((sizeof(float)) * __pyx_v_n_factors)));
+                                  __pyx_t_7 = (__pyx_v_u + 1);
+                                  if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_8 = __pyx_v_u;
+                                  if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
+                                  __pyx_v_user_seen_item = ((*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_7 * __pyx_v_indptr.strides[0]) ))) - (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))));
 
-                                /* "implicit/lmf.pyx":215
+                                  /* "implicit/lmf.pyx":213
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  * 
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
+ * 
+ *                 # Positive item indices: c_ui* y_i
  */
-                                __pyx_t_9 = (__pyx_v_u + 1);
-                                if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
-                                __pyx_t_10 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_11 = __pyx_v_u;
-                                if (__pyx_t_11 < 0) __pyx_t_11 += __pyx_v_indptr.shape[0];
-                                __pyx_t_12 = __pyx_t_10;
-                                for (__pyx_t_13 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_11 * __pyx_v_indptr.strides[0]) ))); __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
-                                  __pyx_v_index = __pyx_t_13;
+                                  (void)(memset(__pyx_v_deriv, 0, ((sizeof(float)) * __pyx_v_n_factors)));
 
                                   /* "implicit/lmf.pyx":216
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]
- */
-                                  __pyx_t_14 = __pyx_v_index;
-                                  if (__pyx_t_14 < 0) __pyx_t_14 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_14 * __pyx_v_indices.strides[0]) )));
-
-                                  /* "implicit/lmf.pyx":217
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] += data[index] * item_vectors[i, _]
  * 
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                  __pyx_t_9 = (__pyx_v_u + 1);
+                                  if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_10 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_11 = __pyx_v_u;
+                                  if (__pyx_t_11 < 0) __pyx_t_11 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_12 = __pyx_t_10;
+                                  for (__pyx_t_13 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_11 * __pyx_v_indptr.strides[0]) ))); __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
+                                    __pyx_v_index = __pyx_t_13;
+
+                                    /* "implicit/lmf.pyx":217
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]
+ */
+                                    __pyx_t_14 = __pyx_v_index;
+                                    if (__pyx_t_14 < 0) __pyx_t_14 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_14 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":218
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] += data[index] * item_vectors[i, _]
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_18 = __pyx_v__;
-                                    __pyx_t_19 = __pyx_v_index;
-                                    if (__pyx_t_19 < 0) __pyx_t_19 += __pyx_v_data.shape[0];
-                                    __pyx_t_20 = __pyx_v_i;
-                                    __pyx_t_21 = __pyx_v__;
-                                    if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) + ((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_19 * __pyx_v_data.strides[0]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_20 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_21 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                /* "implicit/lmf.pyx":221
+                                      /* "implicit/lmf.pyx":219
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 i = indices[index]
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_22 = (__pyx_v_u + 1);
-                                if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_indptr.shape[0];
-                                __pyx_t_10 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_22 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_23 = __pyx_v_u;
-                                if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
-                                __pyx_t_12 = __pyx_t_10;
-                                for (__pyx_t_13 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) ))); __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
-                                  __pyx_v_index = __pyx_t_13;
+                                      __pyx_t_18 = __pyx_v__;
+                                      __pyx_t_19 = __pyx_v_index;
+                                      if (__pyx_t_19 < 0) __pyx_t_19 += __pyx_v_data.shape[0];
+                                      __pyx_t_20 = __pyx_v_i;
+                                      __pyx_t_21 = __pyx_v__;
+                                      if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) + ((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_19 * __pyx_v_data.strides[0]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_20 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_21 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":222
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ * 
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     i = indices[index]
  */
-                                  __pyx_v_exp_r = 0.0;
+                                  __pyx_t_22 = (__pyx_v_u + 1);
+                                  if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_10 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_22 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_23 = __pyx_v_u;
+                                  if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_12 = __pyx_t_10;
+                                  for (__pyx_t_13 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) ))); __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
+                                    __pyx_v_index = __pyx_t_13;
 
-                                  /* "implicit/lmf.pyx":223
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":223
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_24 = __pyx_v_index;
-                                  if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_24 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_exp_r = 0.0;
 
-                                  /* "implicit/lmf.pyx":224
- *                 exp_r = 0
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":224
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                    __pyx_t_24 = __pyx_v_index;
+                                    if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_24 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":225
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
+ *                     exp_r = 0
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_25 = __pyx_v_u;
-                                    __pyx_t_26 = __pyx_v__;
-                                    if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_27 = __pyx_v_i;
-                                    __pyx_t_28 = __pyx_v__;
-                                    if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_25 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_26 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_27 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_28 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                  /* "implicit/lmf.pyx":226
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":226
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_25 = __pyx_v_u;
+                                      __pyx_t_26 = __pyx_v__;
+                                      if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_27 = __pyx_v_i;
+                                      __pyx_t_28 = __pyx_v__;
+                                      if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_25 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_26 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_27 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_28 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":227
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":227
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_29 = __pyx_v_index;
-                                  if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_data.shape[0];
-                                  __pyx_v_z = (((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_29 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":228
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":228
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                    __pyx_t_29 = __pyx_v_index;
+                                    if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_data.shape[0];
+                                    __pyx_v_z = (((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_29 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":229
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_18 = __pyx_v__;
-                                    __pyx_t_30 = __pyx_v_i;
-                                    __pyx_t_31 = __pyx_v__;
-                                    if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_30 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_31 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                /* "implicit/lmf.pyx":232
+                                      /* "implicit/lmf.pyx":230
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_10 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
-                                __pyx_t_12 = __pyx_v_n_items;
-                                if (((__pyx_t_10 < __pyx_t_12) != 0)) {
-                                  __pyx_t_13 = __pyx_t_10;
-                                } else {
-                                  __pyx_t_13 = __pyx_t_12;
-                                }
-                                __pyx_t_10 = __pyx_t_13;
-                                __pyx_t_13 = __pyx_t_10;
-                                for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_13; __pyx_t_12+=1) {
-                                  __pyx_v__ = __pyx_t_12;
+                                      __pyx_t_18 = __pyx_v__;
+                                      __pyx_t_30 = __pyx_v_i;
+                                      __pyx_t_31 = __pyx_v__;
+                                      if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_30 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_31 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":233
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 exp_r = 0
+ * 
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
  */
-                                  __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
+                                  __pyx_t_10 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
+                                  __pyx_t_12 = __pyx_v_n_items;
+                                  if (((__pyx_t_10 < __pyx_t_12) != 0)) {
+                                    __pyx_t_13 = __pyx_t_10;
+                                  } else {
+                                    __pyx_t_13 = __pyx_t_12;
+                                  }
+                                  __pyx_t_10 = __pyx_t_13;
+                                  __pyx_t_13 = __pyx_t_10;
+                                  for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_13; __pyx_t_12+=1) {
+                                    __pyx_v__ = __pyx_t_12;
 
-                                  /* "implicit/lmf.pyx":234
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 for _ in range(n_factors):
+                                    /* "implicit/lmf.pyx":234
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     exp_r = 0
  */
-                                  __pyx_t_32 = __pyx_v_index;
-                                  if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_32 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
-                                  /* "implicit/lmf.pyx":235
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":235
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_exp_r = 0.0;
+                                    __pyx_t_32 = __pyx_v_index;
+                                    if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_32 * __pyx_v_indices.strides[0]) )));
 
-                                  /* "implicit/lmf.pyx":236
- *                 i = indices[index]
- *                 exp_r = 0
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":236
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                    __pyx_v_exp_r = 0.0;
 
                                     /* "implicit/lmf.pyx":237
- *                 exp_r = 0
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
+ *                     i = indices[index]
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_33 = __pyx_v_u;
-                                    __pyx_t_34 = __pyx_v__;
-                                    if (__pyx_t_33 < 0) __pyx_t_33 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_35 = __pyx_v_i;
-                                    __pyx_t_36 = __pyx_v__;
-                                    if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_33 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_34 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_35 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_36 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                  /* "implicit/lmf.pyx":238
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":238
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_33 = __pyx_v_u;
+                                      __pyx_t_34 = __pyx_v__;
+                                      if (__pyx_t_33 < 0) __pyx_t_33 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_35 = __pyx_v_i;
+                                      __pyx_t_36 = __pyx_v__;
+                                      if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_33 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_34 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_35 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_36 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":239
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":239
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":240
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":240
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                    __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":241
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
  */
-                                    __pyx_t_18 = __pyx_v__;
-                                    __pyx_t_37 = __pyx_v_i;
-                                    __pyx_t_38 = __pyx_v__;
-                                    if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_37 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_38 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                /* "implicit/lmf.pyx":243
- *                     deriv[_] -= z * item_vectors[i, _]
+                                      /* "implicit/lmf.pyx":242
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                 for _ in range(n_factors):
  */
-                                __pyx_t_10 = __pyx_v_n_factors;
-                                __pyx_t_13 = __pyx_t_10;
-                                for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_13; __pyx_t_12+=1) {
-                                  __pyx_v__ = __pyx_t_12;
+                                      __pyx_t_18 = __pyx_v__;
+                                      __pyx_t_37 = __pyx_v_i;
+                                      __pyx_t_38 = __pyx_v__;
+                                      if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_37 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_38 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":244
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
  */
-                                  __pyx_t_15 = __pyx_v__;
-                                  __pyx_t_39 = __pyx_v_u;
-                                  __pyx_t_40 = __pyx_v__;
-                                  if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_user_vectors.shape[1];
-                                  (__pyx_v_deriv[__pyx_t_15]) = ((__pyx_v_deriv[__pyx_t_15]) - (__pyx_v_reg * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_39 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_40 * __pyx_v_user_vectors.strides[1]) )))));
+                                  __pyx_t_10 = __pyx_v_n_factors;
+                                  __pyx_t_13 = __pyx_t_10;
+                                  for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_13; __pyx_t_12+=1) {
+                                    __pyx_v__ = __pyx_t_12;
 
-                                  /* "implicit/lmf.pyx":245
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+                                    /* "implicit/lmf.pyx":245
+ * 
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
  */
-                                  __pyx_t_41 = __pyx_v_u;
-                                  __pyx_t_42 = __pyx_v__;
-                                  if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_deriv_sum_sq.shape[1];
-                                  *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_41 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_42 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+                                    __pyx_t_15 = __pyx_v__;
+                                    __pyx_t_39 = __pyx_v_u;
+                                    __pyx_t_40 = __pyx_v__;
+                                    if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_user_vectors.shape[1];
+                                    (__pyx_v_deriv[__pyx_t_15]) = ((__pyx_v_deriv[__pyx_t_15]) - (__pyx_v_reg * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_39 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_40 * __pyx_v_user_vectors.strides[1]) )))));
 
-                                  /* "implicit/lmf.pyx":246
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+                                    /* "implicit/lmf.pyx":246
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
  */
-                                  __pyx_t_43 = __pyx_v_u;
-                                  __pyx_t_44 = __pyx_v__;
-                                  if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[1];
-                                  __pyx_t_45 = __pyx_v_u;
-                                  __pyx_t_46 = __pyx_v__;
-                                  if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_user_vectors.shape[1];
-                                  *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_45 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_46 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
-                                }
-                                goto __pyx_L34;
-                                __pyx_L10_continue:;
-                                goto __pyx_L34;
-                                __pyx_L34:;
-                            }
-                        }
-                    }
+                                    __pyx_t_41 = __pyx_v_u;
+                                    __pyx_t_42 = __pyx_v__;
+                                    if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_deriv_sum_sq.shape[1];
+                                    *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_41 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_42 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+
+                                    /* "implicit/lmf.pyx":247
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+ *         finally:
+ *             free(deriv)
+ */
+                                    __pyx_t_43 = __pyx_v_u;
+                                    __pyx_t_44 = __pyx_v__;
+                                    if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[1];
+                                    __pyx_t_45 = __pyx_v_u;
+                                    __pyx_t_46 = __pyx_v__;
+                                    if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_user_vectors.shape[1];
+                                    *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_45 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_46 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
+                                  }
+                                  goto __pyx_L39;
+                                  __pyx_L15_continue:;
+                                  goto __pyx_L39;
+                                  __pyx_L39:;
+                              }
+                          }
+                      }
+                  }
+                }
+
+                /* "implicit/lmf.pyx":249
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
+ *             free(deriv)             # <<<<<<<<<<<<<<
+ */
+                /*finally:*/ {
+                  /*normal exit:*/{
+                    free(__pyx_v_deriv);
+                    goto __pyx_L14;
+                  }
+                  __pyx_L14:;
                 }
             }
         }
@@ -7719,7 +7771,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
+ *         try:
  */
                 __pyx_v_deriv = ((float *)malloc(((sizeof(float)) * __pyx_v_n_factors)));
 
@@ -7727,8 +7779,8 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -7740,439 +7792,465 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
                 /* "implicit/lmf.pyx":207
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
+ *         try:             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
  */
-                __pyx_t_2 = __pyx_v_n_users;
-                if (1 == 0) abort();
-                {
-                    __pyx_t_4 = (__pyx_t_2 - 0 + 1 - 1/abs(1)) / 1;
-                    if (__pyx_t_4 > 0)
-                    {
-                        #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
-                        #endif /* _OPENMP */
-                        for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
-                            {
-                                __pyx_v_u = (long)(0 + 1 * __pyx_t_3);
-                                /* Initialize private variables to invalid values */
-                                __pyx_v__ = ((long)0xbad0bad0);
-                                __pyx_v_exp_r = ((float)__PYX_NAN());
-                                __pyx_v_i = ((long)0xbad0bad0);
-                                __pyx_v_index = ((long)0xbad0bad0);
-                                __pyx_v_user_seen_item = ((int)0xbad0bad0);
-                                __pyx_v_z = ((float)__PYX_NAN());
+                /*try:*/ {
 
-                                /* "implicit/lmf.pyx":208
+                  /* "implicit/lmf.pyx":208
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
  */
-                                __pyx_t_5 = __pyx_v_u;
-                                if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
-                                __pyx_t_6 = (__pyx_v_u + 1);
-                                if (__pyx_t_6 < 0) __pyx_t_6 += __pyx_v_indptr.shape[0];
-                                __pyx_t_7 = (((*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) ))) == (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_6 * __pyx_v_indptr.strides[0]) )))) != 0);
-                                if (__pyx_t_7) {
+                  __pyx_t_2 = __pyx_v_n_users;
+                  if (1 == 0) abort();
+                  {
+                      __pyx_t_4 = (__pyx_t_2 - 0 + 1 - 1/abs(1)) / 1;
+                      if (__pyx_t_4 > 0)
+                      {
+                          #ifdef _OPENMP
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #endif /* _OPENMP */
+                          for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
+                              {
+                                  __pyx_v_u = (long)(0 + 1 * __pyx_t_3);
+                                  /* Initialize private variables to invalid values */
+                                  __pyx_v__ = ((long)0xbad0bad0);
+                                  __pyx_v_exp_r = ((float)__PYX_NAN());
+                                  __pyx_v_i = ((long)0xbad0bad0);
+                                  __pyx_v_index = ((long)0xbad0bad0);
+                                  __pyx_v_user_seen_item = ((int)0xbad0bad0);
+                                  __pyx_v_z = ((float)__PYX_NAN());
 
                                   /* "implicit/lmf.pyx":209
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
- *                 continue             # <<<<<<<<<<<<<<
- *             user_seen_item = indptr[u + 1] - indptr[u]
- * 
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                  goto __pyx_L10_continue;
+                                  __pyx_t_5 = __pyx_v_u;
+                                  if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_6 = (__pyx_v_u + 1);
+                                  if (__pyx_t_6 < 0) __pyx_t_6 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_7 = (((*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) ))) == (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_6 * __pyx_v_indptr.strides[0]) )))) != 0);
+                                  if (__pyx_t_7) {
 
-                                  /* "implicit/lmf.pyx":208
- *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                    /* "implicit/lmf.pyx":210
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue             # <<<<<<<<<<<<<<
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
+ * 
  */
-                                }
+                                    goto __pyx_L15_continue;
 
-                                /* "implicit/lmf.pyx":210
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
- * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)
+                                    /* "implicit/lmf.pyx":209
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                __pyx_t_8 = (__pyx_v_u + 1);
-                                if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
-                                __pyx_t_9 = __pyx_v_u;
-                                if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
-                                __pyx_v_user_seen_item = ((*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))) - (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) ))));
+                                  }
 
-                                /* "implicit/lmf.pyx":212
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                  /* "implicit/lmf.pyx":211
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
  * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
- * 
- *             # Positive item indices: c_ui* y_i
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)
  */
-                                (void)(memset(__pyx_v_deriv, 0, ((sizeof(float)) * __pyx_v_n_factors)));
+                                  __pyx_t_8 = (__pyx_v_u + 1);
+                                  if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_9 = __pyx_v_u;
+                                  if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
+                                  __pyx_v_user_seen_item = ((*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))) - (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) ))));
 
-                                /* "implicit/lmf.pyx":215
+                                  /* "implicit/lmf.pyx":213
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  * 
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
+ * 
+ *                 # Positive item indices: c_ui* y_i
  */
-                                __pyx_t_10 = (__pyx_v_u + 1);
-                                if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_indptr.shape[0];
-                                __pyx_t_11 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_10 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_12 = __pyx_v_u;
-                                if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_indptr.shape[0];
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_12 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v_index = __pyx_t_14;
+                                  (void)(memset(__pyx_v_deriv, 0, ((sizeof(float)) * __pyx_v_n_factors)));
 
                                   /* "implicit/lmf.pyx":216
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]
- */
-                                  __pyx_t_15 = __pyx_v_index;
-                                  if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_15 * __pyx_v_indices.strides[0]) )));
-
-                                  /* "implicit/lmf.pyx":217
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] += data[index] * item_vectors[i, _]
  * 
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                  __pyx_t_10 = (__pyx_v_u + 1);
+                                  if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_11 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_10 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_12 = __pyx_v_u;
+                                  if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_12 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v_index = __pyx_t_14;
+
+                                    /* "implicit/lmf.pyx":217
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]
+ */
+                                    __pyx_t_15 = __pyx_v_index;
+                                    if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_15 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":218
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] += data[index] * item_vectors[i, _]
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_20 = __pyx_v_index;
-                                    if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_data.shape[0];
-                                    __pyx_t_21 = __pyx_v_i;
-                                    __pyx_t_22 = __pyx_v__;
-                                    if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) + ((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_20 * __pyx_v_data.strides[0]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_21 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_22 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":221
+                                      /* "implicit/lmf.pyx":219
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 i = indices[index]
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_23 = (__pyx_v_u + 1);
-                                if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
-                                __pyx_t_11 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_24 = __pyx_v_u;
-                                if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indptr.shape[0];
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_24 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v_index = __pyx_t_14;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_20 = __pyx_v_index;
+                                      if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_data.shape[0];
+                                      __pyx_t_21 = __pyx_v_i;
+                                      __pyx_t_22 = __pyx_v__;
+                                      if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) + ((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_20 * __pyx_v_data.strides[0]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_21 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_22 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":222
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ * 
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     i = indices[index]
  */
-                                  __pyx_v_exp_r = 0.0;
+                                  __pyx_t_23 = (__pyx_v_u + 1);
+                                  if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_11 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_24 = __pyx_v_u;
+                                  if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_24 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v_index = __pyx_t_14;
 
-                                  /* "implicit/lmf.pyx":223
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":223
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_25 = __pyx_v_index;
-                                  if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_25 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_exp_r = 0.0;
 
-                                  /* "implicit/lmf.pyx":224
- *                 exp_r = 0
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":224
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_t_25 = __pyx_v_index;
+                                    if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_25 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":225
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
+ *                     exp_r = 0
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_26 = __pyx_v_u;
-                                    __pyx_t_27 = __pyx_v__;
-                                    if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_28 = __pyx_v_i;
-                                    __pyx_t_29 = __pyx_v__;
-                                    if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_26 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_27 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_28 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_29 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                  /* "implicit/lmf.pyx":226
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":226
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_26 = __pyx_v_u;
+                                      __pyx_t_27 = __pyx_v__;
+                                      if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_28 = __pyx_v_i;
+                                      __pyx_t_29 = __pyx_v__;
+                                      if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_26 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_27 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_28 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_29 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":227
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":227
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_30 = __pyx_v_index;
-                                  if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_data.shape[0];
-                                  __pyx_v_z = (((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_30 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":228
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":228
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_t_30 = __pyx_v_index;
+                                    if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_data.shape[0];
+                                    __pyx_v_z = (((*((float *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_30 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":229
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_31 = __pyx_v_i;
-                                    __pyx_t_32 = __pyx_v__;
-                                    if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_31 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_32 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":232
+                                      /* "implicit/lmf.pyx":230
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_11 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
-                                __pyx_t_13 = __pyx_v_n_items;
-                                if (((__pyx_t_11 < __pyx_t_13) != 0)) {
-                                  __pyx_t_14 = __pyx_t_11;
-                                } else {
-                                  __pyx_t_14 = __pyx_t_13;
-                                }
-                                __pyx_t_11 = __pyx_t_14;
-                                __pyx_t_14 = __pyx_t_11;
-                                for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_14; __pyx_t_13+=1) {
-                                  __pyx_v__ = __pyx_t_13;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_31 = __pyx_v_i;
+                                      __pyx_t_32 = __pyx_v__;
+                                      if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_31 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_32 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":233
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 exp_r = 0
+ * 
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
  */
-                                  __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
+                                  __pyx_t_11 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
+                                  __pyx_t_13 = __pyx_v_n_items;
+                                  if (((__pyx_t_11 < __pyx_t_13) != 0)) {
+                                    __pyx_t_14 = __pyx_t_11;
+                                  } else {
+                                    __pyx_t_14 = __pyx_t_13;
+                                  }
+                                  __pyx_t_11 = __pyx_t_14;
+                                  __pyx_t_14 = __pyx_t_11;
+                                  for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_14; __pyx_t_13+=1) {
+                                    __pyx_v__ = __pyx_t_13;
 
-                                  /* "implicit/lmf.pyx":234
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 for _ in range(n_factors):
+                                    /* "implicit/lmf.pyx":234
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     exp_r = 0
  */
-                                  __pyx_t_33 = __pyx_v_index;
-                                  if (__pyx_t_33 < 0) __pyx_t_33 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_33 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
-                                  /* "implicit/lmf.pyx":235
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":235
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_exp_r = 0.0;
+                                    __pyx_t_33 = __pyx_v_index;
+                                    if (__pyx_t_33 < 0) __pyx_t_33 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_33 * __pyx_v_indices.strides[0]) )));
 
-                                  /* "implicit/lmf.pyx":236
- *                 i = indices[index]
- *                 exp_r = 0
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":236
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_v_exp_r = 0.0;
 
                                     /* "implicit/lmf.pyx":237
- *                 exp_r = 0
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
+ *                     i = indices[index]
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_34 = __pyx_v_u;
-                                    __pyx_t_35 = __pyx_v__;
-                                    if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_36 = __pyx_v_i;
-                                    __pyx_t_37 = __pyx_v__;
-                                    if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_34 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_35 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_36 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_37 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                  /* "implicit/lmf.pyx":238
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":238
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_34 = __pyx_v_u;
+                                      __pyx_t_35 = __pyx_v__;
+                                      if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_36 = __pyx_v_i;
+                                      __pyx_t_37 = __pyx_v__;
+                                      if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_34 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_35 * __pyx_v_user_vectors.strides[1]) ))) * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_36 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_37 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":239
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":239
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":240
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":240
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":241
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_38 = __pyx_v_i;
-                                    __pyx_t_39 = __pyx_v__;
-                                    if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_38 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_39 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":243
- *                     deriv[_] -= z * item_vectors[i, _]
+                                      /* "implicit/lmf.pyx":242
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                 for _ in range(n_factors):
  */
-                                __pyx_t_11 = __pyx_v_n_factors;
-                                __pyx_t_14 = __pyx_t_11;
-                                for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_14; __pyx_t_13+=1) {
-                                  __pyx_v__ = __pyx_t_13;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_38 = __pyx_v_i;
+                                      __pyx_t_39 = __pyx_v__;
+                                      if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_38 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_39 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":244
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
  */
-                                  __pyx_t_16 = __pyx_v__;
-                                  __pyx_t_40 = __pyx_v_u;
-                                  __pyx_t_41 = __pyx_v__;
-                                  if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_user_vectors.shape[1];
-                                  (__pyx_v_deriv[__pyx_t_16]) = ((__pyx_v_deriv[__pyx_t_16]) - (__pyx_v_reg * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_40 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_41 * __pyx_v_user_vectors.strides[1]) )))));
+                                  __pyx_t_11 = __pyx_v_n_factors;
+                                  __pyx_t_14 = __pyx_t_11;
+                                  for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_14; __pyx_t_13+=1) {
+                                    __pyx_v__ = __pyx_t_13;
 
-                                  /* "implicit/lmf.pyx":245
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+                                    /* "implicit/lmf.pyx":245
+ * 
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
  */
-                                  __pyx_t_42 = __pyx_v_u;
-                                  __pyx_t_43 = __pyx_v__;
-                                  if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[1];
-                                  *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_42 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+                                    __pyx_t_16 = __pyx_v__;
+                                    __pyx_t_40 = __pyx_v_u;
+                                    __pyx_t_41 = __pyx_v__;
+                                    if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_user_vectors.shape[1];
+                                    (__pyx_v_deriv[__pyx_t_16]) = ((__pyx_v_deriv[__pyx_t_16]) - (__pyx_v_reg * (*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_40 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_41 * __pyx_v_user_vectors.strides[1]) )))));
 
-                                  /* "implicit/lmf.pyx":246
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+                                    /* "implicit/lmf.pyx":246
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
  */
-                                  __pyx_t_44 = __pyx_v_u;
-                                  __pyx_t_45 = __pyx_v__;
-                                  if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_deriv_sum_sq.shape[1];
-                                  __pyx_t_46 = __pyx_v_u;
-                                  __pyx_t_47 = __pyx_v__;
-                                  if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_47 < 0) __pyx_t_47 += __pyx_v_user_vectors.shape[1];
-                                  *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_46 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_47 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_45 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
-                                }
-                                goto __pyx_L34;
-                                __pyx_L10_continue:;
-                                goto __pyx_L34;
-                                __pyx_L34:;
-                            }
-                        }
-                    }
+                                    __pyx_t_42 = __pyx_v_u;
+                                    __pyx_t_43 = __pyx_v__;
+                                    if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[1];
+                                    *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_42 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+
+                                    /* "implicit/lmf.pyx":247
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+ *         finally:
+ *             free(deriv)
+ */
+                                    __pyx_t_44 = __pyx_v_u;
+                                    __pyx_t_45 = __pyx_v__;
+                                    if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_deriv_sum_sq.shape[1];
+                                    __pyx_t_46 = __pyx_v_u;
+                                    __pyx_t_47 = __pyx_v__;
+                                    if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_47 < 0) __pyx_t_47 += __pyx_v_user_vectors.shape[1];
+                                    *((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_46 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_47 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((float *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_45 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
+                                  }
+                                  goto __pyx_L39;
+                                  __pyx_L15_continue:;
+                                  goto __pyx_L39;
+                                  __pyx_L39:;
+                              }
+                          }
+                      }
+                  }
+                }
+
+                /* "implicit/lmf.pyx":249
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
+ *             free(deriv)             # <<<<<<<<<<<<<<
+ */
+                /*finally:*/ {
+                  /*normal exit:*/{
+                    free(__pyx_v_deriv);
+                    goto __pyx_L14;
+                  }
+                  __pyx_L14:;
                 }
             }
         }
@@ -8516,7 +8594,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
+ *         try:
  */
                 __pyx_v_deriv = ((double *)malloc(((sizeof(double)) * __pyx_v_n_factors)));
 
@@ -8524,8 +8602,8 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -8537,439 +8615,465 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
                 /* "implicit/lmf.pyx":207
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
+ *         try:             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
  */
-                __pyx_t_2 = __pyx_v_n_users;
-                if (1 == 0) abort();
-                {
-                    __pyx_t_4 = (__pyx_t_2 - 0 + 1 - 1/abs(1)) / 1;
-                    if (__pyx_t_4 > 0)
-                    {
-                        #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
-                        #endif /* _OPENMP */
-                        for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
-                            {
-                                __pyx_v_u = (short)(0 + 1 * __pyx_t_3);
-                                /* Initialize private variables to invalid values */
-                                __pyx_v__ = ((short)0xbad0bad0);
-                                __pyx_v_exp_r = ((double)__PYX_NAN());
-                                __pyx_v_i = ((short)0xbad0bad0);
-                                __pyx_v_index = ((short)0xbad0bad0);
-                                __pyx_v_user_seen_item = ((int)0xbad0bad0);
-                                __pyx_v_z = ((double)__PYX_NAN());
+                /*try:*/ {
 
-                                /* "implicit/lmf.pyx":208
+                  /* "implicit/lmf.pyx":208
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
  */
-                                __pyx_t_5 = __pyx_v_u;
-                                if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
-                                __pyx_t_6 = (__pyx_v_u + 1);
-                                if (__pyx_t_6 < 0) __pyx_t_6 += __pyx_v_indptr.shape[0];
-                                __pyx_t_7 = (((*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) ))) == (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_6 * __pyx_v_indptr.strides[0]) )))) != 0);
-                                if (__pyx_t_7) {
+                  __pyx_t_2 = __pyx_v_n_users;
+                  if (1 == 0) abort();
+                  {
+                      __pyx_t_4 = (__pyx_t_2 - 0 + 1 - 1/abs(1)) / 1;
+                      if (__pyx_t_4 > 0)
+                      {
+                          #ifdef _OPENMP
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #endif /* _OPENMP */
+                          for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
+                              {
+                                  __pyx_v_u = (short)(0 + 1 * __pyx_t_3);
+                                  /* Initialize private variables to invalid values */
+                                  __pyx_v__ = ((short)0xbad0bad0);
+                                  __pyx_v_exp_r = ((double)__PYX_NAN());
+                                  __pyx_v_i = ((short)0xbad0bad0);
+                                  __pyx_v_index = ((short)0xbad0bad0);
+                                  __pyx_v_user_seen_item = ((int)0xbad0bad0);
+                                  __pyx_v_z = ((double)__PYX_NAN());
 
                                   /* "implicit/lmf.pyx":209
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
- *                 continue             # <<<<<<<<<<<<<<
- *             user_seen_item = indptr[u + 1] - indptr[u]
- * 
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                  goto __pyx_L10_continue;
+                                  __pyx_t_5 = __pyx_v_u;
+                                  if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_6 = (__pyx_v_u + 1);
+                                  if (__pyx_t_6 < 0) __pyx_t_6 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_7 = (((*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) ))) == (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_6 * __pyx_v_indptr.strides[0]) )))) != 0);
+                                  if (__pyx_t_7) {
 
-                                  /* "implicit/lmf.pyx":208
- *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                    /* "implicit/lmf.pyx":210
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue             # <<<<<<<<<<<<<<
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
+ * 
  */
-                                }
+                                    goto __pyx_L15_continue;
 
-                                /* "implicit/lmf.pyx":210
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
- * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)
+                                    /* "implicit/lmf.pyx":209
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                __pyx_t_8 = (__pyx_v_u + 1);
-                                if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
-                                __pyx_t_9 = __pyx_v_u;
-                                if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
-                                __pyx_v_user_seen_item = ((*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))) - (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) ))));
+                                  }
 
-                                /* "implicit/lmf.pyx":212
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                  /* "implicit/lmf.pyx":211
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
  * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
- * 
- *             # Positive item indices: c_ui* y_i
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)
  */
-                                (void)(memset(__pyx_v_deriv, 0, ((sizeof(double)) * __pyx_v_n_factors)));
+                                  __pyx_t_8 = (__pyx_v_u + 1);
+                                  if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_9 = __pyx_v_u;
+                                  if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
+                                  __pyx_v_user_seen_item = ((*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))) - (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) ))));
 
-                                /* "implicit/lmf.pyx":215
+                                  /* "implicit/lmf.pyx":213
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  * 
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
+ * 
+ *                 # Positive item indices: c_ui* y_i
  */
-                                __pyx_t_10 = (__pyx_v_u + 1);
-                                if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_indptr.shape[0];
-                                __pyx_t_11 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_10 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_12 = __pyx_v_u;
-                                if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_indptr.shape[0];
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_12 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v_index = __pyx_t_14;
+                                  (void)(memset(__pyx_v_deriv, 0, ((sizeof(double)) * __pyx_v_n_factors)));
 
                                   /* "implicit/lmf.pyx":216
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]
- */
-                                  __pyx_t_15 = __pyx_v_index;
-                                  if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_15 * __pyx_v_indices.strides[0]) )));
-
-                                  /* "implicit/lmf.pyx":217
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] += data[index] * item_vectors[i, _]
  * 
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                  __pyx_t_10 = (__pyx_v_u + 1);
+                                  if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_11 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_10 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_12 = __pyx_v_u;
+                                  if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_12 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v_index = __pyx_t_14;
+
+                                    /* "implicit/lmf.pyx":217
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]
+ */
+                                    __pyx_t_15 = __pyx_v_index;
+                                    if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_15 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":218
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] += data[index] * item_vectors[i, _]
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_20 = __pyx_v_index;
-                                    if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_data.shape[0];
-                                    __pyx_t_21 = __pyx_v_i;
-                                    __pyx_t_22 = __pyx_v__;
-                                    if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) + ((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_20 * __pyx_v_data.strides[0]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_21 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_22 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":221
+                                      /* "implicit/lmf.pyx":219
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 i = indices[index]
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_23 = (__pyx_v_u + 1);
-                                if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
-                                __pyx_t_11 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_24 = __pyx_v_u;
-                                if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indptr.shape[0];
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_24 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v_index = __pyx_t_14;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_20 = __pyx_v_index;
+                                      if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_data.shape[0];
+                                      __pyx_t_21 = __pyx_v_i;
+                                      __pyx_t_22 = __pyx_v__;
+                                      if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) + ((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_20 * __pyx_v_data.strides[0]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_21 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_22 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":222
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ * 
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     i = indices[index]
  */
-                                  __pyx_v_exp_r = 0.0;
+                                  __pyx_t_23 = (__pyx_v_u + 1);
+                                  if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_11 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_24 = __pyx_v_u;
+                                  if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = (*((short *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_24 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v_index = __pyx_t_14;
 
-                                  /* "implicit/lmf.pyx":223
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":223
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_25 = __pyx_v_index;
-                                  if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_25 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_exp_r = 0.0;
 
-                                  /* "implicit/lmf.pyx":224
- *                 exp_r = 0
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":224
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_t_25 = __pyx_v_index;
+                                    if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_25 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":225
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
+ *                     exp_r = 0
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_26 = __pyx_v_u;
-                                    __pyx_t_27 = __pyx_v__;
-                                    if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_28 = __pyx_v_i;
-                                    __pyx_t_29 = __pyx_v__;
-                                    if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_26 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_27 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_28 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_29 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                  /* "implicit/lmf.pyx":226
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":226
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_26 = __pyx_v_u;
+                                      __pyx_t_27 = __pyx_v__;
+                                      if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_28 = __pyx_v_i;
+                                      __pyx_t_29 = __pyx_v__;
+                                      if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_26 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_27 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_28 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_29 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":227
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":227
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_30 = __pyx_v_index;
-                                  if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_data.shape[0];
-                                  __pyx_v_z = (((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_30 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":228
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":228
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_t_30 = __pyx_v_index;
+                                    if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_data.shape[0];
+                                    __pyx_v_z = (((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_30 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":229
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_31 = __pyx_v_i;
-                                    __pyx_t_32 = __pyx_v__;
-                                    if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_31 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_32 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":232
+                                      /* "implicit/lmf.pyx":230
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_1 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
-                                __pyx_t_11 = __pyx_v_n_items;
-                                if (((__pyx_t_1 < __pyx_t_11) != 0)) {
-                                  __pyx_t_33 = __pyx_t_1;
-                                } else {
-                                  __pyx_t_33 = __pyx_t_11;
-                                }
-                                __pyx_t_1 = __pyx_t_33;
-                                __pyx_t_33 = __pyx_t_1;
-                                for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_33; __pyx_t_11+=1) {
-                                  __pyx_v__ = __pyx_t_11;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_31 = __pyx_v_i;
+                                      __pyx_t_32 = __pyx_v__;
+                                      if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_31 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_32 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":233
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 exp_r = 0
+ * 
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
  */
-                                  __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
+                                  __pyx_t_1 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
+                                  __pyx_t_11 = __pyx_v_n_items;
+                                  if (((__pyx_t_1 < __pyx_t_11) != 0)) {
+                                    __pyx_t_33 = __pyx_t_1;
+                                  } else {
+                                    __pyx_t_33 = __pyx_t_11;
+                                  }
+                                  __pyx_t_1 = __pyx_t_33;
+                                  __pyx_t_33 = __pyx_t_1;
+                                  for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_33; __pyx_t_11+=1) {
+                                    __pyx_v__ = __pyx_t_11;
 
-                                  /* "implicit/lmf.pyx":234
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 for _ in range(n_factors):
+                                    /* "implicit/lmf.pyx":234
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     exp_r = 0
  */
-                                  __pyx_t_34 = __pyx_v_index;
-                                  if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_34 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
-                                  /* "implicit/lmf.pyx":235
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":235
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_exp_r = 0.0;
+                                    __pyx_t_34 = __pyx_v_index;
+                                    if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((short *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_34 * __pyx_v_indices.strides[0]) )));
 
-                                  /* "implicit/lmf.pyx":236
- *                 i = indices[index]
- *                 exp_r = 0
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":236
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_13 = __pyx_v_n_factors;
-                                  __pyx_t_14 = __pyx_t_13;
-                                  for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_14; __pyx_t_16+=1) {
-                                    __pyx_v__ = __pyx_t_16;
+                                    __pyx_v_exp_r = 0.0;
 
                                     /* "implicit/lmf.pyx":237
- *                 exp_r = 0
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
+ *                     i = indices[index]
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_35 = __pyx_v_u;
-                                    __pyx_t_36 = __pyx_v__;
-                                    if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_37 = __pyx_v_i;
-                                    __pyx_t_38 = __pyx_v__;
-                                    if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_35 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_36 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_37 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_38 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_13 = __pyx_v_n_factors;
+                                    __pyx_t_14 = __pyx_t_13;
+                                    for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_14; __pyx_t_16+=1) {
+                                      __pyx_v__ = __pyx_t_16;
 
-                                  /* "implicit/lmf.pyx":238
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":238
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_35 = __pyx_v_u;
+                                      __pyx_t_36 = __pyx_v__;
+                                      if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_37 = __pyx_v_i;
+                                      __pyx_t_38 = __pyx_v__;
+                                      if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_35 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_36 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_37 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_38 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":239
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":239
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":240
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":240
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_13 = __pyx_v_n_factors;
-                                  __pyx_t_14 = __pyx_t_13;
-                                  for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_14; __pyx_t_16+=1) {
-                                    __pyx_v__ = __pyx_t_16;
+                                    __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":241
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
  */
-                                    __pyx_t_17 = __pyx_v__;
-                                    __pyx_t_39 = __pyx_v_i;
-                                    __pyx_t_40 = __pyx_v__;
-                                    if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_17]) = ((__pyx_v_deriv[__pyx_t_17]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_39 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_40 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_13 = __pyx_v_n_factors;
+                                    __pyx_t_14 = __pyx_t_13;
+                                    for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_14; __pyx_t_16+=1) {
+                                      __pyx_v__ = __pyx_t_16;
 
-                                /* "implicit/lmf.pyx":243
- *                     deriv[_] -= z * item_vectors[i, _]
+                                      /* "implicit/lmf.pyx":242
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                 for _ in range(n_factors):
  */
-                                __pyx_t_11 = __pyx_v_n_factors;
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v__ = __pyx_t_14;
+                                      __pyx_t_17 = __pyx_v__;
+                                      __pyx_t_39 = __pyx_v_i;
+                                      __pyx_t_40 = __pyx_v__;
+                                      if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_17]) = ((__pyx_v_deriv[__pyx_t_17]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_39 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_40 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":244
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
  */
-                                  __pyx_t_16 = __pyx_v__;
-                                  __pyx_t_41 = __pyx_v_u;
-                                  __pyx_t_42 = __pyx_v__;
-                                  if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_user_vectors.shape[1];
-                                  (__pyx_v_deriv[__pyx_t_16]) = ((__pyx_v_deriv[__pyx_t_16]) - (__pyx_v_reg * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_41 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_42 * __pyx_v_user_vectors.strides[1]) )))));
+                                  __pyx_t_11 = __pyx_v_n_factors;
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v__ = __pyx_t_14;
 
-                                  /* "implicit/lmf.pyx":245
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+                                    /* "implicit/lmf.pyx":245
+ * 
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
  */
-                                  __pyx_t_43 = __pyx_v_u;
-                                  __pyx_t_44 = __pyx_v__;
-                                  if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[1];
-                                  *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+                                    __pyx_t_16 = __pyx_v__;
+                                    __pyx_t_41 = __pyx_v_u;
+                                    __pyx_t_42 = __pyx_v__;
+                                    if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_user_vectors.shape[1];
+                                    (__pyx_v_deriv[__pyx_t_16]) = ((__pyx_v_deriv[__pyx_t_16]) - (__pyx_v_reg * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_41 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_42 * __pyx_v_user_vectors.strides[1]) )))));
 
-                                  /* "implicit/lmf.pyx":246
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+                                    /* "implicit/lmf.pyx":246
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
  */
-                                  __pyx_t_45 = __pyx_v_u;
-                                  __pyx_t_46 = __pyx_v__;
-                                  if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_deriv_sum_sq.shape[1];
-                                  __pyx_t_47 = __pyx_v_u;
-                                  __pyx_t_48 = __pyx_v__;
-                                  if (__pyx_t_47 < 0) __pyx_t_47 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_48 < 0) __pyx_t_48 += __pyx_v_user_vectors.shape[1];
-                                  *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_47 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_48 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_45 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_46 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
-                                }
-                                goto __pyx_L34;
-                                __pyx_L10_continue:;
-                                goto __pyx_L34;
-                                __pyx_L34:;
-                            }
-                        }
-                    }
+                                    __pyx_t_43 = __pyx_v_u;
+                                    __pyx_t_44 = __pyx_v__;
+                                    if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[1];
+                                    *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+
+                                    /* "implicit/lmf.pyx":247
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+ *         finally:
+ *             free(deriv)
+ */
+                                    __pyx_t_45 = __pyx_v_u;
+                                    __pyx_t_46 = __pyx_v__;
+                                    if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_deriv_sum_sq.shape[1];
+                                    __pyx_t_47 = __pyx_v_u;
+                                    __pyx_t_48 = __pyx_v__;
+                                    if (__pyx_t_47 < 0) __pyx_t_47 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_48 < 0) __pyx_t_48 += __pyx_v_user_vectors.shape[1];
+                                    *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_47 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_48 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_45 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_46 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
+                                  }
+                                  goto __pyx_L39;
+                                  __pyx_L15_continue:;
+                                  goto __pyx_L39;
+                                  __pyx_L39:;
+                              }
+                          }
+                      }
+                  }
+                }
+
+                /* "implicit/lmf.pyx":249
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
+ *             free(deriv)             # <<<<<<<<<<<<<<
+ */
+                /*finally:*/ {
+                  /*normal exit:*/{
+                    free(__pyx_v_deriv);
+                    goto __pyx_L14;
+                  }
+                  __pyx_L14:;
                 }
             }
         }
@@ -9311,7 +9415,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
+ *         try:
  */
                 __pyx_v_deriv = ((double *)malloc(((sizeof(double)) * __pyx_v_n_factors)));
 
@@ -9319,8 +9423,8 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -9332,439 +9436,465 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
                 /* "implicit/lmf.pyx":207
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
+ *         try:             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
  */
-                __pyx_t_1 = __pyx_v_n_users;
-                if (1 == 0) abort();
-                {
-                    __pyx_t_3 = (__pyx_t_1 - 0 + 1 - 1/abs(1)) / 1;
-                    if (__pyx_t_3 > 0)
-                    {
-                        #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
-                        #endif /* _OPENMP */
-                        for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_3; __pyx_t_2++){
-                            {
-                                __pyx_v_u = (int)(0 + 1 * __pyx_t_2);
-                                /* Initialize private variables to invalid values */
-                                __pyx_v__ = ((int)0xbad0bad0);
-                                __pyx_v_exp_r = ((double)__PYX_NAN());
-                                __pyx_v_i = ((int)0xbad0bad0);
-                                __pyx_v_index = ((int)0xbad0bad0);
-                                __pyx_v_user_seen_item = ((int)0xbad0bad0);
-                                __pyx_v_z = ((double)__PYX_NAN());
+                /*try:*/ {
 
-                                /* "implicit/lmf.pyx":208
+                  /* "implicit/lmf.pyx":208
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
  */
-                                __pyx_t_4 = __pyx_v_u;
-                                if (__pyx_t_4 < 0) __pyx_t_4 += __pyx_v_indptr.shape[0];
-                                __pyx_t_5 = (__pyx_v_u + 1);
-                                if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
-                                __pyx_t_6 = (((*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_4 * __pyx_v_indptr.strides[0]) ))) == (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) )))) != 0);
-                                if (__pyx_t_6) {
+                  __pyx_t_1 = __pyx_v_n_users;
+                  if (1 == 0) abort();
+                  {
+                      __pyx_t_3 = (__pyx_t_1 - 0 + 1 - 1/abs(1)) / 1;
+                      if (__pyx_t_3 > 0)
+                      {
+                          #ifdef _OPENMP
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #endif /* _OPENMP */
+                          for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_3; __pyx_t_2++){
+                              {
+                                  __pyx_v_u = (int)(0 + 1 * __pyx_t_2);
+                                  /* Initialize private variables to invalid values */
+                                  __pyx_v__ = ((int)0xbad0bad0);
+                                  __pyx_v_exp_r = ((double)__PYX_NAN());
+                                  __pyx_v_i = ((int)0xbad0bad0);
+                                  __pyx_v_index = ((int)0xbad0bad0);
+                                  __pyx_v_user_seen_item = ((int)0xbad0bad0);
+                                  __pyx_v_z = ((double)__PYX_NAN());
 
                                   /* "implicit/lmf.pyx":209
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
- *                 continue             # <<<<<<<<<<<<<<
- *             user_seen_item = indptr[u + 1] - indptr[u]
- * 
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                  goto __pyx_L10_continue;
+                                  __pyx_t_4 = __pyx_v_u;
+                                  if (__pyx_t_4 < 0) __pyx_t_4 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_5 = (__pyx_v_u + 1);
+                                  if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_6 = (((*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_4 * __pyx_v_indptr.strides[0]) ))) == (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) )))) != 0);
+                                  if (__pyx_t_6) {
 
-                                  /* "implicit/lmf.pyx":208
- *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                    /* "implicit/lmf.pyx":210
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue             # <<<<<<<<<<<<<<
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
+ * 
  */
-                                }
+                                    goto __pyx_L15_continue;
 
-                                /* "implicit/lmf.pyx":210
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
- * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)
+                                    /* "implicit/lmf.pyx":209
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                __pyx_t_7 = (__pyx_v_u + 1);
-                                if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_indptr.shape[0];
-                                __pyx_t_8 = __pyx_v_u;
-                                if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
-                                __pyx_v_user_seen_item = ((*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_7 * __pyx_v_indptr.strides[0]) ))) - (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))));
+                                  }
 
-                                /* "implicit/lmf.pyx":212
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                  /* "implicit/lmf.pyx":211
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
  * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
- * 
- *             # Positive item indices: c_ui* y_i
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)
  */
-                                (void)(memset(__pyx_v_deriv, 0, ((sizeof(double)) * __pyx_v_n_factors)));
+                                  __pyx_t_7 = (__pyx_v_u + 1);
+                                  if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_8 = __pyx_v_u;
+                                  if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
+                                  __pyx_v_user_seen_item = ((*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_7 * __pyx_v_indptr.strides[0]) ))) - (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))));
 
-                                /* "implicit/lmf.pyx":215
+                                  /* "implicit/lmf.pyx":213
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  * 
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
+ * 
+ *                 # Positive item indices: c_ui* y_i
  */
-                                __pyx_t_9 = (__pyx_v_u + 1);
-                                if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
-                                __pyx_t_10 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_11 = __pyx_v_u;
-                                if (__pyx_t_11 < 0) __pyx_t_11 += __pyx_v_indptr.shape[0];
-                                __pyx_t_12 = __pyx_t_10;
-                                for (__pyx_t_13 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_11 * __pyx_v_indptr.strides[0]) ))); __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
-                                  __pyx_v_index = __pyx_t_13;
+                                  (void)(memset(__pyx_v_deriv, 0, ((sizeof(double)) * __pyx_v_n_factors)));
 
                                   /* "implicit/lmf.pyx":216
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]
- */
-                                  __pyx_t_14 = __pyx_v_index;
-                                  if (__pyx_t_14 < 0) __pyx_t_14 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_14 * __pyx_v_indices.strides[0]) )));
-
-                                  /* "implicit/lmf.pyx":217
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] += data[index] * item_vectors[i, _]
  * 
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                  __pyx_t_9 = (__pyx_v_u + 1);
+                                  if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_10 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_11 = __pyx_v_u;
+                                  if (__pyx_t_11 < 0) __pyx_t_11 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_12 = __pyx_t_10;
+                                  for (__pyx_t_13 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_11 * __pyx_v_indptr.strides[0]) ))); __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
+                                    __pyx_v_index = __pyx_t_13;
+
+                                    /* "implicit/lmf.pyx":217
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]
+ */
+                                    __pyx_t_14 = __pyx_v_index;
+                                    if (__pyx_t_14 < 0) __pyx_t_14 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_14 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":218
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] += data[index] * item_vectors[i, _]
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_18 = __pyx_v__;
-                                    __pyx_t_19 = __pyx_v_index;
-                                    if (__pyx_t_19 < 0) __pyx_t_19 += __pyx_v_data.shape[0];
-                                    __pyx_t_20 = __pyx_v_i;
-                                    __pyx_t_21 = __pyx_v__;
-                                    if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) + ((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_19 * __pyx_v_data.strides[0]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_20 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_21 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                /* "implicit/lmf.pyx":221
+                                      /* "implicit/lmf.pyx":219
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 i = indices[index]
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_22 = (__pyx_v_u + 1);
-                                if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_indptr.shape[0];
-                                __pyx_t_10 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_22 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_23 = __pyx_v_u;
-                                if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
-                                __pyx_t_12 = __pyx_t_10;
-                                for (__pyx_t_13 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) ))); __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
-                                  __pyx_v_index = __pyx_t_13;
+                                      __pyx_t_18 = __pyx_v__;
+                                      __pyx_t_19 = __pyx_v_index;
+                                      if (__pyx_t_19 < 0) __pyx_t_19 += __pyx_v_data.shape[0];
+                                      __pyx_t_20 = __pyx_v_i;
+                                      __pyx_t_21 = __pyx_v__;
+                                      if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) + ((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_19 * __pyx_v_data.strides[0]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_20 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_21 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":222
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ * 
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     i = indices[index]
  */
-                                  __pyx_v_exp_r = 0.0;
+                                  __pyx_t_22 = (__pyx_v_u + 1);
+                                  if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_10 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_22 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_23 = __pyx_v_u;
+                                  if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_12 = __pyx_t_10;
+                                  for (__pyx_t_13 = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) ))); __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
+                                    __pyx_v_index = __pyx_t_13;
 
-                                  /* "implicit/lmf.pyx":223
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":223
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_24 = __pyx_v_index;
-                                  if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_24 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_exp_r = 0.0;
 
-                                  /* "implicit/lmf.pyx":224
- *                 exp_r = 0
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":224
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                    __pyx_t_24 = __pyx_v_index;
+                                    if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_24 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":225
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
+ *                     exp_r = 0
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_25 = __pyx_v_u;
-                                    __pyx_t_26 = __pyx_v__;
-                                    if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_27 = __pyx_v_i;
-                                    __pyx_t_28 = __pyx_v__;
-                                    if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_25 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_26 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_27 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_28 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                  /* "implicit/lmf.pyx":226
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":226
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_25 = __pyx_v_u;
+                                      __pyx_t_26 = __pyx_v__;
+                                      if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_27 = __pyx_v_i;
+                                      __pyx_t_28 = __pyx_v__;
+                                      if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_25 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_26 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_27 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_28 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":227
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":227
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_29 = __pyx_v_index;
-                                  if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_data.shape[0];
-                                  __pyx_v_z = (((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_29 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":228
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":228
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                    __pyx_t_29 = __pyx_v_index;
+                                    if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_data.shape[0];
+                                    __pyx_v_z = (((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_29 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":229
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_18 = __pyx_v__;
-                                    __pyx_t_30 = __pyx_v_i;
-                                    __pyx_t_31 = __pyx_v__;
-                                    if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_30 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_31 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                /* "implicit/lmf.pyx":232
+                                      /* "implicit/lmf.pyx":230
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_10 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
-                                __pyx_t_12 = __pyx_v_n_items;
-                                if (((__pyx_t_10 < __pyx_t_12) != 0)) {
-                                  __pyx_t_13 = __pyx_t_10;
-                                } else {
-                                  __pyx_t_13 = __pyx_t_12;
-                                }
-                                __pyx_t_10 = __pyx_t_13;
-                                __pyx_t_13 = __pyx_t_10;
-                                for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_13; __pyx_t_12+=1) {
-                                  __pyx_v__ = __pyx_t_12;
+                                      __pyx_t_18 = __pyx_v__;
+                                      __pyx_t_30 = __pyx_v_i;
+                                      __pyx_t_31 = __pyx_v__;
+                                      if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_30 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_31 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":233
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 exp_r = 0
+ * 
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
  */
-                                  __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
+                                  __pyx_t_10 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
+                                  __pyx_t_12 = __pyx_v_n_items;
+                                  if (((__pyx_t_10 < __pyx_t_12) != 0)) {
+                                    __pyx_t_13 = __pyx_t_10;
+                                  } else {
+                                    __pyx_t_13 = __pyx_t_12;
+                                  }
+                                  __pyx_t_10 = __pyx_t_13;
+                                  __pyx_t_13 = __pyx_t_10;
+                                  for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_13; __pyx_t_12+=1) {
+                                    __pyx_v__ = __pyx_t_12;
 
-                                  /* "implicit/lmf.pyx":234
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 for _ in range(n_factors):
+                                    /* "implicit/lmf.pyx":234
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     exp_r = 0
  */
-                                  __pyx_t_32 = __pyx_v_index;
-                                  if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_32 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
-                                  /* "implicit/lmf.pyx":235
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":235
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_exp_r = 0.0;
+                                    __pyx_t_32 = __pyx_v_index;
+                                    if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((int *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_32 * __pyx_v_indices.strides[0]) )));
 
-                                  /* "implicit/lmf.pyx":236
- *                 i = indices[index]
- *                 exp_r = 0
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":236
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                    __pyx_v_exp_r = 0.0;
 
                                     /* "implicit/lmf.pyx":237
- *                 exp_r = 0
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
+ *                     i = indices[index]
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_33 = __pyx_v_u;
-                                    __pyx_t_34 = __pyx_v__;
-                                    if (__pyx_t_33 < 0) __pyx_t_33 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_35 = __pyx_v_i;
-                                    __pyx_t_36 = __pyx_v__;
-                                    if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_33 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_34 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_35 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_36 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                  /* "implicit/lmf.pyx":238
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":238
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_33 = __pyx_v_u;
+                                      __pyx_t_34 = __pyx_v__;
+                                      if (__pyx_t_33 < 0) __pyx_t_33 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_35 = __pyx_v_i;
+                                      __pyx_t_36 = __pyx_v__;
+                                      if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_33 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_34 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_35 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_36 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":239
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":239
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":240
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":240
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_15 = __pyx_v_n_factors;
-                                  __pyx_t_16 = __pyx_t_15;
-                                  for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-                                    __pyx_v__ = __pyx_t_17;
+                                    __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":241
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
  */
-                                    __pyx_t_18 = __pyx_v__;
-                                    __pyx_t_37 = __pyx_v_i;
-                                    __pyx_t_38 = __pyx_v__;
-                                    if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_37 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_38 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_15 = __pyx_v_n_factors;
+                                    __pyx_t_16 = __pyx_t_15;
+                                    for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                                      __pyx_v__ = __pyx_t_17;
 
-                                /* "implicit/lmf.pyx":243
- *                     deriv[_] -= z * item_vectors[i, _]
+                                      /* "implicit/lmf.pyx":242
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                 for _ in range(n_factors):
  */
-                                __pyx_t_10 = __pyx_v_n_factors;
-                                __pyx_t_13 = __pyx_t_10;
-                                for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_13; __pyx_t_12+=1) {
-                                  __pyx_v__ = __pyx_t_12;
+                                      __pyx_t_18 = __pyx_v__;
+                                      __pyx_t_37 = __pyx_v_i;
+                                      __pyx_t_38 = __pyx_v__;
+                                      if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_18]) = ((__pyx_v_deriv[__pyx_t_18]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_37 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_38 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":244
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
  */
-                                  __pyx_t_15 = __pyx_v__;
-                                  __pyx_t_39 = __pyx_v_u;
-                                  __pyx_t_40 = __pyx_v__;
-                                  if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_user_vectors.shape[1];
-                                  (__pyx_v_deriv[__pyx_t_15]) = ((__pyx_v_deriv[__pyx_t_15]) - (__pyx_v_reg * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_39 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_40 * __pyx_v_user_vectors.strides[1]) )))));
+                                  __pyx_t_10 = __pyx_v_n_factors;
+                                  __pyx_t_13 = __pyx_t_10;
+                                  for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_13; __pyx_t_12+=1) {
+                                    __pyx_v__ = __pyx_t_12;
 
-                                  /* "implicit/lmf.pyx":245
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+                                    /* "implicit/lmf.pyx":245
+ * 
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
  */
-                                  __pyx_t_41 = __pyx_v_u;
-                                  __pyx_t_42 = __pyx_v__;
-                                  if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_deriv_sum_sq.shape[1];
-                                  *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_41 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_42 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+                                    __pyx_t_15 = __pyx_v__;
+                                    __pyx_t_39 = __pyx_v_u;
+                                    __pyx_t_40 = __pyx_v__;
+                                    if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_user_vectors.shape[1];
+                                    (__pyx_v_deriv[__pyx_t_15]) = ((__pyx_v_deriv[__pyx_t_15]) - (__pyx_v_reg * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_39 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_40 * __pyx_v_user_vectors.strides[1]) )))));
 
-                                  /* "implicit/lmf.pyx":246
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+                                    /* "implicit/lmf.pyx":246
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
  */
-                                  __pyx_t_43 = __pyx_v_u;
-                                  __pyx_t_44 = __pyx_v__;
-                                  if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[1];
-                                  __pyx_t_45 = __pyx_v_u;
-                                  __pyx_t_46 = __pyx_v__;
-                                  if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_user_vectors.shape[1];
-                                  *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_45 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_46 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
-                                }
-                                goto __pyx_L34;
-                                __pyx_L10_continue:;
-                                goto __pyx_L34;
-                                __pyx_L34:;
-                            }
-                        }
-                    }
+                                    __pyx_t_41 = __pyx_v_u;
+                                    __pyx_t_42 = __pyx_v__;
+                                    if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_deriv_sum_sq.shape[1];
+                                    *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_41 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_42 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+
+                                    /* "implicit/lmf.pyx":247
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+ *         finally:
+ *             free(deriv)
+ */
+                                    __pyx_t_43 = __pyx_v_u;
+                                    __pyx_t_44 = __pyx_v__;
+                                    if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[1];
+                                    __pyx_t_45 = __pyx_v_u;
+                                    __pyx_t_46 = __pyx_v__;
+                                    if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_user_vectors.shape[1];
+                                    *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_45 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_46 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
+                                  }
+                                  goto __pyx_L39;
+                                  __pyx_L15_continue:;
+                                  goto __pyx_L39;
+                                  __pyx_L39:;
+                              }
+                          }
+                      }
+                  }
+                }
+
+                /* "implicit/lmf.pyx":249
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
+ *             free(deriv)             # <<<<<<<<<<<<<<
+ */
+                /*finally:*/ {
+                  /*normal exit:*/{
+                    free(__pyx_v_deriv);
+                    goto __pyx_L14;
+                  }
+                  __pyx_L14:;
                 }
             }
         }
@@ -10107,7 +10237,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
+ *         try:
  */
                 __pyx_v_deriv = ((double *)malloc(((sizeof(double)) * __pyx_v_n_factors)));
 
@@ -10115,8 +10245,8 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
  *     with nogil, parallel(num_threads=num_threads):
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -10128,439 +10258,465 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
                 /* "implicit/lmf.pyx":207
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
+ *         try:             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
  */
-                __pyx_t_2 = __pyx_v_n_users;
-                if (1 == 0) abort();
-                {
-                    __pyx_t_4 = (__pyx_t_2 - 0 + 1 - 1/abs(1)) / 1;
-                    if (__pyx_t_4 > 0)
-                    {
-                        #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
-                        #endif /* _OPENMP */
-                        for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
-                            {
-                                __pyx_v_u = (long)(0 + 1 * __pyx_t_3);
-                                /* Initialize private variables to invalid values */
-                                __pyx_v__ = ((long)0xbad0bad0);
-                                __pyx_v_exp_r = ((double)__PYX_NAN());
-                                __pyx_v_i = ((long)0xbad0bad0);
-                                __pyx_v_index = ((long)0xbad0bad0);
-                                __pyx_v_user_seen_item = ((int)0xbad0bad0);
-                                __pyx_v_z = ((double)__PYX_NAN());
+                /*try:*/ {
 
-                                /* "implicit/lmf.pyx":208
+                  /* "implicit/lmf.pyx":208
  *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
  */
-                                __pyx_t_5 = __pyx_v_u;
-                                if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
-                                __pyx_t_6 = (__pyx_v_u + 1);
-                                if (__pyx_t_6 < 0) __pyx_t_6 += __pyx_v_indptr.shape[0];
-                                __pyx_t_7 = (((*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) ))) == (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_6 * __pyx_v_indptr.strides[0]) )))) != 0);
-                                if (__pyx_t_7) {
+                  __pyx_t_2 = __pyx_v_n_users;
+                  if (1 == 0) abort();
+                  {
+                      __pyx_t_4 = (__pyx_t_2 - 0 + 1 - 1/abs(1)) / 1;
+                      if (__pyx_t_4 > 0)
+                      {
+                          #ifdef _OPENMP
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #endif /* _OPENMP */
+                          for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
+                              {
+                                  __pyx_v_u = (long)(0 + 1 * __pyx_t_3);
+                                  /* Initialize private variables to invalid values */
+                                  __pyx_v__ = ((long)0xbad0bad0);
+                                  __pyx_v_exp_r = ((double)__PYX_NAN());
+                                  __pyx_v_i = ((long)0xbad0bad0);
+                                  __pyx_v_index = ((long)0xbad0bad0);
+                                  __pyx_v_user_seen_item = ((int)0xbad0bad0);
+                                  __pyx_v_z = ((double)__PYX_NAN());
 
                                   /* "implicit/lmf.pyx":209
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:
- *                 continue             # <<<<<<<<<<<<<<
- *             user_seen_item = indptr[u + 1] - indptr[u]
- * 
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                  goto __pyx_L10_continue;
+                                  __pyx_t_5 = __pyx_v_u;
+                                  if (__pyx_t_5 < 0) __pyx_t_5 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_6 = (__pyx_v_u + 1);
+                                  if (__pyx_t_6 < 0) __pyx_t_6 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_7 = (((*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_5 * __pyx_v_indptr.strides[0]) ))) == (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_6 * __pyx_v_indptr.strides[0]) )))) != 0);
+                                  if (__pyx_t_7) {
 
-                                  /* "implicit/lmf.pyx":208
- *         thread_id = threadid()
- *         for u in prange(n_users, schedule='guided'):
- *             if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                    /* "implicit/lmf.pyx":210
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue             # <<<<<<<<<<<<<<
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
+ * 
  */
-                                }
+                                    goto __pyx_L15_continue;
 
-                                /* "implicit/lmf.pyx":210
- *             if indptr[u] == indptr[u + 1]:
- *                 continue
- *             user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
- * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)
+                                    /* "implicit/lmf.pyx":209
+ *         try:
+ *             for u in prange(n_users, schedule='guided'):
+ *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  */
-                                __pyx_t_8 = (__pyx_v_u + 1);
-                                if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
-                                __pyx_t_9 = __pyx_v_u;
-                                if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
-                                __pyx_v_user_seen_item = ((*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))) - (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) ))));
+                                  }
 
-                                /* "implicit/lmf.pyx":212
- *             user_seen_item = indptr[u + 1] - indptr[u]
+                                  /* "implicit/lmf.pyx":211
+ *                 if indptr[u] == indptr[u + 1]:
+ *                     continue
+ *                 user_seen_item = indptr[u + 1] - indptr[u]             # <<<<<<<<<<<<<<
  * 
- *             memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
- * 
- *             # Positive item indices: c_ui* y_i
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)
  */
-                                (void)(memset(__pyx_v_deriv, 0, ((sizeof(double)) * __pyx_v_n_factors)));
+                                  __pyx_t_8 = (__pyx_v_u + 1);
+                                  if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_9 = __pyx_v_u;
+                                  if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_indptr.shape[0];
+                                  __pyx_v_user_seen_item = ((*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_8 * __pyx_v_indptr.strides[0]) ))) - (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_9 * __pyx_v_indptr.strides[0]) ))));
 
-                                /* "implicit/lmf.pyx":215
+                                  /* "implicit/lmf.pyx":213
+ *                 user_seen_item = indptr[u + 1] - indptr[u]
  * 
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ *                 memset(deriv, 0, sizeof(floating) * n_factors)             # <<<<<<<<<<<<<<
+ * 
+ *                 # Positive item indices: c_ui* y_i
  */
-                                __pyx_t_10 = (__pyx_v_u + 1);
-                                if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_indptr.shape[0];
-                                __pyx_t_11 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_10 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_12 = __pyx_v_u;
-                                if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_indptr.shape[0];
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_12 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v_index = __pyx_t_14;
+                                  (void)(memset(__pyx_v_deriv, 0, ((sizeof(double)) * __pyx_v_n_factors)));
 
                                   /* "implicit/lmf.pyx":216
- *             # Positive item indices: c_ui* y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]
- */
-                                  __pyx_t_15 = __pyx_v_index;
-                                  if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_15 * __pyx_v_indices.strides[0]) )));
-
-                                  /* "implicit/lmf.pyx":217
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] += data[index] * item_vectors[i, _]
  * 
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                  __pyx_t_10 = (__pyx_v_u + 1);
+                                  if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_11 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_10 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_12 = __pyx_v_u;
+                                  if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_12 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v_index = __pyx_t_14;
+
+                                    /* "implicit/lmf.pyx":217
+ *                 # Positive item indices: c_ui* y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]
+ */
+                                    __pyx_t_15 = __pyx_v_index;
+                                    if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_15 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":218
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] += data[index] * item_vectors[i, _]
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_20 = __pyx_v_index;
-                                    if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_data.shape[0];
-                                    __pyx_t_21 = __pyx_v_i;
-                                    __pyx_t_22 = __pyx_v__;
-                                    if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) + ((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_20 * __pyx_v_data.strides[0]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_21 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_22 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":221
+                                      /* "implicit/lmf.pyx":219
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         deriv[_] += data[index] * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 i = indices[index]
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_23 = (__pyx_v_u + 1);
-                                if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
-                                __pyx_t_11 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) )));
-                                __pyx_t_24 = __pyx_v_u;
-                                if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indptr.shape[0];
-                                __pyx_t_13 = __pyx_t_11;
-                                for (__pyx_t_14 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_24 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-                                  __pyx_v_index = __pyx_t_14;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_20 = __pyx_v_index;
+                                      if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_data.shape[0];
+                                      __pyx_t_21 = __pyx_v_i;
+                                      __pyx_t_22 = __pyx_v__;
+                                      if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_22 < 0) __pyx_t_22 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) + ((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_20 * __pyx_v_data.strides[0]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_21 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_22 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":222
- *             # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 for _ in range(n_factors):
+ * 
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     i = indices[index]
  */
-                                  __pyx_v_exp_r = 0.0;
+                                  __pyx_t_23 = (__pyx_v_u + 1);
+                                  if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_11 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_23 * __pyx_v_indptr.strides[0]) )));
+                                  __pyx_t_24 = __pyx_v_u;
+                                  if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_indptr.shape[0];
+                                  __pyx_t_13 = __pyx_t_11;
+                                  for (__pyx_t_14 = (*((long *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_24 * __pyx_v_indptr.strides[0]) ))); __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+                                    __pyx_v_index = __pyx_t_14;
 
-                                  /* "implicit/lmf.pyx":223
- *             for index in range(indptr[u], indptr[u + 1]):
- *                 exp_r = 0
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":223
+ *                 # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_25 = __pyx_v_index;
-                                  if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_25 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_exp_r = 0.0;
 
-                                  /* "implicit/lmf.pyx":224
- *                 exp_r = 0
- *                 i = indices[index]
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":224
+ *                 for index in range(indptr[u], indptr[u + 1]):
+ *                     exp_r = 0
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_t_25 = __pyx_v_index;
+                                    if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_25 * __pyx_v_indices.strides[0]) )));
 
                                     /* "implicit/lmf.pyx":225
- *                 i = indices[index]
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
+ *                     exp_r = 0
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_26 = __pyx_v_u;
-                                    __pyx_t_27 = __pyx_v__;
-                                    if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_28 = __pyx_v_i;
-                                    __pyx_t_29 = __pyx_v__;
-                                    if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_26 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_27 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_28 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_29 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                  /* "implicit/lmf.pyx":226
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":226
+ *                     i = indices[index]
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_26 = __pyx_v_u;
+                                      __pyx_t_27 = __pyx_v__;
+                                      if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_28 = __pyx_v_i;
+                                      __pyx_t_29 = __pyx_v__;
+                                      if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_29 < 0) __pyx_t_29 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_26 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_27 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_28 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_29 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":227
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":227
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_t_30 = __pyx_v_index;
-                                  if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_data.shape[0];
-                                  __pyx_v_z = (((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_30 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":228
- *                 exp_r = exp(exp_r)
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":228
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_t_30 = __pyx_v_index;
+                                    if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_v_data.shape[0];
+                                    __pyx_v_z = (((*((double *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_30 * __pyx_v_data.strides[0]) ))) * __pyx_v_exp_r) / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":229
- *                 z = (data[index] * exp_r) / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_31 = __pyx_v_i;
-                                    __pyx_t_32 = __pyx_v__;
-                                    if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_31 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_32 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":232
+                                      /* "implicit/lmf.pyx":230
+ *                     z = (data[index] * exp_r) / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
  */
-                                __pyx_t_11 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
-                                __pyx_t_13 = __pyx_v_n_items;
-                                if (((__pyx_t_11 < __pyx_t_13) != 0)) {
-                                  __pyx_t_14 = __pyx_t_11;
-                                } else {
-                                  __pyx_t_14 = __pyx_t_13;
-                                }
-                                __pyx_t_11 = __pyx_t_14;
-                                __pyx_t_14 = __pyx_t_11;
-                                for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_14; __pyx_t_13+=1) {
-                                  __pyx_v__ = __pyx_t_13;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_31 = __pyx_v_i;
+                                      __pyx_t_32 = __pyx_v__;
+                                      if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_32 < 0) __pyx_t_32 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_31 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_32 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":233
- *             # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
- *                 i = indices[index]
- *                 exp_r = 0
+ * 
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):             # <<<<<<<<<<<<<<
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
  */
-                                  __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
+                                  __pyx_t_11 = (__pyx_v_user_seen_item * __pyx_v_neg_prop);
+                                  __pyx_t_13 = __pyx_v_n_items;
+                                  if (((__pyx_t_11 < __pyx_t_13) != 0)) {
+                                    __pyx_t_14 = __pyx_t_11;
+                                  } else {
+                                    __pyx_t_14 = __pyx_t_13;
+                                  }
+                                  __pyx_t_11 = __pyx_t_14;
+                                  __pyx_t_14 = __pyx_t_11;
+                                  for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_14; __pyx_t_13+=1) {
+                                    __pyx_v__ = __pyx_t_13;
 
-                                  /* "implicit/lmf.pyx":234
- *             for _ in range(min(n_items, user_seen_item * neg_prop)):
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]             # <<<<<<<<<<<<<<
- *                 exp_r = 0
- *                 for _ in range(n_factors):
+                                    /* "implicit/lmf.pyx":234
+ *                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
+ *                     i = indices[index]
+ *                     exp_r = 0
  */
-                                  __pyx_t_33 = __pyx_v_index;
-                                  if (__pyx_t_33 < 0) __pyx_t_33 += __pyx_v_indices.shape[0];
-                                  __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_33 * __pyx_v_indices.strides[0]) )));
+                                    __pyx_v_index = __pyx_f_8implicit_3lmf_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
-                                  /* "implicit/lmf.pyx":235
- *                 index = rng.generate(thread_id)
- *                 i = indices[index]
- *                 exp_r = 0             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":235
+ *                 for _ in range(min(n_items, user_seen_item * neg_prop)):
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]             # <<<<<<<<<<<<<<
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_exp_r = 0.0;
+                                    __pyx_t_33 = __pyx_v_index;
+                                    if (__pyx_t_33 < 0) __pyx_t_33 += __pyx_v_indices.shape[0];
+                                    __pyx_v_i = (*((long *) ( /* dim=0 */ (__pyx_v_indices.data + __pyx_t_33 * __pyx_v_indices.strides[0]) )));
 
-                                  /* "implicit/lmf.pyx":236
- *                 i = indices[index]
- *                 exp_r = 0
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
+                                    /* "implicit/lmf.pyx":236
+ *                     index = rng.generate(thread_id)
+ *                     i = indices[index]
+ *                     exp_r = 0             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_v_exp_r = 0.0;
 
                                     /* "implicit/lmf.pyx":237
- *                 exp_r = 0
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
+ *                     i = indices[index]
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
  */
-                                    __pyx_t_34 = __pyx_v_u;
-                                    __pyx_t_35 = __pyx_v__;
-                                    if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_user_vectors.shape[0];
-                                    if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_user_vectors.shape[1];
-                                    __pyx_t_36 = __pyx_v_i;
-                                    __pyx_t_37 = __pyx_v__;
-                                    if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[1];
-                                    __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_34 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_35 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_36 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_37 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                  /* "implicit/lmf.pyx":238
- *                 for _ in range(n_factors):
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
+                                      /* "implicit/lmf.pyx":238
+ *                     exp_r = 0
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
  */
-                                  __pyx_v_exp_r = exp(__pyx_v_exp_r);
+                                      __pyx_t_34 = __pyx_v_u;
+                                      __pyx_t_35 = __pyx_v__;
+                                      if (__pyx_t_34 < 0) __pyx_t_34 += __pyx_v_user_vectors.shape[0];
+                                      if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_user_vectors.shape[1];
+                                      __pyx_t_36 = __pyx_v_i;
+                                      __pyx_t_37 = __pyx_v__;
+                                      if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_v_item_vectors.shape[1];
+                                      __pyx_v_exp_r = (__pyx_v_exp_r + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_34 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_35 * __pyx_v_user_vectors.strides[1]) ))) * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_36 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_37 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
 
-                                  /* "implicit/lmf.pyx":239
- *                     exp_r += user_vectors[u, _] * item_vectors[i, _]
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]
+                                    /* "implicit/lmf.pyx":239
+ *                     for _ in range(n_factors):
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)             # <<<<<<<<<<<<<<
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
  */
-                                  __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
+                                    __pyx_v_exp_r = exp(__pyx_v_exp_r);
 
-                                  /* "implicit/lmf.pyx":240
- *                 exp_r = exp(exp_r)
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                     deriv[_] -= z * item_vectors[i, _]
- * 
+                                    /* "implicit/lmf.pyx":240
+ *                         exp_r += user_vectors[u, _] * item_vectors[i, _]
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)             # <<<<<<<<<<<<<<
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]
  */
-                                  __pyx_t_16 = __pyx_v_n_factors;
-                                  __pyx_t_17 = __pyx_t_16;
-                                  for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                    __pyx_v__ = __pyx_t_18;
+                                    __pyx_v_z = (__pyx_v_exp_r / (1.0 + __pyx_v_exp_r));
 
                                     /* "implicit/lmf.pyx":241
- *                 z = exp_r / (1 + exp_r)
- *                 for _ in range(n_factors):
- *                     deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
+ *                     exp_r = exp(exp_r)
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
  */
-                                    __pyx_t_19 = __pyx_v__;
-                                    __pyx_t_38 = __pyx_v_i;
-                                    __pyx_t_39 = __pyx_v__;
-                                    if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[0];
-                                    if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_item_vectors.shape[1];
-                                    (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_38 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_39 * __pyx_v_item_vectors.strides[1]) )))));
-                                  }
-                                }
+                                    __pyx_t_16 = __pyx_v_n_factors;
+                                    __pyx_t_17 = __pyx_t_16;
+                                    for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+                                      __pyx_v__ = __pyx_t_18;
 
-                                /* "implicit/lmf.pyx":243
- *                     deriv[_] -= z * item_vectors[i, _]
+                                      /* "implicit/lmf.pyx":242
+ *                     z = exp_r / (1 + exp_r)
+ *                     for _ in range(n_factors):
+ *                         deriv[_] -= z * item_vectors[i, _]             # <<<<<<<<<<<<<<
  * 
- *             for _ in range(n_factors):             # <<<<<<<<<<<<<<
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                 for _ in range(n_factors):
  */
-                                __pyx_t_11 = __pyx_v_n_factors;
-                                __pyx_t_14 = __pyx_t_11;
-                                for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_14; __pyx_t_13+=1) {
-                                  __pyx_v__ = __pyx_t_13;
+                                      __pyx_t_19 = __pyx_v__;
+                                      __pyx_t_38 = __pyx_v_i;
+                                      __pyx_t_39 = __pyx_v__;
+                                      if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_item_vectors.shape[0];
+                                      if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_item_vectors.shape[1];
+                                      (__pyx_v_deriv[__pyx_t_19]) = ((__pyx_v_deriv[__pyx_t_19]) - (__pyx_v_z * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_item_vectors.data + __pyx_t_38 * __pyx_v_item_vectors.strides[0]) ) + __pyx_t_39 * __pyx_v_item_vectors.strides[1]) )))));
+                                    }
+                                  }
 
                                   /* "implicit/lmf.pyx":244
+ *                         deriv[_] -= z * item_vectors[i, _]
  * 
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *                 for _ in range(n_factors):             # <<<<<<<<<<<<<<
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
  */
-                                  __pyx_t_16 = __pyx_v__;
-                                  __pyx_t_40 = __pyx_v_u;
-                                  __pyx_t_41 = __pyx_v__;
-                                  if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_user_vectors.shape[1];
-                                  (__pyx_v_deriv[__pyx_t_16]) = ((__pyx_v_deriv[__pyx_t_16]) - (__pyx_v_reg * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_40 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_41 * __pyx_v_user_vectors.strides[1]) )))));
+                                  __pyx_t_11 = __pyx_v_n_factors;
+                                  __pyx_t_14 = __pyx_t_11;
+                                  for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_14; __pyx_t_13+=1) {
+                                    __pyx_v__ = __pyx_t_13;
 
-                                  /* "implicit/lmf.pyx":245
- *             for _ in range(n_factors):
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+                                    /* "implicit/lmf.pyx":245
+ * 
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]             # <<<<<<<<<<<<<<
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
  */
-                                  __pyx_t_42 = __pyx_v_u;
-                                  __pyx_t_43 = __pyx_v__;
-                                  if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[1];
-                                  *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_42 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+                                    __pyx_t_16 = __pyx_v__;
+                                    __pyx_t_40 = __pyx_v_u;
+                                    __pyx_t_41 = __pyx_v__;
+                                    if (__pyx_t_40 < 0) __pyx_t_40 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_41 < 0) __pyx_t_41 += __pyx_v_user_vectors.shape[1];
+                                    (__pyx_v_deriv[__pyx_t_16]) = ((__pyx_v_deriv[__pyx_t_16]) - (__pyx_v_reg * (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_40 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_41 * __pyx_v_user_vectors.strides[1]) )))));
 
-                                  /* "implicit/lmf.pyx":246
- *                 deriv[_] -= reg * user_vectors[u, _]
- *                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
- *                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+                                    /* "implicit/lmf.pyx":246
+ *                 for _ in range(n_factors):
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]             # <<<<<<<<<<<<<<
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
  */
-                                  __pyx_t_44 = __pyx_v_u;
-                                  __pyx_t_45 = __pyx_v__;
-                                  if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[0];
-                                  if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_deriv_sum_sq.shape[1];
-                                  __pyx_t_46 = __pyx_v_u;
-                                  __pyx_t_47 = __pyx_v__;
-                                  if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_user_vectors.shape[0];
-                                  if (__pyx_t_47 < 0) __pyx_t_47 += __pyx_v_user_vectors.shape[1];
-                                  *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_46 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_47 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_45 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
-                                }
-                                goto __pyx_L34;
-                                __pyx_L10_continue:;
-                                goto __pyx_L34;
-                                __pyx_L34:;
-                            }
-                        }
-                    }
+                                    __pyx_t_42 = __pyx_v_u;
+                                    __pyx_t_43 = __pyx_v__;
+                                    if (__pyx_t_42 < 0) __pyx_t_42 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_43 < 0) __pyx_t_43 += __pyx_v_deriv_sum_sq.shape[1];
+                                    *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_42 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_43 * __pyx_v_deriv_sum_sq.strides[1]) )) += ((__pyx_v_deriv[__pyx_v__]) * (__pyx_v_deriv[__pyx_v__]));
+
+                                    /* "implicit/lmf.pyx":247
+ *                     deriv[_] -= reg * user_vectors[u, _]
+ *                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]             # <<<<<<<<<<<<<<
+ *         finally:
+ *             free(deriv)
+ */
+                                    __pyx_t_44 = __pyx_v_u;
+                                    __pyx_t_45 = __pyx_v__;
+                                    if (__pyx_t_44 < 0) __pyx_t_44 += __pyx_v_deriv_sum_sq.shape[0];
+                                    if (__pyx_t_45 < 0) __pyx_t_45 += __pyx_v_deriv_sum_sq.shape[1];
+                                    __pyx_t_46 = __pyx_v_u;
+                                    __pyx_t_47 = __pyx_v__;
+                                    if (__pyx_t_46 < 0) __pyx_t_46 += __pyx_v_user_vectors.shape[0];
+                                    if (__pyx_t_47 < 0) __pyx_t_47 += __pyx_v_user_vectors.shape[1];
+                                    *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_user_vectors.data + __pyx_t_46 * __pyx_v_user_vectors.strides[0]) ) + __pyx_t_47 * __pyx_v_user_vectors.strides[1]) )) += ((__pyx_v_lr / sqrt((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_deriv_sum_sq.data + __pyx_t_44 * __pyx_v_deriv_sum_sq.strides[0]) ) + __pyx_t_45 * __pyx_v_deriv_sum_sq.strides[1]) ))))) * (__pyx_v_deriv[__pyx_v__]));
+                                  }
+                                  goto __pyx_L39;
+                                  __pyx_L15_continue:;
+                                  goto __pyx_L39;
+                                  __pyx_L39:;
+                              }
+                          }
+                      }
+                  }
+                }
+
+                /* "implicit/lmf.pyx":249
+ *                     user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+ *         finally:
+ *             free(deriv)             # <<<<<<<<<<<<<<
+ */
+                /*finally:*/ {
+                  /*normal exit:*/{
+                    free(__pyx_v_deriv);
+                    goto __pyx_L14;
+                  }
+                  __pyx_L14:;
                 }
             }
         }
