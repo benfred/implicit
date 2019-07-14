@@ -21,8 +21,6 @@ import scipy.sparse
 
 from .recommender_base import MatrixFactorizationBase
 
-from rng cimport RNGVector
-
 cdef extern from "<random>" namespace "std":
     cdef cppclass mt19937:
         mt19937(unsigned int)
@@ -52,27 +50,28 @@ log = logging.getLogger("implicit")
 class LogisticMatrixFactorization(MatrixFactorizationBase):
     """ Logistic Matrix Factorization
 
-    A collaborative filtering recommender model that learns probabilistic distribution whether user like it or not.
-    Algorithm of the model is described in `Logistic Matrix Factorization for Implicit Feedback Data <https://web.stanford.edu/~rezab/nips2014workshop/submits/logmat.pdf>`
+    A collaborative filtering recommender model that learns probabilistic distribution
+    whether user like it or not. Algorithm of the model is described in
+    `Logistic Matrix Factorization for Implicit Feedback Data
+    <https://web.stanford.edu/~rezab/nips2014workshop/submits/logmat.pdf>`
 
     Parameters
     ----------
     factors : int, optional
         The number of latent factors to compute
     learning_rate : float, optional
-        The learning rate to apply for SGD updates during training
+        The learning rate to apply for updates during training
     regularization : float, optional
         The regularization factor to use
     dtype : data-type, optional
         Specifies whether to generate 64 bit or 32 bit floating point factors
-    use_gpu : bool, optional
-        Fit on the GPU if available
     iterations : int, optional
         The number of training epochs to use when fitting the data
-    verify_negative_samples: bool, optional
-        When sampling negative items, check if the randomly picked negative item has actually
-        been liked by the user. This check increases the time needed to train but usually leads
-        to better predictions.
+    neg_prop : int, optional
+        The proportion of negative samples. i.e.) "neg_prop = 30" means if user have seen 5 items,
+        then 5 * 30 = 150 negative samples are used for training.
+    use_gpu : bool, optional
+        Fit on the GPU if available
     num_threads : int, optional
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
@@ -86,7 +85,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         Array of latent factors for each user in the training set
     """
     def __init__(self, factors=30, learning_rate=1.00, regularization=0.6, dtype=np.float32,
-                 iterations=30, use_gpu=False, num_threads=0, neg_prop=30):
+                 iterations=30, neg_prop=30, use_gpu=False, num_threads=0):
         super(LogisticMatrixFactorization, self).__init__()
 
         self.factors = factors
@@ -97,7 +96,6 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         self.use_gpu = use_gpu
         self.num_threads = num_threads
         self.neg_prop = neg_prop
-
 
         # TODO: Add GPU training
         if self.use_gpu:
@@ -118,6 +116,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         show_progress : bool, optional
             Whether to show a progress bar
         """
+
         # for now, all we handle is float 32 values
         if item_users.dtype != np.float32:
             item_users = item_users.astype(np.float32)
@@ -125,7 +124,6 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         items, users = item_users.shape
 
         item_users = item_users.tocsr()
-
         user_items = item_users.T.tocsr()
 
         if not item_users.has_sorted_indices:
@@ -139,29 +137,26 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         item_counts = np.bincount(user_items.indices, minlength=items)
 
         # Reserve last two elements of user factors, and item factors to be bias.
-        # user_factors[-1] = 1
-        # item_factors[-2] = 1
-        # user_factors[-2] = user bias
-        # item factors[-1] = item bias
+        # user_factors[-1] = 1, item_factors[-2] = 1
+        # user_factors[-2] = user bias, item factors[-1] = item bias
         # This significantly simplifies both training, and serving
-
         if self.item_factors is None:
             self.item_factors = np.random.normal(size=(items, self.factors + 2)).astype(np.float32)
-            # set factors to all zeros for items without any ratings
             self.item_factors[:, -1] = 1.0
 
+            # set factors to all zeros for items without any ratings
             self.item_factors[item_counts == 0] = np.zeros(self.factors + 2)
 
         if self.user_factors is None:
             self.user_factors = np.random.normal(size=(users, self.factors + 2)).astype(np.float32)
             self.user_factors[:, -2] = 1.0
+
             # set factors to all zeros for users without any ratings
             self.user_factors[user_counts == 0] = np.zeros(self.factors + 2)
 
         # For Adagrad update
-        self.user_vec_deriv_sum = np.zeros((users, self.factors + 2)).astype(np.float32)
-        self.item_vec_deriv_sum = np.zeros((items, self.factors + 2)).astype(np.float32)
-
+        user_vec_deriv_sum = np.zeros((users, self.factors + 2)).astype(np.float32)
+        item_vec_deriv_sum = np.zeros((items, self.factors + 2)).astype(np.float32)
 
         cdef int num_threads = self.num_threads
         if not num_threads:
@@ -169,66 +164,60 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
         # initialize RNG's, one per thread.
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1)
-        log.debug("Running %i BPR training epochs", self.iterations)
-
+        log.debug("Running %i LMF training epochs", self.iterations)
         with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
                 # user update
-                lmf_update(rng, self.user_vec_deriv_sum,
+                lmf_update(rng, user_vec_deriv_sum,
                            self.user_factors, self.item_factors,
                            user_items.indices, user_items.indptr, user_items.data,
                            self.learning_rate, self.regularization, self.neg_prop, num_threads)
                 self.user_factors[:, -2] = 1.0
                 # item update
-                lmf_update(rng, self.item_vec_deriv_sum,
+                lmf_update(rng, item_vec_deriv_sum,
                            self.item_factors, self.user_factors,
                            item_users.indices, item_users.indptr, item_users.data,
                            self.learning_rate, self.regularization, self.neg_prop, num_threads)
                 self.item_factors[:, -1] = 1.0
                 progress.update(1)
 
-                """
-                total = len(user_items.data)
-                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
-                                      "skipped": "%.2f%%" % (100.0 * skipped / total)})
-                """
-
 
 @cython.cdivision(True)
 @cython.boundscheck(False)
-def lmf_update(RNGVector rng,
-    floating[:, :] deriv_sum_sq, floating[:, :] user_vectors, floating[:, :] item_vectors,
-    integral[:] indices, integral[:] indptr, floating[:] data,
-    floating lr, floating reg, integral neg_prop, integral num_threads):
+def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
+               floating[:, :] user_vectors, floating[:, :] item_vectors,
+               integral[:] indices, integral[:] indptr, floating[:] data,
+               floating lr, floating reg, integral neg_prop,
+               integral num_threads):
 
-    #cdef RNGVector rng = RNGVector(12, len(data) - 1)
     cdef integral n_users = user_vectors.shape[0]
     cdef integral n_items = item_vectors.shape[1]
     cdef integral n_factors = user_vectors.shape[1]
 
     cdef integral u, i, it, c, _, index, f
-    #cdef integral thread_id
+    cdef integral thread_id
     cdef floating* deriv
     cdef floating score, z, temp
     cdef floating exp_r
     cdef int user_seen_item
-    cdef integral tid
+
     with nogil, parallel(num_threads=num_threads):
         deriv = <floating*> malloc(sizeof(floating) * n_factors)
-        tid = threadid()
+        thread_id = threadid()
         for u in prange(n_users, schedule='guided'):
             if indptr[u] == indptr[u + 1]:
                 continue
             user_seen_item = indptr[u + 1] - indptr[u]
 
             memset(deriv, 0, sizeof(floating) * n_factors)
-            # Positive item indices
+
+            # Positive item indices: c_ui* y_i
             for index in range(indptr[u], indptr[u + 1]):
                 i = indices[index]
                 for _ in range(n_factors):
                     deriv[_] += data[index] * item_vectors[i, _]
 
-            # Positive Item Indices
+            # Positive Item Indices (c_ui * exp(y_ui)) / (1 + exp(y_ui)) * y_i
             for index in range(indptr[u], indptr[u + 1]):
                 exp_r = 0
                 i = indices[index]
@@ -239,9 +228,9 @@ def lmf_update(RNGVector rng,
                 for _ in range(n_factors):
                     deriv[_] -= z * item_vectors[i, _]
 
-            # Negative(Sampled) Item Indices
+            # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
             for _ in range(min(n_items, user_seen_item * neg_prop)):
-                index = rng.generate(tid)
+                index = rng.generate(thread_id)
                 i = indices[index]
                 exp_r = 0
                 for _ in range(n_factors):
@@ -255,5 +244,3 @@ def lmf_update(RNGVector rng,
                 deriv[_] -= reg * user_vectors[u, _]
                 deriv_sum_sq[u, _] += deriv[_] * deriv[_]
                 user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
-            #with gil:
-            #    print([ "%0.2f" % d for d in np.asarray(user_vectors[u])])
