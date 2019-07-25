@@ -100,7 +100,7 @@ class RecommenderBase(object):
     @abstractmethod
     def similar_users(self, userid, N=10):
         """
-        Calculates a list of similar items
+        Calculates a list of similar users
 
         Parameters
         ----------
