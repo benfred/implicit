@@ -1,7 +1,7 @@
 # distutils: language = c++
 # cython: language_level=3
 
-import tqdm
+from tqdm.auto import tqdm
 import numpy as np
 from scipy.sparse import coo_matrix, csr_matrix
 import cython
@@ -92,7 +92,7 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
     cdef int * ids
     cdef unordered_set[int] * likes
 
-    progress = tqdm.tqdm(total=users, disable=not show_progress)
+    progress = tqdm(total=users, disable=not show_progress)
 
     with nogil, parallel(num_threads=num_threads):
         ids = <int * > malloc(sizeof(int) * K)
@@ -175,7 +175,7 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
     cdef int * ids
     cdef unordered_set[int] * likes
 
-    progress = tqdm.tqdm(total=users, disable=not show_progress)
+    progress = tqdm(total=users, disable=not show_progress)
 
     with nogil, parallel(num_threads=num_threads):
         ids = <int * > malloc(sizeof(int) * K)
@@ -260,7 +260,7 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
     cdef unordered_set[int] * likes
     cdef double[:] cg = (1.0 / np.log2(np.arange(2, K + 2)))
 
-    progress = tqdm.tqdm(total=users, disable=not show_progress)
+    progress = tqdm(total=users, disable=not show_progress)
 
     with nogil, parallel(num_threads=num_threads):
         ids = <int *> malloc(sizeof(int) * K)

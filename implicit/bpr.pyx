@@ -4,7 +4,7 @@ import logging
 import multiprocessing
 import random
 import time
-import tqdm
+from tqdm.auto import tqdm
 
 from cython.parallel import parallel, prange
 from libc.math cimport exp
@@ -183,7 +183,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # initialize RNG's, one per thread.
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1)
         log.debug("Running %i BPR training epochs", self.iterations)
-        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
+        with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
                 correct, skipped = bpr_update(rng, userids, user_items.indices, user_items.indptr,
                                               self.user_factors, self.item_factors,
@@ -212,7 +212,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         Y = implicit.cuda.CuDenseMatrix(self.item_factors)
 
         log.debug("Running %i BPR training epochs", self.iterations)
-        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
+        with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
                 correct, skipped = implicit.cuda.cu_bpr_update(userids, itemids, indptr,
                                                                X, Y, self.learning_rate,

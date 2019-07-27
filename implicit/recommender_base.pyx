@@ -4,7 +4,7 @@
 
 import itertools
 from abc import ABCMeta, abstractmethod
-import tqdm
+from tqdm.auto import tqdm
 import numpy as np
 import multiprocessing
 from scipy.sparse import csr_matrix
@@ -254,7 +254,7 @@ class MatrixFactorizationBase(RecommenderBase):
             int[:, ::1] B_mv = np.zeros((users_c, N), dtype=np.intc)
             int * B_mv_p = &B_mv[0, 0]
 
-        progress = tqdm.tqdm(total=users_c, disable=not show_progress)
+        progress = tqdm(total=users_c, disable=not show_progress)
         # Separate all users in batches
         for u_b in range(users_c_b):
             u_low = u_b * batch

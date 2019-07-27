@@ -7,7 +7,7 @@ import time
 import numpy as np
 import scipy
 import scipy.sparse
-import tqdm
+from tqdm.auto import tqdm
 
 import implicit.cuda
 
@@ -151,17 +151,15 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         solver = self.solver
 
         log.debug("Running %i ALS iterations", self.iterations)
-        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
+        with tqdm(total=self.iterations, disable=not show_progress) as progress:
             # alternate between learning the user_factors from the item_factors and vice-versa
             for iteration in range(self.iterations):
                 s = time.time()
                 solver(Cui, self.user_factors, self.item_factors, self.regularization,
                        num_threads=self.num_threads)
-                progress.update(.5)
-
                 solver(Ciu, self.item_factors, self.user_factors, self.regularization,
                        num_threads=self.num_threads)
-                progress.update(.5)
+                progress.update(1)
 
                 if self.calculate_training_loss:
                     loss = _als.calculate_loss(Cui, self.user_factors, self.item_factors,
@@ -192,13 +190,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         solver = implicit.cuda.CuLeastSquaresSolver(self.factors)
         log.debug("Running %i ALS iterations", self.iterations)
-        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
+        with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for iteration in range(self.iterations):
                 s = time.time()
                 solver.least_squares(Cui, X, Y, self.regularization, self.cg_steps)
-                progress.update(.5)
                 solver.least_squares(Ciu, Y, X, self.regularization, self.cg_steps)
-                progress.update(.5)
+                progress.update(1)
 
                 if self.fit_callback:
                     self.fit_callback(iteration, time.time() - s)
