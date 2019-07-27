@@ -53,8 +53,8 @@ def define_extensions(use_cython=False):
                          language='c++',
                          extra_compile_args=compile_args, extra_link_args=link_args)
                for name in ['_als', '_nearest_neighbours', 'bpr', 'lmf', 'evaluation']]
-    modules.append(Extension("implicit." + 'recommender_base',
-                             [os.path.join("implicit", 'recommender_base' + src_ext),
+    modules.append(Extension("implicit." + 'matrix_factorization_base',
+                             [os.path.join("implicit", 'matrix_factorization_base' + src_ext),
                               os.path.join("implicit", 'topnc.cpp')],
                              language='c++',
                              extra_compile_args=compile_args, extra_link_args=link_args))

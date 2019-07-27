@@ -12,7 +12,7 @@ from tqdm.auto import tqdm
 import implicit.cuda
 
 from . import _als
-from .recommender_base import MatrixFactorizationBase
+from .matrix_factorization_base import MatrixFactorizationBase
 from .utils import check_blas_config, nonzeros
 
 log = logging.getLogger("implicit")

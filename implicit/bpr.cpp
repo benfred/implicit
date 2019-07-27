@@ -2345,7 +2345,6 @@ static const char __pyx_k_multiprocessing[] = "multiprocessing";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_implicit_bpr_pyx[] = "implicit/bpr.pyx";
-static const char __pyx_k_recommender_base[] = "recommender_base";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_has_sorted_indices[] = "has_sorted_indices";
@@ -2359,6 +2358,7 @@ static const char __pyx_k_contiguous_and_indirect[] = "<contiguous and indirect>
 static const char __pyx_k_verify_negative_samples[] = "verify_negative_samples";
 static const char __pyx_k_Cannot_index_with_type_s[] = "Cannot index with type '%s'";
 static const char __pyx_k_Invalid_shape_in_axis_d_d[] = "Invalid shape in axis %d: %d.";
+static const char __pyx_k_matrix_factorization_base[] = "matrix_factorization_base";
 static const char __pyx_k_BayesianPersonalizedRanking[] = "BayesianPersonalizedRanking";
 static const char __pyx_k_No_matching_signature_found[] = "No matching signature found";
 static const char __pyx_k_itemsize_0_for_cython_array[] = "itemsize <= 0 for cython.array";
@@ -2518,6 +2518,7 @@ static PyObject *__pyx_n_s_long;
 static PyObject *__pyx_kp_s_long_double;
 static PyObject *__pyx_kp_s_long_float;
 static PyObject *__pyx_n_s_main;
+static PyObject *__pyx_n_s_matrix_factorization_base;
 static PyObject *__pyx_n_s_memview;
 static PyObject *__pyx_n_s_metaclass;
 static PyObject *__pyx_n_s_minlength;
@@ -2551,7 +2552,6 @@ static PyObject *__pyx_n_s_rand;
 static PyObject *__pyx_n_s_randint;
 static PyObject *__pyx_n_s_random;
 static PyObject *__pyx_n_s_range;
-static PyObject *__pyx_n_s_recommender_base;
 static PyObject *__pyx_n_s_reduce;
 static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
@@ -24995,6 +24995,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_long_double, __pyx_k_long_double, sizeof(__pyx_k_long_double), 0, 0, 1, 0},
   {&__pyx_kp_s_long_float, __pyx_k_long_float, sizeof(__pyx_k_long_float), 0, 0, 1, 0},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
+  {&__pyx_n_s_matrix_factorization_base, __pyx_k_matrix_factorization_base, sizeof(__pyx_k_matrix_factorization_base), 0, 0, 1, 1},
   {&__pyx_n_s_memview, __pyx_k_memview, sizeof(__pyx_k_memview), 0, 0, 1, 1},
   {&__pyx_n_s_metaclass, __pyx_k_metaclass, sizeof(__pyx_k_metaclass), 0, 0, 1, 1},
   {&__pyx_n_s_minlength, __pyx_k_minlength, sizeof(__pyx_k_minlength), 0, 0, 1, 1},
@@ -25028,7 +25029,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_randint, __pyx_k_randint, sizeof(__pyx_k_randint), 0, 0, 1, 1},
   {&__pyx_n_s_random, __pyx_k_random, sizeof(__pyx_k_random), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
-  {&__pyx_n_s_recommender_base, __pyx_k_recommender_base, sizeof(__pyx_k_recommender_base), 0, 0, 1, 1},
   {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
@@ -25960,7 +25960,7 @@ if (!__Pyx_RefNanny) {
  * 
  * import implicit.cuda             # <<<<<<<<<<<<<<
  * 
- * from .recommender_base import MatrixFactorizationBase
+ * from .matrix_factorization_base import MatrixFactorizationBase
  */
   __pyx_t_2 = __Pyx_Import(__pyx_n_s_implicit_cuda, 0, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -25970,7 +25970,7 @@ if (!__Pyx_RefNanny) {
   /* "implicit/bpr.pyx":20
  * import implicit.cuda
  * 
- * from .recommender_base import MatrixFactorizationBase             # <<<<<<<<<<<<<<
+ * from .matrix_factorization_base import MatrixFactorizationBase             # <<<<<<<<<<<<<<
  * 
  * 
  */
@@ -25979,7 +25979,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_INCREF(__pyx_n_s_MatrixFactorizationBase);
   __Pyx_GIVEREF(__pyx_n_s_MatrixFactorizationBase);
   PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_MatrixFactorizationBase);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_recommender_base, __pyx_t_2, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_matrix_factorization_base, __pyx_t_2, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 20, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_MatrixFactorizationBase); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 20, __pyx_L1_error)

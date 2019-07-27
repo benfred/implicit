@@ -17,7 +17,7 @@ import scipy.sparse
 
 import implicit.cuda
 
-from .recommender_base import MatrixFactorizationBase
+from .matrix_factorization_base import MatrixFactorizationBase
 
 
 cdef extern from "<random>" namespace "std":

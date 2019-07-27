@@ -23,13 +23,13 @@
             "implicit"
         ],
         "language": "c++",
-        "name": "implicit.recommender_base",
+        "name": "implicit.matrix_factorization_base",
         "sources": [
-            "implicit/recommender_base.pyx",
+            "implicit/matrix_factorization_base.pyx",
             "implicit/topnc.cpp"
         ]
     },
-    "module_name": "implicit.recommender_base"
+    "module_name": "implicit.matrix_factorization_base"
 }
 END: Cython Metadata */
 
@@ -637,8 +637,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__implicit__recommender_base
-#define __PYX_HAVE_API__implicit__recommender_base
+#define __PYX_HAVE__implicit__matrix_factorization_base
+#define __PYX_HAVE_API__implicit__matrix_factorization_base
 /* Early includes */
 #include "topnc.h"
 #include "pythread.h"
@@ -854,7 +854,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "implicit/recommender_base.pyx",
+  "implicit/matrix_factorization_base.pyx",
   "stringsource",
 };
 /* NoFastGil.proto */
@@ -967,37 +967,37 @@ typedef struct {
 
 
 /*--- Type declarations ---*/
-struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend;
-struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr;
+struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend;
+struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr;
 struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
 struct __pyx_memoryviewslice_obj;
 
-/* "implicit/recommender_base.pyx":157
+/* "implicit/matrix_factorization_base.pyx":40
  *         self._user_norms, self._item_norms = None, None
  * 
  *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
  *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
  *         user = self._user_factor(userid, user_items, recalculate_user)
  */
-struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend {
+struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend {
   PyObject_HEAD
   PyObject *__pyx_v_best;
   PyObject *__pyx_v_liked;
 };
 
 
-/* "implicit/recommender_base.pyx":176
+/* "implicit/matrix_factorization_base.pyx":59
  *         else:
  *             best = sorted(enumerate(scores), key=lambda x: -x[1])
  *         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))             # <<<<<<<<<<<<<<
  * 
  *     @cython.boundscheck(False)
  */
-struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr {
+struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr {
   PyObject_HEAD
-  struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *__pyx_outer_scope;
+  struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *__pyx_outer_scope;
   PyObject *__pyx_v_rec;
   PyObject *__pyx_t_0;
   Py_ssize_t __pyx_t_1;
@@ -1204,6 +1204,15 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
+/* PyObjectSetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+#define __Pyx_PyObject_DelAttrStr(o,n) __Pyx_PyObject_SetAttrStr(o, n, NULL)
+static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value);
+#else
+#define __Pyx_PyObject_DelAttrStr(o,n)   PyObject_DelAttr(o,n)
+#define __Pyx_PyObject_SetAttrStr(o,n,v) PyObject_SetAttr(o,n,v)
+#endif
+
 /* RaiseArgTupleInvalid.proto */
 static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
     Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
@@ -1215,15 +1224,6 @@ static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_n
 static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
     PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
     const char* function_name);
-
-/* PyObjectSetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-#define __Pyx_PyObject_DelAttrStr(o,n) __Pyx_PyObject_SetAttrStr(o, n, NULL)
-static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value);
-#else
-#define __Pyx_PyObject_DelAttrStr(o,n)   PyObject_DelAttr(o,n)
-#define __Pyx_PyObject_SetAttrStr(o,n,v) PyObject_SetAttr(o,n,v)
-#endif
 
 /* GetItemInt.proto */
 #define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
@@ -2012,9 +2012,9 @@ static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memo
 
 /* Module declarations from 'cython' */
 
-/* Module declarations from 'implicit.recommender_base' */
-static PyTypeObject *__pyx_ptype_8implicit_16recommender_base___pyx_scope_struct__recommend = 0;
-static PyTypeObject *__pyx_ptype_8implicit_16recommender_base___pyx_scope_struct_1_genexpr = 0;
+/* Module declarations from 'implicit.matrix_factorization_base' */
+static PyTypeObject *__pyx_ptype_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend = 0;
+static PyTypeObject *__pyx_ptype_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr = 0;
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
@@ -2061,12 +2061,11 @@ static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize
 static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, PyObject *); /*proto*/
 static __Pyx_TypeInfo __Pyx_TypeInfo_float = { "float", NULL, sizeof(float), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, IS_UNSIGNED(int) ? 'U' : 'I', IS_UNSIGNED(int), 0 };
-#define __Pyx_MODULE_NAME "implicit.recommender_base"
-extern int __pyx_module_is_main_implicit__recommender_base;
-int __pyx_module_is_main_implicit__recommender_base = 0;
+#define __Pyx_MODULE_NAME "implicit.matrix_factorization_base"
+extern int __pyx_module_is_main_implicit__matrix_factorization_base;
+int __pyx_module_is_main_implicit__matrix_factorization_base = 0;
 
-/* Implementation of 'implicit.recommender_base' */
-static PyObject *__pyx_builtin_object;
+/* Implementation of 'implicit.matrix_factorization_base' */
 static PyObject *__pyx_builtin_property;
 static PyObject *__pyx_builtin_sorted;
 static PyObject *__pyx_builtin_zip;
@@ -2089,10 +2088,8 @@ static const char __pyx_k_c[] = "c";
 static const char __pyx_k_u[] = "u";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_np[] = "np";
-static const char __pyx_k_abc[] = "abc";
 static const char __pyx_k_doc[] = "__doc__";
 static const char __pyx_k_dot[] = "dot";
-static const char __pyx_k_fit[] = "fit";
 static const char __pyx_k_ids[] = "ids";
 static const char __pyx_k_key[] = "key";
 static const char __pyx_k_max[] = "max";
@@ -2162,7 +2159,6 @@ static const char __pyx_k_itemid[] = "itemid";
 static const char __pyx_k_linalg[] = "linalg";
 static const char __pyx_k_module[] = "__module__";
 static const char __pyx_k_name_2[] = "__name__";
-static const char __pyx_k_object[] = "object";
 static const char __pyx_k_pickle[] = "pickle";
 static const char __pyx_k_reduce[] = "__reduce__";
 static const char __pyx_k_scores[] = "scores";
@@ -2173,7 +2169,6 @@ static const char __pyx_k_unpack[] = "unpack";
 static const char __pyx_k_update[] = "update";
 static const char __pyx_k_userid[] = "userid";
 static const char __pyx_k_vstack[] = "vstack";
-static const char __pyx_k_ABCMeta[] = "ABCMeta";
 static const char __pyx_k_asarray[] = "asarray";
 static const char __pyx_k_disable[] = "disable";
 static const char __pyx_k_factors[] = "factors";
@@ -2211,7 +2206,6 @@ static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_batch_size[] = "batch_size";
 static const char __pyx_k_csr_matrix[] = "csr_matrix";
 static const char __pyx_k_item_norms[] = "_item_norms";
-static const char __pyx_k_item_users[] = "item_users";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static const char __pyx_k_rank_items[] = "rank_items";
@@ -2240,7 +2234,6 @@ static const char __pyx_k_show_progress[] = "show_progress";
 static const char __pyx_k_similar_items[] = "similar_items";
 static const char __pyx_k_similar_users[] = "similar_users";
 static const char __pyx_k_users_factors[] = "users_factors";
-static const char __pyx_k_abstractmethod[] = "abstractmethod";
 static const char __pyx_k_selected_items[] = "selected_items";
 static const char __pyx_k_RecommenderBase[] = "RecommenderBase";
 static const char __pyx_k_View_MemoryView[] = "View.MemoryView";
@@ -2254,7 +2247,6 @@ static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
 static const char __pyx_k_NotImplementedError[] = "NotImplementedError";
-static const char __pyx_k_RecommenderBase_fit[] = "RecommenderBase.fit";
 static const char __pyx_k_get_similarity_score[] = "_get_similarity_score";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
@@ -2264,20 +2256,14 @@ static const char __pyx_k_MemoryView_of_r_at_0x_x[] = "<MemoryView of %r at 0x%x
 static const char __pyx_k_contiguous_and_indirect[] = "<contiguous and indirect>";
 static const char __pyx_k_Cannot_index_with_type_s[] = "Cannot index with type '%s'";
 static const char __pyx_k_Invalid_shape_in_axis_d_d[] = "Invalid shape in axis %d: %d.";
-static const char __pyx_k_RecommenderBase_recommend[] = "RecommenderBase.recommend";
 static const char __pyx_k_implicit_recommender_base[] = "implicit.recommender_base";
-static const char __pyx_k_RecommenderBase_rank_items[] = "RecommenderBase.rank_items";
 static const char __pyx_k_filter_already_liked_items[] = "filter_already_liked_items";
 static const char __pyx_k_filter_items_cannot_filter[] = "filter_items:\\\n                cannot filter ";
 static const char __pyx_k_itemsize_0_for_cython_array[] = "itemsize <= 0 for cython.array";
-static const char __pyx_k_RecommenderBase_similar_items[] = "RecommenderBase.similar_items";
-static const char __pyx_k_RecommenderBase_similar_users[] = "RecommenderBase.similar_users";
-static const char __pyx_k_implicit_recommender_base_pyx[] = "implicit/recommender_base.pyx";
 static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
-static const char __pyx_k_Defines_the_interface_that_all[] = " Defines the interface that all recommendations models here expose ";
 static const char __pyx_k_MatrixFactorizationBase___init[] = "MatrixFactorizationBase.__init__";
 static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direct or indirect>";
-static const char __pyx_k_Base_class_for_recommendation_a[] = " Base class for recommendation algorithms in this package ";
+static const char __pyx_k_Base_class_for_matrix_factoriza[] = " Base class for matrix factorization algorithms in this package ";
 static const char __pyx_k_MatrixFactorizationBase_contain[] = " MatrixFactorizationBase contains common functionality for recommendation models.\n\n    Attributes\n    ----------\n    item_factors : ndarray\n        Array of latent factors for each item in the training set\n    user_factors : ndarray\n        Array of latent factors for each user in the training set\n     ";
 static const char __pyx_k_MatrixFactorizationBase_similar[] = "MatrixFactorizationBase.similar_users";
 static const char __pyx_k_Buffer_view_does_not_expose_stri[] = "Buffer view does not expose strides";
@@ -2300,6 +2286,7 @@ static const char __pyx_k_Some_of_selected_itemids_are_not[] = "Some of selected
 static const char __pyx_k_Unable_to_convert_item_to_object[] = "Unable to convert item to object";
 static const char __pyx_k_filter_already_liked_items_canno[] = "filter_already_liked_items:\\\n                cannot filter ";
 static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing extents in dimension %d (got %d and %d)";
+static const char __pyx_k_implicit_matrix_factorization_ba[] = "implicit.matrix_factorization_base";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static const char __pyx_k_recalculate_user_is_not_supporte[] = "recalculate_user is not supported with this model";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
@@ -2309,8 +2296,8 @@ static const char __pyx_k_MatrixFactorizationBase_rank_ite_2[] = "MatrixFactoriz
 static const char __pyx_k_MatrixFactorizationBase_recommen_2[] = "MatrixFactorizationBase.recommend.<locals>.<lambda>";
 static const char __pyx_k_MatrixFactorizationBase_recommen_3[] = "MatrixFactorizationBase.recommend";
 static const char __pyx_k_MatrixFactorizationBase_recommen_4[] = "MatrixFactorizationBase.recommend_all";
+static const char __pyx_k_implicit_matrix_factorization_ba_2[] = "implicit/matrix_factorization_base.pyx";
 static PyObject *__pyx_n_s_A;
-static PyObject *__pyx_n_s_ABCMeta;
 static PyObject *__pyx_n_s_ASCII;
 static PyObject *__pyx_n_s_A_min;
 static PyObject *__pyx_n_s_A_mv;
@@ -2322,7 +2309,6 @@ static PyObject *__pyx_kp_s_Can_only_create_a_buffer_that_is;
 static PyObject *__pyx_kp_s_Cannot_assign_to_read_only_memor;
 static PyObject *__pyx_kp_s_Cannot_create_writable_memory_vi;
 static PyObject *__pyx_kp_s_Cannot_index_with_type_s;
-static PyObject *__pyx_kp_s_Defines_the_interface_that_all;
 static PyObject *__pyx_n_s_Ellipsis;
 static PyObject *__pyx_kp_s_Empty_shape_tuple_for_cython_arr;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xb0;
@@ -2356,19 +2342,12 @@ static PyObject *__pyx_n_b_O;
 static PyObject *__pyx_kp_s_Out_of_bounds_on_buffer_access_a;
 static PyObject *__pyx_n_s_PickleError;
 static PyObject *__pyx_n_s_RecommenderBase;
-static PyObject *__pyx_n_s_RecommenderBase_fit;
-static PyObject *__pyx_n_s_RecommenderBase_rank_items;
-static PyObject *__pyx_n_s_RecommenderBase_recommend;
-static PyObject *__pyx_n_s_RecommenderBase_similar_items;
-static PyObject *__pyx_n_s_RecommenderBase_similar_users;
 static PyObject *__pyx_kp_s_Some_of_selected_itemids_are_not;
 static PyObject *__pyx_n_s_T;
 static PyObject *__pyx_n_s_TypeError;
 static PyObject *__pyx_kp_s_Unable_to_convert_item_to_object;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_View_MemoryView;
-static PyObject *__pyx_n_s_abc;
-static PyObject *__pyx_n_s_abstractmethod;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_amin;
 static PyObject *__pyx_kp_u_and_recommend;
@@ -2409,7 +2388,6 @@ static PyObject *__pyx_n_s_filter_already_liked_items;
 static PyObject *__pyx_kp_u_filter_already_liked_items_canno;
 static PyObject *__pyx_n_s_filter_items;
 static PyObject *__pyx_kp_u_filter_items_cannot_filter;
-static PyObject *__pyx_n_s_fit;
 static PyObject *__pyx_n_s_flags;
 static PyObject *__pyx_n_s_float32;
 static PyObject *__pyx_n_s_format;
@@ -2422,8 +2400,9 @@ static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
 static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_ids;
+static PyObject *__pyx_n_s_implicit_matrix_factorization_ba;
+static PyObject *__pyx_kp_s_implicit_matrix_factorization_ba_2;
 static PyObject *__pyx_n_s_implicit_recommender_base;
-static PyObject *__pyx_kp_s_implicit_recommender_base_pyx;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_indices;
 static PyObject *__pyx_n_s_init;
@@ -2432,7 +2411,6 @@ static PyObject *__pyx_n_s_islice;
 static PyObject *__pyx_n_s_item_factors;
 static PyObject *__pyx_n_s_item_norms;
 static PyObject *__pyx_n_s_item_norms_2;
-static PyObject *__pyx_n_s_item_users;
 static PyObject *__pyx_n_s_itemid;
 static PyObject *__pyx_n_s_items_c;
 static PyObject *__pyx_kp_u_items_out_of;
@@ -2464,7 +2442,6 @@ static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_num_threads;
 static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_n_s_obj;
-static PyObject *__pyx_n_s_object;
 static PyObject *__pyx_n_s_out;
 static PyObject *__pyx_n_s_pack;
 static PyObject *__pyx_n_s_pickle;
@@ -2538,27 +2515,22 @@ static PyObject *__pyx_n_s_users_factors;
 static PyObject *__pyx_n_s_vstack;
 static PyObject *__pyx_n_s_zeros;
 static PyObject *__pyx_n_s_zip;
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_fit(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_item_users); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_2recommend(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_user_items, CYTHON_UNUSED PyObject *__pyx_v_N, CYTHON_UNUSED PyObject *__pyx_v_filter_already_liked_items, CYTHON_UNUSED PyObject *__pyx_v_filter_items, CYTHON_UNUSED PyObject *__pyx_v_recalculate_user); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_4rank_items(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_user_items, CYTHON_UNUSED PyObject *__pyx_v_selected_items, CYTHON_UNUSED PyObject *__pyx_v_recalculate_user); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_6similar_users(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_N); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_8similar_items(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_itemid, CYTHON_UNUSED PyObject *__pyx_v_N); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
 static PyObject *__pyx_lambda_funcdef_lambda1(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_2genexpr(PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_2recommend(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_N, PyObject *__pyx_v_filter_already_liked_items, PyObject *__pyx_v_filter_items, PyObject *__pyx_v_recalculate_user); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_4recommend_all(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_user_items, int __pyx_v_N, PyObject *__pyx_v_recalculate_user, PyObject *__pyx_v_filter_already_liked_items, PyObject *__pyx_v_filter_items, int __pyx_v_num_threads, PyObject *__pyx_v_show_progress, int __pyx_v_batch_size); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_2genexpr(PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_2recommend(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_N, PyObject *__pyx_v_filter_already_liked_items, PyObject *__pyx_v_filter_items, PyObject *__pyx_v_recalculate_user); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_4recommend_all(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_user_items, int __pyx_v_N, PyObject *__pyx_v_recalculate_user, PyObject *__pyx_v_filter_already_liked_items, PyObject *__pyx_v_filter_items, int __pyx_v_num_threads, PyObject *__pyx_v_show_progress, int __pyx_v_batch_size); /* proto */
 static PyObject *__pyx_lambda_funcdef_lambda3(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_6rank_items(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_selected_items, PyObject *__pyx_v_recalculate_user); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_8_user_factor(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_recalculate_user); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_10recalculate_user(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_user_items); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_12similar_users(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_N); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_14similar_items(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_itemid, PyObject *__pyx_v_N); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_6rank_items(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_selected_items, PyObject *__pyx_v_recalculate_user); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_8_user_factor(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_recalculate_user); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_10recalculate_user(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_user_items); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_12similar_users(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_N); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_14similar_items(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_itemid, PyObject *__pyx_v_N); /* proto */
 static PyObject *__pyx_lambda_funcdef_lambda4(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_16_get_similarity_score(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, PyObject *__pyx_v_factor, PyObject *__pyx_v_factors, PyObject *__pyx_v_norms, PyObject *__pyx_v_N); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_18user_norms(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_20item_norms(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_16_get_similarity_score(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, PyObject *__pyx_v_factor, PyObject *__pyx_v_factors, PyObject *__pyx_v_norms, PyObject *__pyx_v_N); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_18user_norms(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_20item_norms(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -2601,8 +2573,8 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_16_memoryviewslice_4base___get__
 static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_15View_dot_MemoryView___pyx_unpickle_Enum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct__recommend(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct_1_genexpr(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -2635,620 +2607,42 @@ static PyObject *__pyx_tuple__18;
 static PyObject *__pyx_tuple__19;
 static PyObject *__pyx_tuple__20;
 static PyObject *__pyx_tuple__21;
-static PyObject *__pyx_tuple__22;
-static PyObject *__pyx_tuple__24;
+static PyObject *__pyx_tuple__23;
+static PyObject *__pyx_tuple__25;
 static PyObject *__pyx_tuple__26;
-static PyObject *__pyx_tuple__27;
-static PyObject *__pyx_tuple__29;
+static PyObject *__pyx_tuple__28;
 static PyObject *__pyx_tuple__30;
-static PyObject *__pyx_tuple__32;
+static PyObject *__pyx_tuple__31;
 static PyObject *__pyx_tuple__33;
-static PyObject *__pyx_tuple__35;
+static PyObject *__pyx_tuple__34;
 static PyObject *__pyx_tuple__36;
 static PyObject *__pyx_tuple__38;
-static PyObject *__pyx_tuple__40;
+static PyObject *__pyx_tuple__39;
 static PyObject *__pyx_tuple__41;
-static PyObject *__pyx_tuple__43;
-static PyObject *__pyx_tuple__45;
+static PyObject *__pyx_tuple__42;
+static PyObject *__pyx_tuple__44;
 static PyObject *__pyx_tuple__46;
 static PyObject *__pyx_tuple__48;
 static PyObject *__pyx_tuple__49;
+static PyObject *__pyx_tuple__50;
 static PyObject *__pyx_tuple__51;
+static PyObject *__pyx_tuple__52;
 static PyObject *__pyx_tuple__53;
-static PyObject *__pyx_tuple__54;
-static PyObject *__pyx_tuple__56;
-static PyObject *__pyx_tuple__57;
-static PyObject *__pyx_tuple__59;
-static PyObject *__pyx_tuple__61;
-static PyObject *__pyx_tuple__63;
-static PyObject *__pyx_tuple__64;
-static PyObject *__pyx_tuple__65;
-static PyObject *__pyx_tuple__66;
-static PyObject *__pyx_tuple__67;
-static PyObject *__pyx_tuple__68;
-static PyObject *__pyx_codeobj__23;
-static PyObject *__pyx_codeobj__25;
-static PyObject *__pyx_codeobj__28;
-static PyObject *__pyx_codeobj__31;
-static PyObject *__pyx_codeobj__34;
+static PyObject *__pyx_codeobj__22;
+static PyObject *__pyx_codeobj__24;
+static PyObject *__pyx_codeobj__27;
+static PyObject *__pyx_codeobj__29;
+static PyObject *__pyx_codeobj__32;
+static PyObject *__pyx_codeobj__35;
 static PyObject *__pyx_codeobj__37;
-static PyObject *__pyx_codeobj__39;
-static PyObject *__pyx_codeobj__42;
-static PyObject *__pyx_codeobj__44;
+static PyObject *__pyx_codeobj__40;
+static PyObject *__pyx_codeobj__43;
+static PyObject *__pyx_codeobj__45;
 static PyObject *__pyx_codeobj__47;
-static PyObject *__pyx_codeobj__50;
-static PyObject *__pyx_codeobj__52;
-static PyObject *__pyx_codeobj__55;
-static PyObject *__pyx_codeobj__58;
-static PyObject *__pyx_codeobj__60;
-static PyObject *__pyx_codeobj__62;
-static PyObject *__pyx_codeobj__69;
+static PyObject *__pyx_codeobj__54;
 /* Late includes */
 
-/* "implicit/recommender_base.pyx":25
- * 
- *     @abstractmethod
- *     def fit(self, item_users):             # <<<<<<<<<<<<<<
- *         """
- *         Trains the model on a sparse matrix of item/user/weight
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_1fit(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_8implicit_16recommender_base_15RecommenderBase_fit[] = "\n        Trains the model on a sparse matrix of item/user/weight\n\n        Parameters\n        ----------\n        item_user : csr_matrix\n            A matrix of shape (number_of_items, number_of_users). The nonzero\n            entries in this matrix are the items that are liked by each user.\n            The values are how confidant you are that the item is liked by the user.\n        ";
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_15RecommenderBase_1fit = {"fit", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_15RecommenderBase_1fit, METH_VARARGS|METH_KEYWORDS, __pyx_doc_8implicit_16recommender_base_15RecommenderBase_fit};
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_1fit(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  CYTHON_UNUSED PyObject *__pyx_v_self = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_item_users = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("fit (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_item_users,0};
-    PyObject* values[2] = {0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_item_users)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("fit", 1, 2, 2, 1); __PYX_ERR(0, 25, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "fit") < 0)) __PYX_ERR(0, 25, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-    }
-    __pyx_v_self = values[0];
-    __pyx_v_item_users = values[1];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("fit", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 25, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.RecommenderBase.fit", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_15RecommenderBase_fit(__pyx_self, __pyx_v_self, __pyx_v_item_users);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_fit(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_item_users) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("fit", 0);
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "implicit/recommender_base.pyx":39
- * 
- *     @abstractmethod
- *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
- *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
- *         """
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_3recommend(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_8implicit_16recommender_base_15RecommenderBase_2recommend[] = "\n        Recommends items for a user\n\n        Calculates the N best recommendations for a user, and returns a list of itemids, score.\n\n        Parameters\n        ----------\n        userid : int\n            The userid to calculate recommendations for\n        user_items : csr_matrix\n            A sparse matrix of shape (number_users, number_items). This lets us look\n            up the liked items and their weights for the user. This is used to filter out\n            items that have already been liked from the output, and to also potentially\n            calculate the best items for this user.\n        N : int, optional\n            The number of results to return\n        filter_already_liked_items: bool, optional\n            When true, don't return items present in the training set that were rated\n            by the specificed user.\n        filter_items : sequence of ints, optional\n            List of extra item ids to filter out from the output\n        recalculate_user : bool, optional\n            When true, don't rely on stored user state and instead recalculate from the\n            passed in user_items\n\n        Returns\n        -------\n        list\n            List of (itemid, score) tuples\n        ";
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_15RecommenderBase_3recommend = {"recommend", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_15RecommenderBase_3recommend, METH_VARARGS|METH_KEYWORDS, __pyx_doc_8implicit_16recommender_base_15RecommenderBase_2recommend};
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_3recommend(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  CYTHON_UNUSED PyObject *__pyx_v_self = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_userid = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_user_items = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_N = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_filter_already_liked_items = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_filter_items = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_recalculate_user = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("recommend (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_userid,&__pyx_n_s_user_items,&__pyx_n_s_N,&__pyx_n_s_filter_already_liked_items,&__pyx_n_s_filter_items,&__pyx_n_s_recalculate_user,0};
-    PyObject* values[7] = {0,0,0,0,0,0,0};
-    values[3] = ((PyObject *)((PyObject *)__pyx_int_10));
-
-    /* "implicit/recommender_base.pyx":40
- *     @abstractmethod
- *     def recommend(self, userid, user_items,
- *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):             # <<<<<<<<<<<<<<
- *         """
- *         Recommends items for a user
- */
-    values[4] = ((PyObject *)((PyObject *)Py_True));
-    values[5] = ((PyObject *)((PyObject *)Py_None));
-    values[6] = ((PyObject *)((PyObject *)Py_False));
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-        CYTHON_FALLTHROUGH;
-        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-        CYTHON_FALLTHROUGH;
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_userid)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("recommend", 0, 3, 7, 1); __PYX_ERR(0, 39, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_user_items)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("recommend", 0, 3, 7, 2); __PYX_ERR(0, 39, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N);
-          if (value) { values[3] = value; kw_args--; }
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_filter_already_liked_items);
-          if (value) { values[4] = value; kw_args--; }
-        }
-        CYTHON_FALLTHROUGH;
-        case  5:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_filter_items);
-          if (value) { values[5] = value; kw_args--; }
-        }
-        CYTHON_FALLTHROUGH;
-        case  6:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_recalculate_user);
-          if (value) { values[6] = value; kw_args--; }
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "recommend") < 0)) __PYX_ERR(0, 39, __pyx_L3_error)
-      }
-    } else {
-      switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-        CYTHON_FALLTHROUGH;
-        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-        CYTHON_FALLTHROUGH;
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-    }
-    __pyx_v_self = values[0];
-    __pyx_v_userid = values[1];
-    __pyx_v_user_items = values[2];
-    __pyx_v_N = values[3];
-    __pyx_v_filter_already_liked_items = values[4];
-    __pyx_v_filter_items = values[5];
-    __pyx_v_recalculate_user = values[6];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("recommend", 0, 3, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 39, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.RecommenderBase.recommend", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_15RecommenderBase_2recommend(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items, __pyx_v_N, __pyx_v_filter_already_liked_items, __pyx_v_filter_items, __pyx_v_recalculate_user);
-
-  /* "implicit/recommender_base.pyx":39
- * 
- *     @abstractmethod
- *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
- *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
- *         """
- */
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_2recommend(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_user_items, CYTHON_UNUSED PyObject *__pyx_v_N, CYTHON_UNUSED PyObject *__pyx_v_filter_already_liked_items, CYTHON_UNUSED PyObject *__pyx_v_filter_items, CYTHON_UNUSED PyObject *__pyx_v_recalculate_user) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("recommend", 0);
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "implicit/recommender_base.pyx":74
- * 
- *     @abstractmethod
- *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):             # <<<<<<<<<<<<<<
- *         """
- *         Rank given items for a user and returns sorted item list.
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_5rank_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_8implicit_16recommender_base_15RecommenderBase_4rank_items[] = "\n        Rank given items for a user and returns sorted item list.\n\n        Parameters\n        ----------\n        userid : int\n            The userid to calculate recommendations for\n        user_items : csr_matrix\n            A sparse matrix of shape (number_users, number_items). This lets us look\n            up the liked items and their weights for the user. This is used to filter out\n            items that have already been liked from the output, and to also potentially\n            calculate the best items for this user.\n        selected_items : List of itemids\n        recalculate_user : bool, optional\n            When true, don't rely on stored user state and instead recalculate from the\n            passed in user_items\n\n        Returns\n        -------\n        list\n            List of (itemid, score) tuples. it only contains items that appears in\n            input parameter selected_items\n        ";
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_15RecommenderBase_5rank_items = {"rank_items", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_15RecommenderBase_5rank_items, METH_VARARGS|METH_KEYWORDS, __pyx_doc_8implicit_16recommender_base_15RecommenderBase_4rank_items};
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_5rank_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  CYTHON_UNUSED PyObject *__pyx_v_self = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_userid = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_user_items = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_selected_items = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_recalculate_user = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("rank_items (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_userid,&__pyx_n_s_user_items,&__pyx_n_s_selected_items,&__pyx_n_s_recalculate_user,0};
-    PyObject* values[5] = {0,0,0,0,0};
-    values[4] = ((PyObject *)((PyObject *)Py_False));
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_userid)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, 1); __PYX_ERR(0, 74, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_user_items)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, 2); __PYX_ERR(0, 74, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_selected_items)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, 3); __PYX_ERR(0, 74, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_recalculate_user);
-          if (value) { values[4] = value; kw_args--; }
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "rank_items") < 0)) __PYX_ERR(0, 74, __pyx_L3_error)
-      }
-    } else {
-      switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-    }
-    __pyx_v_self = values[0];
-    __pyx_v_userid = values[1];
-    __pyx_v_user_items = values[2];
-    __pyx_v_selected_items = values[3];
-    __pyx_v_recalculate_user = values[4];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 74, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.RecommenderBase.rank_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_15RecommenderBase_4rank_items(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items, __pyx_v_selected_items, __pyx_v_recalculate_user);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_4rank_items(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_user_items, CYTHON_UNUSED PyObject *__pyx_v_selected_items, CYTHON_UNUSED PyObject *__pyx_v_recalculate_user) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("rank_items", 0);
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "implicit/recommender_base.pyx":101
- * 
- *     @abstractmethod
- *     def similar_users(self, userid, N=10):             # <<<<<<<<<<<<<<
- *         """
- *         Calculates a list of similar items
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_7similar_users(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_8implicit_16recommender_base_15RecommenderBase_6similar_users[] = "\n        Calculates a list of similar items\n\n        Parameters\n        ----------\n        userid : int\n            The row id of the user to retrieve similar users for\n        N : int, optional\n            The number of similar users to return\n\n        Returns\n        -------\n        list\n            List of (userid, score) tuples\n        ";
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_15RecommenderBase_7similar_users = {"similar_users", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_15RecommenderBase_7similar_users, METH_VARARGS|METH_KEYWORDS, __pyx_doc_8implicit_16recommender_base_15RecommenderBase_6similar_users};
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_7similar_users(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  CYTHON_UNUSED PyObject *__pyx_v_self = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_userid = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_N = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("similar_users (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_userid,&__pyx_n_s_N,0};
-    PyObject* values[3] = {0,0,0};
-    values[2] = ((PyObject *)((PyObject *)__pyx_int_10));
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_userid)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("similar_users", 0, 2, 3, 1); __PYX_ERR(0, 101, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N);
-          if (value) { values[2] = value; kw_args--; }
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "similar_users") < 0)) __PYX_ERR(0, 101, __pyx_L3_error)
-      }
-    } else {
-      switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-    }
-    __pyx_v_self = values[0];
-    __pyx_v_userid = values[1];
-    __pyx_v_N = values[2];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("similar_users", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 101, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.RecommenderBase.similar_users", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_15RecommenderBase_6similar_users(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_N);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_6similar_users(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_N) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("similar_users", 0);
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "implicit/recommender_base.pyx":120
- * 
- *     @abstractmethod
- *     def similar_items(self, itemid, N=10):             # <<<<<<<<<<<<<<
- *         """
- *         Calculates a list of similar items
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_9similar_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_8implicit_16recommender_base_15RecommenderBase_8similar_items[] = "\n        Calculates a list of similar items\n\n        Parameters\n        ----------\n        itemid : int\n            The row id of the item to retrieve similar items for\n        N : int, optional\n            The number of similar items to return\n\n        Returns\n        -------\n        list\n            List of (itemid, score) tuples\n        ";
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_15RecommenderBase_9similar_items = {"similar_items", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_15RecommenderBase_9similar_items, METH_VARARGS|METH_KEYWORDS, __pyx_doc_8implicit_16recommender_base_15RecommenderBase_8similar_items};
-static PyObject *__pyx_pw_8implicit_16recommender_base_15RecommenderBase_9similar_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  CYTHON_UNUSED PyObject *__pyx_v_self = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_itemid = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_N = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("similar_items (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_itemid,&__pyx_n_s_N,0};
-    PyObject* values[3] = {0,0,0};
-    values[2] = ((PyObject *)((PyObject *)__pyx_int_10));
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_itemid)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("similar_items", 0, 2, 3, 1); __PYX_ERR(0, 120, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N);
-          if (value) { values[2] = value; kw_args--; }
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "similar_items") < 0)) __PYX_ERR(0, 120, __pyx_L3_error)
-      }
-    } else {
-      switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-    }
-    __pyx_v_self = values[0];
-    __pyx_v_itemid = values[1];
-    __pyx_v_N = values[2];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("similar_items", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 120, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.RecommenderBase.similar_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_15RecommenderBase_8similar_items(__pyx_self, __pyx_v_self, __pyx_v_itemid, __pyx_v_N);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_8similar_items(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_itemid, CYTHON_UNUSED PyObject *__pyx_v_N) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("similar_items", 0);
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "implicit/recommender_base.pyx":149
+/* "implicit/matrix_factorization_base.pyx":32
  *         Array of latent factors for each user in the training set
  *      """
  *     def __init__(self):             # <<<<<<<<<<<<<<
@@ -3257,45 +2651,45 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_15RecommenderBase_8simila
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_1__init__(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_1__init__ = {"__init__", (PyCFunction)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_1__init__, METH_O, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_1__init__(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_1__init__(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_1__init__ = {"__init__", (PyCFunction)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_1__init__, METH_O, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_1__init__(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase___init__(__pyx_self, ((PyObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase___init__(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "implicit/recommender_base.pyx":151
+  /* "implicit/matrix_factorization_base.pyx":34
  *     def __init__(self):
  *         # learned parameters
  *         self.item_factors = None             # <<<<<<<<<<<<<<
  *         self.user_factors = None
  * 
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_item_factors, Py_None) < 0) __PYX_ERR(0, 151, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_item_factors, Py_None) < 0) __PYX_ERR(0, 34, __pyx_L1_error)
 
-  /* "implicit/recommender_base.pyx":152
+  /* "implicit/matrix_factorization_base.pyx":35
  *         # learned parameters
  *         self.item_factors = None
  *         self.user_factors = None             # <<<<<<<<<<<<<<
  * 
  *         # cache of user, item norms (useful for calculating similar items)
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_user_factors, Py_None) < 0) __PYX_ERR(0, 152, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_user_factors, Py_None) < 0) __PYX_ERR(0, 35, __pyx_L1_error)
 
-  /* "implicit/recommender_base.pyx":155
+  /* "implicit/matrix_factorization_base.pyx":38
  * 
  *         # cache of user, item norms (useful for calculating similar items)
  *         self._user_norms, self._item_norms = None, None             # <<<<<<<<<<<<<<
@@ -3306,12 +2700,12 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_INCREF(__pyx_t_1);
   __pyx_t_2 = Py_None;
   __Pyx_INCREF(__pyx_t_2);
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_user_norms, __pyx_t_1) < 0) __PYX_ERR(0, 155, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_user_norms, __pyx_t_1) < 0) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_item_norms, __pyx_t_2) < 0) __PYX_ERR(0, 155, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_item_norms, __pyx_t_2) < 0) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":149
+  /* "implicit/matrix_factorization_base.pyx":32
  *         Array of latent factors for each user in the training set
  *      """
  *     def __init__(self):             # <<<<<<<<<<<<<<
@@ -3325,7 +2719,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3333,7 +2727,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":157
+/* "implicit/matrix_factorization_base.pyx":40
  *         self._user_norms, self._item_norms = None, None
  * 
  *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
@@ -3342,9 +2736,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_3recommend(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_3recommend = {"recommend", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_3recommend, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_3recommend(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_3recommend(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_3recommend = {"recommend", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_3recommend, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_3recommend(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_userid = 0;
   PyObject *__pyx_v_user_items = 0;
@@ -3360,7 +2754,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
     PyObject* values[7] = {0,0,0,0,0,0,0};
     values[3] = ((PyObject *)((PyObject *)__pyx_int_10));
 
-    /* "implicit/recommender_base.pyx":158
+    /* "implicit/matrix_factorization_base.pyx":41
  * 
  *     def recommend(self, userid, user_items,
  *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):             # <<<<<<<<<<<<<<
@@ -3400,13 +2794,13 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_userid)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("recommend", 0, 3, 7, 1); __PYX_ERR(0, 157, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("recommend", 0, 3, 7, 1); __PYX_ERR(0, 40, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_user_items)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("recommend", 0, 3, 7, 2); __PYX_ERR(0, 157, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("recommend", 0, 3, 7, 2); __PYX_ERR(0, 40, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
@@ -3434,7 +2828,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "recommend") < 0)) __PYX_ERR(0, 157, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "recommend") < 0)) __PYX_ERR(0, 40, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -3463,15 +2857,15 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("recommend", 0, 3, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 157, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("recommend", 0, 3, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 40, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.recommend", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.recommend", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_2recommend(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items, __pyx_v_N, __pyx_v_filter_already_liked_items, __pyx_v_filter_items, __pyx_v_recalculate_user);
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_2recommend(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items, __pyx_v_N, __pyx_v_filter_already_liked_items, __pyx_v_filter_items, __pyx_v_recalculate_user);
 
-  /* "implicit/recommender_base.pyx":157
+  /* "implicit/matrix_factorization_base.pyx":40
  *         self._user_norms, self._item_norms = None, None
  * 
  *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
@@ -3484,7 +2878,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":173
+/* "implicit/matrix_factorization_base.pyx":56
  *         if count < len(scores):
  *             ids = np.argpartition(scores, -count)[-count:]
  *             best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])             # <<<<<<<<<<<<<<
@@ -3493,9 +2887,9 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_lambda = {"lambda", (PyCFunction)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_lambda, METH_O, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_lambda = {"lambda", (PyCFunction)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_lambda, METH_O, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("lambda (wrapper)", 0);
@@ -3513,9 +2907,9 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("lambda", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Negative(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Negative(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
@@ -3526,7 +2920,7 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.recommend.lambda", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.recommend.lambda", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3534,7 +2928,7 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":175
+/* "implicit/matrix_factorization_base.pyx":58
  *             best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
  *         else:
  *             best = sorted(enumerate(scores), key=lambda x: -x[1])             # <<<<<<<<<<<<<<
@@ -3543,9 +2937,9 @@ static PyObject *__pyx_lambda_funcdef_lambda(CYTHON_UNUSED PyObject *__pyx_self,
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_1lambda1(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_1lambda1 = {"lambda1", (PyCFunction)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_1lambda1, METH_O, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_1lambda1(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_1lambda1(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_1lambda1 = {"lambda1", (PyCFunction)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_1lambda1, METH_O, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_1lambda1(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("lambda1 (wrapper)", 0);
@@ -3563,9 +2957,9 @@ static PyObject *__pyx_lambda_funcdef_lambda1(CYTHON_UNUSED PyObject *__pyx_self
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("lambda1", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Negative(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Negative(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
@@ -3576,16 +2970,16 @@ static PyObject *__pyx_lambda_funcdef_lambda1(CYTHON_UNUSED PyObject *__pyx_self
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.recommend.lambda1", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.recommend.lambda1", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
-static PyObject *__pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_4generator(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
+static PyObject *__pyx_gb_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_4generator(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "implicit/recommender_base.pyx":176
+/* "implicit/matrix_factorization_base.pyx":59
  *         else:
  *             best = sorted(enumerate(scores), key=lambda x: -x[1])
  *         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))             # <<<<<<<<<<<<<<
@@ -3593,24 +2987,24 @@ static PyObject *__pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase
  *     @cython.boundscheck(False)
  */
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_2genexpr(PyObject *__pyx_self) {
-  struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *__pyx_cur_scope;
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_2genexpr(PyObject *__pyx_self) {
+  struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *__pyx_cur_scope;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("genexpr", 0);
-  __pyx_cur_scope = (struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *)__pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct_1_genexpr(__pyx_ptype_8implicit_16recommender_base___pyx_scope_struct_1_genexpr, __pyx_empty_tuple, NULL);
+  __pyx_cur_scope = (struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *)__pyx_tp_new_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr(__pyx_ptype_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr, __pyx_empty_tuple, NULL);
   if (unlikely(!__pyx_cur_scope)) {
-    __pyx_cur_scope = ((struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *)Py_None);
+    __pyx_cur_scope = ((struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 176, __pyx_L1_error)
+    __PYX_ERR(0, 59, __pyx_L1_error)
   } else {
     __Pyx_GOTREF(__pyx_cur_scope);
   }
-  __pyx_cur_scope->__pyx_outer_scope = (struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *) __pyx_self;
+  __pyx_cur_scope->__pyx_outer_scope = (struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *) __pyx_self;
   __Pyx_INCREF(((PyObject *)__pyx_cur_scope->__pyx_outer_scope));
   __Pyx_GIVEREF(__pyx_cur_scope->__pyx_outer_scope);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_4generator, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_genexpr, __pyx_n_s_MatrixFactorizationBase_recommen, __pyx_n_s_implicit_recommender_base); if (unlikely(!gen)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_4generator, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_genexpr, __pyx_n_s_MatrixFactorizationBase_recommen, __pyx_n_s_implicit_matrix_factorization_ba); if (unlikely(!gen)) __PYX_ERR(0, 59, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -3618,7 +3012,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.recommend.genexpr", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.recommend.genexpr", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_DECREF(((PyObject *)__pyx_cur_scope));
   __Pyx_XGIVEREF(__pyx_r);
@@ -3626,9 +3020,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-static PyObject *__pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_4generator(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value) /* generator body */
+static PyObject *__pyx_gb_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_4generator(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value) /* generator body */
 {
-  struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *__pyx_cur_scope = ((struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *)__pyx_generator->closure);
+  struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *__pyx_cur_scope = ((struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *)__pyx_generator->closure);
   PyObject *__pyx_r = NULL;
   PyObject *__pyx_t_1 = NULL;
   Py_ssize_t __pyx_t_2;
@@ -3646,32 +3040,32 @@ static PyObject *__pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 176, __pyx_L1_error)
-  if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_best)) { __Pyx_RaiseClosureNameError("best"); __PYX_ERR(0, 176, __pyx_L1_error) }
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 59, __pyx_L1_error)
+  if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_best)) { __Pyx_RaiseClosureNameError("best"); __PYX_ERR(0, 59, __pyx_L1_error) }
   if (likely(PyList_CheckExact(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_best)) || PyTuple_CheckExact(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_best)) {
     __pyx_t_1 = __pyx_cur_scope->__pyx_outer_scope->__pyx_v_best; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_best); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_best); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 59, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 176, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 59, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 176, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 59, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -3681,7 +3075,7 @@ static PyObject *__pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 176, __pyx_L1_error)
+          else __PYX_ERR(0, 59, __pyx_L1_error)
         }
         break;
       }
@@ -3691,14 +3085,14 @@ static PyObject *__pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase
     __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_rec, __pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_4);
     __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_cur_scope->__pyx_v_rec, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_cur_scope->__pyx_v_rec, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_liked)) { __Pyx_RaiseClosureNameError("liked"); __PYX_ERR(0, 176, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_liked)) { __Pyx_RaiseClosureNameError("liked"); __PYX_ERR(0, 59, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_liked == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 176, __pyx_L1_error)
+      __PYX_ERR(0, 59, __pyx_L1_error)
     }
-    __pyx_t_5 = (__Pyx_PySet_ContainsTF(__pyx_t_4, __pyx_cur_scope->__pyx_outer_scope->__pyx_v_liked, Py_NE)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_5 = (__Pyx_PySet_ContainsTF(__pyx_t_4, __pyx_cur_scope->__pyx_outer_scope->__pyx_v_liked, Py_NE)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 59, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_6 = (__pyx_t_5 != 0);
     if (__pyx_t_6) {
@@ -3720,7 +3114,7 @@ static PyObject *__pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase
       __Pyx_XGOTREF(__pyx_t_1);
       __pyx_t_2 = __pyx_cur_scope->__pyx_t_1;
       __pyx_t_3 = __pyx_cur_scope->__pyx_t_2;
-      if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 176, __pyx_L1_error)
+      if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 59, __pyx_L1_error)
     }
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -3744,7 +3138,7 @@ static PyObject *__pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":157
+/* "implicit/matrix_factorization_base.pyx":40
  *         self._user_norms, self._item_norms = None, None
  * 
  *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
@@ -3752,8 +3146,8 @@ static PyObject *__pyx_gb_8implicit_16recommender_base_23MatrixFactorizationBase
  *         user = self._user_factor(userid, user_items, recalculate_user)
  */
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_2recommend(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_N, PyObject *__pyx_v_filter_already_liked_items, PyObject *__pyx_v_filter_items, PyObject *__pyx_v_recalculate_user) {
-  struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *__pyx_cur_scope;
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_2recommend(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_N, PyObject *__pyx_v_filter_already_liked_items, PyObject *__pyx_v_filter_items, PyObject *__pyx_v_recalculate_user) {
+  struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *__pyx_cur_scope;
   PyObject *__pyx_v_user = NULL;
   PyObject *__pyx_v_scores = NULL;
   PyObject *__pyx_v_count = NULL;
@@ -3769,23 +3163,23 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   Py_ssize_t __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
   __Pyx_RefNannySetupContext("recommend", 0);
-  __pyx_cur_scope = (struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *)__pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct__recommend(__pyx_ptype_8implicit_16recommender_base___pyx_scope_struct__recommend, __pyx_empty_tuple, NULL);
+  __pyx_cur_scope = (struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *)__pyx_tp_new_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend(__pyx_ptype_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend, __pyx_empty_tuple, NULL);
   if (unlikely(!__pyx_cur_scope)) {
-    __pyx_cur_scope = ((struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *)Py_None);
+    __pyx_cur_scope = ((struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 157, __pyx_L1_error)
+    __PYX_ERR(0, 40, __pyx_L1_error)
   } else {
     __Pyx_GOTREF(__pyx_cur_scope);
   }
 
-  /* "implicit/recommender_base.pyx":159
+  /* "implicit/matrix_factorization_base.pyx":42
  *     def recommend(self, userid, user_items,
  *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
  *         user = self._user_factor(userid, user_items, recalculate_user)             # <<<<<<<<<<<<<<
  * 
  *         liked = set()
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factor); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 159, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factor); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -3802,7 +3196,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_3, __pyx_v_userid, __pyx_v_user_items, __pyx_v_recalculate_user};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -3810,13 +3204,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_3, __pyx_v_userid, __pyx_v_user_items, __pyx_v_recalculate_user};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(3+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(3+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 42, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -3830,7 +3224,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __Pyx_INCREF(__pyx_v_recalculate_user);
     __Pyx_GIVEREF(__pyx_v_recalculate_user);
     PyTuple_SET_ITEM(__pyx_t_5, 2+__pyx_t_4, __pyx_v_recalculate_user);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -3838,47 +3232,47 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_v_user = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "implicit/recommender_base.pyx":161
+  /* "implicit/matrix_factorization_base.pyx":44
  *         user = self._user_factor(userid, user_items, recalculate_user)
  * 
  *         liked = set()             # <<<<<<<<<<<<<<
  *         if filter_already_liked_items:
  *             liked.update(user_items[userid].indices)
  */
-  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
+  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_cur_scope->__pyx_v_liked = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "implicit/recommender_base.pyx":162
+  /* "implicit/matrix_factorization_base.pyx":45
  * 
  *         liked = set()
  *         if filter_already_liked_items:             # <<<<<<<<<<<<<<
  *             liked.update(user_items[userid].indices)
  *         if filter_items:
  */
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_filter_already_liked_items); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 162, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_filter_already_liked_items); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 45, __pyx_L1_error)
   if (__pyx_t_6) {
 
-    /* "implicit/recommender_base.pyx":163
+    /* "implicit/matrix_factorization_base.pyx":46
  *         liked = set()
  *         if filter_already_liked_items:
  *             liked.update(user_items[userid].indices)             # <<<<<<<<<<<<<<
  *         if filter_items:
  *             liked.update(filter_items)
  */
-    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_user_items, __pyx_v_userid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_user_items, __pyx_v_userid); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_indices); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 163, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_indices); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 46, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PySet_Type_update, __pyx_cur_scope->__pyx_v_liked, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PySet_Type_update, __pyx_cur_scope->__pyx_v_liked, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "implicit/recommender_base.pyx":162
+    /* "implicit/matrix_factorization_base.pyx":45
  * 
  *         liked = set()
  *         if filter_already_liked_items:             # <<<<<<<<<<<<<<
@@ -3887,28 +3281,28 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":164
+  /* "implicit/matrix_factorization_base.pyx":47
  *         if filter_already_liked_items:
  *             liked.update(user_items[userid].indices)
  *         if filter_items:             # <<<<<<<<<<<<<<
  *             liked.update(filter_items)
  * 
  */
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_filter_items); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 164, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_filter_items); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 47, __pyx_L1_error)
   if (__pyx_t_6) {
 
-    /* "implicit/recommender_base.pyx":165
+    /* "implicit/matrix_factorization_base.pyx":48
  *             liked.update(user_items[userid].indices)
  *         if filter_items:
  *             liked.update(filter_items)             # <<<<<<<<<<<<<<
  * 
  *         # calculate the top N items, removing the users own liked items from the results
  */
-    __pyx_t_1 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PySet_Type_update, __pyx_cur_scope->__pyx_v_liked, __pyx_v_filter_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PySet_Type_update, __pyx_cur_scope->__pyx_v_liked, __pyx_v_filter_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "implicit/recommender_base.pyx":164
+    /* "implicit/matrix_factorization_base.pyx":47
  *         if filter_already_liked_items:
  *             liked.update(user_items[userid].indices)
  *         if filter_items:             # <<<<<<<<<<<<<<
@@ -3917,16 +3311,16 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":168
+  /* "implicit/matrix_factorization_base.pyx":51
  * 
  *         # calculate the top N items, removing the users own liked items from the results
  *         scores = self.item_factors.dot(user)             # <<<<<<<<<<<<<<
  * 
  *         count = N + len(liked)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 168, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_dot); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 168, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_dot); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3941,13 +3335,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_2, __pyx_v_user) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_user);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 168, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_scores = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "implicit/recommender_base.pyx":170
+  /* "implicit/matrix_factorization_base.pyx":53
  *         scores = self.item_factors.dot(user)
  * 
  *         count = N + len(liked)             # <<<<<<<<<<<<<<
@@ -3958,47 +3352,47 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_INCREF(__pyx_t_1);
   if (unlikely(__pyx_t_1 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 170, __pyx_L1_error)
+    __PYX_ERR(0, 53, __pyx_L1_error)
   }
-  __pyx_t_7 = PySet_GET_SIZE(__pyx_t_1); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_7 = PySet_GET_SIZE(__pyx_t_1); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = PyNumber_Add(__pyx_v_N, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Add(__pyx_v_N, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_count = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "implicit/recommender_base.pyx":171
+  /* "implicit/matrix_factorization_base.pyx":54
  * 
  *         count = N + len(liked)
  *         if count < len(scores):             # <<<<<<<<<<<<<<
  *             ids = np.argpartition(scores, -count)[-count:]
  *             best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
  */
-  __pyx_t_7 = PyObject_Length(__pyx_v_scores); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 171, __pyx_L1_error)
-  __pyx_t_5 = PyInt_FromSsize_t(__pyx_t_7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_t_7 = PyObject_Length(__pyx_v_scores); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_t_7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 54, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_1 = PyObject_RichCompare(__pyx_v_count, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_t_1 = PyObject_RichCompare(__pyx_v_count, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 54, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_6) {
 
-    /* "implicit/recommender_base.pyx":172
+    /* "implicit/matrix_factorization_base.pyx":55
  *         count = N + len(liked)
  *         if count < len(scores):
  *             ids = np.argpartition(scores, -count)[-count:]             # <<<<<<<<<<<<<<
  *             best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
  *         else:
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 172, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_argpartition); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_argpartition); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = PyNumber_Negative(__pyx_v_count); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 172, __pyx_L1_error)
+    __pyx_t_5 = PyNumber_Negative(__pyx_v_count); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_3 = NULL;
     __pyx_t_4 = 0;
@@ -4015,7 +3409,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_scores, __pyx_t_5};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -4024,14 +3418,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_scores, __pyx_t_5};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     } else
     #endif
     {
-      __pyx_t_8 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 172, __pyx_L1_error)
+      __pyx_t_8 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       if (__pyx_t_3) {
         __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -4042,30 +3436,30 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __Pyx_GIVEREF(__pyx_t_5);
       PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_4, __pyx_t_5);
       __pyx_t_5 = 0;
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyNumber_Negative(__pyx_v_count); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_Negative(__pyx_v_count); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_8 = __Pyx_PyObject_GetSlice(__pyx_t_1, 0, 0, &__pyx_t_2, NULL, NULL, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 172, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_GetSlice(__pyx_t_1, 0, 0, &__pyx_t_2, NULL, NULL, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 55, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_ids = __pyx_t_8;
     __pyx_t_8 = 0;
 
-    /* "implicit/recommender_base.pyx":173
+    /* "implicit/matrix_factorization_base.pyx":56
  *         if count < len(scores):
  *             ids = np.argpartition(scores, -count)[-count:]
  *             best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])             # <<<<<<<<<<<<<<
  *         else:
  *             best = sorted(enumerate(scores), key=lambda x: -x[1])
  */
-    __pyx_t_8 = __Pyx_PyObject_GetItem(__pyx_v_scores, __pyx_v_ids); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_GetItem(__pyx_v_scores, __pyx_v_ids); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_v_ids);
     __Pyx_GIVEREF(__pyx_v_ids);
@@ -4073,21 +3467,21 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __Pyx_GIVEREF(__pyx_t_8);
     PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_8);
     __pyx_t_8 = 0;
-    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_GIVEREF(__pyx_t_8);
     PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_8);
     __pyx_t_8 = 0;
-    __pyx_t_8 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_lambda, 0, __pyx_n_s_MatrixFactorizationBase_recommen_2, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_lambda, 0, __pyx_n_s_MatrixFactorizationBase_recommen_2, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_key, __pyx_t_1) < 0) __PYX_ERR(0, 173, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_key, __pyx_t_1) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_2, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_2, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -4095,7 +3489,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __pyx_cur_scope->__pyx_v_best = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "implicit/recommender_base.pyx":171
+    /* "implicit/matrix_factorization_base.pyx":54
  * 
  *         count = N + len(liked)
  *         if count < len(scores):             # <<<<<<<<<<<<<<
@@ -4105,7 +3499,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     goto __pyx_L5;
   }
 
-  /* "implicit/recommender_base.pyx":175
+  /* "implicit/matrix_factorization_base.pyx":58
  *             best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
  *         else:
  *             best = sorted(enumerate(scores), key=lambda x: -x[1])             # <<<<<<<<<<<<<<
@@ -4113,20 +3507,20 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  * 
  */
   /*else*/ {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_enumerate, __pyx_v_scores); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_enumerate, __pyx_v_scores); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 58, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_1lambda1, 0, __pyx_n_s_MatrixFactorizationBase_recommen_2, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_1lambda1, 0, __pyx_n_s_MatrixFactorizationBase_recommen_2, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_key, __pyx_t_2) < 0) __PYX_ERR(0, 175, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_key, __pyx_t_2) < 0) __PYX_ERR(0, 58, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_8, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_8, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -4136,7 +3530,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   __pyx_L5:;
 
-  /* "implicit/recommender_base.pyx":176
+  /* "implicit/matrix_factorization_base.pyx":59
  *         else:
  *             best = sorted(enumerate(scores), key=lambda x: -x[1])
  *         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))             # <<<<<<<<<<<<<<
@@ -4144,12 +3538,12 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  *     @cython.boundscheck(False)
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_itertools); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_itertools); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_islice); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_islice); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_9recommend_2genexpr(((PyObject*)__pyx_cur_scope)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_1 = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9recommend_2genexpr(((PyObject*)__pyx_cur_scope)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_5 = NULL;
   __pyx_t_4 = 0;
@@ -4166,7 +3560,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_8)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_1, __pyx_v_N};
-    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -4175,14 +3569,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_8)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_1, __pyx_v_N};
-    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_8, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   } else
   #endif
   {
-    __pyx_t_3 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 59, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     if (__pyx_t_5) {
       __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -4193,19 +3587,19 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __Pyx_GIVEREF(__pyx_v_N);
     PyTuple_SET_ITEM(__pyx_t_3, 1+__pyx_t_4, __pyx_v_N);
     __pyx_t_1 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_8 = PySequence_List(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_8 = PySequence_List(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_8;
   __pyx_t_8 = 0;
   goto __pyx_L0;
 
-  /* "implicit/recommender_base.pyx":157
+  /* "implicit/matrix_factorization_base.pyx":40
  *         self._user_norms, self._item_norms = None, None
  * 
  *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
@@ -4220,7 +3614,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.recommend", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.recommend", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_user);
@@ -4233,7 +3627,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":181
+/* "implicit/matrix_factorization_base.pyx":64
  *     @cython.wraparound(False)
  *     @cython.nonecheck(False)
  *     def recommend_all(self, user_items, int N=10,             # <<<<<<<<<<<<<<
@@ -4242,10 +3636,10 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_5recommend_all(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_8implicit_16recommender_base_23MatrixFactorizationBase_4recommend_all[] = "\n        Recommends items for all users\n\n        Calculates the N best recommendations for all users, and returns numpy ndarray of\n        shape (number_users, N) with item's ids in reversed probability order\n\n        Parameters\n        ----------\n        self : implicit.als.AlternatingLeastSquares\n            The fitted recommendation model\n        user_items : csr_matrix\n            A sparse matrix of shape (number_users, number_items). This lets us look\n            up the liked items and their weights for the user. This is used to filter out\n            items that have already been liked from the output, and to also potentially\n            calculate the best items for this user.\n        N : int, optional\n            The number of results to return\n        recalculate_user : bool, optional\n            When true, don't rely on stored user state and instead recalculate from the\n            passed in user_items\n        filter_already_liked_items : bool, optional\n            This is used to filter out items that have already been liked from the user_items\n        filter_items: list, optional\n            List of item id's to exclude from recommendations for all users\n        num_threads : int, optional\n            The number of threads to use for sorting scores in parallel by users. Default is\n            number of cores on machine\n        show_progress : bool, optional\n            Whether to show a progress bar\n        batch_size : int, optional\n            To optimise memory usage while matrix multiplication, users are separated into groups\n            and scored iteratively. By default batch_size == num_threads * 100\n\n        Returns\n        -------\n        numpy ndarray\n            Array of (number_users, N) with item's ids in descending probability order\n        ";
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_5recommend_all = {"recommend_all", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_5recommend_all, METH_VARARGS|METH_KEYWORDS, __pyx_doc_8implicit_16recommender_base_23MatrixFactorizationBase_4recommend_all};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_5recommend_all(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_5recommend_all(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_4recommend_all[] = "\n        Recommends items for all users\n\n        Calculates the N best recommendations for all users, and returns numpy ndarray of\n        shape (number_users, N) with item's ids in reversed probability order\n\n        Parameters\n        ----------\n        self : implicit.als.AlternatingLeastSquares\n            The fitted recommendation model\n        user_items : csr_matrix\n            A sparse matrix of shape (number_users, number_items). This lets us look\n            up the liked items and their weights for the user. This is used to filter out\n            items that have already been liked from the output, and to also potentially\n            calculate the best items for this user.\n        N : int, optional\n            The number of results to return\n        recalculate_user : bool, optional\n            When true, don't rely on stored user state and instead recalculate from the\n            passed in user_items\n        filter_already_liked_items : bool, optional\n            This is used to filter out items that have already been liked from the user_items\n        filter_items: list, optional\n            List of item id's to exclude from recommendations for all users\n        num_threads : int, optional\n            The number of threads to use for sorting scores in parallel by users. Default is\n            number of cores on machine\n        show_progress : bool, optional\n            Whether to show a progress bar\n        batch_size : int, optional\n            To optimise memory usage while matrix multiplication, users are separated into groups\n            and scored iteratively. By default batch_size == num_threads * 100\n\n        Returns\n        -------\n        numpy ndarray\n            Array of (number_users, N) with item's ids in descending probability order\n        ";
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_5recommend_all = {"recommend_all", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_5recommend_all, METH_VARARGS|METH_KEYWORDS, __pyx_doc_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_4recommend_all};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_5recommend_all(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_user_items = 0;
   int __pyx_v_N;
@@ -4262,7 +3656,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_user_items,&__pyx_n_s_N,&__pyx_n_s_recalculate_user,&__pyx_n_s_filter_already_liked_items,&__pyx_n_s_filter_items,&__pyx_n_s_num_threads,&__pyx_n_s_show_progress,&__pyx_n_s_batch_size,0};
     PyObject* values[9] = {0,0,0,0,0,0,0,0,0};
 
-    /* "implicit/recommender_base.pyx":182
+    /* "implicit/matrix_factorization_base.pyx":65
  *     @cython.nonecheck(False)
  *     def recommend_all(self, user_items, int N=10,
  *                       recalculate_user=False, filter_already_liked_items=True, filter_items=None,             # <<<<<<<<<<<<<<
@@ -4273,7 +3667,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
     values[4] = ((PyObject *)((PyObject *)Py_True));
     values[5] = ((PyObject *)((PyObject *)Py_None));
 
-    /* "implicit/recommender_base.pyx":183
+    /* "implicit/matrix_factorization_base.pyx":66
  *     def recommend_all(self, user_items, int N=10,
  *                       recalculate_user=False, filter_already_liked_items=True, filter_items=None,
  *                       int num_threads=0, show_progress=True, int batch_size=0):             # <<<<<<<<<<<<<<
@@ -4315,7 +3709,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_user_items)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("recommend_all", 0, 2, 9, 1); __PYX_ERR(0, 181, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("recommend_all", 0, 2, 9, 1); __PYX_ERR(0, 64, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -4361,7 +3755,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "recommend_all") < 0)) __PYX_ERR(0, 181, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "recommend_all") < 0)) __PYX_ERR(0, 64, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -4388,7 +3782,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
     __pyx_v_self = values[0];
     __pyx_v_user_items = values[1];
     if (values[2]) {
-      __pyx_v_N = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_N == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 181, __pyx_L3_error)
+      __pyx_v_N = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_N == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 64, __pyx_L3_error)
     } else {
       __pyx_v_N = ((int)((int)10));
     }
@@ -4396,28 +3790,28 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
     __pyx_v_filter_already_liked_items = values[4];
     __pyx_v_filter_items = values[5];
     if (values[6]) {
-      __pyx_v_num_threads = __Pyx_PyInt_As_int(values[6]); if (unlikely((__pyx_v_num_threads == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
+      __pyx_v_num_threads = __Pyx_PyInt_As_int(values[6]); if (unlikely((__pyx_v_num_threads == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L3_error)
     } else {
       __pyx_v_num_threads = ((int)((int)0));
     }
     __pyx_v_show_progress = values[7];
     if (values[8]) {
-      __pyx_v_batch_size = __Pyx_PyInt_As_int(values[8]); if (unlikely((__pyx_v_batch_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
+      __pyx_v_batch_size = __Pyx_PyInt_As_int(values[8]); if (unlikely((__pyx_v_batch_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L3_error)
     } else {
       __pyx_v_batch_size = ((int)((int)0));
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("recommend_all", 0, 2, 9, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 181, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("recommend_all", 0, 2, 9, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 64, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.recommend_all", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.recommend_all", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_4recommend_all(__pyx_self, __pyx_v_self, __pyx_v_user_items, __pyx_v_N, __pyx_v_recalculate_user, __pyx_v_filter_already_liked_items, __pyx_v_filter_items, __pyx_v_num_threads, __pyx_v_show_progress, __pyx_v_batch_size);
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_4recommend_all(__pyx_self, __pyx_v_self, __pyx_v_user_items, __pyx_v_N, __pyx_v_recalculate_user, __pyx_v_filter_already_liked_items, __pyx_v_filter_items, __pyx_v_num_threads, __pyx_v_show_progress, __pyx_v_batch_size);
 
-  /* "implicit/recommender_base.pyx":181
+  /* "implicit/matrix_factorization_base.pyx":64
  *     @cython.wraparound(False)
  *     @cython.nonecheck(False)
  *     def recommend_all(self, user_items, int N=10,             # <<<<<<<<<<<<<<
@@ -4430,7 +3824,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_4recommend_all(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_user_items, int __pyx_v_N, PyObject *__pyx_v_recalculate_user, PyObject *__pyx_v_filter_already_liked_items, PyObject *__pyx_v_filter_items, int __pyx_v_num_threads, PyObject *__pyx_v_show_progress, int __pyx_v_batch_size) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_4recommend_all(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_user_items, int __pyx_v_N, PyObject *__pyx_v_recalculate_user, PyObject *__pyx_v_filter_already_liked_items, PyObject *__pyx_v_filter_items, int __pyx_v_num_threads, PyObject *__pyx_v_show_progress, int __pyx_v_batch_size) {
   PyObject *__pyx_v_max_row_n = NULL;
   PyObject *__pyx_v_factors_items = NULL;
   int __pyx_v_users_c;
@@ -4485,33 +3879,33 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_INCREF(__pyx_v_user_items);
   __Pyx_INCREF(__pyx_v_filter_items);
 
-  /* "implicit/recommender_base.pyx":224
+  /* "implicit/matrix_factorization_base.pyx":107
  * 
  *         # Check N possibility
  *         if filter_already_liked_items:             # <<<<<<<<<<<<<<
  *             max_row_n = user_items.getnnz(axis=1).max()
  *             if max_row_n > user_items.shape[1] - N:
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_filter_already_liked_items); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_filter_already_liked_items); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 107, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "implicit/recommender_base.pyx":225
+    /* "implicit/matrix_factorization_base.pyx":108
  *         # Check N possibility
  *         if filter_already_liked_items:
  *             max_row_n = user_items.getnnz(axis=1).max()             # <<<<<<<<<<<<<<
  *             if max_row_n > user_items.shape[1] - N:
  *                 raise ValueError(f"filter_already_liked_items:\
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_getnnz); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_getnnz); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 225, __pyx_L1_error)
-    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 225, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 108, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_empty_tuple, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_max); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_max); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_5 = NULL;
@@ -4526,44 +3920,44 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     }
     __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 225, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 108, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_max_row_n = __pyx_t_2;
     __pyx_t_2 = 0;
 
-    /* "implicit/recommender_base.pyx":226
+    /* "implicit/matrix_factorization_base.pyx":109
  *         if filter_already_liked_items:
  *             max_row_n = user_items.getnnz(axis=1).max()
  *             if max_row_n > user_items.shape[1] - N:             # <<<<<<<<<<<<<<
  *                 raise ValueError(f"filter_already_liked_items:\
  *                 cannot filter {max_row_n} and recommend {N} items\
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = PyNumber_Subtract(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_5 = PyNumber_Subtract(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyObject_RichCompare(__pyx_v_max_row_n, __pyx_t_5, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_2 = PyObject_RichCompare(__pyx_v_max_row_n, __pyx_t_5, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 226, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (unlikely(__pyx_t_1)) {
 
-      /* "implicit/recommender_base.pyx":227
+      /* "implicit/matrix_factorization_base.pyx":110
  *             max_row_n = user_items.getnnz(axis=1).max()
  *             if max_row_n > user_items.shape[1] - N:
  *                 raise ValueError(f"filter_already_liked_items:\             # <<<<<<<<<<<<<<
  *                 cannot filter {max_row_n} and recommend {N} items\
  *                 out of {user_items.shape[1]} available.")
  */
-      __pyx_t_2 = PyTuple_New(7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_6 = 0;
       __pyx_t_7 = 127;
@@ -4571,7 +3965,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __pyx_t_6 += 59;
       __Pyx_GIVEREF(__pyx_kp_u_filter_already_liked_items_canno);
       PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_kp_u_filter_already_liked_items_canno);
-      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_v_max_row_n, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_v_max_row_n, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_7 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) > __pyx_t_7) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) : __pyx_t_7;
       __pyx_t_6 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5);
@@ -4582,7 +3976,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __pyx_t_6 += 15;
       __Pyx_GIVEREF(__pyx_kp_u_and_recommend);
       PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_kp_u_and_recommend);
-      __pyx_t_5 = __Pyx_PyUnicode_From_int(__pyx_v_N, 0, ' ', 'd'); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyUnicode_From_int(__pyx_v_N, 0, ' ', 'd'); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_6 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_5);
       __Pyx_GIVEREF(__pyx_t_5);
@@ -4592,12 +3986,12 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __pyx_t_6 += 31;
       __Pyx_GIVEREF(__pyx_kp_u_items_out_of);
       PyTuple_SET_ITEM(__pyx_t_2, 4, __pyx_kp_u_items_out_of);
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_5, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_5, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_4, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_FormatSimple(__pyx_t_4, __pyx_empty_unicode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_7 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) > __pyx_t_7) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) : __pyx_t_7;
@@ -4609,17 +4003,17 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __pyx_t_6 += 11;
       __Pyx_GIVEREF(__pyx_kp_u_available);
       PyTuple_SET_ITEM(__pyx_t_2, 6, __pyx_kp_u_available);
-      __pyx_t_5 = __Pyx_PyUnicode_Join(__pyx_t_2, 7, __pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyUnicode_Join(__pyx_t_2, 7, __pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_Raise(__pyx_t_2, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __PYX_ERR(0, 227, __pyx_L1_error)
+      __PYX_ERR(0, 110, __pyx_L1_error)
 
-      /* "implicit/recommender_base.pyx":226
+      /* "implicit/matrix_factorization_base.pyx":109
  *         if filter_already_liked_items:
  *             max_row_n = user_items.getnnz(axis=1).max()
  *             if max_row_n > user_items.shape[1] - N:             # <<<<<<<<<<<<<<
@@ -4628,7 +4022,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
     }
 
-    /* "implicit/recommender_base.pyx":224
+    /* "implicit/matrix_factorization_base.pyx":107
  * 
  *         # Check N possibility
  *         if filter_already_liked_items:             # <<<<<<<<<<<<<<
@@ -4637,67 +4031,67 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":230
+  /* "implicit/matrix_factorization_base.pyx":113
  *                 cannot filter {max_row_n} and recommend {N} items\
  *                 out of {user_items.shape[1]} available.")
  *         if filter_items:             # <<<<<<<<<<<<<<
  *             filter_items = list(set(filter_items))
  *             if len(filter_items) > user_items.shape[1] - N:
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_filter_items); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_filter_items); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 113, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "implicit/recommender_base.pyx":231
+    /* "implicit/matrix_factorization_base.pyx":114
  *                 out of {user_items.shape[1]} available.")
  *         if filter_items:
  *             filter_items = list(set(filter_items))             # <<<<<<<<<<<<<<
  *             if len(filter_items) > user_items.shape[1] - N:
  *                 raise ValueError(f"filter_items:\
  */
-    __pyx_t_2 = PySet_New(__pyx_v_filter_items); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 231, __pyx_L1_error)
+    __pyx_t_2 = PySet_New(__pyx_v_filter_items); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = PySequence_List(__pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 231, __pyx_L1_error)
+    __pyx_t_5 = PySequence_List(__pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 114, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF_SET(__pyx_v_filter_items, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "implicit/recommender_base.pyx":232
+    /* "implicit/matrix_factorization_base.pyx":115
  *         if filter_items:
  *             filter_items = list(set(filter_items))
  *             if len(filter_items) > user_items.shape[1] - N:             # <<<<<<<<<<<<<<
  *                 raise ValueError(f"filter_items:\
  *                 cannot filter {len(filter_items)} and recommend {N} items\
  */
-    __pyx_t_6 = PyObject_Length(__pyx_v_filter_items); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 232, __pyx_L1_error)
-    __pyx_t_5 = PyInt_FromSsize_t(__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 232, __pyx_L1_error)
+    __pyx_t_6 = PyObject_Length(__pyx_v_filter_items); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 115, __pyx_L1_error)
+    __pyx_t_5 = PyInt_FromSsize_t(__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 232, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 232, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 232, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyNumber_Subtract(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 232, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Subtract(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyObject_RichCompare(__pyx_t_5, __pyx_t_3, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 232, __pyx_L1_error)
+    __pyx_t_2 = PyObject_RichCompare(__pyx_t_5, __pyx_t_3, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 232, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (unlikely(__pyx_t_1)) {
 
-      /* "implicit/recommender_base.pyx":233
+      /* "implicit/matrix_factorization_base.pyx":116
  *             filter_items = list(set(filter_items))
  *             if len(filter_items) > user_items.shape[1] - N:
  *                 raise ValueError(f"filter_items:\             # <<<<<<<<<<<<<<
  *                 cannot filter {len(filter_items)} and recommend {N} items\
  *                 out of {user_items.shape[1]} available.")
  */
-      __pyx_t_2 = PyTuple_New(7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 233, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_6 = 0;
       __pyx_t_7 = 127;
@@ -4705,8 +4099,8 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __pyx_t_6 += 45;
       __Pyx_GIVEREF(__pyx_kp_u_filter_items_cannot_filter);
       PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_kp_u_filter_items_cannot_filter);
-      __pyx_t_8 = PyObject_Length(__pyx_v_filter_items); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 233, __pyx_L1_error)
-      __pyx_t_3 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_8, 0, ' ', 'd'); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
+      __pyx_t_8 = PyObject_Length(__pyx_v_filter_items); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 116, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_8, 0, ' ', 'd'); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_t_6 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_3);
@@ -4716,7 +4110,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __pyx_t_6 += 15;
       __Pyx_GIVEREF(__pyx_kp_u_and_recommend);
       PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_kp_u_and_recommend);
-      __pyx_t_3 = __Pyx_PyUnicode_From_int(__pyx_v_N, 0, ' ', 'd'); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyUnicode_From_int(__pyx_v_N, 0, ' ', 'd'); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_t_6 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_3);
@@ -4726,12 +4120,12 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __pyx_t_6 += 31;
       __Pyx_GIVEREF(__pyx_kp_u_items_out_of);
       PyTuple_SET_ITEM(__pyx_t_2, 4, __pyx_kp_u_items_out_of);
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_3, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 233, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_3, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_FormatSimple(__pyx_t_5, __pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_7 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) > __pyx_t_7) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3) : __pyx_t_7;
@@ -4743,17 +4137,17 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __pyx_t_6 += 11;
       __Pyx_GIVEREF(__pyx_kp_u_available);
       PyTuple_SET_ITEM(__pyx_t_2, 6, __pyx_kp_u_available);
-      __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_2, 7, __pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_2, 7, __pyx_t_6, __pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 233, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_Raise(__pyx_t_2, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __PYX_ERR(0, 233, __pyx_L1_error)
+      __PYX_ERR(0, 116, __pyx_L1_error)
 
-      /* "implicit/recommender_base.pyx":232
+      /* "implicit/matrix_factorization_base.pyx":115
  *         if filter_items:
  *             filter_items = list(set(filter_items))
  *             if len(filter_items) > user_items.shape[1] - N:             # <<<<<<<<<<<<<<
@@ -4762,7 +4156,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
     }
 
-    /* "implicit/recommender_base.pyx":230
+    /* "implicit/matrix_factorization_base.pyx":113
  *                 cannot filter {max_row_n} and recommend {N} items\
  *                 out of {user_items.shape[1]} available.")
  *         if filter_items:             # <<<<<<<<<<<<<<
@@ -4771,7 +4165,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":237
+  /* "implicit/matrix_factorization_base.pyx":120
  *                 out of {user_items.shape[1]} available.")
  * 
  *         if num_threads==0:             # <<<<<<<<<<<<<<
@@ -4781,16 +4175,16 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_t_1 = ((__pyx_v_num_threads == 0) != 0);
   if (__pyx_t_1) {
 
-    /* "implicit/recommender_base.pyx":238
+    /* "implicit/matrix_factorization_base.pyx":121
  * 
  *         if num_threads==0:
  *             num_threads=multiprocessing.cpu_count()             # <<<<<<<<<<<<<<
  * 
  *         if not isinstance(user_items, csr_matrix):
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_multiprocessing); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 238, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_multiprocessing); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_cpu_count); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 238, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_cpu_count); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_3 = NULL;
@@ -4805,14 +4199,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     }
     __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 238, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 238, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_num_threads = __pyx_t_9;
 
-    /* "implicit/recommender_base.pyx":237
+    /* "implicit/matrix_factorization_base.pyx":120
  *                 out of {user_items.shape[1]} available.")
  * 
  *         if num_threads==0:             # <<<<<<<<<<<<<<
@@ -4821,28 +4215,28 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":240
+  /* "implicit/matrix_factorization_base.pyx":123
  *             num_threads=multiprocessing.cpu_count()
  * 
  *         if not isinstance(user_items, csr_matrix):             # <<<<<<<<<<<<<<
  *             user_items = user_items.tocsr()
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_csr_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_csr_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyObject_IsInstance(__pyx_v_user_items, __pyx_t_2); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 240, __pyx_L1_error)
+  __pyx_t_1 = PyObject_IsInstance(__pyx_v_user_items, __pyx_t_2); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_10 = ((!(__pyx_t_1 != 0)) != 0);
   if (__pyx_t_10) {
 
-    /* "implicit/recommender_base.pyx":241
+    /* "implicit/matrix_factorization_base.pyx":124
  * 
  *         if not isinstance(user_items, csr_matrix):
  *             user_items = user_items.tocsr()             # <<<<<<<<<<<<<<
  * 
  *         factors_items = self.item_factors.T
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_tocsr); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 241, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_tocsr); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -4856,13 +4250,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     }
     __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 241, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 124, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF_SET(__pyx_v_user_items, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "implicit/recommender_base.pyx":240
+    /* "implicit/matrix_factorization_base.pyx":123
  *             num_threads=multiprocessing.cpu_count()
  * 
  *         if not isinstance(user_items, csr_matrix):             # <<<<<<<<<<<<<<
@@ -4871,46 +4265,46 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":243
+  /* "implicit/matrix_factorization_base.pyx":126
  *             user_items = user_items.tocsr()
  * 
  *         factors_items = self.item_factors.T             # <<<<<<<<<<<<<<
  * 
  *         cdef:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 243, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 126, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_T); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 243, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_T); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 126, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_factors_items = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "implicit/recommender_base.pyx":246
+  /* "implicit/matrix_factorization_base.pyx":129
  * 
  *         cdef:
  *             int users_c = user_items.shape[0], items_c = user_items.shape[1]             # <<<<<<<<<<<<<<
  *             int batch = num_threads * 100 if batch_size==0 else batch_size
  *             int u_b, u_low, u_high, u_len, u
  */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_5, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_5, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_users_c = __pyx_t_9;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_5); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_5); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_items_c = __pyx_t_9;
 
-  /* "implicit/recommender_base.pyx":247
+  /* "implicit/matrix_factorization_base.pyx":130
  *         cdef:
  *             int users_c = user_items.shape[0], items_c = user_items.shape[1]
  *             int batch = num_threads * 100 if batch_size==0 else batch_size             # <<<<<<<<<<<<<<
@@ -4924,23 +4318,23 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   __pyx_v_batch = __pyx_t_11;
 
-  /* "implicit/recommender_base.pyx":249
+  /* "implicit/matrix_factorization_base.pyx":132
  *             int batch = num_threads * 100 if batch_size==0 else batch_size
  *             int u_b, u_low, u_high, u_len, u
  *         A = np.zeros((batch, items_c), dtype=np.float32)             # <<<<<<<<<<<<<<
  *         cdef:
  *             int users_c_b = ceil(users_c / float(batch))
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_batch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_batch); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_items_c); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_items_c); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_5);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5);
@@ -4948,21 +4342,21 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_3);
   __pyx_t_5 = 0;
   __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_float32); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_float32); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_12) < 0) __PYX_ERR(0, 249, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_12) < 0) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4970,20 +4364,20 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_v_A = __pyx_t_12;
   __pyx_t_12 = 0;
 
-  /* "implicit/recommender_base.pyx":251
+  /* "implicit/matrix_factorization_base.pyx":134
  *         A = np.zeros((batch, items_c), dtype=np.float32)
  *         cdef:
  *             int users_c_b = ceil(users_c / float(batch))             # <<<<<<<<<<<<<<
  *             float[:, ::1] A_mv = A
  *             float * A_mv_p = &A_mv[0, 0]
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_ceil); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 251, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_ceil); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   if (unlikely(((double)__pyx_v_batch) == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(0, 251, __pyx_L1_error)
+    __PYX_ERR(0, 134, __pyx_L1_error)
   }
-  __pyx_t_3 = PyFloat_FromDouble((__pyx_v_users_c / ((double)__pyx_v_batch))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 251, __pyx_L1_error)
+  __pyx_t_3 = PyFloat_FromDouble((__pyx_v_users_c / ((double)__pyx_v_batch))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -4998,26 +4392,26 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_t_12 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 251, __pyx_L1_error)
+  if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_12); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 251, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_12); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
   __pyx_v_users_c_b = __pyx_t_9;
 
-  /* "implicit/recommender_base.pyx":252
+  /* "implicit/matrix_factorization_base.pyx":135
  *         cdef:
  *             int users_c_b = ceil(users_c / float(batch))
  *             float[:, ::1] A_mv = A             # <<<<<<<<<<<<<<
  *             float * A_mv_p = &A_mv[0, 0]
  *             int[:, ::1] B_mv = np.zeros((users_c, N), dtype=np.intc)
  */
-  __pyx_t_13 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_float(__pyx_v_A, PyBUF_WRITABLE); if (unlikely(!__pyx_t_13.memview)) __PYX_ERR(0, 252, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_float(__pyx_v_A, PyBUF_WRITABLE); if (unlikely(!__pyx_t_13.memview)) __PYX_ERR(0, 135, __pyx_L1_error)
   __pyx_v_A_mv = __pyx_t_13;
   __pyx_t_13.memview = NULL;
   __pyx_t_13.data = NULL;
 
-  /* "implicit/recommender_base.pyx":253
+  /* "implicit/matrix_factorization_base.pyx":136
  *             int users_c_b = ceil(users_c / float(batch))
  *             float[:, ::1] A_mv = A
  *             float * A_mv_p = &A_mv[0, 0]             # <<<<<<<<<<<<<<
@@ -5028,23 +4422,23 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_t_15 = 0;
   __pyx_v_A_mv_p = (&(*((float *) ( /* dim=1 */ ((char *) (((float *) ( /* dim=0 */ (__pyx_v_A_mv.data + __pyx_t_14 * __pyx_v_A_mv.strides[0]) )) + __pyx_t_15)) ))));
 
-  /* "implicit/recommender_base.pyx":254
+  /* "implicit/matrix_factorization_base.pyx":137
  *             float[:, ::1] A_mv = A
  *             float * A_mv_p = &A_mv[0, 0]
  *             int[:, ::1] B_mv = np.zeros((users_c, N), dtype=np.intc)             # <<<<<<<<<<<<<<
  *             int * B_mv_p = &B_mv[0, 0]
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_users_c); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_users_c); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_N); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_12);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_12);
@@ -5052,32 +4446,32 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_3);
   __pyx_t_12 = 0;
   __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_intc); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_intc); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(0, 254, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_16 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_int(__pyx_t_5, PyBUF_WRITABLE); if (unlikely(!__pyx_t_16.memview)) __PYX_ERR(0, 254, __pyx_L1_error)
+  __pyx_t_16 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_int(__pyx_t_5, PyBUF_WRITABLE); if (unlikely(!__pyx_t_16.memview)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_B_mv = __pyx_t_16;
   __pyx_t_16.memview = NULL;
   __pyx_t_16.data = NULL;
 
-  /* "implicit/recommender_base.pyx":255
+  /* "implicit/matrix_factorization_base.pyx":138
  *             float * A_mv_p = &A_mv[0, 0]
  *             int[:, ::1] B_mv = np.zeros((users_c, N), dtype=np.intc)
  *             int * B_mv_p = &B_mv[0, 0]             # <<<<<<<<<<<<<<
@@ -5088,34 +4482,34 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_t_18 = 0;
   __pyx_v_B_mv_p = (&(*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_B_mv.data + __pyx_t_17 * __pyx_v_B_mv.strides[0]) )) + __pyx_t_18)) ))));
 
-  /* "implicit/recommender_base.pyx":257
+  /* "implicit/matrix_factorization_base.pyx":140
  *             int * B_mv_p = &B_mv[0, 0]
  * 
  *         progress = tqdm(total=users_c, disable=not show_progress)             # <<<<<<<<<<<<<<
  *         # Separate all users in batches
  *         for u_b in range(users_c_b):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_tqdm); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 257, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_tqdm); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 257, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_users_c); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 257, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_users_c); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_total, __pyx_t_3) < 0) __PYX_ERR(0, 257, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_total, __pyx_t_3) < 0) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_v_show_progress); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 257, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyBool_FromLong((!__pyx_t_10)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 257, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_v_show_progress); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyBool_FromLong((!__pyx_t_10)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_disable, __pyx_t_3) < 0) __PYX_ERR(0, 257, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_disable, __pyx_t_3) < 0) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 257, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_empty_tuple, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_progress = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "implicit/recommender_base.pyx":259
+  /* "implicit/matrix_factorization_base.pyx":142
  *         progress = tqdm(total=users_c, disable=not show_progress)
  *         # Separate all users in batches
  *         for u_b in range(users_c_b):             # <<<<<<<<<<<<<<
@@ -5127,7 +4521,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   for (__pyx_t_20 = 0; __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
     __pyx_v_u_b = __pyx_t_20;
 
-    /* "implicit/recommender_base.pyx":260
+    /* "implicit/matrix_factorization_base.pyx":143
  *         # Separate all users in batches
  *         for u_b in range(users_c_b):
  *             u_low = u_b * batch             # <<<<<<<<<<<<<<
@@ -5136,7 +4530,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
     __pyx_v_u_low = (__pyx_v_u_b * __pyx_v_batch);
 
-    /* "implicit/recommender_base.pyx":261
+    /* "implicit/matrix_factorization_base.pyx":144
  *         for u_b in range(users_c_b):
  *             u_low = u_b * batch
  *             u_high = min([(u_b + 1) * batch, users_c])             # <<<<<<<<<<<<<<
@@ -5152,7 +4546,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     }
     __pyx_v_u_high = __pyx_t_22;
 
-    /* "implicit/recommender_base.pyx":262
+    /* "implicit/matrix_factorization_base.pyx":145
  *             u_low = u_b * batch
  *             u_high = min([(u_b + 1) * batch, users_c])
  *             u_len = u_high - u_low             # <<<<<<<<<<<<<<
@@ -5161,22 +4555,22 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
     __pyx_v_u_len = (__pyx_v_u_high - __pyx_v_u_low);
 
-    /* "implicit/recommender_base.pyx":264
+    /* "implicit/matrix_factorization_base.pyx":147
  *             u_len = u_high - u_low
  *             # Prepare array with scores for batch of users
  *             users_factors = np.vstack([             # <<<<<<<<<<<<<<
  *                 self._user_factor(u, user_items, recalculate_user)
  *                 for u
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 264, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 147, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_vstack); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 264, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_vstack); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 147, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 264, __pyx_L1_error)
+    __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 147, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
 
-    /* "implicit/recommender_base.pyx":267
+    /* "implicit/matrix_factorization_base.pyx":150
  *                 self._user_factor(u, user_items, recalculate_user)
  *                 for u
  *                 in range(u_low, u_high, 1)             # <<<<<<<<<<<<<<
@@ -5185,7 +4579,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
     __pyx_t_21 = __pyx_v_u_high;
 
-    /* "implicit/recommender_base.pyx":266
+    /* "implicit/matrix_factorization_base.pyx":149
  *             users_factors = np.vstack([
  *                 self._user_factor(u, user_items, recalculate_user)
  *                 for u             # <<<<<<<<<<<<<<
@@ -5196,16 +4590,16 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     for (__pyx_t_24 = __pyx_v_u_low; __pyx_t_24 < __pyx_t_23; __pyx_t_24+=1) {
       __pyx_v_u = __pyx_t_24;
 
-      /* "implicit/recommender_base.pyx":265
+      /* "implicit/matrix_factorization_base.pyx":148
  *             # Prepare array with scores for batch of users
  *             users_factors = np.vstack([
  *                 self._user_factor(u, user_items, recalculate_user)             # <<<<<<<<<<<<<<
  *                 for u
  *                 in range(u_low, u_high, 1)
  */
-      __pyx_t_25 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factor); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 265, __pyx_L1_error)
+      __pyx_t_25 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factor); if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 148, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_25);
-      __pyx_t_26 = __Pyx_PyInt_From_int(__pyx_v_u); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 265, __pyx_L1_error)
+      __pyx_t_26 = __Pyx_PyInt_From_int(__pyx_v_u); if (unlikely(!__pyx_t_26)) __PYX_ERR(0, 148, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_26);
       __pyx_t_27 = NULL;
       __pyx_t_28 = 0;
@@ -5222,7 +4616,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_25)) {
         PyObject *__pyx_temp[4] = {__pyx_t_27, __pyx_t_26, __pyx_v_user_items, __pyx_v_recalculate_user};
-        __pyx_t_12 = __Pyx_PyFunction_FastCall(__pyx_t_25, __pyx_temp+1-__pyx_t_28, 3+__pyx_t_28); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 265, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyFunction_FastCall(__pyx_t_25, __pyx_temp+1-__pyx_t_28, 3+__pyx_t_28); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 148, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_27); __pyx_t_27 = 0;
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
@@ -5231,14 +4625,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_25)) {
         PyObject *__pyx_temp[4] = {__pyx_t_27, __pyx_t_26, __pyx_v_user_items, __pyx_v_recalculate_user};
-        __pyx_t_12 = __Pyx_PyCFunction_FastCall(__pyx_t_25, __pyx_temp+1-__pyx_t_28, 3+__pyx_t_28); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 265, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyCFunction_FastCall(__pyx_t_25, __pyx_temp+1-__pyx_t_28, 3+__pyx_t_28); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 148, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_27); __pyx_t_27 = 0;
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_26); __pyx_t_26 = 0;
       } else
       #endif
       {
-        __pyx_t_29 = PyTuple_New(3+__pyx_t_28); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 265, __pyx_L1_error)
+        __pyx_t_29 = PyTuple_New(3+__pyx_t_28); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 148, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_29);
         if (__pyx_t_27) {
           __Pyx_GIVEREF(__pyx_t_27); PyTuple_SET_ITEM(__pyx_t_29, 0, __pyx_t_27); __pyx_t_27 = NULL;
@@ -5252,12 +4646,12 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
         __Pyx_GIVEREF(__pyx_v_recalculate_user);
         PyTuple_SET_ITEM(__pyx_t_29, 2+__pyx_t_28, __pyx_v_recalculate_user);
         __pyx_t_26 = 0;
-        __pyx_t_12 = __Pyx_PyObject_Call(__pyx_t_25, __pyx_t_29, NULL); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 265, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyObject_Call(__pyx_t_25, __pyx_t_29, NULL); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 148, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_29); __pyx_t_29 = 0;
       }
       __Pyx_DECREF(__pyx_t_25); __pyx_t_25 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_5, (PyObject*)__pyx_t_12))) __PYX_ERR(0, 264, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_5, (PyObject*)__pyx_t_12))) __PYX_ERR(0, 147, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     }
     __pyx_t_12 = NULL;
@@ -5273,23 +4667,23 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __pyx_t_2 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_12, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 264, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 147, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "implicit/recommender_base.pyx":268
+    /* "implicit/matrix_factorization_base.pyx":151
  *                 for u
  *                 in range(u_low, u_high, 1)
  *             ]).astype(np.float32)             # <<<<<<<<<<<<<<
  *             users_factors.dot(factors_items, out=A[:u_len])
  *             # Precalculate min if needed later
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 268, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 268, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 151, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 268, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_2 = NULL;
@@ -5305,67 +4699,67 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 268, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 151, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_XDECREF_SET(__pyx_v_users_factors, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "implicit/recommender_base.pyx":269
+    /* "implicit/matrix_factorization_base.pyx":152
  *                 in range(u_low, u_high, 1)
  *             ]).astype(np.float32)
  *             users_factors.dot(factors_items, out=A[:u_len])             # <<<<<<<<<<<<<<
  *             # Precalculate min if needed later
  *             if filter_already_liked_items or filter_items:
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_users_factors, __pyx_n_s_dot); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 269, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_users_factors, __pyx_n_s_dot); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 152, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 269, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 152, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_INCREF(__pyx_v_factors_items);
     __Pyx_GIVEREF(__pyx_v_factors_items);
     PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_factors_items);
-    __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 269, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_2 = __Pyx_PyObject_GetSlice(__pyx_v_A, 0, __pyx_v_u_len, NULL, NULL, NULL, 0, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetSlice(__pyx_v_A, 0, __pyx_v_u_len, NULL, NULL, NULL, 0, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_out, __pyx_t_2) < 0) __PYX_ERR(0, 269, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_out, __pyx_t_2) < 0) __PYX_ERR(0, 152, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "implicit/recommender_base.pyx":271
+    /* "implicit/matrix_factorization_base.pyx":154
  *             users_factors.dot(factors_items, out=A[:u_len])
  *             # Precalculate min if needed later
  *             if filter_already_liked_items or filter_items:             # <<<<<<<<<<<<<<
  *                 A_min = np.amin(A)
  *             # Filter out items from user_items if needed
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_filter_already_liked_items); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 271, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_filter_already_liked_items); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 154, __pyx_L1_error)
     if (!__pyx_t_1) {
     } else {
       __pyx_t_10 = __pyx_t_1;
       goto __pyx_L14_bool_binop_done;
     }
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_filter_items); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 271, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_filter_items); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 154, __pyx_L1_error)
     __pyx_t_10 = __pyx_t_1;
     __pyx_L14_bool_binop_done:;
     if (__pyx_t_10) {
 
-      /* "implicit/recommender_base.pyx":272
+      /* "implicit/matrix_factorization_base.pyx":155
  *             # Precalculate min if needed later
  *             if filter_already_liked_items or filter_items:
  *                 A_min = np.amin(A)             # <<<<<<<<<<<<<<
  *             # Filter out items from user_items if needed
  *             if filter_already_liked_items:
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 155, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_amin); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_amin); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 155, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_5 = NULL;
@@ -5380,13 +4774,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       }
       __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_v_A) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_A);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 272, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 155, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_XDECREF_SET(__pyx_v_A_min, __pyx_t_2);
       __pyx_t_2 = 0;
 
-      /* "implicit/recommender_base.pyx":271
+      /* "implicit/matrix_factorization_base.pyx":154
  *             users_factors.dot(factors_items, out=A[:u_len])
  *             # Precalculate min if needed later
  *             if filter_already_liked_items or filter_items:             # <<<<<<<<<<<<<<
@@ -5395,29 +4789,29 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
     }
 
-    /* "implicit/recommender_base.pyx":274
+    /* "implicit/matrix_factorization_base.pyx":157
  *                 A_min = np.amin(A)
  *             # Filter out items from user_items if needed
  *             if filter_already_liked_items:             # <<<<<<<<<<<<<<
  *                 A[user_items[u_low:u_high].nonzero()] = A_min - 1
  *             # Filter out constant items
  */
-    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_v_filter_already_liked_items); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 274, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_v_filter_already_liked_items); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 157, __pyx_L1_error)
     if (__pyx_t_10) {
 
-      /* "implicit/recommender_base.pyx":275
+      /* "implicit/matrix_factorization_base.pyx":158
  *             # Filter out items from user_items if needed
  *             if filter_already_liked_items:
  *                 A[user_items[u_low:u_high].nonzero()] = A_min - 1             # <<<<<<<<<<<<<<
  *             # Filter out constant items
  *             if filter_items:
  */
-      if (unlikely(!__pyx_v_A_min)) { __Pyx_RaiseUnboundLocalError("A_min"); __PYX_ERR(0, 275, __pyx_L1_error) }
-      __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_v_A_min, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 275, __pyx_L1_error)
+      if (unlikely(!__pyx_v_A_min)) { __Pyx_RaiseUnboundLocalError("A_min"); __PYX_ERR(0, 158, __pyx_L1_error) }
+      __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_v_A_min, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 158, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_5 = __Pyx_PyObject_GetSlice(__pyx_v_user_items, __pyx_v_u_low, __pyx_v_u_high, NULL, NULL, NULL, 1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 275, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetSlice(__pyx_v_user_items, __pyx_v_u_low, __pyx_v_u_high, NULL, NULL, NULL, 1, 1, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 158, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_nonzero); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 275, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_nonzero); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 158, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_5 = NULL;
@@ -5432,14 +4826,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       }
       __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 275, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 158, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(PyObject_SetItem(__pyx_v_A, __pyx_t_4, __pyx_t_2) < 0)) __PYX_ERR(0, 275, __pyx_L1_error)
+      if (unlikely(PyObject_SetItem(__pyx_v_A, __pyx_t_4, __pyx_t_2) < 0)) __PYX_ERR(0, 158, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "implicit/recommender_base.pyx":274
+      /* "implicit/matrix_factorization_base.pyx":157
  *                 A_min = np.amin(A)
  *             # Filter out items from user_items if needed
  *             if filter_already_liked_items:             # <<<<<<<<<<<<<<
@@ -5448,27 +4842,27 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
     }
 
-    /* "implicit/recommender_base.pyx":277
+    /* "implicit/matrix_factorization_base.pyx":160
  *                 A[user_items[u_low:u_high].nonzero()] = A_min - 1
  *             # Filter out constant items
  *             if filter_items:             # <<<<<<<<<<<<<<
  *                 A[:, filter_items] = A_min - 1
  *             # Sort array of scores in parallel
  */
-    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_v_filter_items); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 277, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_v_filter_items); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 160, __pyx_L1_error)
     if (__pyx_t_10) {
 
-      /* "implicit/recommender_base.pyx":278
+      /* "implicit/matrix_factorization_base.pyx":161
  *             # Filter out constant items
  *             if filter_items:
  *                 A[:, filter_items] = A_min - 1             # <<<<<<<<<<<<<<
  *             # Sort array of scores in parallel
  *             for u in prange(u_len, nogil=True, num_threads=num_threads, schedule='dynamic'):
  */
-      if (unlikely(!__pyx_v_A_min)) { __Pyx_RaiseUnboundLocalError("A_min"); __PYX_ERR(0, 278, __pyx_L1_error) }
-      __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_v_A_min, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L1_error)
+      if (unlikely(!__pyx_v_A_min)) { __Pyx_RaiseUnboundLocalError("A_min"); __PYX_ERR(0, 161, __pyx_L1_error) }
+      __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_v_A_min, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 161, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 278, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 161, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_slice_);
       __Pyx_GIVEREF(__pyx_slice_);
@@ -5476,11 +4870,11 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __Pyx_INCREF(__pyx_v_filter_items);
       __Pyx_GIVEREF(__pyx_v_filter_items);
       PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_v_filter_items);
-      if (unlikely(PyObject_SetItem(__pyx_v_A, __pyx_t_4, __pyx_t_2) < 0)) __PYX_ERR(0, 278, __pyx_L1_error)
+      if (unlikely(PyObject_SetItem(__pyx_v_A, __pyx_t_4, __pyx_t_2) < 0)) __PYX_ERR(0, 161, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "implicit/recommender_base.pyx":277
+      /* "implicit/matrix_factorization_base.pyx":160
  *                 A[user_items[u_low:u_high].nonzero()] = A_min - 1
  *             # Filter out constant items
  *             if filter_items:             # <<<<<<<<<<<<<<
@@ -5489,7 +4883,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
     }
 
-    /* "implicit/recommender_base.pyx":280
+    /* "implicit/matrix_factorization_base.pyx":163
  *                 A[:, filter_items] = A_min - 1
  *             # Sort array of scores in parallel
  *             for u in prange(u_len, nogil=True, num_threads=num_threads, schedule='dynamic'):             # <<<<<<<<<<<<<<
@@ -5526,7 +4920,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
                           {
                               __pyx_v_u = (int)(0 + 1 * __pyx_t_23);
 
-                              /* "implicit/recommender_base.pyx":281
+                              /* "implicit/matrix_factorization_base.pyx":164
  *             # Sort array of scores in parallel
  *             for u in prange(u_len, nogil=True, num_threads=num_threads, schedule='dynamic'):
  *                 fargsort_c(A_mv_p, u, batch * u_b + u, items_c, N, B_mv_p)             # <<<<<<<<<<<<<<
@@ -5547,7 +4941,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
           #endif
         }
 
-        /* "implicit/recommender_base.pyx":280
+        /* "implicit/matrix_factorization_base.pyx":163
  *                 A[:, filter_items] = A_min - 1
  *             # Sort array of scores in parallel
  *             for u in prange(u_len, nogil=True, num_threads=num_threads, schedule='dynamic'):             # <<<<<<<<<<<<<<
@@ -5566,16 +4960,16 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
         }
     }
 
-    /* "implicit/recommender_base.pyx":282
+    /* "implicit/matrix_factorization_base.pyx":165
  *             for u in prange(u_len, nogil=True, num_threads=num_threads, schedule='dynamic'):
  *                 fargsort_c(A_mv_p, u, batch * u_b + u, items_c, N, B_mv_p)
  *             progress.update(u_len)             # <<<<<<<<<<<<<<
  *         progress.close()
  *         return np.asarray(B_mv)
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_progress, __pyx_n_s_update); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 282, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_progress, __pyx_n_s_update); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_u_len); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 282, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_u_len); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_5 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -5590,20 +4984,20 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 282, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
 
-  /* "implicit/recommender_base.pyx":283
+  /* "implicit/matrix_factorization_base.pyx":166
  *                 fargsort_c(A_mv_p, u, batch * u_b + u, items_c, N, B_mv_p)
  *             progress.update(u_len)
  *         progress.close()             # <<<<<<<<<<<<<<
  *         return np.asarray(B_mv)
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_progress, __pyx_n_s_close); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 283, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_progress, __pyx_n_s_close); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 166, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -5617,12 +5011,12 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 283, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":284
+  /* "implicit/matrix_factorization_base.pyx":167
  *             progress.update(u_len)
  *         progress.close()
  *         return np.asarray(B_mv)             # <<<<<<<<<<<<<<
@@ -5630,12 +5024,12 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 284, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 167, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_asarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 284, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_asarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 167, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_B_mv, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 284, __pyx_L1_error)
+  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_B_mv, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 167, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -5650,14 +5044,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_5, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 284, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 167, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "implicit/recommender_base.pyx":181
+  /* "implicit/matrix_factorization_base.pyx":64
  *     @cython.wraparound(False)
  *     @cython.nonecheck(False)
  *     def recommend_all(self, user_items, int N=10,             # <<<<<<<<<<<<<<
@@ -5678,7 +5072,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_XDECREF(__pyx_t_26);
   __Pyx_XDECREF(__pyx_t_27);
   __Pyx_XDECREF(__pyx_t_29);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.recommend_all", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.recommend_all", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_max_row_n);
@@ -5696,7 +5090,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":286
+/* "implicit/matrix_factorization_base.pyx":169
  *         return np.asarray(B_mv)
  * 
  *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):             # <<<<<<<<<<<<<<
@@ -5705,9 +5099,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_7rank_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_7rank_items = {"rank_items", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_7rank_items, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_7rank_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_7rank_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_7rank_items = {"rank_items", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_7rank_items, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_7rank_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_userid = 0;
   PyObject *__pyx_v_user_items = 0;
@@ -5746,19 +5140,19 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_userid)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, 1); __PYX_ERR(0, 286, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, 1); __PYX_ERR(0, 169, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_user_items)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, 2); __PYX_ERR(0, 286, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, 2); __PYX_ERR(0, 169, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_selected_items)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, 3); __PYX_ERR(0, 286, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, 3); __PYX_ERR(0, 169, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
@@ -5768,7 +5162,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "rank_items") < 0)) __PYX_ERR(0, 286, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "rank_items") < 0)) __PYX_ERR(0, 169, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -5790,20 +5184,20 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 286, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("rank_items", 0, 4, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 169, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.rank_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.rank_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_6rank_items(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items, __pyx_v_selected_items, __pyx_v_recalculate_user);
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_6rank_items(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items, __pyx_v_selected_items, __pyx_v_recalculate_user);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":298
+/* "implicit/matrix_factorization_base.pyx":181
  * 
  *         # return sorted results
  *         return sorted(zip(selected_items, scores), key=lambda x: -x[1])             # <<<<<<<<<<<<<<
@@ -5812,9 +5206,9 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_10rank_items_lambda3(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_10rank_items_lambda3 = {"lambda3", (PyCFunction)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_10rank_items_lambda3, METH_O, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_10rank_items_lambda3(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_10rank_items_lambda3(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_10rank_items_lambda3 = {"lambda3", (PyCFunction)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_10rank_items_lambda3, METH_O, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_10rank_items_lambda3(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("lambda3 (wrapper)", 0);
@@ -5832,9 +5226,9 @@ static PyObject *__pyx_lambda_funcdef_lambda3(CYTHON_UNUSED PyObject *__pyx_self
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("lambda3", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Negative(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Negative(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
@@ -5845,7 +5239,7 @@ static PyObject *__pyx_lambda_funcdef_lambda3(CYTHON_UNUSED PyObject *__pyx_self
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.rank_items.lambda3", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.rank_items.lambda3", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -5853,7 +5247,7 @@ static PyObject *__pyx_lambda_funcdef_lambda3(CYTHON_UNUSED PyObject *__pyx_self
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":286
+/* "implicit/matrix_factorization_base.pyx":169
  *         return np.asarray(B_mv)
  * 
  *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):             # <<<<<<<<<<<<<<
@@ -5861,7 +5255,7 @@ static PyObject *__pyx_lambda_funcdef_lambda3(CYTHON_UNUSED PyObject *__pyx_self
  * 
  */
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_6rank_items(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_selected_items, PyObject *__pyx_v_recalculate_user) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_6rank_items(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_selected_items, PyObject *__pyx_v_recalculate_user) {
   PyObject *__pyx_v_user = NULL;
   PyObject *__pyx_v_item_factors = NULL;
   PyObject *__pyx_v_scores = NULL;
@@ -5876,14 +5270,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   int __pyx_t_7;
   __Pyx_RefNannySetupContext("rank_items", 0);
 
-  /* "implicit/recommender_base.pyx":287
+  /* "implicit/matrix_factorization_base.pyx":170
  * 
  *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
  *         user = self._user_factor(userid, user_items, recalculate_user)             # <<<<<<<<<<<<<<
  * 
  *         # check selected items are  in the model
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factor); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 287, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factor); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 170, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -5900,7 +5294,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_3, __pyx_v_userid, __pyx_v_user_items, __pyx_v_recalculate_user};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 287, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
@@ -5908,13 +5302,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_3, __pyx_v_userid, __pyx_v_user_items, __pyx_v_recalculate_user};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 287, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 3+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(3+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 287, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(3+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 170, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -5928,7 +5322,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __Pyx_INCREF(__pyx_v_recalculate_user);
     __Pyx_GIVEREF(__pyx_v_recalculate_user);
     PyTuple_SET_ITEM(__pyx_t_5, 2+__pyx_t_4, __pyx_v_recalculate_user);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 287, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -5936,54 +5330,54 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_v_user = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "implicit/recommender_base.pyx":290
+  /* "implicit/matrix_factorization_base.pyx":173
  * 
  *         # check selected items are  in the model
  *         if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:             # <<<<<<<<<<<<<<
  *             raise IndexError("Some of selected itemids are not in the model")
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_max, __pyx_v_selected_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_max, __pyx_v_selected_items); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_user_items, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyObject_RichCompare(__pyx_t_1, __pyx_t_5, Py_GE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __pyx_t_2 = PyObject_RichCompare(__pyx_t_1, __pyx_t_5, Py_GE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (!__pyx_t_7) {
   } else {
     __pyx_t_6 = __pyx_t_7;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_min, __pyx_v_selected_items); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_min, __pyx_v_selected_items); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyObject_RichCompare(__pyx_t_2, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __pyx_t_5 = PyObject_RichCompare(__pyx_t_2, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 290, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_6 = __pyx_t_7;
   __pyx_L4_bool_binop_done:;
   if (unlikely(__pyx_t_6)) {
 
-    /* "implicit/recommender_base.pyx":291
+    /* "implicit/matrix_factorization_base.pyx":174
  *         # check selected items are  in the model
  *         if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:
  *             raise IndexError("Some of selected itemids are not in the model")             # <<<<<<<<<<<<<<
  * 
  *         item_factors = self.item_factors[selected_items]
  */
-    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 291, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 174, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_Raise(__pyx_t_5, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __PYX_ERR(0, 291, __pyx_L1_error)
+    __PYX_ERR(0, 174, __pyx_L1_error)
 
-    /* "implicit/recommender_base.pyx":290
+    /* "implicit/matrix_factorization_base.pyx":173
  * 
  *         # check selected items are  in the model
  *         if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:             # <<<<<<<<<<<<<<
@@ -5992,29 +5386,29 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":293
+  /* "implicit/matrix_factorization_base.pyx":176
  *             raise IndexError("Some of selected itemids are not in the model")
  * 
  *         item_factors = self.item_factors[selected_items]             # <<<<<<<<<<<<<<
  *         # calculate relevance scores of given items w.r.t the user
  *         scores = item_factors.dot(user)
  */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_5, __pyx_v_selected_items); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_5, __pyx_v_selected_items); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_item_factors = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":295
+  /* "implicit/matrix_factorization_base.pyx":178
  *         item_factors = self.item_factors[selected_items]
  *         # calculate relevance scores of given items w.r.t the user
  *         scores = item_factors.dot(user)             # <<<<<<<<<<<<<<
  * 
  *         # return sorted results
  */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_item_factors, __pyx_n_s_dot); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 295, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_item_factors, __pyx_n_s_dot); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 178, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_1 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -6028,13 +5422,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_1, __pyx_v_user) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_user);
   __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 295, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 178, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_scores = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":298
+  /* "implicit/matrix_factorization_base.pyx":181
  * 
  *         # return sorted results
  *         return sorted(zip(selected_items, scores), key=lambda x: -x[1])             # <<<<<<<<<<<<<<
@@ -6042,7 +5436,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  *     recommend.__doc__ = RecommenderBase.recommend.__doc__
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_selected_items);
   __Pyx_GIVEREF(__pyx_v_selected_items);
@@ -6050,21 +5444,21 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_INCREF(__pyx_v_scores);
   __Pyx_GIVEREF(__pyx_v_scores);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_scores);
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_2, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_2, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_5);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_5);
   __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_10rank_items_lambda3, 0, __pyx_n_s_MatrixFactorizationBase_rank_ite, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_10rank_items_lambda3, 0, __pyx_n_s_MatrixFactorizationBase_rank_ite, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_key, __pyx_t_1) < 0) __PYX_ERR(0, 298, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_key, __pyx_t_1) < 0) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -6072,7 +5466,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "implicit/recommender_base.pyx":286
+  /* "implicit/matrix_factorization_base.pyx":169
  *         return np.asarray(B_mv)
  * 
  *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):             # <<<<<<<<<<<<<<
@@ -6086,7 +5480,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.rank_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.rank_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_user);
@@ -6097,7 +5491,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":302
+/* "implicit/matrix_factorization_base.pyx":185
  *     recommend.__doc__ = RecommenderBase.recommend.__doc__
  * 
  *     def _user_factor(self, userid, user_items, recalculate_user=False):             # <<<<<<<<<<<<<<
@@ -6106,9 +5500,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_9_user_factor(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_9_user_factor = {"_user_factor", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_9_user_factor, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_9_user_factor(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9_user_factor(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9_user_factor = {"_user_factor", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9_user_factor, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9_user_factor(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_userid = 0;
   PyObject *__pyx_v_user_items = 0;
@@ -6144,13 +5538,13 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_userid)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_user_factor", 0, 3, 4, 1); __PYX_ERR(0, 302, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_user_factor", 0, 3, 4, 1); __PYX_ERR(0, 185, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_user_items)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_user_factor", 0, 3, 4, 2); __PYX_ERR(0, 302, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_user_factor", 0, 3, 4, 2); __PYX_ERR(0, 185, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
@@ -6160,7 +5554,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_user_factor") < 0)) __PYX_ERR(0, 302, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_user_factor") < 0)) __PYX_ERR(0, 185, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -6180,20 +5574,20 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_user_factor", 0, 3, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 302, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_user_factor", 0, 3, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 185, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase._user_factor", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase._user_factor", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_8_user_factor(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items, __pyx_v_recalculate_user);
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_8_user_factor(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items, __pyx_v_recalculate_user);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_8_user_factor(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_recalculate_user) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_8_user_factor(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_user_items, PyObject *__pyx_v_recalculate_user) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -6204,17 +5598,17 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("_user_factor", 0);
 
-  /* "implicit/recommender_base.pyx":303
+  /* "implicit/matrix_factorization_base.pyx":186
  * 
  *     def _user_factor(self, userid, user_items, recalculate_user=False):
  *         if recalculate_user:             # <<<<<<<<<<<<<<
  *             return self.recalculate_user(userid, user_items)
  *         else:
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_recalculate_user); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 303, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_recalculate_user); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 186, __pyx_L1_error)
   if (__pyx_t_1) {
 
-    /* "implicit/recommender_base.pyx":304
+    /* "implicit/matrix_factorization_base.pyx":187
  *     def _user_factor(self, userid, user_items, recalculate_user=False):
  *         if recalculate_user:
  *             return self.recalculate_user(userid, user_items)             # <<<<<<<<<<<<<<
@@ -6222,7 +5616,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  *             return self.user_factors[userid]
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_recalculate_user); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_recalculate_user); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 187, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_4 = NULL;
     __pyx_t_5 = 0;
@@ -6239,7 +5633,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_3)) {
       PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_userid, __pyx_v_user_items};
-      __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_2);
     } else
@@ -6247,13 +5641,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
       PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_userid, __pyx_v_user_items};
-      __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_2);
     } else
     #endif
     {
-      __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       if (__pyx_t_4) {
         __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -6264,7 +5658,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
       __Pyx_INCREF(__pyx_v_user_items);
       __Pyx_GIVEREF(__pyx_v_user_items);
       PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_v_user_items);
-      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 304, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
@@ -6273,7 +5667,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "implicit/recommender_base.pyx":303
+    /* "implicit/matrix_factorization_base.pyx":186
  * 
  *     def _user_factor(self, userid, user_items, recalculate_user=False):
  *         if recalculate_user:             # <<<<<<<<<<<<<<
@@ -6282,7 +5676,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":306
+  /* "implicit/matrix_factorization_base.pyx":189
  *             return self.recalculate_user(userid, user_items)
  *         else:
  *             return self.user_factors[userid]             # <<<<<<<<<<<<<<
@@ -6291,9 +5685,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 306, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 189, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_userid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 306, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_v_userid); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 189, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_r = __pyx_t_3;
@@ -6301,7 +5695,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     goto __pyx_L0;
   }
 
-  /* "implicit/recommender_base.pyx":302
+  /* "implicit/matrix_factorization_base.pyx":185
  *     recommend.__doc__ = RecommenderBase.recommend.__doc__
  * 
  *     def _user_factor(self, userid, user_items, recalculate_user=False):             # <<<<<<<<<<<<<<
@@ -6315,7 +5709,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase._user_factor", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase._user_factor", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -6323,7 +5717,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":308
+/* "implicit/matrix_factorization_base.pyx":191
  *             return self.user_factors[userid]
  * 
  *     def recalculate_user(self, userid, user_items):             # <<<<<<<<<<<<<<
@@ -6332,9 +5726,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_11recalculate_user(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_11recalculate_user = {"recalculate_user", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_11recalculate_user, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_11recalculate_user(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_11recalculate_user(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_11recalculate_user = {"recalculate_user", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_11recalculate_user, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_11recalculate_user(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   CYTHON_UNUSED PyObject *__pyx_v_self = 0;
   CYTHON_UNUSED PyObject *__pyx_v_userid = 0;
   CYTHON_UNUSED PyObject *__pyx_v_user_items = 0;
@@ -6366,17 +5760,17 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_userid)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("recalculate_user", 1, 3, 3, 1); __PYX_ERR(0, 308, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("recalculate_user", 1, 3, 3, 1); __PYX_ERR(0, 191, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_user_items)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("recalculate_user", 1, 3, 3, 2); __PYX_ERR(0, 308, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("recalculate_user", 1, 3, 3, 2); __PYX_ERR(0, 191, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "recalculate_user") < 0)) __PYX_ERR(0, 308, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "recalculate_user") < 0)) __PYX_ERR(0, 191, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -6391,39 +5785,39 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("recalculate_user", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 308, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("recalculate_user", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 191, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.recalculate_user", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.recalculate_user", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_10recalculate_user(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items);
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_10recalculate_user(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_user_items);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_10recalculate_user(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_user_items) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_10recalculate_user(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v_userid, CYTHON_UNUSED PyObject *__pyx_v_user_items) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("recalculate_user", 0);
 
-  /* "implicit/recommender_base.pyx":309
+  /* "implicit/matrix_factorization_base.pyx":192
  * 
  *     def recalculate_user(self, userid, user_items):
  *         raise NotImplementedError("recalculate_user is not supported with this model")             # <<<<<<<<<<<<<<
  * 
  *     def similar_users(self, userid, N=10):
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_NotImplementedError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_NotImplementedError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __PYX_ERR(0, 309, __pyx_L1_error)
+  __PYX_ERR(0, 192, __pyx_L1_error)
 
-  /* "implicit/recommender_base.pyx":308
+  /* "implicit/matrix_factorization_base.pyx":191
  *             return self.user_factors[userid]
  * 
  *     def recalculate_user(self, userid, user_items):             # <<<<<<<<<<<<<<
@@ -6434,14 +5828,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.recalculate_user", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.recalculate_user", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":311
+/* "implicit/matrix_factorization_base.pyx":194
  *         raise NotImplementedError("recalculate_user is not supported with this model")
  * 
  *     def similar_users(self, userid, N=10):             # <<<<<<<<<<<<<<
@@ -6450,9 +5844,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_13similar_users(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_13similar_users = {"similar_users", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_13similar_users, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_13similar_users(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_13similar_users(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_13similar_users = {"similar_users", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_13similar_users, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_13similar_users(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_userid = 0;
   PyObject *__pyx_v_N = 0;
@@ -6485,7 +5879,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_userid)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("similar_users", 0, 2, 3, 1); __PYX_ERR(0, 311, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("similar_users", 0, 2, 3, 1); __PYX_ERR(0, 194, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -6495,7 +5889,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "similar_users") < 0)) __PYX_ERR(0, 311, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "similar_users") < 0)) __PYX_ERR(0, 194, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -6513,20 +5907,20 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("similar_users", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 311, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("similar_users", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 194, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.similar_users", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.similar_users", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_12similar_users(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_N);
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_12similar_users(__pyx_self, __pyx_v_self, __pyx_v_userid, __pyx_v_N);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_12similar_users(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_N) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_12similar_users(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_userid, PyObject *__pyx_v_N) {
   PyObject *__pyx_v_factor = NULL;
   PyObject *__pyx_v_factors = NULL;
   PyObject *__pyx_v_norms = NULL;
@@ -6539,46 +5933,46 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("similar_users", 0);
 
-  /* "implicit/recommender_base.pyx":312
+  /* "implicit/matrix_factorization_base.pyx":195
  * 
  *     def similar_users(self, userid, N=10):
  *         factor = self.user_factors[userid]             # <<<<<<<<<<<<<<
  *         factors = self.user_factors
  *         norms = self.user_norms
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factors); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factors); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_v_userid); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 312, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_v_userid); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 195, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_factor = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":313
+  /* "implicit/matrix_factorization_base.pyx":196
  *     def similar_users(self, userid, N=10):
  *         factor = self.user_factors[userid]
  *         factors = self.user_factors             # <<<<<<<<<<<<<<
  *         norms = self.user_norms
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 313, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 196, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_factors = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":314
+  /* "implicit/matrix_factorization_base.pyx":197
  *         factor = self.user_factors[userid]
  *         factors = self.user_factors
  *         norms = self.user_norms             # <<<<<<<<<<<<<<
  * 
  *         return self._get_similarity_score(factor, factors, norms, N)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 314, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 197, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_norms = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":316
+  /* "implicit/matrix_factorization_base.pyx":199
  *         norms = self.user_norms
  * 
  *         return self._get_similarity_score(factor, factors, norms, N)             # <<<<<<<<<<<<<<
@@ -6586,7 +5980,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  *     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_get_similarity_score); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_get_similarity_score); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -6603,7 +5997,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[5] = {__pyx_t_3, __pyx_v_factor, __pyx_v_factors, __pyx_v_norms, __pyx_v_N};
-    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_4, 4+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_4, 4+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 199, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_2);
   } else
@@ -6611,13 +6005,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[5] = {__pyx_t_3, __pyx_v_factor, __pyx_v_factors, __pyx_v_norms, __pyx_v_N};
-    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_4, 4+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_4, 4+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 199, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_2);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(4+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(4+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 199, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -6634,7 +6028,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __Pyx_INCREF(__pyx_v_N);
     __Pyx_GIVEREF(__pyx_v_N);
     PyTuple_SET_ITEM(__pyx_t_5, 3+__pyx_t_4, __pyx_v_N);
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 316, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 199, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -6643,7 +6037,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "implicit/recommender_base.pyx":311
+  /* "implicit/matrix_factorization_base.pyx":194
  *         raise NotImplementedError("recalculate_user is not supported with this model")
  * 
  *     def similar_users(self, userid, N=10):             # <<<<<<<<<<<<<<
@@ -6657,7 +6051,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.similar_users", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.similar_users", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_factor);
@@ -6668,7 +6062,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":320
+/* "implicit/matrix_factorization_base.pyx":203
  *     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
  * 
  *     def similar_items(self, itemid, N=10):             # <<<<<<<<<<<<<<
@@ -6677,9 +6071,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_15similar_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_15similar_items = {"similar_items", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_15similar_items, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_15similar_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_15similar_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_15similar_items = {"similar_items", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_15similar_items, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_15similar_items(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_itemid = 0;
   PyObject *__pyx_v_N = 0;
@@ -6712,7 +6106,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_itemid)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("similar_items", 0, 2, 3, 1); __PYX_ERR(0, 320, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("similar_items", 0, 2, 3, 1); __PYX_ERR(0, 203, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -6722,7 +6116,7 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "similar_items") < 0)) __PYX_ERR(0, 320, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "similar_items") < 0)) __PYX_ERR(0, 203, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -6740,20 +6134,20 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("similar_items", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 320, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("similar_items", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 203, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.similar_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.similar_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_14similar_items(__pyx_self, __pyx_v_self, __pyx_v_itemid, __pyx_v_N);
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_14similar_items(__pyx_self, __pyx_v_self, __pyx_v_itemid, __pyx_v_N);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_14similar_items(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_itemid, PyObject *__pyx_v_N) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_14similar_items(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_itemid, PyObject *__pyx_v_N) {
   PyObject *__pyx_v_factor = NULL;
   PyObject *__pyx_v_factors = NULL;
   PyObject *__pyx_v_norms = NULL;
@@ -6766,46 +6160,46 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("similar_items", 0);
 
-  /* "implicit/recommender_base.pyx":321
+  /* "implicit/matrix_factorization_base.pyx":204
  * 
  *     def similar_items(self, itemid, N=10):
  *         factor = self.item_factors[itemid]             # <<<<<<<<<<<<<<
  *         factors = self.item_factors
  *         norms = self.item_norms
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_v_itemid); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_v_itemid); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 204, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_factor = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":322
+  /* "implicit/matrix_factorization_base.pyx":205
  *     def similar_items(self, itemid, N=10):
  *         factor = self.item_factors[itemid]
  *         factors = self.item_factors             # <<<<<<<<<<<<<<
  *         norms = self.item_norms
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_factors = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":323
+  /* "implicit/matrix_factorization_base.pyx":206
  *         factor = self.item_factors[itemid]
  *         factors = self.item_factors
  *         norms = self.item_norms             # <<<<<<<<<<<<<<
  * 
  *         return self._get_similarity_score(factor, factors, norms, N)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 206, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_norms = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":325
+  /* "implicit/matrix_factorization_base.pyx":208
  *         norms = self.item_norms
  * 
  *         return self._get_similarity_score(factor, factors, norms, N)             # <<<<<<<<<<<<<<
@@ -6813,7 +6207,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  *     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_get_similarity_score); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 325, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_get_similarity_score); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 208, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -6830,7 +6224,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[5] = {__pyx_t_3, __pyx_v_factor, __pyx_v_factors, __pyx_v_norms, __pyx_v_N};
-    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_4, 4+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 325, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_4, 4+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 208, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_2);
   } else
@@ -6838,13 +6232,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
     PyObject *__pyx_temp[5] = {__pyx_t_3, __pyx_v_factor, __pyx_v_factors, __pyx_v_norms, __pyx_v_N};
-    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_4, 4+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 325, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_4, 4+__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 208, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_2);
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(4+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 325, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(4+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -6861,7 +6255,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __Pyx_INCREF(__pyx_v_N);
     __Pyx_GIVEREF(__pyx_v_N);
     PyTuple_SET_ITEM(__pyx_t_5, 3+__pyx_t_4, __pyx_v_N);
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 325, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
@@ -6870,7 +6264,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "implicit/recommender_base.pyx":320
+  /* "implicit/matrix_factorization_base.pyx":203
  *     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
  * 
  *     def similar_items(self, itemid, N=10):             # <<<<<<<<<<<<<<
@@ -6884,7 +6278,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.similar_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.similar_items", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_factor);
@@ -6895,7 +6289,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":329
+/* "implicit/matrix_factorization_base.pyx":212
  *     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
  * 
  *     def _get_similarity_score(self, factor, factors, norms, N):             # <<<<<<<<<<<<<<
@@ -6904,9 +6298,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_17_get_similarity_score(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_17_get_similarity_score = {"_get_similarity_score", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_17_get_similarity_score, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_17_get_similarity_score(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_17_get_similarity_score(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_17_get_similarity_score = {"_get_similarity_score", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_17_get_similarity_score, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_17_get_similarity_score(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   CYTHON_UNUSED PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_factor = 0;
   PyObject *__pyx_v_factors = 0;
@@ -6944,29 +6338,29 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_factor)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, 1); __PYX_ERR(0, 329, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, 1); __PYX_ERR(0, 212, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_factors)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, 2); __PYX_ERR(0, 329, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, 2); __PYX_ERR(0, 212, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_norms)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, 3); __PYX_ERR(0, 329, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, 3); __PYX_ERR(0, 212, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, 4); __PYX_ERR(0, 329, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, 4); __PYX_ERR(0, 212, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_get_similarity_score") < 0)) __PYX_ERR(0, 329, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_get_similarity_score") < 0)) __PYX_ERR(0, 212, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -6985,20 +6379,20 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 329, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_get_similarity_score", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 212, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase._get_similarity_score", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase._get_similarity_score", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_16_get_similarity_score(__pyx_self, __pyx_v_self, __pyx_v_factor, __pyx_v_factors, __pyx_v_norms, __pyx_v_N);
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_16_get_similarity_score(__pyx_self, __pyx_v_self, __pyx_v_factor, __pyx_v_factors, __pyx_v_norms, __pyx_v_N);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":332
+/* "implicit/matrix_factorization_base.pyx":215
  *         scores = factors.dot(factor) / norms
  *         best = np.argpartition(scores, -N)[-N:]
  *         return sorted(zip(best, scores[best]), key=lambda x: -x[1])             # <<<<<<<<<<<<<<
@@ -7007,9 +6401,9 @@ static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4 = {"lambda4", (PyCFunction)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4, METH_O, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4 = {"lambda4", (PyCFunction)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4, METH_O, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("lambda4 (wrapper)", 0);
@@ -7027,9 +6421,9 @@ static PyObject *__pyx_lambda_funcdef_lambda4(CYTHON_UNUSED PyObject *__pyx_self
   PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannySetupContext("lambda4", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 332, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_x, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Negative(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Negative(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
@@ -7040,7 +6434,7 @@ static PyObject *__pyx_lambda_funcdef_lambda4(CYTHON_UNUSED PyObject *__pyx_self
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase._get_similarity_score.lambda4", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase._get_similarity_score.lambda4", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -7048,7 +6442,7 @@ static PyObject *__pyx_lambda_funcdef_lambda4(CYTHON_UNUSED PyObject *__pyx_self
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":329
+/* "implicit/matrix_factorization_base.pyx":212
  *     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
  * 
  *     def _get_similarity_score(self, factor, factors, norms, N):             # <<<<<<<<<<<<<<
@@ -7056,7 +6450,7 @@ static PyObject *__pyx_lambda_funcdef_lambda4(CYTHON_UNUSED PyObject *__pyx_self
  *         best = np.argpartition(scores, -N)[-N:]
  */
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_16_get_similarity_score(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, PyObject *__pyx_v_factor, PyObject *__pyx_v_factors, PyObject *__pyx_v_norms, PyObject *__pyx_v_N) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_16_get_similarity_score(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self, PyObject *__pyx_v_factor, PyObject *__pyx_v_factors, PyObject *__pyx_v_norms, PyObject *__pyx_v_N) {
   PyObject *__pyx_v_scores = NULL;
   PyObject *__pyx_v_best = NULL;
   PyObject *__pyx_r = NULL;
@@ -7069,14 +6463,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("_get_similarity_score", 0);
 
-  /* "implicit/recommender_base.pyx":330
+  /* "implicit/matrix_factorization_base.pyx":213
  * 
  *     def _get_similarity_score(self, factor, factors, norms, N):
  *         scores = factors.dot(factor) / norms             # <<<<<<<<<<<<<<
  *         best = np.argpartition(scores, -N)[-N:]
  *         return sorted(zip(best, scores[best]), key=lambda x: -x[1])
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_factors, __pyx_n_s_dot); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 330, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_factors, __pyx_n_s_dot); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -7090,28 +6484,28 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_factor) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_factor);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 330, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_v_norms); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 330, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_v_norms); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_scores = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":331
+  /* "implicit/matrix_factorization_base.pyx":214
  *     def _get_similarity_score(self, factor, factors, norms, N):
  *         scores = factors.dot(factor) / norms
  *         best = np.argpartition(scores, -N)[-N:]             # <<<<<<<<<<<<<<
  *         return sorted(zip(best, scores[best]), key=lambda x: -x[1])
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_argpartition); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_argpartition); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Negative(__pyx_v_N); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Negative(__pyx_v_N); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -7128,7 +6522,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_scores, __pyx_t_1};
-    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 331, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 214, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -7137,14 +6531,14 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_v_scores, __pyx_t_1};
-    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 331, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 214, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 331, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -7155,21 +6549,21 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 331, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Negative(__pyx_v_N); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Negative(__pyx_v_N); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_6 = __Pyx_PyObject_GetSlice(__pyx_t_2, 0, 0, &__pyx_t_3, NULL, NULL, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetSlice(__pyx_t_2, 0, 0, &__pyx_t_3, NULL, NULL, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_best = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "implicit/recommender_base.pyx":332
+  /* "implicit/matrix_factorization_base.pyx":215
  *         scores = factors.dot(factor) / norms
  *         best = np.argpartition(scores, -N)[-N:]
  *         return sorted(zip(best, scores[best]), key=lambda x: -x[1])             # <<<<<<<<<<<<<<
@@ -7177,9 +6571,9 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_scores, __pyx_v_best); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 332, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_v_scores, __pyx_v_best); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 332, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_v_best);
   __Pyx_GIVEREF(__pyx_v_best);
@@ -7187,21 +6581,21 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_6);
   __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_3, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 332, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_3, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 332, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_6);
   __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 332, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4, 0, __pyx_n_s_MatrixFactorizationBase__get_sim, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21_get_similarity_score_lambda4, 0, __pyx_n_s_MatrixFactorizationBase__get_sim, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_key, __pyx_t_2) < 0) __PYX_ERR(0, 332, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_key, __pyx_t_2) < 0) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_sorted, __pyx_t_3, __pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 215, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -7209,7 +6603,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "implicit/recommender_base.pyx":329
+  /* "implicit/matrix_factorization_base.pyx":212
  *     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
  * 
  *     def _get_similarity_score(self, factor, factors, norms, N):             # <<<<<<<<<<<<<<
@@ -7224,7 +6618,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase._get_similarity_score", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase._get_similarity_score", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_scores);
@@ -7234,7 +6628,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":335
+/* "implicit/matrix_factorization_base.pyx":218
  * 
  *     @property
  *     def user_norms(self):             # <<<<<<<<<<<<<<
@@ -7243,20 +6637,20 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_19user_norms(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_19user_norms = {"user_norms", (PyCFunction)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_19user_norms, METH_O, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_19user_norms(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_19user_norms(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_19user_norms = {"user_norms", (PyCFunction)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_19user_norms, METH_O, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_19user_norms(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("user_norms (wrapper)", 0);
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_18user_norms(__pyx_self, ((PyObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_18user_norms(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_18user_norms(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_18user_norms(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -7267,72 +6661,72 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("user_norms", 0);
 
-  /* "implicit/recommender_base.pyx":336
+  /* "implicit/matrix_factorization_base.pyx":219
  *     @property
  *     def user_norms(self):
  *         if self._user_norms is None:             # <<<<<<<<<<<<<<
  *             self._user_norms = np.linalg.norm(self.user_factors, axis=-1)
  *             # don't divide by zero in similar_items, replace with small value
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = (__pyx_t_1 == Py_None);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "implicit/recommender_base.pyx":337
+    /* "implicit/matrix_factorization_base.pyx":220
  *     def user_norms(self):
  *         if self._user_norms is None:
  *             self._user_norms = np.linalg.norm(self.user_factors, axis=-1)             # <<<<<<<<<<<<<<
  *             # don't divide by zero in similar_items, replace with small value
  *             self._user_norms[self._user_norms == 0] = 1e-10
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 337, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 220, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_linalg); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 337, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_linalg); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 220, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_norm); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 337, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_norm); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 220, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factors); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 337, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_factors); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 220, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 337, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 220, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_GIVEREF(__pyx_t_4);
     PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
     __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 337, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 220, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_axis, __pyx_int_neg_1) < 0) __PYX_ERR(0, 337, __pyx_L1_error)
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 337, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_axis, __pyx_int_neg_1) < 0) __PYX_ERR(0, 220, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 220, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_user_norms, __pyx_t_6) < 0) __PYX_ERR(0, 337, __pyx_L1_error)
+    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_user_norms, __pyx_t_6) < 0) __PYX_ERR(0, 220, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "implicit/recommender_base.pyx":339
+    /* "implicit/matrix_factorization_base.pyx":222
  *             self._user_norms = np.linalg.norm(self.user_factors, axis=-1)
  *             # don't divide by zero in similar_items, replace with small value
  *             self._user_norms[self._user_norms == 0] = 1e-10             # <<<<<<<<<<<<<<
  *         return self._user_norms
  * 
  */
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 222, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 222, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 339, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 222, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(PyObject_SetItem(__pyx_t_6, __pyx_t_5, __pyx_float_1eneg_10) < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_t_6, __pyx_t_5, __pyx_float_1eneg_10) < 0)) __PYX_ERR(0, 222, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "implicit/recommender_base.pyx":336
+    /* "implicit/matrix_factorization_base.pyx":219
  *     @property
  *     def user_norms(self):
  *         if self._user_norms is None:             # <<<<<<<<<<<<<<
@@ -7341,7 +6735,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":340
+  /* "implicit/matrix_factorization_base.pyx":223
  *             # don't divide by zero in similar_items, replace with small value
  *             self._user_norms[self._user_norms == 0] = 1e-10
  *         return self._user_norms             # <<<<<<<<<<<<<<
@@ -7349,13 +6743,13 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 340, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_user_norms); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 223, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_r = __pyx_t_5;
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "implicit/recommender_base.pyx":335
+  /* "implicit/matrix_factorization_base.pyx":218
  * 
  *     @property
  *     def user_norms(self):             # <<<<<<<<<<<<<<
@@ -7369,7 +6763,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.user_norms", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.user_norms", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -7377,7 +6771,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   return __pyx_r;
 }
 
-/* "implicit/recommender_base.pyx":343
+/* "implicit/matrix_factorization_base.pyx":226
  * 
  *     @property
  *     def item_norms(self):             # <<<<<<<<<<<<<<
@@ -7386,20 +6780,20 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_21item_norms(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_21item_norms = {"item_norms", (PyCFunction)__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_21item_norms, METH_O, 0};
-static PyObject *__pyx_pw_8implicit_16recommender_base_23MatrixFactorizationBase_21item_norms(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21item_norms(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21item_norms = {"item_norms", (PyCFunction)__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21item_norms, METH_O, 0};
+static PyObject *__pyx_pw_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21item_norms(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("item_norms (wrapper)", 0);
-  __pyx_r = __pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_20item_norms(__pyx_self, ((PyObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_20item_norms(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase_20item_norms(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_20item_norms(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -7410,71 +6804,71 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("item_norms", 0);
 
-  /* "implicit/recommender_base.pyx":344
+  /* "implicit/matrix_factorization_base.pyx":227
  *     @property
  *     def item_norms(self):
  *         if self._item_norms is None:             # <<<<<<<<<<<<<<
  *             self._item_norms = np.linalg.norm(self.item_factors, axis=-1)
  *             # don't divide by zero in similar_items, replace with small value
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = (__pyx_t_1 == Py_None);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "implicit/recommender_base.pyx":345
+    /* "implicit/matrix_factorization_base.pyx":228
  *     def item_norms(self):
  *         if self._item_norms is None:
  *             self._item_norms = np.linalg.norm(self.item_factors, axis=-1)             # <<<<<<<<<<<<<<
  *             # don't divide by zero in similar_items, replace with small value
  *             self._item_norms[self._item_norms == 0] = 1e-10
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_linalg); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_linalg); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_norm); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_norm); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_factors); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_GIVEREF(__pyx_t_4);
     PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
     __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 345, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_axis, __pyx_int_neg_1) < 0) __PYX_ERR(0, 345, __pyx_L1_error)
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 345, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_axis, __pyx_int_neg_1) < 0) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_item_norms, __pyx_t_6) < 0) __PYX_ERR(0, 345, __pyx_L1_error)
+    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_item_norms, __pyx_t_6) < 0) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "implicit/recommender_base.pyx":347
+    /* "implicit/matrix_factorization_base.pyx":230
  *             self._item_norms = np.linalg.norm(self.item_factors, axis=-1)
  *             # don't divide by zero in similar_items, replace with small value
  *             self._item_norms[self._item_norms == 0] = 1e-10             # <<<<<<<<<<<<<<
  *         return self._item_norms
  */
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 347, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 230, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 347, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 230, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 347, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 230, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(PyObject_SetItem(__pyx_t_6, __pyx_t_5, __pyx_float_1eneg_10) < 0)) __PYX_ERR(0, 347, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_t_6, __pyx_t_5, __pyx_float_1eneg_10) < 0)) __PYX_ERR(0, 230, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "implicit/recommender_base.pyx":344
+    /* "implicit/matrix_factorization_base.pyx":227
  *     @property
  *     def item_norms(self):
  *         if self._item_norms is None:             # <<<<<<<<<<<<<<
@@ -7483,19 +6877,19 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
  */
   }
 
-  /* "implicit/recommender_base.pyx":348
+  /* "implicit/matrix_factorization_base.pyx":231
  *             # don't divide by zero in similar_items, replace with small value
  *             self._item_norms[self._item_norms == 0] = 1e-10
  *         return self._item_norms             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 348, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_item_norms); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_r = __pyx_t_5;
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "implicit/recommender_base.pyx":343
+  /* "implicit/matrix_factorization_base.pyx":226
  * 
  *     @property
  *     def item_norms(self):             # <<<<<<<<<<<<<<
@@ -7509,7 +6903,7 @@ static PyObject *__pyx_pf_8implicit_16recommender_base_23MatrixFactorizationBase
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("implicit.recommender_base.MatrixFactorizationBase.item_norms", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("implicit.matrix_factorization_base.MatrixFactorizationBase.item_norms", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -20330,14 +19724,14 @@ static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *__
   return __pyx_r;
 }
 
-static struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *__pyx_freelist_8implicit_16recommender_base___pyx_scope_struct__recommend[8];
-static int __pyx_freecount_8implicit_16recommender_base___pyx_scope_struct__recommend = 0;
+static struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *__pyx_freelist_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend[8];
+static int __pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend = 0;
 
-static PyObject *__pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct__recommend(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+static PyObject *__pyx_tp_new_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
   PyObject *o;
-  if (CYTHON_COMPILING_IN_CPYTHON && likely((__pyx_freecount_8implicit_16recommender_base___pyx_scope_struct__recommend > 0) & (t->tp_basicsize == sizeof(struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend)))) {
-    o = (PyObject*)__pyx_freelist_8implicit_16recommender_base___pyx_scope_struct__recommend[--__pyx_freecount_8implicit_16recommender_base___pyx_scope_struct__recommend];
-    memset(o, 0, sizeof(struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend));
+  if (CYTHON_COMPILING_IN_CPYTHON && likely((__pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend > 0) & (t->tp_basicsize == sizeof(struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend)))) {
+    o = (PyObject*)__pyx_freelist_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend[--__pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend];
+    memset(o, 0, sizeof(struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend));
     (void) PyObject_INIT(o, t);
     PyObject_GC_Track(o);
   } else {
@@ -20347,21 +19741,21 @@ static PyObject *__pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct__r
   return o;
 }
 
-static void __pyx_tp_dealloc_8implicit_16recommender_base___pyx_scope_struct__recommend(PyObject *o) {
-  struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *p = (struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *)o;
+static void __pyx_tp_dealloc_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend(PyObject *o) {
+  struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *p = (struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *)o;
   PyObject_GC_UnTrack(o);
   Py_CLEAR(p->__pyx_v_best);
   Py_CLEAR(p->__pyx_v_liked);
-  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_8implicit_16recommender_base___pyx_scope_struct__recommend < 8) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend)))) {
-    __pyx_freelist_8implicit_16recommender_base___pyx_scope_struct__recommend[__pyx_freecount_8implicit_16recommender_base___pyx_scope_struct__recommend++] = ((struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *)o);
+  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend < 8) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend)))) {
+    __pyx_freelist_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend[__pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend++] = ((struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *)o);
   } else {
     (*Py_TYPE(o)->tp_free)(o);
   }
 }
 
-static int __pyx_tp_traverse_8implicit_16recommender_base___pyx_scope_struct__recommend(PyObject *o, visitproc v, void *a) {
+static int __pyx_tp_traverse_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend(PyObject *o, visitproc v, void *a) {
   int e;
-  struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *p = (struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *)o;
+  struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *p = (struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *)o;
   if (p->__pyx_v_best) {
     e = (*v)(p->__pyx_v_best, a); if (e) return e;
   }
@@ -20371,9 +19765,9 @@ static int __pyx_tp_traverse_8implicit_16recommender_base___pyx_scope_struct__re
   return 0;
 }
 
-static int __pyx_tp_clear_8implicit_16recommender_base___pyx_scope_struct__recommend(PyObject *o) {
+static int __pyx_tp_clear_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend(PyObject *o) {
   PyObject* tmp;
-  struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *p = (struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend *)o;
+  struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *p = (struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend *)o;
   tmp = ((PyObject*)p->__pyx_v_best);
   p->__pyx_v_best = Py_None; Py_INCREF(Py_None);
   Py_XDECREF(tmp);
@@ -20383,12 +19777,12 @@ static int __pyx_tp_clear_8implicit_16recommender_base___pyx_scope_struct__recom
   return 0;
 }
 
-static PyTypeObject __pyx_type_8implicit_16recommender_base___pyx_scope_struct__recommend = {
+static PyTypeObject __pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend = {
   PyVarObject_HEAD_INIT(0, 0)
-  "implicit.recommender_base.__pyx_scope_struct__recommend", /*tp_name*/
-  sizeof(struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct__recommend), /*tp_basicsize*/
+  "implicit.matrix_factorization_base.__pyx_scope_struct__recommend", /*tp_name*/
+  sizeof(struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_8implicit_16recommender_base___pyx_scope_struct__recommend, /*tp_dealloc*/
+  __pyx_tp_dealloc_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -20410,8 +19804,8 @@ static PyTypeObject __pyx_type_8implicit_16recommender_base___pyx_scope_struct__
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_8implicit_16recommender_base___pyx_scope_struct__recommend, /*tp_traverse*/
-  __pyx_tp_clear_8implicit_16recommender_base___pyx_scope_struct__recommend, /*tp_clear*/
+  __pyx_tp_traverse_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend, /*tp_traverse*/
+  __pyx_tp_clear_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -20426,7 +19820,7 @@ static PyTypeObject __pyx_type_8implicit_16recommender_base___pyx_scope_struct__
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct__recommend, /*tp_new*/
+  __pyx_tp_new_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -20444,14 +19838,14 @@ static PyTypeObject __pyx_type_8implicit_16recommender_base___pyx_scope_struct__
   #endif
 };
 
-static struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *__pyx_freelist_8implicit_16recommender_base___pyx_scope_struct_1_genexpr[8];
-static int __pyx_freecount_8implicit_16recommender_base___pyx_scope_struct_1_genexpr = 0;
+static struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *__pyx_freelist_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr[8];
+static int __pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr = 0;
 
-static PyObject *__pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct_1_genexpr(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+static PyObject *__pyx_tp_new_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
   PyObject *o;
-  if (CYTHON_COMPILING_IN_CPYTHON && likely((__pyx_freecount_8implicit_16recommender_base___pyx_scope_struct_1_genexpr > 0) & (t->tp_basicsize == sizeof(struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr)))) {
-    o = (PyObject*)__pyx_freelist_8implicit_16recommender_base___pyx_scope_struct_1_genexpr[--__pyx_freecount_8implicit_16recommender_base___pyx_scope_struct_1_genexpr];
-    memset(o, 0, sizeof(struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr));
+  if (CYTHON_COMPILING_IN_CPYTHON && likely((__pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr > 0) & (t->tp_basicsize == sizeof(struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr)))) {
+    o = (PyObject*)__pyx_freelist_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr[--__pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr];
+    memset(o, 0, sizeof(struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr));
     (void) PyObject_INIT(o, t);
     PyObject_GC_Track(o);
   } else {
@@ -20461,22 +19855,22 @@ static PyObject *__pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct_1_
   return o;
 }
 
-static void __pyx_tp_dealloc_8implicit_16recommender_base___pyx_scope_struct_1_genexpr(PyObject *o) {
-  struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *p = (struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *)o;
+static void __pyx_tp_dealloc_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr(PyObject *o) {
+  struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *p = (struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *)o;
   PyObject_GC_UnTrack(o);
   Py_CLEAR(p->__pyx_outer_scope);
   Py_CLEAR(p->__pyx_v_rec);
   Py_CLEAR(p->__pyx_t_0);
-  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_8implicit_16recommender_base___pyx_scope_struct_1_genexpr < 8) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr)))) {
-    __pyx_freelist_8implicit_16recommender_base___pyx_scope_struct_1_genexpr[__pyx_freecount_8implicit_16recommender_base___pyx_scope_struct_1_genexpr++] = ((struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *)o);
+  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr < 8) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr)))) {
+    __pyx_freelist_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr[__pyx_freecount_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr++] = ((struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *)o);
   } else {
     (*Py_TYPE(o)->tp_free)(o);
   }
 }
 
-static int __pyx_tp_traverse_8implicit_16recommender_base___pyx_scope_struct_1_genexpr(PyObject *o, visitproc v, void *a) {
+static int __pyx_tp_traverse_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr(PyObject *o, visitproc v, void *a) {
   int e;
-  struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *p = (struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr *)o;
+  struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *p = (struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr *)o;
   if (p->__pyx_outer_scope) {
     e = (*v)(((PyObject *)p->__pyx_outer_scope), a); if (e) return e;
   }
@@ -20489,12 +19883,12 @@ static int __pyx_tp_traverse_8implicit_16recommender_base___pyx_scope_struct_1_g
   return 0;
 }
 
-static PyTypeObject __pyx_type_8implicit_16recommender_base___pyx_scope_struct_1_genexpr = {
+static PyTypeObject __pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr = {
   PyVarObject_HEAD_INIT(0, 0)
-  "implicit.recommender_base.__pyx_scope_struct_1_genexpr", /*tp_name*/
-  sizeof(struct __pyx_obj_8implicit_16recommender_base___pyx_scope_struct_1_genexpr), /*tp_basicsize*/
+  "implicit.matrix_factorization_base.__pyx_scope_struct_1_genexpr", /*tp_name*/
+  sizeof(struct __pyx_obj_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_8implicit_16recommender_base___pyx_scope_struct_1_genexpr, /*tp_dealloc*/
+  __pyx_tp_dealloc_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -20516,7 +19910,7 @@ static PyTypeObject __pyx_type_8implicit_16recommender_base___pyx_scope_struct_1
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_8implicit_16recommender_base___pyx_scope_struct_1_genexpr, /*tp_traverse*/
+  __pyx_tp_traverse_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr, /*tp_traverse*/
   0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
@@ -20532,7 +19926,7 @@ static PyTypeObject __pyx_type_8implicit_16recommender_base___pyx_scope_struct_1
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_8implicit_16recommender_base___pyx_scope_struct_1_genexpr, /*tp_new*/
+  __pyx_tp_new_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -20672,7 +20066,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "implicit.recommender_base.array", /*tp_name*/
+  "implicit.matrix_factorization_base.array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -20783,7 +20177,7 @@ static PyMethodDef __pyx_methods_Enum[] = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "implicit.recommender_base.Enum", /*tp_name*/
+  "implicit.matrix_factorization_base.Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -21036,7 +20430,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "implicit.recommender_base.memoryview", /*tp_name*/
+  "implicit.matrix_factorization_base.memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -21166,7 +20560,7 @@ static struct PyGetSetDef __pyx_getsets__memoryviewslice[] = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "implicit.recommender_base._memoryviewslice", /*tp_name*/
+  "implicit.matrix_factorization_base._memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -21240,18 +20634,18 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_recommender_base(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_matrix_factorization_base(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_recommender_base},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_matrix_factorization_base},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "recommender_base",
-    __pyx_k_Base_class_for_recommendation_a, /* m_doc */
+    "matrix_factorization_base",
+    __pyx_k_Base_class_for_matrix_factoriza, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
   #else
@@ -21280,7 +20674,6 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_A, __pyx_k_A, sizeof(__pyx_k_A), 0, 0, 1, 1},
-  {&__pyx_n_s_ABCMeta, __pyx_k_ABCMeta, sizeof(__pyx_k_ABCMeta), 0, 0, 1, 1},
   {&__pyx_n_s_ASCII, __pyx_k_ASCII, sizeof(__pyx_k_ASCII), 0, 0, 1, 1},
   {&__pyx_n_s_A_min, __pyx_k_A_min, sizeof(__pyx_k_A_min), 0, 0, 1, 1},
   {&__pyx_n_s_A_mv, __pyx_k_A_mv, sizeof(__pyx_k_A_mv), 0, 0, 1, 1},
@@ -21292,7 +20685,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Cannot_assign_to_read_only_memor, __pyx_k_Cannot_assign_to_read_only_memor, sizeof(__pyx_k_Cannot_assign_to_read_only_memor), 0, 0, 1, 0},
   {&__pyx_kp_s_Cannot_create_writable_memory_vi, __pyx_k_Cannot_create_writable_memory_vi, sizeof(__pyx_k_Cannot_create_writable_memory_vi), 0, 0, 1, 0},
   {&__pyx_kp_s_Cannot_index_with_type_s, __pyx_k_Cannot_index_with_type_s, sizeof(__pyx_k_Cannot_index_with_type_s), 0, 0, 1, 0},
-  {&__pyx_kp_s_Defines_the_interface_that_all, __pyx_k_Defines_the_interface_that_all, sizeof(__pyx_k_Defines_the_interface_that_all), 0, 0, 1, 0},
   {&__pyx_n_s_Ellipsis, __pyx_k_Ellipsis, sizeof(__pyx_k_Ellipsis), 0, 0, 1, 1},
   {&__pyx_kp_s_Empty_shape_tuple_for_cython_arr, __pyx_k_Empty_shape_tuple_for_cython_arr, sizeof(__pyx_k_Empty_shape_tuple_for_cython_arr), 0, 0, 1, 0},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xb0, __pyx_k_Incompatible_checksums_s_vs_0xb0, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xb0), 0, 0, 1, 0},
@@ -21326,19 +20718,12 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Out_of_bounds_on_buffer_access_a, __pyx_k_Out_of_bounds_on_buffer_access_a, sizeof(__pyx_k_Out_of_bounds_on_buffer_access_a), 0, 0, 1, 0},
   {&__pyx_n_s_PickleError, __pyx_k_PickleError, sizeof(__pyx_k_PickleError), 0, 0, 1, 1},
   {&__pyx_n_s_RecommenderBase, __pyx_k_RecommenderBase, sizeof(__pyx_k_RecommenderBase), 0, 0, 1, 1},
-  {&__pyx_n_s_RecommenderBase_fit, __pyx_k_RecommenderBase_fit, sizeof(__pyx_k_RecommenderBase_fit), 0, 0, 1, 1},
-  {&__pyx_n_s_RecommenderBase_rank_items, __pyx_k_RecommenderBase_rank_items, sizeof(__pyx_k_RecommenderBase_rank_items), 0, 0, 1, 1},
-  {&__pyx_n_s_RecommenderBase_recommend, __pyx_k_RecommenderBase_recommend, sizeof(__pyx_k_RecommenderBase_recommend), 0, 0, 1, 1},
-  {&__pyx_n_s_RecommenderBase_similar_items, __pyx_k_RecommenderBase_similar_items, sizeof(__pyx_k_RecommenderBase_similar_items), 0, 0, 1, 1},
-  {&__pyx_n_s_RecommenderBase_similar_users, __pyx_k_RecommenderBase_similar_users, sizeof(__pyx_k_RecommenderBase_similar_users), 0, 0, 1, 1},
   {&__pyx_kp_s_Some_of_selected_itemids_are_not, __pyx_k_Some_of_selected_itemids_are_not, sizeof(__pyx_k_Some_of_selected_itemids_are_not), 0, 0, 1, 0},
   {&__pyx_n_s_T, __pyx_k_T, sizeof(__pyx_k_T), 0, 0, 1, 1},
   {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
   {&__pyx_kp_s_Unable_to_convert_item_to_object, __pyx_k_Unable_to_convert_item_to_object, sizeof(__pyx_k_Unable_to_convert_item_to_object), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_View_MemoryView, __pyx_k_View_MemoryView, sizeof(__pyx_k_View_MemoryView), 0, 0, 1, 1},
-  {&__pyx_n_s_abc, __pyx_k_abc, sizeof(__pyx_k_abc), 0, 0, 1, 1},
-  {&__pyx_n_s_abstractmethod, __pyx_k_abstractmethod, sizeof(__pyx_k_abstractmethod), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_amin, __pyx_k_amin, sizeof(__pyx_k_amin), 0, 0, 1, 1},
   {&__pyx_kp_u_and_recommend, __pyx_k_and_recommend, sizeof(__pyx_k_and_recommend), 0, 1, 0, 0},
@@ -21379,7 +20764,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_filter_already_liked_items_canno, __pyx_k_filter_already_liked_items_canno, sizeof(__pyx_k_filter_already_liked_items_canno), 0, 1, 0, 0},
   {&__pyx_n_s_filter_items, __pyx_k_filter_items, sizeof(__pyx_k_filter_items), 0, 0, 1, 1},
   {&__pyx_kp_u_filter_items_cannot_filter, __pyx_k_filter_items_cannot_filter, sizeof(__pyx_k_filter_items_cannot_filter), 0, 1, 0, 0},
-  {&__pyx_n_s_fit, __pyx_k_fit, sizeof(__pyx_k_fit), 0, 0, 1, 1},
   {&__pyx_n_s_flags, __pyx_k_flags, sizeof(__pyx_k_flags), 0, 0, 1, 1},
   {&__pyx_n_s_float32, __pyx_k_float32, sizeof(__pyx_k_float32), 0, 0, 1, 1},
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
@@ -21392,8 +20776,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 0, 1, 0},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
   {&__pyx_n_s_ids, __pyx_k_ids, sizeof(__pyx_k_ids), 0, 0, 1, 1},
+  {&__pyx_n_s_implicit_matrix_factorization_ba, __pyx_k_implicit_matrix_factorization_ba, sizeof(__pyx_k_implicit_matrix_factorization_ba), 0, 0, 1, 1},
+  {&__pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_k_implicit_matrix_factorization_ba_2, sizeof(__pyx_k_implicit_matrix_factorization_ba_2), 0, 0, 1, 0},
   {&__pyx_n_s_implicit_recommender_base, __pyx_k_implicit_recommender_base, sizeof(__pyx_k_implicit_recommender_base), 0, 0, 1, 1},
-  {&__pyx_kp_s_implicit_recommender_base_pyx, __pyx_k_implicit_recommender_base_pyx, sizeof(__pyx_k_implicit_recommender_base_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_indices, __pyx_k_indices, sizeof(__pyx_k_indices), 0, 0, 1, 1},
   {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
@@ -21402,7 +20787,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_item_factors, __pyx_k_item_factors, sizeof(__pyx_k_item_factors), 0, 0, 1, 1},
   {&__pyx_n_s_item_norms, __pyx_k_item_norms, sizeof(__pyx_k_item_norms), 0, 0, 1, 1},
   {&__pyx_n_s_item_norms_2, __pyx_k_item_norms_2, sizeof(__pyx_k_item_norms_2), 0, 0, 1, 1},
-  {&__pyx_n_s_item_users, __pyx_k_item_users, sizeof(__pyx_k_item_users), 0, 0, 1, 1},
   {&__pyx_n_s_itemid, __pyx_k_itemid, sizeof(__pyx_k_itemid), 0, 0, 1, 1},
   {&__pyx_n_s_items_c, __pyx_k_items_c, sizeof(__pyx_k_items_c), 0, 0, 1, 1},
   {&__pyx_kp_u_items_out_of, __pyx_k_items_out_of, sizeof(__pyx_k_items_out_of), 0, 1, 0, 0},
@@ -21434,7 +20818,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_num_threads, __pyx_k_num_threads, sizeof(__pyx_k_num_threads), 0, 0, 1, 1},
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
-  {&__pyx_n_s_object, __pyx_k_object, sizeof(__pyx_k_object), 0, 0, 1, 1},
   {&__pyx_n_s_out, __pyx_k_out, sizeof(__pyx_k_out), 0, 0, 1, 1},
   {&__pyx_n_s_pack, __pyx_k_pack, sizeof(__pyx_k_pack), 0, 0, 1, 1},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
@@ -21511,17 +20894,16 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_object = __Pyx_GetBuiltinName(__pyx_n_s_object); if (!__pyx_builtin_object) __PYX_ERR(0, 20, __pyx_L1_error)
-  __pyx_builtin_property = __Pyx_GetBuiltinName(__pyx_n_s_property); if (!__pyx_builtin_property) __PYX_ERR(0, 334, __pyx_L1_error)
-  __pyx_builtin_sorted = __Pyx_GetBuiltinName(__pyx_n_s_sorted); if (!__pyx_builtin_sorted) __PYX_ERR(0, 173, __pyx_L1_error)
-  __pyx_builtin_zip = __Pyx_GetBuiltinName(__pyx_n_s_zip); if (!__pyx_builtin_zip) __PYX_ERR(0, 173, __pyx_L1_error)
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 175, __pyx_L1_error)
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 227, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 259, __pyx_L1_error)
-  __pyx_builtin_max = __Pyx_GetBuiltinName(__pyx_n_s_max); if (!__pyx_builtin_max) __PYX_ERR(0, 290, __pyx_L1_error)
-  __pyx_builtin_min = __Pyx_GetBuiltinName(__pyx_n_s_min); if (!__pyx_builtin_min) __PYX_ERR(0, 290, __pyx_L1_error)
-  __pyx_builtin_IndexError = __Pyx_GetBuiltinName(__pyx_n_s_IndexError); if (!__pyx_builtin_IndexError) __PYX_ERR(0, 291, __pyx_L1_error)
-  __pyx_builtin_NotImplementedError = __Pyx_GetBuiltinName(__pyx_n_s_NotImplementedError); if (!__pyx_builtin_NotImplementedError) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_builtin_property = __Pyx_GetBuiltinName(__pyx_n_s_property); if (!__pyx_builtin_property) __PYX_ERR(0, 217, __pyx_L1_error)
+  __pyx_builtin_sorted = __Pyx_GetBuiltinName(__pyx_n_s_sorted); if (!__pyx_builtin_sorted) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_builtin_zip = __Pyx_GetBuiltinName(__pyx_n_s_zip); if (!__pyx_builtin_zip) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 110, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 142, __pyx_L1_error)
+  __pyx_builtin_max = __Pyx_GetBuiltinName(__pyx_n_s_max); if (!__pyx_builtin_max) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_builtin_min = __Pyx_GetBuiltinName(__pyx_n_s_min); if (!__pyx_builtin_min) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_builtin_IndexError = __Pyx_GetBuiltinName(__pyx_n_s_IndexError); if (!__pyx_builtin_IndexError) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_builtin_NotImplementedError = __Pyx_GetBuiltinName(__pyx_n_s_NotImplementedError); if (!__pyx_builtin_NotImplementedError) __PYX_ERR(0, 192, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 148, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_Ellipsis = __Pyx_GetBuiltinName(__pyx_n_s_Ellipsis); if (!__pyx_builtin_Ellipsis) __PYX_ERR(1, 404, __pyx_L1_error)
@@ -21535,36 +20917,36 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "implicit/recommender_base.pyx":278
+  /* "implicit/matrix_factorization_base.pyx":161
  *             # Filter out constant items
  *             if filter_items:
  *                 A[:, filter_items] = A_min - 1             # <<<<<<<<<<<<<<
  *             # Sort array of scores in parallel
  *             for u in prange(u_len, nogil=True, num_threads=num_threads, schedule='dynamic'):
  */
-  __pyx_slice_ = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 278, __pyx_L1_error)
+  __pyx_slice_ = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 161, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice_);
   __Pyx_GIVEREF(__pyx_slice_);
 
-  /* "implicit/recommender_base.pyx":291
+  /* "implicit/matrix_factorization_base.pyx":174
  *         # check selected items are  in the model
  *         if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:
  *             raise IndexError("Some of selected itemids are not in the model")             # <<<<<<<<<<<<<<
  * 
  *         item_factors = self.item_factors[selected_items]
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_Some_of_selected_itemids_are_not); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 291, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_Some_of_selected_itemids_are_not); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "implicit/recommender_base.pyx":309
+  /* "implicit/matrix_factorization_base.pyx":192
  * 
  *     def recalculate_user(self, userid, user_items):
  *         raise NotImplementedError("recalculate_user is not supported with this model")             # <<<<<<<<<<<<<<
  * 
  *     def similar_users(self, userid, N=10):
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_recalculate_user_is_not_supporte); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_recalculate_user_is_not_supporte); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
@@ -21749,235 +21131,152 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
 
-  /* "implicit/recommender_base.pyx":20
- * 
- * 
- * class RecommenderBase(object):             # <<<<<<<<<<<<<<
- *     """ Defines the interface that all recommendations models here expose """
- *     __metaclass__ = ABCMeta
- */
-  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_builtin_object); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 20, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__21);
-  __Pyx_GIVEREF(__pyx_tuple__21);
-
-  /* "implicit/recommender_base.pyx":25
- * 
- *     @abstractmethod
- *     def fit(self, item_users):             # <<<<<<<<<<<<<<
- *         """
- *         Trains the model on a sparse matrix of item/user/weight
- */
-  __pyx_tuple__22 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_item_users); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__22);
-  __Pyx_GIVEREF(__pyx_tuple__22);
-  __pyx_codeobj__23 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__22, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_fit, 25, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__23)) __PYX_ERR(0, 25, __pyx_L1_error)
-
-  /* "implicit/recommender_base.pyx":39
- * 
- *     @abstractmethod
- *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
- *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
- *         """
- */
-  __pyx_tuple__24 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items, __pyx_n_s_N, __pyx_n_s_filter_already_liked_items, __pyx_n_s_filter_items, __pyx_n_s_recalculate_user); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(0, 39, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__24);
-  __Pyx_GIVEREF(__pyx_tuple__24);
-  __pyx_codeobj__25 = (PyObject*)__Pyx_PyCode_New(7, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_recommend, 39, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__25)) __PYX_ERR(0, 39, __pyx_L1_error)
-  __pyx_tuple__26 = PyTuple_Pack(4, ((PyObject *)__pyx_int_10), ((PyObject *)Py_True), ((PyObject *)Py_None), ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(0, 39, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__26);
-  __Pyx_GIVEREF(__pyx_tuple__26);
-
-  /* "implicit/recommender_base.pyx":74
- * 
- *     @abstractmethod
- *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):             # <<<<<<<<<<<<<<
- *         """
- *         Rank given items for a user and returns sorted item list.
- */
-  __pyx_tuple__27 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items, __pyx_n_s_selected_items, __pyx_n_s_recalculate_user); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 74, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__27);
-  __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(5, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_rank_items, 74, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 74, __pyx_L1_error)
-  __pyx_tuple__29 = PyTuple_Pack(1, ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 74, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__29);
-  __Pyx_GIVEREF(__pyx_tuple__29);
-
-  /* "implicit/recommender_base.pyx":101
- * 
- *     @abstractmethod
- *     def similar_users(self, userid, N=10):             # <<<<<<<<<<<<<<
- *         """
- *         Calculates a list of similar items
- */
-  __pyx_tuple__30 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_N); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__30);
-  __Pyx_GIVEREF(__pyx_tuple__30);
-  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_similar_users, 101, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __pyx_tuple__32 = PyTuple_Pack(1, ((PyObject *)__pyx_int_10)); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__32);
-  __Pyx_GIVEREF(__pyx_tuple__32);
-
-  /* "implicit/recommender_base.pyx":120
- * 
- *     @abstractmethod
- *     def similar_items(self, itemid, N=10):             # <<<<<<<<<<<<<<
- *         """
- *         Calculates a list of similar items
- */
-  __pyx_tuple__33 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_itemid, __pyx_n_s_N); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 120, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__33);
-  __Pyx_GIVEREF(__pyx_tuple__33);
-  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_similar_items, 120, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 120, __pyx_L1_error)
-  __pyx_tuple__35 = PyTuple_Pack(1, ((PyObject *)__pyx_int_10)); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 120, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__35);
-  __Pyx_GIVEREF(__pyx_tuple__35);
-
-  /* "implicit/recommender_base.pyx":149
+  /* "implicit/matrix_factorization_base.pyx":32
  *         Array of latent factors for each user in the training set
  *      """
  *     def __init__(self):             # <<<<<<<<<<<<<<
  *         # learned parameters
  *         self.item_factors = None
  */
-  __pyx_tuple__36 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(0, 149, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__36);
-  __Pyx_GIVEREF(__pyx_tuple__36);
-  __pyx_codeobj__37 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_init, 149, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__37)) __PYX_ERR(0, 149, __pyx_L1_error)
+  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__21);
+  __Pyx_GIVEREF(__pyx_tuple__21);
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_init, 32, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 32, __pyx_L1_error)
 
-  /* "implicit/recommender_base.pyx":157
+  /* "implicit/matrix_factorization_base.pyx":40
  *         self._user_norms, self._item_norms = None, None
  * 
  *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
  *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
  *         user = self._user_factor(userid, user_items, recalculate_user)
  */
-  __pyx_tuple__38 = PyTuple_Pack(15, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items, __pyx_n_s_N, __pyx_n_s_filter_already_liked_items, __pyx_n_s_filter_items, __pyx_n_s_recalculate_user, __pyx_n_s_user, __pyx_n_s_liked, __pyx_n_s_scores, __pyx_n_s_count, __pyx_n_s_ids, __pyx_n_s_best, __pyx_n_s_genexpr, __pyx_n_s_genexpr); if (unlikely(!__pyx_tuple__38)) __PYX_ERR(0, 157, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__38);
-  __Pyx_GIVEREF(__pyx_tuple__38);
-  __pyx_codeobj__39 = (PyObject*)__Pyx_PyCode_New(7, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__38, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_recommend, 157, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__39)) __PYX_ERR(0, 157, __pyx_L1_error)
-  __pyx_tuple__40 = PyTuple_Pack(4, ((PyObject *)__pyx_int_10), ((PyObject *)Py_True), ((PyObject *)Py_None), ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__40)) __PYX_ERR(0, 157, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__40);
-  __Pyx_GIVEREF(__pyx_tuple__40);
+  __pyx_tuple__23 = PyTuple_Pack(15, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items, __pyx_n_s_N, __pyx_n_s_filter_already_liked_items, __pyx_n_s_filter_items, __pyx_n_s_recalculate_user, __pyx_n_s_user, __pyx_n_s_liked, __pyx_n_s_scores, __pyx_n_s_count, __pyx_n_s_ids, __pyx_n_s_best, __pyx_n_s_genexpr, __pyx_n_s_genexpr); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__23);
+  __Pyx_GIVEREF(__pyx_tuple__23);
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(7, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_recommend, 40, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_tuple__25 = PyTuple_Pack(4, ((PyObject *)__pyx_int_10), ((PyObject *)Py_True), ((PyObject *)Py_None), ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__25);
+  __Pyx_GIVEREF(__pyx_tuple__25);
 
-  /* "implicit/recommender_base.pyx":181
+  /* "implicit/matrix_factorization_base.pyx":64
  *     @cython.wraparound(False)
  *     @cython.nonecheck(False)
  *     def recommend_all(self, user_items, int N=10,             # <<<<<<<<<<<<<<
  *                       recalculate_user=False, filter_already_liked_items=True, filter_items=None,
  *                       int num_threads=0, show_progress=True, int batch_size=0):
  */
-  __pyx_tuple__41 = PyTuple_Pack(28, __pyx_n_s_self, __pyx_n_s_user_items, __pyx_n_s_N, __pyx_n_s_recalculate_user, __pyx_n_s_filter_already_liked_items, __pyx_n_s_filter_items, __pyx_n_s_num_threads, __pyx_n_s_show_progress, __pyx_n_s_batch_size, __pyx_n_s_max_row_n, __pyx_n_s_factors_items, __pyx_n_s_users_c, __pyx_n_s_items_c, __pyx_n_s_batch, __pyx_n_s_u_b, __pyx_n_s_u_low, __pyx_n_s_u_high, __pyx_n_s_u_len, __pyx_n_s_u, __pyx_n_s_A, __pyx_n_s_users_c_b, __pyx_n_s_A_mv, __pyx_n_s_A_mv_p, __pyx_n_s_B_mv, __pyx_n_s_B_mv_p, __pyx_n_s_progress, __pyx_n_s_users_factors, __pyx_n_s_A_min); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(0, 181, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__41);
-  __Pyx_GIVEREF(__pyx_tuple__41);
-  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(9, 0, 28, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_recommend_all, 181, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_tuple__26 = PyTuple_Pack(28, __pyx_n_s_self, __pyx_n_s_user_items, __pyx_n_s_N, __pyx_n_s_recalculate_user, __pyx_n_s_filter_already_liked_items, __pyx_n_s_filter_items, __pyx_n_s_num_threads, __pyx_n_s_show_progress, __pyx_n_s_batch_size, __pyx_n_s_max_row_n, __pyx_n_s_factors_items, __pyx_n_s_users_c, __pyx_n_s_items_c, __pyx_n_s_batch, __pyx_n_s_u_b, __pyx_n_s_u_low, __pyx_n_s_u_high, __pyx_n_s_u_len, __pyx_n_s_u, __pyx_n_s_A, __pyx_n_s_users_c_b, __pyx_n_s_A_mv, __pyx_n_s_A_mv_p, __pyx_n_s_B_mv, __pyx_n_s_B_mv_p, __pyx_n_s_progress, __pyx_n_s_users_factors, __pyx_n_s_A_min); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__26);
+  __Pyx_GIVEREF(__pyx_tuple__26);
+  __pyx_codeobj__27 = (PyObject*)__Pyx_PyCode_New(9, 0, 28, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__26, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_recommend_all, 64, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__27)) __PYX_ERR(0, 64, __pyx_L1_error)
 
-  /* "implicit/recommender_base.pyx":286
+  /* "implicit/matrix_factorization_base.pyx":169
  *         return np.asarray(B_mv)
  * 
  *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):             # <<<<<<<<<<<<<<
  *         user = self._user_factor(userid, user_items, recalculate_user)
  * 
  */
-  __pyx_tuple__43 = PyTuple_Pack(8, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items, __pyx_n_s_selected_items, __pyx_n_s_recalculate_user, __pyx_n_s_user, __pyx_n_s_item_factors, __pyx_n_s_scores); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(0, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__43);
-  __Pyx_GIVEREF(__pyx_tuple__43);
-  __pyx_codeobj__44 = (PyObject*)__Pyx_PyCode_New(5, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__43, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_rank_items, 286, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__44)) __PYX_ERR(0, 286, __pyx_L1_error)
-  __pyx_tuple__45 = PyTuple_Pack(1, ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(0, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__45);
-  __Pyx_GIVEREF(__pyx_tuple__45);
+  __pyx_tuple__28 = PyTuple_Pack(8, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items, __pyx_n_s_selected_items, __pyx_n_s_recalculate_user, __pyx_n_s_user, __pyx_n_s_item_factors, __pyx_n_s_scores); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__28);
+  __Pyx_GIVEREF(__pyx_tuple__28);
+  __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(5, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_rank_items, 169, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_tuple__30 = PyTuple_Pack(1, ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__30);
+  __Pyx_GIVEREF(__pyx_tuple__30);
 
-  /* "implicit/recommender_base.pyx":302
+  /* "implicit/matrix_factorization_base.pyx":185
  *     recommend.__doc__ = RecommenderBase.recommend.__doc__
  * 
  *     def _user_factor(self, userid, user_items, recalculate_user=False):             # <<<<<<<<<<<<<<
  *         if recalculate_user:
  *             return self.recalculate_user(userid, user_items)
  */
-  __pyx_tuple__46 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items, __pyx_n_s_recalculate_user); if (unlikely(!__pyx_tuple__46)) __PYX_ERR(0, 302, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__46);
-  __Pyx_GIVEREF(__pyx_tuple__46);
-  __pyx_codeobj__47 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__46, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_user_factor, 302, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__47)) __PYX_ERR(0, 302, __pyx_L1_error)
-  __pyx_tuple__48 = PyTuple_Pack(1, ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(0, 302, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__48);
-  __Pyx_GIVEREF(__pyx_tuple__48);
+  __pyx_tuple__31 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items, __pyx_n_s_recalculate_user); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 185, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__31);
+  __Pyx_GIVEREF(__pyx_tuple__31);
+  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_user_factor, 185, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 185, __pyx_L1_error)
+  __pyx_tuple__33 = PyTuple_Pack(1, ((PyObject *)Py_False)); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 185, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__33);
+  __Pyx_GIVEREF(__pyx_tuple__33);
 
-  /* "implicit/recommender_base.pyx":308
+  /* "implicit/matrix_factorization_base.pyx":191
  *             return self.user_factors[userid]
  * 
  *     def recalculate_user(self, userid, user_items):             # <<<<<<<<<<<<<<
  *         raise NotImplementedError("recalculate_user is not supported with this model")
  * 
  */
-  __pyx_tuple__49 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(0, 308, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__49);
-  __Pyx_GIVEREF(__pyx_tuple__49);
-  __pyx_codeobj__50 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__49, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_recalculate_user, 308, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__50)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_tuple__34 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_user_items); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__34);
+  __Pyx_GIVEREF(__pyx_tuple__34);
+  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_recalculate_user, 191, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 191, __pyx_L1_error)
 
-  /* "implicit/recommender_base.pyx":311
+  /* "implicit/matrix_factorization_base.pyx":194
  *         raise NotImplementedError("recalculate_user is not supported with this model")
  * 
  *     def similar_users(self, userid, N=10):             # <<<<<<<<<<<<<<
  *         factor = self.user_factors[userid]
  *         factors = self.user_factors
  */
-  __pyx_tuple__51 = PyTuple_Pack(6, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_N, __pyx_n_s_factor, __pyx_n_s_factors, __pyx_n_s_norms); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(0, 311, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__51);
-  __Pyx_GIVEREF(__pyx_tuple__51);
-  __pyx_codeobj__52 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__51, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_similar_users, 311, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__52)) __PYX_ERR(0, 311, __pyx_L1_error)
-  __pyx_tuple__53 = PyTuple_Pack(1, ((PyObject *)__pyx_int_10)); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(0, 311, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__53);
-  __Pyx_GIVEREF(__pyx_tuple__53);
+  __pyx_tuple__36 = PyTuple_Pack(6, __pyx_n_s_self, __pyx_n_s_userid, __pyx_n_s_N, __pyx_n_s_factor, __pyx_n_s_factors, __pyx_n_s_norms); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(0, 194, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__36);
+  __Pyx_GIVEREF(__pyx_tuple__36);
+  __pyx_codeobj__37 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_similar_users, 194, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__37)) __PYX_ERR(0, 194, __pyx_L1_error)
+  __pyx_tuple__38 = PyTuple_Pack(1, ((PyObject *)__pyx_int_10)); if (unlikely(!__pyx_tuple__38)) __PYX_ERR(0, 194, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__38);
+  __Pyx_GIVEREF(__pyx_tuple__38);
 
-  /* "implicit/recommender_base.pyx":320
+  /* "implicit/matrix_factorization_base.pyx":203
  *     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
  * 
  *     def similar_items(self, itemid, N=10):             # <<<<<<<<<<<<<<
  *         factor = self.item_factors[itemid]
  *         factors = self.item_factors
  */
-  __pyx_tuple__54 = PyTuple_Pack(6, __pyx_n_s_self, __pyx_n_s_itemid, __pyx_n_s_N, __pyx_n_s_factor, __pyx_n_s_factors, __pyx_n_s_norms); if (unlikely(!__pyx_tuple__54)) __PYX_ERR(0, 320, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__54);
-  __Pyx_GIVEREF(__pyx_tuple__54);
-  __pyx_codeobj__55 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__54, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_similar_items, 320, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__55)) __PYX_ERR(0, 320, __pyx_L1_error)
-  __pyx_tuple__56 = PyTuple_Pack(1, ((PyObject *)__pyx_int_10)); if (unlikely(!__pyx_tuple__56)) __PYX_ERR(0, 320, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__56);
-  __Pyx_GIVEREF(__pyx_tuple__56);
+  __pyx_tuple__39 = PyTuple_Pack(6, __pyx_n_s_self, __pyx_n_s_itemid, __pyx_n_s_N, __pyx_n_s_factor, __pyx_n_s_factors, __pyx_n_s_norms); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__39);
+  __Pyx_GIVEREF(__pyx_tuple__39);
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_similar_items, 203, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_tuple__41 = PyTuple_Pack(1, ((PyObject *)__pyx_int_10)); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__41);
+  __Pyx_GIVEREF(__pyx_tuple__41);
 
-  /* "implicit/recommender_base.pyx":329
+  /* "implicit/matrix_factorization_base.pyx":212
  *     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
  * 
  *     def _get_similarity_score(self, factor, factors, norms, N):             # <<<<<<<<<<<<<<
  *         scores = factors.dot(factor) / norms
  *         best = np.argpartition(scores, -N)[-N:]
  */
-  __pyx_tuple__57 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_factor, __pyx_n_s_factors, __pyx_n_s_norms, __pyx_n_s_N, __pyx_n_s_scores, __pyx_n_s_best); if (unlikely(!__pyx_tuple__57)) __PYX_ERR(0, 329, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__57);
-  __Pyx_GIVEREF(__pyx_tuple__57);
-  __pyx_codeobj__58 = (PyObject*)__Pyx_PyCode_New(5, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__57, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_get_similarity_score, 329, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__58)) __PYX_ERR(0, 329, __pyx_L1_error)
+  __pyx_tuple__42 = PyTuple_Pack(7, __pyx_n_s_self, __pyx_n_s_factor, __pyx_n_s_factors, __pyx_n_s_norms, __pyx_n_s_N, __pyx_n_s_scores, __pyx_n_s_best); if (unlikely(!__pyx_tuple__42)) __PYX_ERR(0, 212, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__42);
+  __Pyx_GIVEREF(__pyx_tuple__42);
+  __pyx_codeobj__43 = (PyObject*)__Pyx_PyCode_New(5, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__42, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_get_similarity_score, 212, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__43)) __PYX_ERR(0, 212, __pyx_L1_error)
 
-  /* "implicit/recommender_base.pyx":335
+  /* "implicit/matrix_factorization_base.pyx":218
  * 
  *     @property
  *     def user_norms(self):             # <<<<<<<<<<<<<<
  *         if self._user_norms is None:
  *             self._user_norms = np.linalg.norm(self.user_factors, axis=-1)
  */
-  __pyx_tuple__59 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__59)) __PYX_ERR(0, 335, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__59);
-  __Pyx_GIVEREF(__pyx_tuple__59);
-  __pyx_codeobj__60 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__59, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_user_norms_2, 335, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__60)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __pyx_tuple__44 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__44)) __PYX_ERR(0, 218, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__44);
+  __Pyx_GIVEREF(__pyx_tuple__44);
+  __pyx_codeobj__45 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__44, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_user_norms_2, 218, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__45)) __PYX_ERR(0, 218, __pyx_L1_error)
 
-  /* "implicit/recommender_base.pyx":343
+  /* "implicit/matrix_factorization_base.pyx":226
  * 
  *     @property
  *     def item_norms(self):             # <<<<<<<<<<<<<<
  *         if self._item_norms is None:
  *             self._item_norms = np.linalg.norm(self.item_factors, axis=-1)
  */
-  __pyx_tuple__61 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__61)) __PYX_ERR(0, 343, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__61);
-  __Pyx_GIVEREF(__pyx_tuple__61);
-  __pyx_codeobj__62 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__61, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_recommender_base_pyx, __pyx_n_s_item_norms_2, 343, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__62)) __PYX_ERR(0, 343, __pyx_L1_error)
+  __pyx_tuple__46 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__46)) __PYX_ERR(0, 226, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__46);
+  __Pyx_GIVEREF(__pyx_tuple__46);
+  __pyx_codeobj__47 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__46, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_implicit_matrix_factorization_ba_2, __pyx_n_s_item_norms_2, 226, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__47)) __PYX_ERR(0, 226, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -21986,9 +21285,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__63 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__63)) __PYX_ERR(1, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__63);
-  __Pyx_GIVEREF(__pyx_tuple__63);
+  __pyx_tuple__48 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(1, 286, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__48);
+  __Pyx_GIVEREF(__pyx_tuple__48);
 
   /* "View.MemoryView":287
  * 
@@ -21997,9 +21296,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__64 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__64)) __PYX_ERR(1, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__64);
-  __Pyx_GIVEREF(__pyx_tuple__64);
+  __pyx_tuple__49 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(1, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__49);
+  __Pyx_GIVEREF(__pyx_tuple__49);
 
   /* "View.MemoryView":288
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -22008,9 +21307,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__65 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__65)) __PYX_ERR(1, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__65);
-  __Pyx_GIVEREF(__pyx_tuple__65);
+  __pyx_tuple__50 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__50)) __PYX_ERR(1, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__50);
+  __Pyx_GIVEREF(__pyx_tuple__50);
 
   /* "View.MemoryView":291
  * 
@@ -22019,9 +21318,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__66 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__66)) __PYX_ERR(1, 291, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__66);
-  __Pyx_GIVEREF(__pyx_tuple__66);
+  __pyx_tuple__51 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(1, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__51);
+  __Pyx_GIVEREF(__pyx_tuple__51);
 
   /* "View.MemoryView":292
  * 
@@ -22030,19 +21329,19 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__67 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__67)) __PYX_ERR(1, 292, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__67);
-  __Pyx_GIVEREF(__pyx_tuple__67);
+  __pyx_tuple__52 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__52)) __PYX_ERR(1, 292, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__52);
+  __Pyx_GIVEREF(__pyx_tuple__52);
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_Enum(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__68 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__68)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__68);
-  __Pyx_GIVEREF(__pyx_tuple__68);
-  __pyx_codeobj__69 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__68, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__69)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_tuple__53 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__53)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__53);
+  __Pyx_GIVEREF(__pyx_tuple__53);
+  __pyx_codeobj__54 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__53, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__54)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -22112,22 +21411,22 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_8implicit_16recommender_base___pyx_scope_struct__recommend) < 0) __PYX_ERR(0, 157, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend) < 0) __PYX_ERR(0, 40, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_8implicit_16recommender_base___pyx_scope_struct__recommend.tp_print = 0;
+  __pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend.tp_print = 0;
   #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8implicit_16recommender_base___pyx_scope_struct__recommend.tp_dictoffset && __pyx_type_8implicit_16recommender_base___pyx_scope_struct__recommend.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_8implicit_16recommender_base___pyx_scope_struct__recommend.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend.tp_dictoffset && __pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  __pyx_ptype_8implicit_16recommender_base___pyx_scope_struct__recommend = &__pyx_type_8implicit_16recommender_base___pyx_scope_struct__recommend;
-  if (PyType_Ready(&__pyx_type_8implicit_16recommender_base___pyx_scope_struct_1_genexpr) < 0) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_ptype_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend = &__pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct__recommend;
+  if (PyType_Ready(&__pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr) < 0) __PYX_ERR(0, 59, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_8implicit_16recommender_base___pyx_scope_struct_1_genexpr.tp_print = 0;
+  __pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr.tp_print = 0;
   #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8implicit_16recommender_base___pyx_scope_struct_1_genexpr.tp_dictoffset && __pyx_type_8implicit_16recommender_base___pyx_scope_struct_1_genexpr.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_8implicit_16recommender_base___pyx_scope_struct_1_genexpr.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr.tp_dictoffset && __pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  __pyx_ptype_8implicit_16recommender_base___pyx_scope_struct_1_genexpr = &__pyx_type_8implicit_16recommender_base___pyx_scope_struct_1_genexpr;
+  __pyx_ptype_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr = &__pyx_type_8implicit_25matrix_factorization_base___pyx_scope_struct_1_genexpr;
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
   if (PyType_Ready(&__pyx_type___pyx_array) < 0) __PYX_ERR(1, 105, __pyx_L1_error)
@@ -22227,11 +21526,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initrecommender_base(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initrecommender_base(void)
+__Pyx_PyMODINIT_FUNC initmatrix_factorization_base(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initmatrix_factorization_base(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_recommender_base(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_recommender_base(void)
+__Pyx_PyMODINIT_FUNC PyInit_matrix_factorization_base(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_matrix_factorization_base(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -22298,7 +21597,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_recommender_base(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_matrix_factorization_base(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -22314,7 +21613,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_recommender_base(PyObject *__pyx_p
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'recommender_base' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'matrix_factorization_base' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -22329,7 +21628,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_recommender_base(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_matrix_factorization_base(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -22368,7 +21667,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("recommender_base", __pyx_methods, __pyx_k_Base_class_for_recommendation_a, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("matrix_factorization_base", __pyx_methods, __pyx_k_Base_class_for_matrix_factoriza, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -22386,14 +21685,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_implicit__recommender_base) {
+  if (__pyx_module_is_main_implicit__matrix_factorization_base) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name_2, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "implicit.recommender_base")) {
-      if (unlikely(PyDict_SetItemString(modules, "implicit.recommender_base", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "implicit.matrix_factorization_base")) {
+      if (unlikely(PyDict_SetItemString(modules, "implicit.matrix_factorization_base", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -22414,439 +21713,200 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "implicit/recommender_base.pyx":5
+  /* "implicit/matrix_factorization_base.pyx":5
  * # cython: language_level=3
  * 
  * import itertools             # <<<<<<<<<<<<<<
- * from abc import ABCMeta, abstractmethod
  * from tqdm.auto import tqdm
+ * import numpy as np
  */
   __pyx_t_1 = __Pyx_Import(__pyx_n_s_itertools, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_itertools, __pyx_t_1) < 0) __PYX_ERR(0, 5, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "implicit/recommender_base.pyx":6
+  /* "implicit/matrix_factorization_base.pyx":6
  * 
  * import itertools
- * from abc import ABCMeta, abstractmethod             # <<<<<<<<<<<<<<
- * from tqdm.auto import tqdm
- * import numpy as np
- */
-  __pyx_t_1 = PyList_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_n_s_ABCMeta);
-  __Pyx_GIVEREF(__pyx_n_s_ABCMeta);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_ABCMeta);
-  __Pyx_INCREF(__pyx_n_s_abstractmethod);
-  __Pyx_GIVEREF(__pyx_n_s_abstractmethod);
-  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_n_s_abstractmethod);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_abc, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_ABCMeta); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ABCMeta, __pyx_t_1) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_abstractmethod); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_abstractmethod, __pyx_t_1) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "implicit/recommender_base.pyx":7
- * import itertools
- * from abc import ABCMeta, abstractmethod
  * from tqdm.auto import tqdm             # <<<<<<<<<<<<<<
  * import numpy as np
  * import multiprocessing
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_tqdm);
   __Pyx_GIVEREF(__pyx_n_s_tqdm);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_tqdm);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_tqdm_auto, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_tqdm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_tqdm);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_tqdm_auto, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_tqdm, __pyx_t_2) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_tqdm); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_tqdm, __pyx_t_1) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":8
- * from abc import ABCMeta, abstractmethod
+  /* "implicit/matrix_factorization_base.pyx":7
+ * import itertools
  * from tqdm.auto import tqdm
  * import numpy as np             # <<<<<<<<<<<<<<
  * import multiprocessing
  * from scipy.sparse import csr_matrix
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 8, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_numpy, 0, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_2) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":9
+  /* "implicit/matrix_factorization_base.pyx":8
  * from tqdm.auto import tqdm
  * import numpy as np
  * import multiprocessing             # <<<<<<<<<<<<<<
  * from scipy.sparse import csr_matrix
  * import cython
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_multiprocessing, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_multiprocessing, __pyx_t_1) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_multiprocessing, 0, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_multiprocessing, __pyx_t_2) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":10
+  /* "implicit/matrix_factorization_base.pyx":9
  * import numpy as np
  * import multiprocessing
  * from scipy.sparse import csr_matrix             # <<<<<<<<<<<<<<
  * import cython
  * from cython.parallel import prange
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 10, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_csr_matrix);
   __Pyx_GIVEREF(__pyx_n_s_csr_matrix);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_csr_matrix);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_scipy_sparse, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 10, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_csr_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 10, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_csr_matrix);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_scipy_sparse, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_csr_matrix, __pyx_t_1) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_csr_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_csr_matrix, __pyx_t_2) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "implicit/recommender_base.pyx":13
+  /* "implicit/matrix_factorization_base.pyx":12
  * import cython
  * from cython.parallel import prange
  * from math import ceil             # <<<<<<<<<<<<<<
  * 
- * # Define wrapper for C++ sorting function
+ * from implicit.recommender_base import RecommenderBase
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 13, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_ceil);
   __Pyx_GIVEREF(__pyx_n_s_ceil);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_ceil);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_math, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_ceil);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_math, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_ceil); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ceil, __pyx_t_1) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "implicit/matrix_factorization_base.pyx":14
+ * from math import ceil
+ * 
+ * from implicit.recommender_base import RecommenderBase             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 14, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_n_s_RecommenderBase);
+  __Pyx_GIVEREF(__pyx_n_s_RecommenderBase);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_RecommenderBase);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_implicit_recommender_base, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_ceil); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_RecommenderBase); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ceil, __pyx_t_2) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_RecommenderBase, __pyx_t_2) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "implicit/recommender_base.pyx":20
- * 
- * 
- * class RecommenderBase(object):             # <<<<<<<<<<<<<<
- *     """ Defines the interface that all recommendations models here expose """
- *     __metaclass__ = ABCMeta
- */
-  __pyx_t_1 = __Pyx_CalculateMetaclass(NULL, __pyx_tuple__21); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 20, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_Py3MetaclassPrepare(__pyx_t_1, __pyx_tuple__21, __pyx_n_s_RecommenderBase, __pyx_n_s_RecommenderBase, (PyObject *) NULL, __pyx_n_s_implicit_recommender_base, __pyx_kp_s_Defines_the_interface_that_all); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 20, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-
-  /* "implicit/recommender_base.pyx":22
- * class RecommenderBase(object):
- *     """ Defines the interface that all recommendations models here expose """
- *     __metaclass__ = ABCMeta             # <<<<<<<<<<<<<<
- * 
- *     @abstractmethod
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_ABCMeta); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_metaclass, __pyx_t_3) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "implicit/recommender_base.pyx":24
- *     __metaclass__ = ABCMeta
- * 
- *     @abstractmethod             # <<<<<<<<<<<<<<
- *     def fit(self, item_users):
- *         """
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_abstractmethod); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 24, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-
-  /* "implicit/recommender_base.pyx":25
- * 
- *     @abstractmethod
- *     def fit(self, item_users):             # <<<<<<<<<<<<<<
- *         """
- *         Trains the model on a sparse matrix of item/user/weight
- */
-  __pyx_t_5 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_15RecommenderBase_1fit, 0, __pyx_n_s_RecommenderBase_fit, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__23)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_6)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_6);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 24, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_fit, __pyx_t_3) < 0) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "implicit/recommender_base.pyx":38
- *         pass
- * 
- *     @abstractmethod             # <<<<<<<<<<<<<<
- *     def recommend(self, userid, user_items,
- *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_abstractmethod); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-
-  /* "implicit/recommender_base.pyx":39
- * 
- *     @abstractmethod
- *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
- *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
- *         """
- */
-  __pyx_t_5 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_15RecommenderBase_3recommend, 0, __pyx_n_s_RecommenderBase_recommend, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__25)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 39, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_5, __pyx_tuple__26);
-  __pyx_t_6 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_6)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_6);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_recommend, __pyx_t_3) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "implicit/recommender_base.pyx":73
- *         pass
- * 
- *     @abstractmethod             # <<<<<<<<<<<<<<
- *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
- *         """
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_abstractmethod); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 73, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-
-  /* "implicit/recommender_base.pyx":74
- * 
- *     @abstractmethod
- *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):             # <<<<<<<<<<<<<<
- *         """
- *         Rank given items for a user and returns sorted item list.
- */
-  __pyx_t_5 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_15RecommenderBase_5rank_items, 0, __pyx_n_s_RecommenderBase_rank_items, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_5, __pyx_tuple__29);
-  __pyx_t_6 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_6)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_6);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 73, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_rank_items, __pyx_t_3) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "implicit/recommender_base.pyx":100
- *         pass
- * 
- *     @abstractmethod             # <<<<<<<<<<<<<<
- *     def similar_users(self, userid, N=10):
- *         """
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_abstractmethod); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-
-  /* "implicit/recommender_base.pyx":101
- * 
- *     @abstractmethod
- *     def similar_users(self, userid, N=10):             # <<<<<<<<<<<<<<
- *         """
- *         Calculates a list of similar items
- */
-  __pyx_t_5 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_15RecommenderBase_7similar_users, 0, __pyx_n_s_RecommenderBase_similar_users, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__31)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_5, __pyx_tuple__32);
-  __pyx_t_6 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_6)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_6);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_similar_users, __pyx_t_3) < 0) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "implicit/recommender_base.pyx":119
- *         pass
- * 
- *     @abstractmethod             # <<<<<<<<<<<<<<
- *     def similar_items(self, itemid, N=10):
- *         """
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_abstractmethod); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-
-  /* "implicit/recommender_base.pyx":120
- * 
- *     @abstractmethod
- *     def similar_items(self, itemid, N=10):             # <<<<<<<<<<<<<<
- *         """
- *         Calculates a list of similar items
- */
-  __pyx_t_5 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_15RecommenderBase_9similar_items, 0, __pyx_n_s_RecommenderBase_similar_items, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__34)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 120, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_5, __pyx_tuple__35);
-  __pyx_t_6 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_6)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_6);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 119, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_similar_items, __pyx_t_3) < 0) __PYX_ERR(0, 120, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "implicit/recommender_base.pyx":20
- * 
- * 
- * class RecommenderBase(object):             # <<<<<<<<<<<<<<
- *     """ Defines the interface that all recommendations models here expose """
- *     __metaclass__ = ABCMeta
- */
-  __pyx_t_3 = __Pyx_Py3ClassCreate(__pyx_t_1, __pyx_n_s_RecommenderBase, __pyx_tuple__21, __pyx_t_2, NULL, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 20, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_RecommenderBase, __pyx_t_3) < 0) __PYX_ERR(0, 20, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "implicit/recommender_base.pyx":139
+  /* "implicit/matrix_factorization_base.pyx":22
  * 
  * 
  * class MatrixFactorizationBase(RecommenderBase):             # <<<<<<<<<<<<<<
  *     """ MatrixFactorizationBase contains common functionality for recommendation models.
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_RecommenderBase); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_RecommenderBase); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_CalculateMetaclass(NULL, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CalculateMetaclass(NULL, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_1, __pyx_t_2, __pyx_n_s_MatrixFactorizationBase, __pyx_n_s_MatrixFactorizationBase, (PyObject *) NULL, __pyx_n_s_implicit_recommender_base, __pyx_kp_s_MatrixFactorizationBase_contain); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_1, __pyx_t_2, __pyx_n_s_MatrixFactorizationBase, __pyx_n_s_MatrixFactorizationBase, (PyObject *) NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_kp_s_MatrixFactorizationBase_contain); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
 
-  /* "implicit/recommender_base.pyx":149
+  /* "implicit/matrix_factorization_base.pyx":32
  *         Array of latent factors for each user in the training set
  *      """
  *     def __init__(self):             # <<<<<<<<<<<<<<
  *         # learned parameters
  *         self.item_factors = None
  */
-  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_1__init__, 0, __pyx_n_s_MatrixFactorizationBase___init, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__37)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 149, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_1__init__, 0, __pyx_n_s_MatrixFactorizationBase___init, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_init, __pyx_t_4) < 0) __PYX_ERR(0, 149, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_init, __pyx_t_4) < 0) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "implicit/recommender_base.pyx":157
+  /* "implicit/matrix_factorization_base.pyx":40
  *         self._user_norms, self._item_norms = None, None
  * 
  *     def recommend(self, userid, user_items,             # <<<<<<<<<<<<<<
  *                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
  *         user = self._user_factor(userid, user_items, recalculate_user)
  */
-  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_3recommend, 0, __pyx_n_s_MatrixFactorizationBase_recommen_3, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 157, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_3recommend, 0, __pyx_n_s_MatrixFactorizationBase_recommen_3, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__24)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_4, __pyx_tuple__40);
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_recommend, __pyx_t_4) < 0) __PYX_ERR(0, 157, __pyx_L1_error)
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_4, __pyx_tuple__25);
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_recommend, __pyx_t_4) < 0) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "implicit/recommender_base.pyx":181
+  /* "implicit/matrix_factorization_base.pyx":64
  *     @cython.wraparound(False)
  *     @cython.nonecheck(False)
  *     def recommend_all(self, user_items, int N=10,             # <<<<<<<<<<<<<<
  *                       recalculate_user=False, filter_already_liked_items=True, filter_items=None,
  *                       int num_threads=0, show_progress=True, int batch_size=0):
  */
-  __pyx_t_4 = __Pyx_PyInt_From_int(((int)10)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_int(((int)10)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
 
-  /* "implicit/recommender_base.pyx":183
+  /* "implicit/matrix_factorization_base.pyx":66
  *     def recommend_all(self, user_items, int N=10,
  *                       recalculate_user=False, filter_already_liked_items=True, filter_items=None,
  *                       int num_threads=0, show_progress=True, int batch_size=0):             # <<<<<<<<<<<<<<
  *         """
  *         Recommends items for all users
  */
-  __pyx_t_5 = __Pyx_PyInt_From_int(((int)0)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 183, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(((int)0)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_PyInt_From_int(((int)0)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 183, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_From_int(((int)0)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 66, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
 
-  /* "implicit/recommender_base.pyx":181
+  /* "implicit/matrix_factorization_base.pyx":64
  *     @cython.wraparound(False)
  *     @cython.nonecheck(False)
  *     def recommend_all(self, user_items, int N=10,             # <<<<<<<<<<<<<<
  *                       recalculate_user=False, filter_already_liked_items=True, filter_items=None,
  *                       int num_threads=0, show_progress=True, int batch_size=0):
  */
-  __pyx_t_7 = PyTuple_New(7); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_t_7 = PyTuple_New(7); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_4);
@@ -22869,39 +21929,39 @@ if (!__Pyx_RefNanny) {
   __pyx_t_4 = 0;
   __pyx_t_5 = 0;
   __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_5recommend_all, 0, __pyx_n_s_MatrixFactorizationBase_recommen_4, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__42)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_5recommend_all, 0, __pyx_n_s_MatrixFactorizationBase_recommen_4, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__27)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_6, __pyx_t_7);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_recommend_all, __pyx_t_6) < 0) __PYX_ERR(0, 181, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_recommend_all, __pyx_t_6) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "implicit/recommender_base.pyx":286
+  /* "implicit/matrix_factorization_base.pyx":169
  *         return np.asarray(B_mv)
  * 
  *     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):             # <<<<<<<<<<<<<<
  *         user = self._user_factor(userid, user_items, recalculate_user)
  * 
  */
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_7rank_items, 0, __pyx_n_s_MatrixFactorizationBase_rank_ite_2, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__44)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 286, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_7rank_items, 0, __pyx_n_s_MatrixFactorizationBase_rank_ite_2, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__29)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_6, __pyx_tuple__45);
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_rank_items, __pyx_t_6) < 0) __PYX_ERR(0, 286, __pyx_L1_error)
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_6, __pyx_tuple__30);
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_rank_items, __pyx_t_6) < 0) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "implicit/recommender_base.pyx":300
+  /* "implicit/matrix_factorization_base.pyx":183
  *         return sorted(zip(selected_items, scores), key=lambda x: -x[1])
  * 
  *     recommend.__doc__ = RecommenderBase.recommend.__doc__             # <<<<<<<<<<<<<<
  * 
  *     def _user_factor(self, userid, user_items, recalculate_user=False):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_RecommenderBase); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 300, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_RecommenderBase); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_recommend); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 300, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_recommend); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_doc); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 300, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_doc); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_t_7 = PyObject_GetItem(__pyx_t_3, __pyx_n_s_recommend);
@@ -22909,63 +21969,63 @@ if (!__Pyx_RefNanny) {
     PyErr_Clear();
     __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_recommend);
   }
-  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 300, __pyx_L1_error)
+  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (__Pyx_PyObject_SetAttrStr(__pyx_t_7, __pyx_n_s_doc, __pyx_t_6) < 0) __PYX_ERR(0, 300, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_t_7, __pyx_n_s_doc, __pyx_t_6) < 0) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "implicit/recommender_base.pyx":302
+  /* "implicit/matrix_factorization_base.pyx":185
  *     recommend.__doc__ = RecommenderBase.recommend.__doc__
  * 
  *     def _user_factor(self, userid, user_items, recalculate_user=False):             # <<<<<<<<<<<<<<
  *         if recalculate_user:
  *             return self.recalculate_user(userid, user_items)
  */
-  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_9_user_factor, 0, __pyx_n_s_MatrixFactorizationBase__user_fa, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__47)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 302, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_9_user_factor, 0, __pyx_n_s_MatrixFactorizationBase__user_fa, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 185, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_tuple__48);
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_user_factor, __pyx_t_7) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_tuple__33);
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_user_factor, __pyx_t_7) < 0) __PYX_ERR(0, 185, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "implicit/recommender_base.pyx":308
+  /* "implicit/matrix_factorization_base.pyx":191
  *             return self.user_factors[userid]
  * 
  *     def recalculate_user(self, userid, user_items):             # <<<<<<<<<<<<<<
  *         raise NotImplementedError("recalculate_user is not supported with this model")
  * 
  */
-  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_11recalculate_user, 0, __pyx_n_s_MatrixFactorizationBase_recalcul, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__50)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_11recalculate_user, 0, __pyx_n_s_MatrixFactorizationBase_recalcul, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 191, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_recalculate_user, __pyx_t_7) < 0) __PYX_ERR(0, 308, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_recalculate_user, __pyx_t_7) < 0) __PYX_ERR(0, 191, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "implicit/recommender_base.pyx":311
+  /* "implicit/matrix_factorization_base.pyx":194
  *         raise NotImplementedError("recalculate_user is not supported with this model")
  * 
  *     def similar_users(self, userid, N=10):             # <<<<<<<<<<<<<<
  *         factor = self.user_factors[userid]
  *         factors = self.user_factors
  */
-  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_13similar_users, 0, __pyx_n_s_MatrixFactorizationBase_similar, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__52)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_13similar_users, 0, __pyx_n_s_MatrixFactorizationBase_similar, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__37)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_tuple__53);
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_similar_users, __pyx_t_7) < 0) __PYX_ERR(0, 311, __pyx_L1_error)
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_7, __pyx_tuple__38);
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_similar_users, __pyx_t_7) < 0) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "implicit/recommender_base.pyx":318
+  /* "implicit/matrix_factorization_base.pyx":201
  *         return self._get_similarity_score(factor, factors, norms, N)
  * 
  *     similar_users.__doc__ = RecommenderBase.similar_users.__doc__             # <<<<<<<<<<<<<<
  * 
  *     def similar_items(self, itemid, N=10):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_RecommenderBase); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_RecommenderBase); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_similar_users); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_similar_users); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_doc); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_doc); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_6 = PyObject_GetItem(__pyx_t_3, __pyx_n_s_similar_users);
@@ -22973,38 +22033,38 @@ if (!__Pyx_RefNanny) {
     PyErr_Clear();
     __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_similar_users);
   }
-  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 318, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (__Pyx_PyObject_SetAttrStr(__pyx_t_6, __pyx_n_s_doc, __pyx_t_7) < 0) __PYX_ERR(0, 318, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_t_6, __pyx_n_s_doc, __pyx_t_7) < 0) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "implicit/recommender_base.pyx":320
+  /* "implicit/matrix_factorization_base.pyx":203
  *     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
  * 
  *     def similar_items(self, itemid, N=10):             # <<<<<<<<<<<<<<
  *         factor = self.item_factors[itemid]
  *         factors = self.item_factors
  */
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_15similar_items, 0, __pyx_n_s_MatrixFactorizationBase_similar_2, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__55)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 320, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_15similar_items, 0, __pyx_n_s_MatrixFactorizationBase_similar_2, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 203, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_6, __pyx_tuple__56);
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_similar_items, __pyx_t_6) < 0) __PYX_ERR(0, 320, __pyx_L1_error)
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_6, __pyx_tuple__41);
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_similar_items, __pyx_t_6) < 0) __PYX_ERR(0, 203, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "implicit/recommender_base.pyx":327
+  /* "implicit/matrix_factorization_base.pyx":210
  *         return self._get_similarity_score(factor, factors, norms, N)
  * 
  *     similar_items.__doc__ = RecommenderBase.similar_items.__doc__             # <<<<<<<<<<<<<<
  * 
  *     def _get_similarity_score(self, factor, factors, norms, N):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_RecommenderBase); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 327, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_RecommenderBase); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 210, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_similar_items); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 327, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_similar_items); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 210, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_doc); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 327, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_doc); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 210, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_t_7 = PyObject_GetItem(__pyx_t_3, __pyx_n_s_similar_items);
@@ -23012,87 +22072,87 @@ if (!__Pyx_RefNanny) {
     PyErr_Clear();
     __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_similar_items);
   }
-  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 327, __pyx_L1_error)
+  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 210, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (__Pyx_PyObject_SetAttrStr(__pyx_t_7, __pyx_n_s_doc, __pyx_t_6) < 0) __PYX_ERR(0, 327, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_t_7, __pyx_n_s_doc, __pyx_t_6) < 0) __PYX_ERR(0, 210, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "implicit/recommender_base.pyx":329
+  /* "implicit/matrix_factorization_base.pyx":212
  *     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
  * 
  *     def _get_similarity_score(self, factor, factors, norms, N):             # <<<<<<<<<<<<<<
  *         scores = factors.dot(factor) / norms
  *         best = np.argpartition(scores, -N)[-N:]
  */
-  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_17_get_similarity_score, 0, __pyx_n_s_MatrixFactorizationBase__get_sim_2, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__58)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 329, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_17_get_similarity_score, 0, __pyx_n_s_MatrixFactorizationBase__get_sim_2, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__43)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_get_similarity_score, __pyx_t_7) < 0) __PYX_ERR(0, 329, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_get_similarity_score, __pyx_t_7) < 0) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "implicit/recommender_base.pyx":335
+  /* "implicit/matrix_factorization_base.pyx":218
  * 
  *     @property
  *     def user_norms(self):             # <<<<<<<<<<<<<<
  *         if self._user_norms is None:
  *             self._user_norms = np.linalg.norm(self.user_factors, axis=-1)
  */
-  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_19user_norms, 0, __pyx_n_s_MatrixFactorizationBase_user_nor, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__60)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_19user_norms, 0, __pyx_n_s_MatrixFactorizationBase_user_nor, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__45)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
 
-  /* "implicit/recommender_base.pyx":334
+  /* "implicit/matrix_factorization_base.pyx":217
  *         return sorted(zip(best, scores[best]), key=lambda x: -x[1])
  * 
  *     @property             # <<<<<<<<<<<<<<
  *     def user_norms(self):
  *         if self._user_norms is None:
  */
-  __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_property, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 334, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_property, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_user_norms_2, __pyx_t_6) < 0) __PYX_ERR(0, 335, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_user_norms_2, __pyx_t_6) < 0) __PYX_ERR(0, 218, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "implicit/recommender_base.pyx":343
+  /* "implicit/matrix_factorization_base.pyx":226
  * 
  *     @property
  *     def item_norms(self):             # <<<<<<<<<<<<<<
  *         if self._item_norms is None:
  *             self._item_norms = np.linalg.norm(self.item_factors, axis=-1)
  */
-  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_16recommender_base_23MatrixFactorizationBase_21item_norms, 0, __pyx_n_s_MatrixFactorizationBase_item_nor, NULL, __pyx_n_s_implicit_recommender_base, __pyx_d, ((PyObject *)__pyx_codeobj__62)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 343, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8implicit_25matrix_factorization_base_23MatrixFactorizationBase_21item_norms, 0, __pyx_n_s_MatrixFactorizationBase_item_nor, NULL, __pyx_n_s_implicit_matrix_factorization_ba, __pyx_d, ((PyObject *)__pyx_codeobj__47)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
 
-  /* "implicit/recommender_base.pyx":342
+  /* "implicit/matrix_factorization_base.pyx":225
  *         return self._user_norms
  * 
  *     @property             # <<<<<<<<<<<<<<
  *     def item_norms(self):
  *         if self._item_norms is None:
  */
-  __pyx_t_7 = __Pyx_PyObject_CallOneArg(__pyx_builtin_property, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 342, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_CallOneArg(__pyx_builtin_property, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_item_norms_2, __pyx_t_7) < 0) __PYX_ERR(0, 343, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_item_norms_2, __pyx_t_7) < 0) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "implicit/recommender_base.pyx":139
+  /* "implicit/matrix_factorization_base.pyx":22
  * 
  * 
  * class MatrixFactorizationBase(RecommenderBase):             # <<<<<<<<<<<<<<
  *     """ MatrixFactorizationBase contains common functionality for recommendation models.
  * 
  */
-  __pyx_t_7 = __Pyx_Py3ClassCreate(__pyx_t_1, __pyx_n_s_MatrixFactorizationBase, __pyx_t_2, __pyx_t_3, NULL, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_Py3ClassCreate(__pyx_t_1, __pyx_n_s_MatrixFactorizationBase, __pyx_t_2, __pyx_t_3, NULL, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_MatrixFactorizationBase, __pyx_t_7) < 0) __PYX_ERR(0, 139, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_MatrixFactorizationBase, __pyx_t_7) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "implicit/recommender_base.pyx":1
- * """ Base class for recommendation algorithms in this package """             # <<<<<<<<<<<<<<
+  /* "implicit/matrix_factorization_base.pyx":1
+ * """ Base class for matrix factorization algorithms in this package """             # <<<<<<<<<<<<<<
  * # distutils: language = c++
  * # cython: language_level=3
  */
@@ -23121,7 +22181,7 @@ if (!__Pyx_RefNanny) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__63, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 286, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__48, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 286, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(generic);
   __Pyx_DECREF_SET(generic, __pyx_t_2);
@@ -23135,7 +22195,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__64, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 287, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__49, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 287, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(strided);
   __Pyx_DECREF_SET(strided, __pyx_t_2);
@@ -23149,7 +22209,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__65, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 288, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__50, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 288, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect);
   __Pyx_DECREF_SET(indirect, __pyx_t_2);
@@ -23163,7 +22223,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__66, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 291, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__51, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 291, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(contiguous);
   __Pyx_DECREF_SET(contiguous, __pyx_t_2);
@@ -23177,7 +22237,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__67, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 292, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__52, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 292, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect_contiguous);
   __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_2);
@@ -23267,11 +22327,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_7);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init implicit.recommender_base", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init implicit.matrix_factorization_base", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init implicit.recommender_base");
+    PyErr_SetString(PyExc_ImportError, "init implicit.matrix_factorization_base");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -23329,6 +22389,20 @@ static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
     }
     return result;
 }
+
+/* PyObjectSetAttrStr */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value) {
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_setattro))
+        return tp->tp_setattro(obj, attr_name, value);
+#if PY_MAJOR_VERSION < 3
+    if (likely(tp->tp_setattr))
+        return tp->tp_setattr(obj, PyString_AS_STRING(attr_name), value);
+#endif
+    return PyObject_SetAttr(obj, attr_name, value);
+}
+#endif
 
 /* RaiseArgTupleInvalid */
 static void __Pyx_RaiseArgtupleInvalid(
@@ -23471,20 +22545,6 @@ invalid_keyword:
 bad:
     return -1;
 }
-
-/* PyObjectSetAttrStr */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value) {
-    PyTypeObject* tp = Py_TYPE(obj);
-    if (likely(tp->tp_setattro))
-        return tp->tp_setattro(obj, attr_name, value);
-#if PY_MAJOR_VERSION < 3
-    if (likely(tp->tp_setattr))
-        return tp->tp_setattr(obj, PyString_AS_STRING(attr_name), value);
-#endif
-    return PyObject_SetAttr(obj, attr_name, value);
-}
-#endif
 
 /* GetItemInt */
 static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
