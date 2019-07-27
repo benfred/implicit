@@ -4,7 +4,7 @@ try:
 except ImportError:
     from urllib import urlretrieve
 
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 
 LOCAL_CACHE_DIR = os.path.join(os.path.expanduser("~"), "implicit_datasets")

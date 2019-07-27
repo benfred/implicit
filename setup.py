@@ -156,7 +156,7 @@ setup(
              'Collaborative Filtering, Recommender Systems',
 
     packages=find_packages(),
-    install_requires=['numpy', 'scipy>=0.16', 'tqdm'],
+    install_requires=['numpy', 'scipy>=0.16', 'tqdm>=4.27'],
     setup_requires=["Cython>=0.24"],
     ext_modules=define_extensions(use_cython),
     cmdclass={'build_ext': build_ext},

@@ -10,13 +10,13 @@ matrix:
     - language: generic
       os: osx
       python: 2.7.14
-      osx_image: xcode9.3
       env: PYTHON=2
+      osx_image: xcode11
     - language: generic
       os: osx
       python: 3.6.5
-      osx_image: xcode9.3
       env: PYTHON=3
+      osx_image: xcode11
 
 addons:
   apt:
@@ -24,6 +24,9 @@ addons:
     - libblas-dev
     - liblapack-dev
     - gfortran
+  homebrew:
+    packages:
+    - python3
 
 before_install:
 - |
@@ -33,8 +36,6 @@ before_install:
     PIP=pip2
     PY=python2
     if  [ "${PYTHON:0:1}" = "3" ]; then
-      brew upgrade python
-      brew install python3
       PIP=pip3
       PY=python3
     fi
@@ -63,3 +64,4 @@ cache:
   - apt
   - directories:
     - $HOME/.cache/pip
+

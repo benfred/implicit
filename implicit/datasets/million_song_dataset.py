@@ -1,6 +1,6 @@
 import h5py
 import time
-import tqdm
+from tqdm.auto import tqdm
 import os
 import logging
 from scipy.sparse import coo_matrix, csr_matrix
@@ -89,7 +89,7 @@ def _join_summary_file(data, summary_filename="msd_summary_file.h5"):
 
     # join on trackid to the summary file to get the artist/album/songname
     track_info = np.empty(shape=(len(track_lookup), 4), dtype=np.object)
-    with tqdm.tqdm(total=len(track_info)) as progress:
+    with tqdm(total=len(track_info)) as progress:
         for song in msd['metadata']['songs']:
             trackid = song[17]
             if trackid in track_lookup:
