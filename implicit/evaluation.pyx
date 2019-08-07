@@ -288,7 +288,7 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
                 for i in range(test_indptr[u], test_indptr[u+1]):
                     likes.insert(test_indices[i])
 
-                idcg = cg_sum[min(K, likes.size())]
+                idcg = cg_sum[min(K, likes.size()) - 1]
                 for i in range(K):
                     if likes.find(ids[i]) != likes.end():
                         relevant += cg[i] / idcg
