@@ -18,6 +18,7 @@ from implicit.als import AlternatingLeastSquares
 from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlternatingLeastSquares,
                                       NMSLibAlternatingLeastSquares)
 from implicit.bpr import BayesianPersonalizedRanking
+from implicit.lmf import LogisticMatrixFactorization
 from implicit.datasets.lastfm import get_lastfm
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
@@ -30,6 +31,7 @@ MODELS = {"als":  AlternatingLeastSquares,
           "tfidf": TFIDFRecommender,
           "cosine": CosineRecommender,
           "bpr": BayesianPersonalizedRanking,
+          "lmf": LogisticMatrixFactorization,
           "bm25": BM25Recommender}
 
 
@@ -46,6 +48,8 @@ def get_model(model_name):
         params = {'K1': 100, 'B': 0.5}
     elif model_name == "bpr":
         params = {'factors': 63}
+    elif model_name == "lmf":
+        params = {'factors': 30, "iterations":40, "regularization": 1.5}
     else:
         params = {}
 
