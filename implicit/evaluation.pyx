@@ -16,14 +16,12 @@ from libcpp.unordered_set cimport unordered_set
 
 def train_test_split(ratings, train_percentage=0.8):
     """ Randomly splits the ratings matrix into two matrices for training/testing.
-
     Parameters
     ----------
     ratings : coo_matrix
         A sparse matrix to split
     train_percentage : float
         What percentage of ratings should be used for training
-
     Returns
     -------
     (train, test) : csr_matrix, csr_matrix
@@ -52,7 +50,6 @@ def train_test_split(ratings, train_percentage=0.8):
 def precision_at_k(model, train_user_items, test_user_items, int K=10,
                    show_progress=True, int num_threads=1):
     """ Calculates P@K for a given trained model
-
     Parameters
     ----------
     model : RecommenderBase
@@ -72,7 +69,6 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
         to the number of cores on the machine. Note: aside from the ALS and BPR
         models, setting this to more than 1 will likely hurt performance rather than
         help.
-
     Returns
     -------
     float
@@ -135,7 +131,6 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
 def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=10,
                                 show_progress=True, int num_threads=1):
     """ Calculates MAP@K for a given trained model
-
     Parameters
     ----------
     model : RecommenderBase
@@ -153,7 +148,6 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
         to the number of cores on the machine. Note: aside from the ALS and BPR
         models, setting this to more than 1 will likely hurt performance rather than
         help.
-
     Returns
     -------
     float
@@ -221,7 +215,6 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
 def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
               show_progress=True, int num_threads=1):
     """ Calculates ndcg@K for a given trained model
-
     Parameters
     ----------
     model : RecommenderBase
@@ -239,7 +232,6 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
         to the number of cores on the machine. Note: aside from the ALS and BPR
         models, setting this to more than 1 will likely hurt performance rather than
         help.
-
     Returns
     -------
     float
@@ -259,7 +251,8 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
     cdef int * ids
     cdef unordered_set[int] * likes
     cdef double[:] cg = (1.0 / np.log2(np.arange(2, K + 2)))
-
+    cdef double[:] cg_sum = np.cumsum(cg)
+    cdef double idcg
     progress = tqdm(total=users, disable=not show_progress)
 
     with nogil, parallel(num_threads=num_threads):
@@ -287,11 +280,12 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
                 for i in range(test_indptr[u], test_indptr[u+1]):
                     likes.insert(test_indices[i])
 
-                with gil:
-                    idcg = np.sum(cg[:min(K, likes.size())])
-                    for i in range(K):
-                        if likes.find(ids[i]) != likes.end():
-                            relevant += cg[i] / idcg
+
+                idcg = cg_sum[min(K, likes.size())]
+                for i in range(K):
+                    if likes.find(ids[i]) != likes.end():
+                        relevant += cg[i] / idcg
+                        #total += cg[i]
                 total += 1
         finally:
             free(ids)
