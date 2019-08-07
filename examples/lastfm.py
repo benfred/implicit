@@ -49,7 +49,7 @@ def get_model(model_name):
     elif model_name == "bpr":
         params = {'factors': 63}
     elif model_name == "lmf":
-        params = {'factors': 30, "iterations":40, "regularization": 1.5}
+        params = {'factors': 30, "iterations": 40, "regularization": 1.5}
     else:
         params = {}
 
