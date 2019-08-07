@@ -14,6 +14,7 @@ implicit feedback datasets:
 
  * Alternating Least Squares as described in the papers `Collaborative Filtering for Implicit Feedback Datasets <http://yifanhu.net/PUB/cf.pdf>`_ and in `Applications of the Conjugate Gradient Method for Implicit Feedback Collaborative Filtering <https://pdfs.semanticscholar.org/bfdf/7af6cf7fd7bb5e6b6db5bbd91be11597eaf0.pdf>`_.
  * `Bayesian Personalized Ranking <https://arxiv.org/pdf/1205.2618.pdf>`_
+ * `Logistic Matrix Factorization <https://web.stanford.edu/~rezab/nips2014workshop/submits/logmat.pdf>`_
  * Item-Item Nearest Neighbour models, using Cosine, TFIDF or BM25 as a distance metric
 
 All models have multi-threaded training routines, using Cython and OpenMP to fit the models in
@@ -29,6 +30,7 @@ and `Faiss <https://github.com/facebookresearch/faiss>`_ for `speeding up making
     RecommenderBase <models>
     Alternating Least Squares <als>
     Bayesian Personalized Ranking <bpr>
+    Logistic Matrix Factorization <lmf>
     Approximate Alternating Least Squares <ann>
 
 Indices and tables
