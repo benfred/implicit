@@ -16,12 +16,14 @@ from libcpp.unordered_set cimport unordered_set
 
 def train_test_split(ratings, train_percentage=0.8):
     """ Randomly splits the ratings matrix into two matrices for training/testing.
+
     Parameters
     ----------
     ratings : coo_matrix
         A sparse matrix to split
     train_percentage : float
         What percentage of ratings should be used for training
+
     Returns
     -------
     (train, test) : csr_matrix, csr_matrix
@@ -50,6 +52,7 @@ def train_test_split(ratings, train_percentage=0.8):
 def precision_at_k(model, train_user_items, test_user_items, int K=10,
                    show_progress=True, int num_threads=1):
     """ Calculates P@K for a given trained model
+
     Parameters
     ----------
     model : RecommenderBase
@@ -69,6 +72,7 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
         to the number of cores on the machine. Note: aside from the ALS and BPR
         models, setting this to more than 1 will likely hurt performance rather than
         help.
+
     Returns
     -------
     float
@@ -131,6 +135,7 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
 def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=10,
                                 show_progress=True, int num_threads=1):
     """ Calculates MAP@K for a given trained model
+
     Parameters
     ----------
     model : RecommenderBase
@@ -148,6 +153,7 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
         to the number of cores on the machine. Note: aside from the ALS and BPR
         models, setting this to more than 1 will likely hurt performance rather than
         help.
+
     Returns
     -------
     float
@@ -215,6 +221,7 @@ def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=
 def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
               show_progress=True, int num_threads=1):
     """ Calculates ndcg@K for a given trained model
+
     Parameters
     ----------
     model : RecommenderBase
@@ -232,6 +239,7 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
         to the number of cores on the machine. Note: aside from the ALS and BPR
         models, setting this to more than 1 will likely hurt performance rather than
         help.
+
     Returns
     -------
     float
