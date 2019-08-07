@@ -259,7 +259,8 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
     cdef int * ids
     cdef unordered_set[int] * likes
     cdef double[:] cg = (1.0 / np.log2(np.arange(2, K + 2)))
-
+    cdef double[:] cg_sum = np.cumsum(cg)
+    cdef double idcg
     progress = tqdm(total=users, disable=not show_progress)
 
     with nogil, parallel(num_threads=num_threads):
@@ -287,11 +288,10 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
                 for i in range(test_indptr[u], test_indptr[u+1]):
                     likes.insert(test_indices[i])
 
-                with gil:
-                    idcg = np.sum(cg[:min(K, likes.size())])
-                    for i in range(K):
-                        if likes.find(ids[i]) != likes.end():
-                            relevant += cg[i] / idcg
+                idcg = cg_sum[min(K, likes.size()) - 1]
+                for i in range(K):
+                    if likes.find(ids[i]) != likes.end():
+                        relevant += cg[i] / idcg
                 total += 1
         finally:
             free(ids)
