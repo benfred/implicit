@@ -22,8 +22,8 @@ import tqdm
 
 from implicit.als import AlternatingLeastSquares
 from implicit.bpr import BayesianPersonalizedRanking
-from implicit.lmf import LogisticMatrixFactorization
 from implicit.datasets.movielens import get_movielens
+from implicit.lmf import LogisticMatrixFactorization
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
 
