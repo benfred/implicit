@@ -284,7 +284,6 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
                 for i in range(K):
                     if likes.find(ids[i]) != likes.end():
                         relevant += cg[i] / idcg
-                        #total += cg[i]
                 total += 1
         finally:
             free(ids)
