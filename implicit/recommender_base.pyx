@@ -31,7 +31,7 @@ class RecommenderBase(object):
         item_user : csr_matrix
             A matrix of shape (number_of_items, number_of_users). The nonzero
             entries in this matrix are the items that are liked by each user.
-            The values are how confidant you are that the item is liked by the user.
+            The values are how confident you are that the item is liked by the user.
         """
         pass
 
