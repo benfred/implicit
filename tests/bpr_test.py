@@ -1,9 +1,10 @@
 import unittest
 
-from implicit.bpr import BayesianPersonalizedRanking
 from scipy.sparse import csr_matrix
 
+from implicit.bpr import BayesianPersonalizedRanking
 from implicit.cuda import HAS_CUDA
+
 from .recommender_base import RecommenderBaseMixin
 
 
