@@ -2,10 +2,10 @@ import unittest
 
 from implicit.lmf import LogisticMatrixFactorization
 
-from .recommender_base_test import TestRecommenderBaseMixin
+from .recommender_base import RecommenderBaseMixin
 
 
-class LMFTest(unittest.TestCase, TestRecommenderBaseMixin):
+class LMF(unittest.TestCase, RecommenderBaseMixin):
     def _get_model(self):
         return LogisticMatrixFactorization(factors=3, regularization=0, use_gpu=False)
 

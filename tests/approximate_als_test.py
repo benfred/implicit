@@ -5,53 +5,64 @@ import unittest
 from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlternatingLeastSquares,
                                       NMSLibAlternatingLeastSquares)
 from implicit.cuda import HAS_CUDA
-
-from .recommender_base_test import TestRecommenderBaseMixin
+from .recommender_base import RecommenderBaseMixin
 
 # don't require annoy/faiss/nmslib to be installed
 try:
-    import annoy  # noqa
+    import annoy
 
-    class AnnoyALSTest(unittest.TestCase, TestRecommenderBaseMixin):
-        def _get_model(self):
-            return AnnoyAlternatingLeastSquares(factors=2, regularization=0, use_gpu=False)
-
-        def test_pickle(self):
-            # pickle isn't supported on annoy indices
-            pass
-
+    HAVE_ANNOY = True
 except ImportError:
-    pass
+    HAVE_ANNOY = False
 
 try:
-    import nmslib  # noqa
+    import nmslib
 
-    class NMSLibALSTest(unittest.TestCase, TestRecommenderBaseMixin):
-        def _get_model(self):
-            return NMSLibAlternatingLeastSquares(factors=2, regularization=0,
-                                                 index_params={'post': 2}, use_gpu=False)
-
-        def test_pickle(self):
-            # pickle isn't supported on nmslib indices
-            pass
-
+    HAVE_NMSLIB = True
 except ImportError:
-    pass
+    HAVE_NMSLIB = False
 
 try:
-    import faiss  # noqa
+    import faiss
 
-    class FaissALSTest(unittest.TestCase, TestRecommenderBaseMixin):
-        def _get_model(self):
-            return FaissAlternatingLeastSquares(nlist=1, nprobe=1, factors=2, regularization=0,
-                                                use_gpu=False)
+    HAVE_FAISS = True
+except ImportError:
+    HAVE_FAISS = False
 
-        def test_pickle(self):
-            # pickle isn't supported on faiss indices
-            pass
+
+@unittest.skipUnless(HAVE_ANNOY, "requires annoy")
+class AnnoyALS(unittest.TestCase, RecommenderBaseMixin):
+    def _get_model(self):
+        return AnnoyAlternatingLeastSquares(factors=2, regularization=0, use_gpu=False)
+
+    def test_pickle(self):
+        # pickle isn't supported on annoy indices
+        pass
+
+
+@unittest.skipUnless(HAVE_NMSLIB, "requires nmslib")
+class NMSLibALS(unittest.TestCase, RecommenderBaseMixin):
+    def _get_model(self):
+        return NMSLibAlternatingLeastSquares(factors=2, regularization=0,
+                                             index_params={'post': 2}, use_gpu=False)
+
+    def test_pickle(self):
+        # pickle isn't supported on nmslib indices
+        pass
+
+
+@unittest.skipUnless(HAVE_FAISS, "requires faiss")
+class FaissALS(unittest.TestCase, RecommenderBaseMixin):
+    def _get_model(self):
+        return FaissAlternatingLeastSquares(nlist=1, nprobe=1, factors=2, regularization=0,
+                                            use_gpu=False)
+
+    def test_pickle(self):
+        # pickle isn't supported on faiss indices
+        pass
 
     if HAS_CUDA:
-        class FaissALSGPUTest(unittest.TestCase, TestRecommenderBaseMixin):
+        class FaissALSGPU(unittest.TestCase, RecommenderBaseMixin):
             __regularization = 0
 
             def _get_model(self):
@@ -66,7 +77,7 @@ try:
                 # this causes the test_similar_items call to fail if we set regularization to 0
                 self.__regularization = 1.0
                 try:
-                    super(FaissALSGPUTest, self).test_similar_items()
+                    super(FaissALSGPU, self).test_similar_items()
                 finally:
                     self.__regularization = 0.0
 
@@ -86,9 +97,6 @@ try:
             def test_pickle(self):
                 # pickle isn't supported on faiss indices
                 pass
-
-except ImportError:
-    pass
 
 
 if __name__ == "__main__":

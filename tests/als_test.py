@@ -8,10 +8,10 @@ from scipy.sparse import csr_matrix, random
 from implicit.als import AlternatingLeastSquares
 from implicit.cuda import HAS_CUDA
 
-from .recommender_base_test import TestRecommenderBaseMixin
+from .recommender_base import RecommenderBaseMixin
 
 
-class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
+class ALS(unittest.TestCase, RecommenderBaseMixin):
 
     def _get_model(self):
         return AlternatingLeastSquares(factors=3, regularization=0, use_gpu=False)
