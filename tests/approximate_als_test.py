@@ -13,21 +13,21 @@ try:
     import annoy
 
     HAVE_ANNOY = True
-except ModuleNotFoundError:
+except ImportError:
     HAVE_ANNOY = False
 
 try:
     import nmslib
 
     HAVE_NMSLIB = True
-except ModuleNotFoundError:
+except ImportError:
     HAVE_NMSLIB = False
 
 try:
     import faiss
 
     HAVE_FAISS = True
-except ModuleNotFoundError:
+except ImportError:
     HAVE_FAISS = False
 
 
