@@ -5,6 +5,7 @@ import unittest
 from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlternatingLeastSquares,
                                       NMSLibAlternatingLeastSquares)
 from implicit.cuda import HAS_CUDA
+
 from .recommender_base import RecommenderBaseMixin
 
 # don't require annoy/faiss/nmslib to be installed
@@ -12,21 +13,21 @@ try:
     import annoy
 
     HAVE_ANNOY = True
-except ImportError:
+except ModuleNotFoundError:
     HAVE_ANNOY = False
 
 try:
     import nmslib
 
     HAVE_NMSLIB = True
-except ImportError:
+except ModuleNotFoundError:
     HAVE_NMSLIB = False
 
 try:
     import faiss
 
     HAVE_FAISS = True
-except ImportError:
+except ModuleNotFoundError:
     HAVE_FAISS = False
 
 
@@ -77,7 +78,7 @@ class FaissALS(unittest.TestCase, RecommenderBaseMixin):
                 # this causes the test_similar_items call to fail if we set regularization to 0
                 self.__regularization = 1.0
                 try:
-                    super(FaissALSGPU, self).test_similar_items()
+                    super(RecommenderBaseMixin).test_similar_items()
                 finally:
                     self.__regularization = 0.0
 

@@ -5,9 +5,9 @@ from __future__ import print_function
 import pickle
 
 import numpy as np
-from implicit.evaluation import precision_at_k
 from scipy.sparse import csr_matrix
 
+from implicit.evaluation import precision_at_k
 from implicit.nearest_neighbours import ItemItemRecommender
 
 
