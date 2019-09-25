@@ -10,21 +10,21 @@ from .recommender_base import RecommenderBaseMixin
 
 # don't require annoy/faiss/nmslib to be installed
 try:
-    import annoy
+    import annoy # NOQA
 
     HAVE_ANNOY = True
 except ImportError:
     HAVE_ANNOY = False
 
 try:
-    import nmslib
+    import nmslib # NOQA
 
     HAVE_NMSLIB = True
 except ImportError:
     HAVE_NMSLIB = False
 
 try:
-    import faiss
+    import faiss # NOQA
 
     HAVE_FAISS = True
 except ImportError:
