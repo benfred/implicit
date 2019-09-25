@@ -72,9 +72,11 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             log.warning("GPU training requires factor size to be a multiple of 32."
                         " Increasing factors from %i to %i.", factors, factors + padding)
             factors += padding
+
         # parameters on how to factorize
         self.factors = factors
         self.regularization = regularization
+
         # options on how to fit the model
         self.dtype = dtype
         self.use_native = use_native
