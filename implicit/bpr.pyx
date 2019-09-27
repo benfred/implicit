@@ -191,8 +191,10 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                                               self.verify_negative_samples)
                 progress.update(1)
                 total = len(user_items.data)
-                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
-                                      "skipped": "%.2f%%" % (100.0 * skipped / total)})
+                if total != 0 and total != skipped:
+                    progress.set_postfix(
+                        {"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
+                         "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
     def _fit_gpu(self, user_items, userids_host, show_progress=True):
         if not implicit.cuda.HAS_CUDA:
@@ -221,8 +223,10 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                                                                self.verify_negative_samples)
                 progress.update(1)
                 total = len(user_items.data)
-                progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
-                                      "skipped": "%.2f%%" % (100.0 * skipped / total)})
+                if total != 0 and total != skipped:
+                    progress.set_postfix(
+                        {"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
+                         "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
         X.to_host(self.user_factors)
         Y.to_host(self.item_factors)
