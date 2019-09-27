@@ -1,4 +1,5 @@
 import glob
+import io
 import logging
 import os.path
 import platform
@@ -123,19 +124,20 @@ def set_gcc():
 
 set_gcc()
 
-try:
-    # if we don't have pandoc installed, don't worry about it
-    import pypandoc
-    long_description = pypandoc.convert_file("README.md", "rst")
-except ImportError:
-    long_description = ''
+
+def read(file_name):
+    """Read a text file and return the content as a string."""
+    file_path = os.path.join(os.path.dirname(__file__), file_name)
+    with io.open(file_path, encoding="utf-8") as f:
+        return f.read()
 
 
 setup(
     name=NAME,
     version=VERSION,
     description='Collaborative Filtering for Implicit Datasets',
-    long_description=long_description,
+    long_description=read("README.md"),
+    long_description_content_type="text/markdown",
     url='http://github.com/benfred/implicit/',
     author='Ben Frederickson',
     author_email='ben@benfrederickson.com',
