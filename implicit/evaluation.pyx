@@ -299,3 +299,97 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
 
     progress.close()
     return relevant / total
+
+
+@cython.boundscheck(False)
+def AUC_at_k(model, train_user_items, test_user_items, int K=10,
+             show_progress=True, int num_threads=1):
+    """ Calculate limited AUC for a given trained model
+
+    Parameters
+    ----------
+    model : RecommenderBase
+        The fitted recommendation model to test
+    train_user_items : csr_matrix
+        Sparse matrix of user by item that contains elements that were used in training the model
+    test_user_items : csr_matrix
+        Sparse matrix of user by item that contains withheld elements to test on
+    K : int
+        Number of items to test on
+    show_progress : bool, optional
+        Whether to show a progress bar
+    num_threads : int, optional
+        The number of threads to use for testing. Specifying 0 means to default
+        to the number of cores on the machine. Note: aside from the ALS and BPR
+        models, setting this to more than 1 will likely hurt performance rather than
+        help.
+
+    Returns
+    -------
+    float
+        the calculated ndcg@k
+    """
+    if not isinstance(train_user_items, csr_matrix):
+        train_user_items = train_user_items.tocsr()
+
+    if not isinstance(test_user_items, csr_matrix):
+        test_user_items = test_user_items.tocsr()
+
+    cdef int users = test_user_items.shape[0], u, i
+    cdef int items = test_user_items.shape[1]
+    cdef double total = 0
+    cdef int[:] test_indptr = test_user_items.indptr
+    cdef int[:] test_indices = test_user_items.indices
+
+    cdef int * ids
+    cdef unordered_set[int] * likes
+
+    progress = tqdm(total=users, disable=not show_progress)
+    cdef double* _auc_list
+    cdef int __auc = 0, __relevant = 1, __miss = 2, __num_pos_items = 3, __num_neg_items = 4
+    cdef double auc
+    with nogil, parallel(num_threads=num_threads):
+        ids = <int *> malloc(sizeof(int) * K)
+        likes = new unordered_set[int]()
+        _auc_list = <double *> malloc(sizeof(double) * 5)
+        try:
+            for u in prange(users, schedule='guided'):
+                # if we don't have any test items, skip this user
+                if test_indptr[u] == test_indptr[u+1]:
+                    with gil:
+                        progress.update(1)
+                    continue
+                memset(ids, 0, sizeof(int) * K)
+                memset(_auc_list, 0, sizeof(double) * 5)
+                with gil:
+                    recs = model.recommend(u, train_user_items, N=K)
+                    for i in range(len(recs)):
+                        ids[i] = recs[i][0]
+                    progress.update(1)
+
+                # mostly we're going to be blocked on the gil here,
+                # so try to do actual scoring without it
+                likes.clear()
+
+                for i in range(test_indptr[u], test_indptr[u+1]):
+                    likes.insert(test_indices[i])
+                _auc_list[__num_pos_items] = likes.size()
+                _auc_list[__num_neg_items] = items - _auc_list[__num_pos_items]
+                for i in range(K):
+                    if likes.find(ids[i]) != likes.end():
+                        _auc_list[__relevant] += 1
+                    else:
+                        _auc_list[__miss] += 1
+                        _auc_list[__auc] += _auc_list[__relevant]
+                _auc_list[__auc] += ((_auc_list[__relevant] + _auc_list[__num_pos_items]) / 2.0) \
+                    * (_auc_list[__num_neg_items] - _auc_list[__miss])
+                _auc_list[__auc] /= (_auc_list[__num_pos_items] * _auc_list[__num_neg_items])
+                auc += _auc_list[__auc]
+                total += 1
+        finally:
+            free(ids)
+            free(_auc_list)
+            del likes
+
+    progress.close()
+    return auc / total
