@@ -359,7 +359,7 @@ def AUC_at_k(model, train_user_items, test_user_items, int K=10,
                         progress.update(1)
                     continue
                 memset(ids, 0, sizeof(int) * K)
-
+                memset(_auc_list, 0, sizeof(float) * 5)
                 with gil:
                     recs = model.recommend(u, train_user_items, N=K)
                     for i in range(len(recs)):

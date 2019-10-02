@@ -7015,7 +7015,7 @@ static PyObject *__pyx_pf_8implicit_10evaluation_8AUC_at_k(CYTHON_UNUSED PyObjec
  *                         progress.update(1)
  *                     continue             # <<<<<<<<<<<<<<
  *                 memset(ids, 0, sizeof(int) * K)
- * 
+ *                 memset(_auc_list, 0, sizeof(float) * 5)
  */
                                     goto __pyx_L17_continue;
 
@@ -7032,14 +7032,23 @@ static PyObject *__pyx_pf_8implicit_10evaluation_8AUC_at_k(CYTHON_UNUSED PyObjec
  *                         progress.update(1)
  *                     continue
  *                 memset(ids, 0, sizeof(int) * K)             # <<<<<<<<<<<<<<
- * 
+ *                 memset(_auc_list, 0, sizeof(float) * 5)
  *                 with gil:
  */
                                   (void)(memset(__pyx_v_ids, 0, ((sizeof(int)) * __pyx_v_K)));
 
+                                  /* "implicit/evaluation.pyx":362
+ *                     continue
+ *                 memset(ids, 0, sizeof(int) * K)
+ *                 memset(_auc_list, 0, sizeof(float) * 5)             # <<<<<<<<<<<<<<
+ *                 with gil:
+ *                     recs = model.recommend(u, train_user_items, N=K)
+ */
+                                  (void)(memset(__pyx_v__auc_list, 0, ((sizeof(float)) * 5)));
+
                                   /* "implicit/evaluation.pyx":363
  *                 memset(ids, 0, sizeof(int) * K)
- * 
+ *                 memset(_auc_list, 0, sizeof(float) * 5)
  *                 with gil:             # <<<<<<<<<<<<<<
  *                     recs = model.recommend(u, train_user_items, N=K)
  *                     for i in range(len(recs)):
@@ -7051,7 +7060,7 @@ static PyObject *__pyx_pf_8implicit_10evaluation_8AUC_at_k(CYTHON_UNUSED PyObjec
                                       /*try:*/ {
 
                                         /* "implicit/evaluation.pyx":364
- * 
+ *                 memset(_auc_list, 0, sizeof(float) * 5)
  *                 with gil:
  *                     recs = model.recommend(u, train_user_items, N=K)             # <<<<<<<<<<<<<<
  *                     for i in range(len(recs)):
@@ -7141,7 +7150,7 @@ static PyObject *__pyx_pf_8implicit_10evaluation_8AUC_at_k(CYTHON_UNUSED PyObjec
 
                                       /* "implicit/evaluation.pyx":363
  *                 memset(ids, 0, sizeof(int) * K)
- * 
+ *                 memset(_auc_list, 0, sizeof(float) * 5)
  *                 with gil:             # <<<<<<<<<<<<<<
  *                     recs = model.recommend(u, train_user_items, N=K)
  *                     for i in range(len(recs)):
