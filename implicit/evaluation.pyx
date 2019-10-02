@@ -300,10 +300,11 @@ def ndcg_at_k(model, train_user_items, test_user_items, int K=10,
     progress.close()
     return relevant / total
 
+
 @cython.boundscheck(False)
 def AUC_at_k(model, train_user_items, test_user_items, int K=10,
              show_progress=True, int num_threads=1):
-    """ Calculates ndcg@K for a given trained model
+    """ Calculate limited AUC for a given trained model
 
     Parameters
     ----------
@@ -344,13 +345,13 @@ def AUC_at_k(model, train_user_items, test_user_items, int K=10,
     cdef unordered_set[int] * likes
 
     progress = tqdm(total=users, disable=not show_progress)
-    cdef float* _auc_list
+    cdef double* _auc_list
     cdef int __auc = 0, __relevant = 1, __miss = 2, __num_pos_items = 3, __num_neg_items = 4
-    cdef float auc
+    cdef double auc
     with nogil, parallel(num_threads=num_threads):
         ids = <int *> malloc(sizeof(int) * K)
         likes = new unordered_set[int]()
-        _auc_list = <float *> malloc(sizeof(float) * 5)
+        _auc_list = <double *> malloc(sizeof(double) * 5)
         try:
             for u in prange(users, schedule='guided'):
                 # if we don't have any test items, skip this user
@@ -359,7 +360,7 @@ def AUC_at_k(model, train_user_items, test_user_items, int K=10,
                         progress.update(1)
                     continue
                 memset(ids, 0, sizeof(int) * K)
-                memset(_auc_list, 0, sizeof(float) * 5)
+                memset(_auc_list, 0, sizeof(double) * 5)
                 with gil:
                     recs = model.recommend(u, train_user_items, N=K)
                     for i in range(len(recs)):
@@ -380,7 +381,8 @@ def AUC_at_k(model, train_user_items, test_user_items, int K=10,
                     else:
                         _auc_list[__miss] += 1
                         _auc_list[__auc] += _auc_list[__relevant]
-                _auc_list[__auc] += ((_auc_list[__relevant] + _auc_list[__num_pos_items]) / 2.0) * (_auc_list[__num_neg_items] - _auc_list[__miss])
+                _auc_list[__auc] += ((_auc_list[__relevant] + _auc_list[__num_pos_items]) / 2.0) \
+                    * (_auc_list[__num_neg_items] - _auc_list[__miss])
                 _auc_list[__auc] /= (_auc_list[__num_pos_items] * _auc_list[__num_neg_items])
                 auc += _auc_list[__auc]
                 total += 1
