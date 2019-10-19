@@ -91,7 +91,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         import nmslib
 
         # train the model
-        super(NMSLibAlternatingLeastSquares, self).fit(Ciu, show_progress)
+        super(NMSLibAlternatingLeastSquares, self).fit(Ciu, show_progress=show_progress)
 
         # create index for similar_items
         if self.approximate_similar_items:
@@ -207,7 +207,7 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
         import annoy
 
         # train the model
-        super(AnnoyAlternatingLeastSquares, self).fit(Ciu, show_progress)
+        super(AnnoyAlternatingLeastSquares, self).fit(Ciu, show_progress=show_progress)
 
         # build up an Annoy Index with all the item_factors (for calculating
         # similar items)
@@ -316,7 +316,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         import faiss
 
         # train the model
-        super(FaissAlternatingLeastSquares, self).fit(Ciu, show_progress)
+        super(FaissAlternatingLeastSquares, self).fit(Ciu, show_progress=show_progress)
 
         self.quantizer = faiss.IndexFlat(self.factors)
 
