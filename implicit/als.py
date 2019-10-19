@@ -45,18 +45,11 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         The number of ALS iterations to use when fitting data
     calculate_training_loss : bool, optional
         Whether to log out the training loss at each iteration
-    validate_step : int, optional
-        if validate_step > 0, periodically (per validate_step) validates
-        the model. validation dataset must be given to argument of
-        `fit`method.
-        if validate_step <= 0, no validation is done.
-    validate_N : int, optional
-        size of truncation of validation metric.
-        it has no meaning when validate_step <= 0.
     num_threads : int, optional
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
         to the number of cores on the machine.
+
     Attributes
     ----------
     item_factors : ndarray
@@ -67,9 +60,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
     def __init__(self, factors=100, regularization=0.01, dtype=np.float32,
                  use_native=True, use_cg=True, use_gpu=implicit.cuda.HAS_CUDA,
-                 iterations=15, calculate_training_loss=False,
-                 validate_step=-1, validate_N=30,
-                 num_threads=0):
+                 iterations=15, calculate_training_loss=False, num_threads=0):
         super(AlternatingLeastSquares, self).__init__()
 
         # currently there are some issues when training on the GPU when some of the warps
@@ -96,19 +87,13 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.num_threads = num_threads
         self.fit_callback = None
         self.cg_steps = 3
-        if validate_step < 0:
-            self.use_validation = False
-        else:
-            self.use_validation = True
-        self.validate_step = validate_step
-        self.validate_N = validate_N
 
         # cache for item factors squared
         self._YtY = None
 
         check_blas_config()
 
-    def fit(self, item_users, vali_item_users=None, show_progress=True):
+    def fit(self, item_users, show_progress=True):
         """ Factorizes the item_users matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
@@ -128,17 +113,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             Matrix of confidences for the liked items. This matrix should be a csr_matrix where
             the rows of the matrix are the item, the columns are the users that liked that item,
             and the value is the confidence that the user liked the item.
-        vali_item_users: csr_matrix
-            Same format with item_users. It is used to validate the model.
         show_progress : bool, optional
             Whether to show a progress bar during fitting
         """
-
-        if vali_item_users is not None:
-            vali_user_items = vali_item_users.T.tocsr()
-        else:
-            self.use_validation = False
-
         Ciu = item_users
         if not isinstance(Ciu, scipy.sparse.csr_matrix):
             s = time.time()
@@ -169,7 +146,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self._YtY = None
 
         if self.use_gpu:
-            return self._fit_gpu(Ciu, Cui, vali_user_items, show_progress)
+            return self._fit_gpu(Ciu, Cui, show_progress)
 
         solver = self.solver
 
@@ -192,20 +169,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                 if self.fit_callback:
                     self.fit_callback(iteration, time.time() - s)
 
-                if self.use_validation and ((iteration + 1) % self.validate_step) == 0:
-                    vali_res = self.validate(Cui, vali_user_items, self.validate_N)
-                    log.info(
-                        "[iter %d] Precision %0.4f MAP %0.4f NDCG %0.4f AUC %0.4f" %
-                        (iteration,
-                         vali_res["precision"],
-                         vali_res["map"],
-                         vali_res["ndcg"],
-                         vali_res["auc"]))
-
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)
 
-    def _fit_gpu(self, Ciu_host, Cui_host, vali_user_items, show_progress=True):
+    def _fit_gpu(self, Ciu_host, Cui_host, show_progress=True):
         """ specialized training on the gpu. copies inputs to/from cuda device """
         if not implicit.cuda.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
@@ -230,22 +197,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                 solver.least_squares(Ciu, Y, X, self.regularization, self.cg_steps)
                 progress.update(1)
 
-                if self.calculate_training_loss:
-                    loss = solver.calculate_loss(Cui, X, Y, self.regularization)
-                    progress.set_postfix({"loss": loss})
-
                 if self.fit_callback:
                     self.fit_callback(iteration, time.time() - s)
 
-                if self.use_validation and ((iteration + 1) % self.validate_step) == 0:
-                    vali_res = self.validate(Cui, vali_user_items, self.validate_N)
-                    log.info(
-                        "[iter %d] Precision %0.4f MAP %0.4f NDCG %0.4f AUC %0.4f" %
-                        (iteration,
-                         vali_res["precision"],
-                         vali_res["map"],
-                         vali_res["ndcg"],
-                         vali_res["auc"]))
+                if self.calculate_training_loss:
+                    loss = solver.calculate_loss(Cui, X, Y, self.regularization)
+                    progress.set_postfix({"loss": loss})
 
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)
