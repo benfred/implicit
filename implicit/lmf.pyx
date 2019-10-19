@@ -4,7 +4,7 @@ import logging
 import multiprocessing
 import random
 import time
-from tqdm.auto import tqdm
+import tqdm
 
 from cython.parallel import parallel, prange, threadid
 from libc.math cimport exp
@@ -72,14 +72,6 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         then 5 * 30 = 150 negative samples are used for training.
     use_gpu : bool, optional
         Fit on the GPU if available
-    validate_step : int, optional
-        if validate_step > 0, periodically (per validate_step) validates
-        the model. validation dataset must be given to argument of
-        `fit`method.
-        if validate_step <= 0, no validation is done.
-    validate_N : int, optional
-        size of truncation of validation metric.
-        it has no meaning when validate_step <= 0.
     num_threads : int, optional
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
@@ -92,9 +84,8 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
     user_factors : ndarray
         Array of latent factors for each user in the training set
     """
-    def __init__(self, factors=30, learning_rate=0.85, regularization=2.0, dtype=np.float32,
-                 iterations=30, neg_prop=150, use_gpu=False,
-                 validate_step=-1, validate_N=30, num_threads=0):
+    def __init__(self, factors=30, learning_rate=1.00, regularization=0.6, dtype=np.float32,
+                 iterations=30, neg_prop=30, use_gpu=False, num_threads=0):
         super(LogisticMatrixFactorization, self).__init__()
 
         self.factors = factors
@@ -105,12 +96,6 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         self.use_gpu = use_gpu
         self.num_threads = num_threads
         self.neg_prop = neg_prop
-        if validate_step < 0:
-            self.use_validation = False
-        else:
-            self.use_validation = True
-        self.validate_step = validate_step
-        self.validate_N = validate_N
 
         # TODO: Add GPU training
         if self.use_gpu:
@@ -118,7 +103,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, item_users, vali_item_users=None, show_progress=True):
+    def fit(self, item_users, show_progress=True):
         """ Factorizes the item_users matrix
 
         Parameters
@@ -128,15 +113,9 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
             the rows of the matrix are the item, and the columns are the users that liked that item.
             BPR ignores the weight value of the matrix right now - it treats non zero entries
             as a binary signal that the user liked the item.
-        vali_item_users: csr_matrix
-            Same format with item_users. It is used to validate the model.
         show_progress : bool, optional
             Whether to show a progress bar
         """
-        if vali_item_users is not None:
-            vali_user_items = vali_item_users.T.tocsr()
-        else:
-            self.use_validation = False
 
         # for now, all we handle is float 32 values
         if item_users.dtype != np.float32:
@@ -186,7 +165,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         # initialize RNG's, one per thread.
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1)
         log.debug("Running %i LMF training epochs", self.iterations)
-        with tqdm(total=self.iterations, disable=not show_progress) as progress:
+        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
                 # user update
                 lmf_update(rng, user_vec_deriv_sum,
@@ -201,15 +180,6 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
                            self.learning_rate, self.regularization, self.neg_prop, num_threads)
                 self.item_factors[:, -1] = 1.0
                 progress.update(1)
-                if self.use_validation and ((epoch + 1) % self.validate_step) == 0:
-                    vali_res = self.validate(user_items, vali_user_items, self.validate_N)
-                    log.info(
-                        "[epoch %d] Precision %0.4f MAP %0.4f NDCG %0.4f AUC %0.4f" %
-                        (epoch,
-                         vali_res["precision"],
-                         vali_res["map"],
-                         vali_res["ndcg"],
-                         vali_res["auc"]))
 
 
 @cython.cdivision(True)

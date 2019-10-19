@@ -92,7 +92,7 @@ def _read_dataframes_100k(path):
 
 def _read_dataframes(path):
     import pandas
-    ratings = pandas.read_csv(os.path.join(path, "ratings.dat"), delimiter="::",
+    ratings = pandas.read_csv(os.path.join(path, "ratings.dat"),  delimiter="::",
                               names=['userId', 'movieId', 'rating', 'timestamp'])
 
     movies = pandas.read_table(os.path.join(path, "movies.dat"), delimiter="::",
