@@ -24,7 +24,7 @@ from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
 
 # maps command line model argument to class name
-MODELS = {"als":  AlternatingLeastSquares,
+MODELS = {"als": AlternatingLeastSquares,
           "nmslib_als": NMSLibAlternatingLeastSquares,
           "annoy_als": AnnoyAlternatingLeastSquares,
           "faiss_als": FaissAlternatingLeastSquares,
@@ -99,7 +99,7 @@ def calculate_similar_artists(output_filename, model_name="als"):
                     o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
                 progress.update(1)
 
-    logging.debug("generated similar artists in %0.2fs",  time.time() - start)
+    logging.debug("generated similar artists in %0.2fs", time.time() - start)
 
 
 def calculate_recommendations(output_filename, model_name="als"):
@@ -137,7 +137,7 @@ def calculate_recommendations(output_filename, model_name="als"):
                 for artistid, score in model.recommend(userid, user_plays):
                     o.write("%s\t%s\t%s\n" % (username, artists[artistid], score))
                 progress.update(1)
-    logging.debug("generated recommendations in %0.2fs",  time.time() - start)
+    logging.debug("generated recommendations in %0.2fs", time.time() - start)
 
 
 if __name__ == "__main__":

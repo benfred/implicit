@@ -8,6 +8,7 @@ import numpy as np
 import scipy
 import scipy.sparse
 from tqdm.auto import tqdm
+
 import implicit.cuda
 
 from . import _als
