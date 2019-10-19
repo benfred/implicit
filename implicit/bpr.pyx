@@ -136,7 +136,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, item_users, vali_item_users, show_progress=True):
+    def fit(self, item_users, vali_item_users=None, show_progress=True):
         """ Factorizes the item_users matrix
 
         Parameters
