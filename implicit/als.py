@@ -12,7 +12,6 @@ from tqdm.auto import tqdm
 import implicit.cuda
 
 from . import _als
-from .evaluation import train_test_split
 from .recommender_base import MatrixFactorizationBase
 from .utils import check_blas_config, nonzeros
 
@@ -54,9 +53,6 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     validate_N : int, optional
         size of truncation of validation metric.
         it has no meaning when validate_step <= 0.
-    validate_proportion : float, optional
-        the portion of validation matrix to total matrix. default value
-        to be 0.05
     num_threads : int, optional
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
@@ -72,7 +68,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     def __init__(self, factors=100, regularization=0.01, dtype=np.float32,
                  use_native=True, use_cg=True, use_gpu=implicit.cuda.HAS_CUDA,
                  iterations=15, calculate_training_loss=False,
-                 validate_step=-1, validate_N=30, validate_proportion=0.05,
+                 validate_step=-1, validate_N=30,
                  num_threads=0):
         super(AlternatingLeastSquares, self).__init__()
 
@@ -106,14 +102,13 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self.use_validation = True
         self.validate_step = validate_step
         self.validate_N = validate_N
-        self.validate_proportion = validate_proportion
 
         # cache for item factors squared
         self._YtY = None
 
         check_blas_config()
 
-    def fit(self, item_users, show_progress=True):
+    def fit(self, item_users, vali_item_users=None, show_progress=True):
         """ Factorizes the item_users matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
@@ -139,10 +134,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             Whether to show a progress bar during fitting
         """
 
-        if self.use_validation is True:
-            item_users, vali_item_users = train_test_split(
-                item_users, 1.0 - self.validate_proportion)
-            vali_user_items = vali_item_users.T
+        if vali_item_users is not None:
+            vali_user_items = vali_item_users.T.tocsr()
+        else:
+            self.use_validation = False
 
         Ciu = item_users
         if not isinstance(Ciu, scipy.sparse.csr_matrix):
