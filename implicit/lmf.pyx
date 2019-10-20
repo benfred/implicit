@@ -20,6 +20,7 @@ import numpy as np
 import scipy.sparse
 
 from .recommender_base import MatrixFactorizationBase
+from .evaluation import train_test_split
 
 cdef extern from "<random>" namespace "std":
     cdef cppclass mt19937:
@@ -80,6 +81,9 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
     validate_N : int, optional
         size of truncation of validation metric.
         it has no meaning when validate_step <= 0.
+    validate_proportion : float, optional
+        the portion of validation matrix to total matrix. default value
+        to be 0.05
     num_threads : int, optional
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
@@ -94,7 +98,8 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
     """
     def __init__(self, factors=30, learning_rate=0.85, regularization=2.0, dtype=np.float32,
                  iterations=30, neg_prop=150, use_gpu=False,
-                 validate_step=-1, validate_N=30, num_threads=0):
+                 validate_step=-1, validate_N=30, validate_proportion=0.05,
+                 num_threads=0):
         super(LogisticMatrixFactorization, self).__init__()
 
         self.factors = factors
@@ -111,6 +116,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
             self.use_validation = True
         self.validate_step = validate_step
         self.validate_N = validate_N
+        self.validate_proportion = validate_proportion
 
         # TODO: Add GPU training
         if self.use_gpu:
@@ -118,7 +124,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, item_users, vali_item_users=None, show_progress=True):
+    def fit(self, item_users, show_progress=True):
         """ Factorizes the item_users matrix
 
         Parameters
@@ -133,14 +139,15 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         show_progress : bool, optional
             Whether to show a progress bar
         """
-        if vali_item_users is not None:
-            vali_user_items = vali_item_users.T.tocsr()
-        else:
-            self.use_validation = False
 
         # for now, all we handle is float 32 values
         if item_users.dtype != np.float32:
             item_users = item_users.astype(np.float32)
+
+        if self.use_validation is True:
+            item_users, vali_item_users = train_test_split(
+                item_users, 1.0 - self.validate_proportion)
+            vali_user_items = vali_item_users.T
 
         items, users = item_users.shape
 
