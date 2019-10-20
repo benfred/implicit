@@ -1,19 +1,8 @@
-## v0.4.1
-
-* Add validation scheme(#283)[https://github.com/benfred/implicit/pull/283]
-
-
-## v0.4.0
-
-* Add Logistic matrix factorization (#231)[https://github.com/benfred/implicit/pull/231]
-* Add AUC method to evaluation (#212)[https://github.com/benfred/implicit/pull/212]
-
-
 ## v0.3.9
 
 * Add ability to pickle nearest neighbours recommenders (#191)[https://github.com/benfred/implicit/issues/191]
 * add NDCG method to evaluation (#212)[https://github.com/benfred/implicit/pull/212]
-* Add a 'recommend_all' method for matrix factorization models (#179)[https://github.com/benfred/implicit/pull/179]
+* Add a 'recommend_all' method for matrix factorization models (#179[https://github.com/benfred/implicit/pull/179]
 
 ## v0.3.8
 
