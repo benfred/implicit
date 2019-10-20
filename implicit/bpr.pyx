@@ -85,20 +85,11 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         When sampling negative items, check if the randomly picked negative item has actually
         been liked by the user. This check increases the time needed to train but usually leads
         to better predictions.
-    validate_step : int, optional
-        if validate_step > 0, periodically (per validate_step) validates
-        the model. validation dataset must be given to argument of
-        `fit`method.
-        if validate_step <= 0, no validation is done.
-    validate_N : int, optional
-        size of truncation of validation metric.
-        it has no meaning when validate_step <= 0.
     num_threads : int, optional
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
         to the number of cores on the machine.
-    verify_negative_samples: bool, optional
-        check negative samples whether really uninteracted samples or not.
+
     Attributes
     ----------
     item_factors : ndarray
@@ -107,8 +98,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         Array of latent factors for each user in the training set
     """
     def __init__(self, factors=100, learning_rate=0.01, regularization=0.01, dtype=np.float32,
-                 iterations=100, use_gpu=implicit.cuda.HAS_CUDA,
-                 validate_step=-1, validate_N=30, num_threads=0,
+                 iterations=100, use_gpu=implicit.cuda.HAS_CUDA, num_threads=0,
                  verify_negative_samples=True):
         super(BayesianPersonalizedRanking, self).__init__()
 
@@ -124,19 +114,12 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.regularization = regularization
         self.dtype = dtype
         self.use_gpu = use_gpu
-        if validate_step < 0:
-            self.use_validation = False
-        else:
-            self.use_validation = True
-        self.validate_step = validate_step
-        self.validate_N = validate_N
-
         self.num_threads = num_threads
         self.verify_negative_samples = verify_negative_samples
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, item_users, vali_item_users=None, show_progress=True):
+    def fit(self, item_users, show_progress=True):
         """ Factorizes the item_users matrix
 
         Parameters
@@ -146,17 +129,9 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             the rows of the matrix are the item, and the columns are the users that liked that item.
             BPR ignores the weight value of the matrix right now - it treats non zero entries
             as a binary signal that the user liked the item.
-        vali_item_users: csr_matrix
-            Same format with item_users. It is used to validate the model.
         show_progress : bool, optional
             Whether to show a progress bar
         """
-
-        if vali_item_users is not None:
-            vali_user_items = vali_item_users.T.tocsr()
-        else:
-            self.use_validation = False
-
         # for now, all we handle is float 32 values
         if item_users.dtype != np.float32:
             item_users = item_users.astype(np.float32)
@@ -196,7 +171,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.user_factors[:, self.factors] = 1.0
 
         if self.use_gpu:
-            return self._fit_gpu(user_items, userids, vali_item_users, show_progress)
+            return self._fit_gpu(user_items, userids, show_progress)
 
         # we accept num_threads = 0 as indicating to create as many threads as we have cores,
         # but in that case we need the number of cores, since we need to initialize RNG state per
@@ -218,17 +193,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 total = len(user_items.data)
                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
                                       "skipped": "%.2f%%" % (100.0 * skipped / total)})
-                if self.use_validation and ((epoch + 1) % self.validate_step) == 0:
-                    vali_res = self.validate(user_items, vali_user_items, self.validate_N)
-                    log.info(
-                        "[epoch %d] Precision %0.4f MAP %0.4f NDCG %0.4f AUC %0.4f" %
-                        (epoch,
-                         vali_res["precision"],
-                         vali_res["map"],
-                         vali_res["ndcg"],
-                         vali_res["auc"]))
 
-    def _fit_gpu(self, user_items, userids_host, vali_user_items, show_progress=True):
+    def _fit_gpu(self, user_items, userids_host, show_progress=True):
         if not implicit.cuda.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
@@ -257,15 +223,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 total = len(user_items.data)
                 progress.set_postfix({"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
                                       "skipped": "%.2f%%" % (100.0 * skipped / total)})
-                if self.use_validation and ((epoch + 1) % self.validate_step) == 0:
-                    vali_res = self.validate(user_items, vali_user_items, self.validate_N)
-                    log.info(
-                        "[epoch %d] Precision %0.4f MAP %0.4f NDCG %0.4f AUC %0.4f" %
-                        (epoch,
-                         vali_res["precision"],
-                         vali_res["map"],
-                         vali_res["ndcg"],
-                         vali_res["auc"]))
 
         X.to_host(self.user_factors)
         Y.to_host(self.item_factors)

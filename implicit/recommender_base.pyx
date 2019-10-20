@@ -11,7 +11,7 @@ from scipy.sparse import csr_matrix
 import cython
 from cython.parallel import prange
 from math import ceil
-from evaluation import ranking_metrics_at_k
+
 # Define wrapper for C++ sorting function
 cdef extern from "topnc.h":
     cdef void fargsort_c(float A[], int n_row, int m_row, int m_cols, int ktop, int B[]) nogil
@@ -34,9 +34,6 @@ class RecommenderBase(object):
             The values are how confident you are that the item is liked by the user.
         """
         pass
-
-    def validate(self, user_items, vali_user_items, K):
-        return ranking_metrics_at_k(self, user_items, vali_user_items, K, False)
 
     @abstractmethod
     def recommend(self, userid, user_items,
