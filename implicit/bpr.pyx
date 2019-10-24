@@ -164,8 +164,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             item_users, vali_item_users = train_test_split(
                 item_users, 1.0 - self.validate_proportion)
             vali_user_items = vali_item_users.T
-        else:
-            vali_user_items = None
 
         items, users = item_users.shape
 
