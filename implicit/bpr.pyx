@@ -202,7 +202,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.user_factors[:, self.factors] = 1.0
 
         if self.use_gpu:
-            return self._fit_gpu(user_items, userids, vali_user_items, show_progress)
+            return self._fit_gpu(user_items, userids, vali_item_users, show_progress)
 
         # we accept num_threads = 0 as indicating to create as many threads as we have cores,
         # but in that case we need the number of cores, since we need to initialize RNG state per
