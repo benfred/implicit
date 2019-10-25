@@ -150,8 +150,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             the rows of the matrix are the item, and the columns are the users that liked that item.
             BPR ignores the weight value of the matrix right now - it treats non zero entries
             as a binary signal that the user liked the item.
-        vali_item_users: csr_matrix
-            Same format with item_users. It is used to validate the model.
         show_progress : bool, optional
             Whether to show a progress bar
         """
@@ -202,7 +200,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.user_factors[:, self.factors] = 1.0
 
         if self.use_gpu:
-            return self._fit_gpu(user_items, userids, vali_item_users, show_progress)
+            return self._fit_gpu(user_items, userids, vali_user_items, show_progress)
 
         # we accept num_threads = 0 as indicating to create as many threads as we have cores,
         # but in that case we need the number of cores, since we need to initialize RNG state per

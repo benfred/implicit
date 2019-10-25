@@ -133,8 +133,6 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             Matrix of confidences for the liked items. This matrix should be a csr_matrix where
             the rows of the matrix are the item, the columns are the users that liked that item,
             and the value is the confidence that the user liked the item.
-        vali_item_users: csr_matrix
-            Same format with item_users. It is used to validate the model.
         show_progress : bool, optional
             Whether to show a progress bar during fitting
         """
