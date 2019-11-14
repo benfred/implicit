@@ -162,6 +162,7 @@ std::pair<int, int> bpr_update(const CudaVector<int> & userids,
     CHECK_CUDA(cudaFree(random_likes));
     CHECK_CUDA(cudaFree(random_dislikes));
     CHECK_CUDA(cudaFree(stats));
+    curandDestroyGenerator(rng);
     return std::make_pair(output[0], output[1]);
 }
 }
