@@ -150,6 +150,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             if self.use_bias:
                 log.warning("GPU training with bias factors not implemented,",
                             "setting self.use_bias to False.")
+                self.use_bias = False
             return self._fit_gpu(Ciu, Cui, show_progress)
 
         solver = self.solver
