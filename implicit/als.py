@@ -158,6 +158,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                 s = time.time()
                 solver(Cui, self.user_factors, self.item_factors, self.regularization,
                        num_threads=self.num_threads)
+                if self.use_bias:
+                    self.user_factors[:, -2] = 1.0
                 solver(Ciu, self.item_factors, self.user_factors, self.regularization,
                        num_threads=self.num_threads)
                 progress.update(1)
