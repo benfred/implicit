@@ -60,7 +60,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
     def __init__(self, factors=100, regularization=0.01, dtype=np.float32,
                  use_native=True, use_cg=True, use_gpu=implicit.cuda.HAS_CUDA,
-                 iterations=15, calculate_training_loss=False, num_threads=0):
+                 iterations=15, calculate_training_loss=False, num_threads=0, use_bias=False):
         super(AlternatingLeastSquares, self).__init__()
 
         # currently there are some issues when training on the GPU when some of the warps
@@ -87,6 +87,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.num_threads = num_threads
         self.fit_callback = None
         self.cg_steps = 3
+        self.use_bias = use_bias
 
         # cache for item factors squared
         self._YtY = None
