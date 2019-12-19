@@ -152,6 +152,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         solver = self.solver
 
         log.debug("Running %i ALS iterations", self.iterations)
+        if self.use_bias:
+            log.info("Training model with bias factors.")
+            log.debug("Last element of self.user_factors is user bias.",
+                      "Second-to-last element of self.item_factors is item bias.")
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             # alternate between learning the user_factors from the item_factors and vice-versa
             for iteration in range(self.iterations):
