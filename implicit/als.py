@@ -162,6 +162,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                     self.user_factors[:, -2] = 1.0
                 solver(Ciu, self.item_factors, self.user_factors, self.regularization,
                        num_threads=self.num_threads)
+                if self.use_bias:
+                    self.item_factors[:, -1] = 1.0
                 progress.update(1)
 
                 if self.calculate_training_loss:
