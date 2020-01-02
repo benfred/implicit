@@ -90,7 +90,7 @@ def extract_gcc_binaries():
                 '/opt/local/bin/g++-mp-[0-9]',
                 '/usr/local/bin/g++-[0-9].[0-9]',
                 '/usr/local/bin/g++-[0-9]']
-    if 'darwin' in platform.platform().lower():
+    if platform.system() == 'Darwin':
         gcc_binaries = []
         for pattern in patterns:
             gcc_binaries += glob.glob(pattern)
@@ -107,8 +107,7 @@ def extract_gcc_binaries():
 def set_gcc():
     """Try to use GCC on OSX for OpenMP support."""
     # For macports and homebrew
-
-    if 'darwin' in platform.platform().lower():
+    if platform.system() == 'Darwin':
         gcc = extract_gcc_binaries()
 
         if gcc is not None:
