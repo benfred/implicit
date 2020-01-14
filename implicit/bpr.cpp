@@ -5,28 +5,28 @@
     "distutils": {
         "depends": [
             "implicit/bpr.h"
-        ],
+        ], 
         "extra_compile_args": [
-            "-Wno-unused-function",
-            "-Wno-maybe-uninitialized",
-            "-O3",
-            "-ffast-math",
-            "-fopenmp",
+            "-Wno-unused-function", 
+            "-Wno-maybe-uninitialized", 
+            "-O3", 
+            "-ffast-math", 
+            "-fopenmp", 
             "-std=c++11"
-        ],
+        ], 
         "extra_link_args": [
-            "-fopenmp",
+            "-fopenmp", 
             "-std=c++11"
-        ],
+        ], 
         "include_dirs": [
             "implicit"
-        ],
-        "language": "c++",
-        "name": "implicit.bpr",
+        ], 
+        "language": "c++", 
+        "name": "implicit.bpr", 
         "sources": [
             "implicit/bpr.pyx"
         ]
-    },
+    }, 
     "module_name": "implicit.bpr"
 }
 END: Cython Metadata */

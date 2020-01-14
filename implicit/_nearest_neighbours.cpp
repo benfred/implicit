@@ -5,28 +5,28 @@
     "distutils": {
         "depends": [
             "implicit/nearest_neighbours.h"
-        ],
+        ], 
         "extra_compile_args": [
-            "-Wno-unused-function",
-            "-Wno-maybe-uninitialized",
-            "-O3",
-            "-ffast-math",
-            "-fopenmp",
+            "-Wno-unused-function", 
+            "-Wno-maybe-uninitialized", 
+            "-O3", 
+            "-ffast-math", 
+            "-fopenmp", 
             "-std=c++11"
-        ],
+        ], 
         "extra_link_args": [
-            "-fopenmp",
+            "-fopenmp", 
             "-std=c++11"
-        ],
+        ], 
         "include_dirs": [
             "implicit"
-        ],
-        "language": "c++",
-        "name": "implicit._nearest_neighbours",
+        ], 
+        "language": "c++", 
+        "name": "implicit._nearest_neighbours", 
         "sources": [
             "implicit/_nearest_neighbours.pyx"
         ]
-    },
+    }, 
     "module_name": "implicit._nearest_neighbours"
 }
 END: Cython Metadata */

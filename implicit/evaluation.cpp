@@ -3,25 +3,25 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "depends": [],
+        "depends": [], 
         "extra_compile_args": [
-            "-Wno-unused-function",
-            "-Wno-maybe-uninitialized",
-            "-O3",
-            "-ffast-math",
-            "-fopenmp",
+            "-Wno-unused-function", 
+            "-Wno-maybe-uninitialized", 
+            "-O3", 
+            "-ffast-math", 
+            "-fopenmp", 
             "-std=c++11"
-        ],
+        ], 
         "extra_link_args": [
-            "-fopenmp",
+            "-fopenmp", 
             "-std=c++11"
-        ],
-        "language": "c++",
-        "name": "implicit.evaluation",
+        ], 
+        "language": "c++", 
+        "name": "implicit.evaluation", 
         "sources": [
             "implicit/evaluation.pyx"
         ]
-    },
+    }, 
     "module_name": "implicit.evaluation"
 }
 END: Cython Metadata */
