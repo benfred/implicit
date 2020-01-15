@@ -259,7 +259,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         total_score = 0.0
         h = []
         h_len = 0
-        for i, (itemid, confidence) in enumerate(nonzeros(user_items, userid)):
+        for itemid, confidence in nonzeros(user_items, userid):
             if confidence < 0:
                 continue
 
