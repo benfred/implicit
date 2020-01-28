@@ -57,7 +57,7 @@ def get_model(model_name):
 
 
 def calculate_similar_artists(output_filename, model_name="als"):
-    """ generates a list of similar artists in lastfm by utiliizing the 'similar_items'
+    """ generates a list of similar artists in lastfm by utilizing the 'similar_items'
     api of the models """
     artists, users, plays = get_lastfm()
 
