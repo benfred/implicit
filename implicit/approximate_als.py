@@ -134,7 +134,8 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
             self.item_factors[itemid], N)
         return zip(neighbours, 1.0 - distances)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_already_liked_items=True,
+                  filter_items=None, recalculate_user=False):
         if not self.approximate_recommend:
             return super(NMSLibAlternatingLeastSquares,
                          self).recommend(userid, user_items, N=N,
@@ -145,7 +146,9 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
 
         # calculate the top N items, removing the users own liked items from
         # the results
-        liked = set(user_items[userid].indices)
+        liked = set()
+        if filter_already_liked_items:
+            liked.update(user_items[userid].indices)
         if filter_items:
             liked.update(filter_items)
         count = N + len(liked)
@@ -240,7 +243,8 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
         # transform distances back to cosine from euclidean distance
         return zip(neighbours, 1 - (numpy.array(dist) ** 2) / 2)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_already_liked_items=True,
+                  filter_items=None, recalculate_user=False):
         if not self.approximate_recommend:
             return super(AnnoyAlternatingLeastSquares,
                          self).recommend(userid, user_items, N=N,
@@ -251,7 +255,9 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
 
         # calculate the top N items, removing the users own liked items from
         # the results
-        liked = set(user_items[userid].indices)
+        liked = set()
+        if filter_already_liked_items:
+            liked.update(user_items[userid].indices)
         if filter_items:
             liked.update(filter_items)
         count = N + len(liked)
@@ -372,7 +378,8 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
                                                           N)
         return zip(ids, dist)
 
-    def recommend(self, userid, user_items, N=10, filter_items=None, recalculate_user=False):
+    def recommend(self, userid, user_items, N=10, filter_already_liked_items=True,
+                  filter_items=None, recalculate_user=False):
         if not self.approximate_recommend:
             return super(FaissAlternatingLeastSquares,
                          self).recommend(userid, user_items, N=N,
@@ -383,7 +390,9 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
 
         # calculate the top N items, removing the users own liked items from
         # the results
-        liked = set(user_items[userid].indices)
+        liked = set()
+        if filter_already_liked_items:
+            liked.update(user_items[userid].indices)
         if filter_items:
             liked.update(filter_items)
         count = N + len(liked)
