@@ -180,7 +180,8 @@ class MatrixFactorizationBase(RecommenderBase):
     @cython.nonecheck(False)
     def recommend_all(self, user_items, int N=10,
                       recalculate_user=False, filter_already_liked_items=True, filter_items=None,
-                      int num_threads=0, show_progress=True, int batch_size=0):
+                      int num_threads=0, show_progress=True, int batch_size=0,
+                      int users_items_offset=0):
         """
         Recommends items for all users
 
@@ -213,6 +214,8 @@ class MatrixFactorizationBase(RecommenderBase):
         batch_size : int, optional
             To optimise memory usage while matrix multiplication, users are separated into groups
             and scored iteratively. By default batch_size == num_threads * 100
+        users_items_offset : int, optional
+            Allow to pass a slice of user_items matrix to split calculations
 
         Returns
         -------
@@ -262,7 +265,7 @@ class MatrixFactorizationBase(RecommenderBase):
             u_len = u_high - u_low
             # Prepare array with scores for batch of users
             users_factors = np.vstack([
-                self._user_factor(u, user_items, recalculate_user)
+                self._user_factor(u+users_items_offset, user_items, recalculate_user)
                 for u
                 in range(u_low, u_high, 1)
             ]).astype(np.float32)

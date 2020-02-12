@@ -174,6 +174,17 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
             # all the other similar users
             self.assertEqual(recs[userid][0], userid)
 
+        offset = 2
+        recs = model.recommend_all(
+            user_items[[2, 3, 4]],
+            N=1,
+            show_progress=False,
+            users_items_offset=offset)
+
+        for userid in range(2, 5):
+            self.assertEqual(len(recs[userid-offset]), 1)
+            self.assertEqual(recs[userid-offset][0], userid)
+
         # try asking for more items than possible
         self.assertRaises(ValueError, model.recommend_all, user_items, N=10000, show_progress=False)
         self.assertRaises(
