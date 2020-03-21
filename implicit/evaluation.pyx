@@ -245,7 +245,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                     with gil:
                         progress.update(1)
                     continue
-                memset(ids, 0, sizeof(int) * K)
+                memset(ids, -1, sizeof(int) * K)
 
                 with gil:
                     recs = model.recommend(u, train_user_items, N=K)
