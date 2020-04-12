@@ -103,9 +103,11 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         users (P_iu in the original paper), as well as how much confidence we have that the user
         liked the item (C_iu).
 
-        The negative items are implicitly defined: This code assumes that non-zero items in the
+        The negative items are implicitly defined: This code assumes that positive items in the
         item_users matrix means that the user liked the item. The negatives are left unset in this
         sparse matrix: the library will assume that means Piu = 0 and Ciu = 1 for all these items.
+        Negative items can also be passed with a higher confidence value by passing a negative
+        value, indicating that the user disliked the item.
 
         Parameters
         ----------
