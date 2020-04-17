@@ -177,7 +177,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
             num_threads = multiprocessing.cpu_count()
 
         # initialize RNG's, one per thread. Also pass the seeds for each thread's RNG
-        cdef np.ndarray[long, ndim=1, mode='c'] rng_seeds = rs.randint(0, 2**31, size=num_threads)
+        cdef long[:] rng_seeds = rs.randint(0, 2**31, size=num_threads)
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
 
         log.debug("Running %i LMF training epochs", self.iterations)
