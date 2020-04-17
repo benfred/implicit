@@ -14,7 +14,8 @@ try:
 
     class AnnoyALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
-            return AnnoyAlternatingLeastSquares(factors=2, regularization=0, use_gpu=False)
+            return AnnoyAlternatingLeastSquares(factors=2, regularization=0, use_gpu=False,
+                                                random_state=23)
 
         def test_pickle(self):
             # pickle isn't supported on annoy indices
@@ -29,7 +30,8 @@ try:
     class NMSLibALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
             return NMSLibAlternatingLeastSquares(factors=2, regularization=0,
-                                                 index_params={'post': 2}, use_gpu=False)
+                                                 index_params={'post': 2}, use_gpu=False,
+                                                 random_state=23)
 
         def test_pickle(self):
             # pickle isn't supported on nmslib indices
@@ -44,7 +46,7 @@ try:
     class FaissALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
             return FaissAlternatingLeastSquares(nlist=1, nprobe=1, factors=2, regularization=0,
-                                                use_gpu=False)
+                                                use_gpu=False, random_state=23)
 
         def test_pickle(self):
             # pickle isn't supported on faiss indices
@@ -57,7 +59,7 @@ try:
             def _get_model(self):
                 return FaissAlternatingLeastSquares(nlist=1, nprobe=1, factors=32,
                                                     regularization=self.__regularization,
-                                                    use_gpu=True)
+                                                    use_gpu=True, random_state=23)
 
             def test_similar_items(self):
                 # For the GPU version, we currently have to have factors be a multiple of 32

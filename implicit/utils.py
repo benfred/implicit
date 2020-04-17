@@ -46,6 +46,6 @@ def check_random_state(random_state):
     # if it's an existing random state, pass through
     if isinstance(random_state, np.random.RandomState):
         return random_state
-    # otherwise TRY to initialize a new one, and let it fail through
+    # otherwise try to initialize a new one, and let it fail through
     # on the numpy side if it doesn't work
     return np.random.RandomState(random_state)

@@ -124,12 +124,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         show_progress : bool, optional
             Whether to show a progress bar during fitting
         """
-<<<<<<< HEAD
-=======
         # initialize the random state
         random_state = check_random_state(self.random_state)
 
->>>>>>> Permit seeding for ALS to control X, Y initialization
         Ciu = item_users
         if not isinstance(Ciu, scipy.sparse.csr_matrix):
             s = time.time()

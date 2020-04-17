@@ -11,7 +11,8 @@ from .recommender_base_test import TestRecommenderBaseMixin
 class BPRTest(unittest.TestCase, TestRecommenderBaseMixin):
 
     def _get_model(self):
-        return BayesianPersonalizedRanking(factors=3, regularization=0, use_gpu=False)
+        return BayesianPersonalizedRanking(factors=3, regularization=0, use_gpu=False,
+                                           random_state=42)
 
     # Test issue #264 causing crashes on empty matrices
     def test_fit_empty_matrix(self):
@@ -28,7 +29,8 @@ if HAS_CUDA:
     class BPRGPUTest(unittest.TestCase, TestRecommenderBaseMixin):
 
         def _get_model(self):
-            return BayesianPersonalizedRanking(factors=3, regularization=0, use_gpu=True)
+            return BayesianPersonalizedRanking(factors=3, regularization=0, use_gpu=True,
+                                               random_state=42)
 
 if __name__ == "__main__":
     unittest.main()
