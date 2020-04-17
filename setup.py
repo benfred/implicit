@@ -51,7 +51,7 @@ def define_extensions(use_cython=False):
     # we need numpy to build so we can include the arrayobject.h in the .cpp builds
     try:
         import numpy as np
-    except (ImportError, ModuleNotFoundError):
+    except ImportError:
         raise ValueError("numpy is required to build from source")
 
     src_ext = '.pyx' if use_cython else '.cpp'
