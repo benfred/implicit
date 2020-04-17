@@ -15,7 +15,6 @@ from libc.stdlib cimport malloc, free
 from libc.string cimport memcpy, memset
 
 import numpy as np
-cimport numpy as np
 import scipy.sparse
 
 import random

@@ -11,7 +11,6 @@ from libcpp cimport bool
 from libcpp.algorithm cimport binary_search
 
 import numpy as np
-cimport numpy as np
 import scipy.sparse
 
 import random
@@ -212,7 +211,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                          "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
     def _fit_gpu(self, user_items, userids_host, random_state=None, show_progress=True):
-        # if called from `fit`, this is a passthrough 
+        # if called from `fit`, this is a passthrough
         rs = check_random_state(random_state)
 
         if not implicit.cuda.HAS_CUDA:
