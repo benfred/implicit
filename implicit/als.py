@@ -13,7 +13,7 @@ import implicit.cuda
 
 from . import _als
 from .recommender_base import MatrixFactorizationBase
-from .utils import check_blas_config, nonzeros, check_random_state
+from .utils import check_blas_config, check_random_state, nonzeros
 
 log = logging.getLogger("implicit")
 
@@ -65,7 +65,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                  use_native=True, use_cg=True, use_gpu=implicit.cuda.HAS_CUDA,
                  iterations=15, calculate_training_loss=False, num_threads=0,
                  random_state=None):
-                 
+
         super(AlternatingLeastSquares, self).__init__()
 
         # currently there are some issues when training on the GPU when some of the warps
