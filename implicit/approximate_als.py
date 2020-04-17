@@ -322,7 +322,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
     """
 
     def __init__(self, approximate_similar_items=True, approximate_recommend=True,
-                 nlist=400, nprobe=20, use_gpu=implicit.cuda.HAS_CUDA, random_state=random_state,
+                 nlist=400, nprobe=20, use_gpu=implicit.cuda.HAS_CUDA, random_state=None,
                  *args, **kwargs):
 
         self.similar_items_index = None
