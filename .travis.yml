@@ -6,17 +6,18 @@ python:
   - "3.6"
 
 matrix:
+  # xcode11 has a known bug: https://github.com/Homebrew/homebrew-core/issues/44579
   include:
     - language: generic
       os: osx
       python: 2.7.14
       env: PYTHON=2
-      osx_image: xcode11
+      osx_image: xcode11.3
     - language: generic
       os: osx
       python: 3.6.5
       env: PYTHON=3
-      osx_image: xcode11
+      osx_image: xcode11.3
 
 addons:
   apt:
@@ -39,8 +40,6 @@ before_install:
       PIP=pip3
       PY=python3
     fi
-
-    # xcode11 has a known bug: https://github.com/Homebrew/homebrew-core/issues/44579
     brew reinstall gcc
   fi
 install:
