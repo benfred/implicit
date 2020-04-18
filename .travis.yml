@@ -39,6 +39,9 @@ before_install:
       PIP=pip3
       PY=python3
     fi
+
+    # xcode11 has a known bug: https://github.com/Homebrew/homebrew-core/issues/44579
+    brew reinstall gcc
   fi
 install:
 - |
