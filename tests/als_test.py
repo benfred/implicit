@@ -14,7 +14,8 @@ from .recommender_base_test import TestRecommenderBaseMixin
 class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
     def _get_model(self):
-        return AlternatingLeastSquares(factors=3, regularization=0, use_gpu=False)
+        return AlternatingLeastSquares(factors=3, regularization=0, use_gpu=False,
+                                       random_state=23)
 
     def test_cg_nan(self):
         # test issue with CG code that was causing NaN values in output:
@@ -38,7 +39,8 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                             dtype=np.float64,
                                             use_native=use_native,
                                             use_cg=True,
-                                            use_gpu=False)
+                                            use_gpu=False,
+                                            random_state=23)
             model.fit(counts, show_progress=False)
             rows, cols = model.item_factors, model.user_factors
 
@@ -56,7 +58,8 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
         for options in configs:
             model = AlternatingLeastSquares(factors=32, regularization=10, iterations=10,
-                                            dtype=np.float32, **options)
+                                            dtype=np.float32, random_state=23,
+                                            **options)
             model.fit(Ciu, show_progress=False)
 
             self.assertTrue(np.isfinite(model.item_factors).all())
@@ -90,8 +93,8 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                                 dtype=dtype,
                                                 use_native=use_native,
                                                 use_cg=use_cg,
-                                                use_gpu=use_gpu)
-                np.random.seed(23)
+                                                use_gpu=use_gpu,
+                                                random_state=23)
                 model.fit(user_items, show_progress=False)
                 rows, cols = model.item_factors, model.user_factors
 
@@ -125,8 +128,8 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                         regularization=20,
                                         use_native=False,
                                         use_cg=False,
-                                        iterations=100)
-        np.random.seed(23)
+                                        iterations=100,
+                                        random_state=23)
         model.fit(user_items, show_progress=False)
 
         userid = 0

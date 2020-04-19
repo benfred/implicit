@@ -52,6 +52,9 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         whether or not to build an NMSLIB index for computing similar_items
     approximate_recommend : bool, optional
         whether or not to build an NMSLIB index for the recommend call
+    random_state : int, RandomState or None, optional
+        The random state for seeding the initial item and user factors.
+        Default is None.
 
     Attributes
     ----------
@@ -66,7 +69,8 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
 
     def __init__(self,
                  approximate_similar_items=True, approximate_recommend=True,
-                 method='hnsw', index_params=None, query_params=None, *args, **kwargs):
+                 method='hnsw', index_params=None, query_params=None,
+                 random_state=None, *args, **kwargs):
         if index_params is None:
             index_params = {'M': 16, 'post': 0, 'efConstruction': 400}
         if query_params is None:
@@ -82,7 +86,9 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         self.index_params = index_params
         self.query_params = query_params
 
-        super(NMSLibAlternatingLeastSquares, self).__init__(*args, **kwargs)
+        super(NMSLibAlternatingLeastSquares, self).__init__(*args,
+                                                            random_state=random_state,
+                                                            **kwargs)
 
     def fit(self, Ciu, show_progress=True):
         # nmslib can be a little chatty when first imported, disable some of
@@ -181,6 +187,9 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
         whether or not to build an Annoy index for computing similar_items
     approximate_recommend : bool, optional
         whether or not to build an Annoy index for the recommend call
+    random_state : int, RandomState or None, optional
+        The random state for seeding the initial item and user factors.
+        Default is None.
 
     Attributes
     ----------
@@ -194,8 +203,12 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
     """
 
     def __init__(self, approximate_similar_items=True, approximate_recommend=True,
-                 n_trees=50, search_k=-1, *args, **kwargs):
-        super(AnnoyAlternatingLeastSquares, self).__init__(*args, **kwargs)
+                 n_trees=50, search_k=-1, random_state=None, *args, **kwargs):
+
+        super(AnnoyAlternatingLeastSquares, self).__init__(*args,
+                                                           random_state=random_state,
+                                                           **kwargs)
+
         self.similar_items_index = None
         self.recommend_index = None
 
@@ -293,6 +306,9 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         whether or not to build an Faiss index for computing similar_items
     approximate_recommend : bool, optional
         whether or not to build an Faiss index for the recommend call
+    random_state : int, RandomState or None, optional
+        The random state for seeding the initial item and user factors.
+        Default is None.
 
     Attributes
     ----------
@@ -306,7 +322,9 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
     """
 
     def __init__(self, approximate_similar_items=True, approximate_recommend=True,
-                 nlist=400, nprobe=20, use_gpu=implicit.cuda.HAS_CUDA, *args, **kwargs):
+                 nlist=400, nprobe=20, use_gpu=implicit.cuda.HAS_CUDA, random_state=None,
+                 *args, **kwargs):
+
         self.similar_items_index = None
         self.recommend_index = None
 
@@ -316,7 +334,9 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         # hyper-parameters for FAISS
         self.nlist = nlist
         self.nprobe = nprobe
-        super(FaissAlternatingLeastSquares, self).__init__(*args, use_gpu=use_gpu, **kwargs)
+        super(FaissAlternatingLeastSquares, self).__init__(*args,
+                                                           random_state=random_state,
+                                                           use_gpu=use_gpu, **kwargs)
 
     def fit(self, Ciu, show_progress=True):
         import faiss

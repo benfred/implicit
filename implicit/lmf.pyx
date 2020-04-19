@@ -2,7 +2,6 @@ import cython
 from cython cimport floating, integral
 import logging
 import multiprocessing
-import random
 import time
 import tqdm
 
@@ -11,7 +10,6 @@ from libc.math cimport exp
 from libc.math cimport sqrt
 
 from libcpp cimport bool
-from libcpp.vector cimport vector
 from libcpp.algorithm cimport binary_search
 from libc.stdlib cimport malloc, free
 from libc.string cimport memcpy, memset
@@ -19,7 +17,14 @@ from libc.string cimport memcpy, memset
 import numpy as np
 import scipy.sparse
 
+import random
+from libcpp.vector cimport vector
+
 from .recommender_base import MatrixFactorizationBase
+from .utils import check_random_state
+
+log = logging.getLogger("implicit")
+
 
 cdef extern from "<random>" namespace "std":
     cdef cppclass mt19937:
@@ -29,22 +34,24 @@ cdef extern from "<random>" namespace "std":
         uniform_int_distribution(T, T)
         T operator()(mt19937) nogil
 
+
 cdef class RNGVector(object):
     """ This class creates one c++ rng object per thread, and enables us to randomly sample
     liked/disliked items here in a thread safe manner """
     cdef vector[mt19937] rng
-    cdef vector[uniform_int_distribution[long]]  dist
+    cdef vector[uniform_int_distribution[long]] dist
 
-    def __init__(self, int num_threads, long rows):
+    def __init__(self, int num_threads, long rows, long[:] rng_seeds):
+        if len(rng_seeds) != num_threads:
+            raise ValueError("length of RNG seeds must be equal to num_threads")
+
+        cdef int i
         for i in range(num_threads):
-            self.rng.push_back(mt19937(np.random.randint(2**31)))
+            self.rng.push_back(mt19937(rng_seeds[i]))
             self.dist.push_back(uniform_int_distribution[long](0, rows))
 
     cdef inline long generate(self, int thread_id) nogil:
         return self.dist[thread_id](self.rng[thread_id])
-
-
-log = logging.getLogger("implicit")
 
 
 class LogisticMatrixFactorization(MatrixFactorizationBase):
@@ -76,6 +83,9 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
         to the number of cores on the machine.
+    random_state : int, RandomState or None, optional
+        The random state for seeding the initial item and user factors.
+        Default is None.
 
     Attributes
     ----------
@@ -85,7 +95,8 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         Array of latent factors for each user in the training set
     """
     def __init__(self, factors=30, learning_rate=1.00, regularization=0.6, dtype=np.float32,
-                 iterations=30, neg_prop=30, use_gpu=False, num_threads=0):
+                 iterations=30, neg_prop=30, use_gpu=False, num_threads=0,
+                 random_state=None):
         super(LogisticMatrixFactorization, self).__init__()
 
         self.factors = factors
@@ -96,6 +107,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         self.use_gpu = use_gpu
         self.num_threads = num_threads
         self.neg_prop = neg_prop
+        self.random_state = random_state
 
         # TODO: Add GPU training
         if self.use_gpu:
@@ -116,6 +128,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         show_progress : bool, optional
             Whether to show a progress bar
         """
+        rs = check_random_state(self.random_state)
 
         # for now, all we handle is float 32 values
         if item_users.dtype != np.float32:
@@ -141,14 +154,14 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         # user_factors[-2] = user bias, item factors[-1] = item bias
         # This significantly simplifies both training, and serving
         if self.item_factors is None:
-            self.item_factors = np.random.normal(size=(items, self.factors + 2)).astype(np.float32)
+            self.item_factors = rs.normal(size=(items, self.factors + 2)).astype(np.float32)
             self.item_factors[:, -1] = 1.0
 
             # set factors to all zeros for items without any ratings
             self.item_factors[item_counts == 0] = np.zeros(self.factors + 2)
 
         if self.user_factors is None:
-            self.user_factors = np.random.normal(size=(users, self.factors + 2)).astype(np.float32)
+            self.user_factors = rs.normal(size=(users, self.factors + 2)).astype(np.float32)
             self.user_factors[:, -2] = 1.0
 
             # set factors to all zeros for users without any ratings
@@ -162,8 +175,10 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         if not num_threads:
             num_threads = multiprocessing.cpu_count()
 
-        # initialize RNG's, one per thread.
-        cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1)
+        # initialize RNG's, one per thread. Also pass the seeds for each thread's RNG
+        cdef long[:] rng_seeds = rs.randint(0, 2**31, size=num_threads)
+        cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
+
         log.debug("Running %i LMF training epochs", self.iterations)
         with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
