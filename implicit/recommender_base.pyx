@@ -315,8 +315,8 @@ class MatrixFactorizationBase(RecommenderBase):
         factor = self.user_factors[userid]
         factors = self.user_factors
         norms = self.user_norms
-
-        return self._get_similarity_score(factor, factors, norms, N)
+        norm = norms[userid]
+        return self._get_similarity_score(factor, norm, factors, norms, N)
 
     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
 
@@ -324,13 +324,13 @@ class MatrixFactorizationBase(RecommenderBase):
         factor = self.item_factors[itemid]
         factors = self.item_factors
         norms = self.item_norms
-
-        return self._get_similarity_score(factor, factors, norms, N)
+        norm = norms[itemid]
+        return self._get_similarity_score(factor, norm, factors, norms, N)
 
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
 
-    def _get_similarity_score(self, factor, factors, norms, N):
-        scores = factors.dot(factor) / norms
+    def _get_similarity_score(self, factor, norm, factors, norms, N):
+        scores = factors.dot(factor) / (norm * norms)
         best = np.argpartition(scores, -N)[-N:]
         return sorted(zip(best, scores[best]), key=lambda x: -x[1])
 
