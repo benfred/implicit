@@ -24,6 +24,7 @@ from implicit.als import AlternatingLeastSquares
 from implicit.bpr import BayesianPersonalizedRanking
 from implicit.datasets.movielens import get_movielens
 from implicit.lmf import LogisticMatrixFactorization
+from implicit.cdae import CollaborativeDenoisingAutoEncoder
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
 
@@ -58,7 +59,8 @@ def calculate_similar_movies(output_filename,
 
     elif model_name == "lmf":
         model = LogisticMatrixFactorization()
-
+    elif model_name == "cdae":
+        model = CollaborativeDenoisingAutoEncoder()
     elif model_name == "tfidf":
         model = TFIDFRecommender()
 

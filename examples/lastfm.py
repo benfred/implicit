@@ -20,11 +20,12 @@ from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlterna
 from implicit.bpr import BayesianPersonalizedRanking
 from implicit.datasets.lastfm import get_lastfm
 from implicit.lmf import LogisticMatrixFactorization
+from implicit.cdae import CollaborativeDenoisingAutoEncoder
 from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
                                          TFIDFRecommender, bm25_weight)
 
 # maps command line model argument to class name
-MODELS = {"als":  AlternatingLeastSquares,
+MODELS = {"als": AlternatingLeastSquares,
           "nmslib_als": NMSLibAlternatingLeastSquares,
           "annoy_als": AnnoyAlternatingLeastSquares,
           "faiss_als": FaissAlternatingLeastSquares,
@@ -32,6 +33,7 @@ MODELS = {"als":  AlternatingLeastSquares,
           "cosine": CosineRecommender,
           "bpr": BayesianPersonalizedRanking,
           "lmf": LogisticMatrixFactorization,
+          "cdae": LogisticMatrixFactorization,
           "bm25": BM25Recommender}
 
 
