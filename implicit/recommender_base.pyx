@@ -117,7 +117,8 @@ class RecommenderBase(object):
         pass
 
     @abstractmethod
-    def similar_items(self, itemid, N=10):
+    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
+
         """
         Calculates a list of similar items
 
@@ -127,6 +128,12 @@ class RecommenderBase(object):
             The row id of the item to retrieve similar items for
         N : int, optional
             The number of similar items to return
+        react_users : csr_matrix, optional
+            A sparse matrix of shape (number_items, number_users). This lets us look
+            up the reacted users and their weights for the item.
+        recalculate_item : bool, optional
+            When true, don't rely on stored item state and instead recalculate from the
+            passed in react_users
 
         Returns
         -------
@@ -308,8 +315,17 @@ class MatrixFactorizationBase(RecommenderBase):
         else:
             return self.user_factors[userid]
 
+    def _item_factor(self, itemid, react_users, recalculate_item=False):
+        if recalculate_item:
+            return self.recalculate_item(itemid, react_users)
+        else:
+            return self.item_factors[itemid]
+
     def recalculate_user(self, userid, user_items):
         raise NotImplementedError("recalculate_user is not supported with this model")
+
+    def recalculate_item(self, userid, react_users):
+        raise NotImplementedError("recalculate_item is not supported with this model")
 
     def similar_users(self, userid, N=10):
         factor = self.user_factors[userid]
@@ -320,11 +336,15 @@ class MatrixFactorizationBase(RecommenderBase):
 
     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
 
-    def similar_items(self, itemid, N=10):
-        factor = self.item_factors[itemid]
+    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
+        factor = self._item_factor(itemid, react_users, recalculate_item)
         factors = self.item_factors
         norms = self.item_norms
-        norm = norms[itemid]
+        if recalculate_item:
+            norm = np.linalg.norm(factor)
+            norm = norm if norm != 0 else 1e-10
+        else:
+            norm = norms[itemid]
         return self._get_similarity_score(factor, norm, factors, norms, N)
 
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
