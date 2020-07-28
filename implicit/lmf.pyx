@@ -196,6 +196,8 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
                 self.item_factors[:, -1] = 1.0
                 progress.update(1)
 
+        self._check_fit_errors()
+
 
 @cython.cdivision(True)
 @cython.boundscheck(False)
