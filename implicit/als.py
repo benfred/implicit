@@ -375,7 +375,7 @@ def user_factor(Y, YtY, Cui, u, regularization, n_factors):
 
 
 def item_factor(X, XtX, Cui, u, regularization, n_factors):
-    # Xu = (XtCuX + regularization * I)^-1 (XtCuPu)
+    # Yu = (XtCuX + regularization * I)^-1 (XtCuPu)
     A, b = user_linear_equation(X, XtX, Cui, u, regularization, n_factors)
     return np.linalg.solve(A, b)
 
