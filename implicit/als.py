@@ -96,6 +96,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         # cache for item factors squared
         self._YtY = None
+        # cache for user factors squared
+        self._XtX = None
 
         check_blas_config()
 
@@ -155,6 +157,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # invalidate cached norms and squared factors
         self._item_norms = None
         self._YtY = None
+        self._XtX = None
 
         if self.use_gpu:
             return self._fit_gpu(Ciu, Cui, show_progress)
@@ -224,6 +227,11 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     def recalculate_user(self, userid, user_items):
         return user_factor(self.item_factors, self.YtY,
                            user_items.tocsr(), userid,
+                           self.regularization, self.factors)
+
+    def recalculate_item(self, itemid, react_users):
+        return item_factor(self.user_factors, self.XtX,
+                           react_users.tocsr(), itemid,
                            self.regularization, self.factors)
 
     def explain(self, userid, user_items, itemid, user_weights=None, N=10):
@@ -303,6 +311,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self._YtY = Y.T.dot(Y)
         return self._YtY
 
+    @property
+    def XtX(self):
+        if self._XtX is None:
+            X = self.user_factors
+            self._XtX = X.T.dot(X)
+        return self._XtX
 
 def alternating_least_squares(Ciu, factors, **kwargs):
     """ factorizes the matrix Cui using an implicit alternating least squares
@@ -357,6 +371,12 @@ def user_linear_equation(Y, YtY, Cui, u, regularization, n_factors):
 def user_factor(Y, YtY, Cui, u, regularization, n_factors):
     # Xu = (YtCuY + regularization * I)^-1 (YtCuPu)
     A, b = user_linear_equation(Y, YtY, Cui, u, regularization, n_factors)
+    return np.linalg.solve(A, b)
+
+
+def item_factor(X, XtX, Cui, u, regularization, n_factors):
+    # Xu = (XtCuX + regularization * I)^-1 (XtCuPu)
+    A, b = user_linear_equation(X, XtX, Cui, u, regularization, n_factors)
     return np.linalg.solve(A, b)
 
 
