@@ -205,6 +205,7 @@ cdef inline floating sigmoid(floating x) nogil:
         z = exp(x)
         return z / (1 + z)
 
+
 @cython.cdivision(True)
 @cython.boundscheck(False)
 def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
@@ -248,8 +249,8 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
                         exp_r += user_vectors[u, _] * item_vectors[i, _]
                     z = sigmoid(exp_r) * data[index]
                     for _ in range(n_factors):
-                        deriv[_] =  deriv[_] - z * item_vectors[i, _]
-                
+                        deriv[_] = deriv[_] - z * item_vectors[i, _]
+
                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
                 for _ in range(min(n_items, user_seen_item * neg_prop)):
                     index = rng.generate(thread_id)
