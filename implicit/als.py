@@ -318,6 +318,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self._XtX = X.T.dot(X)
         return self._XtX
 
+
 def alternating_least_squares(Ciu, factors, **kwargs):
     """ factorizes the matrix Cui using an implicit alternating least squares
     algorithm. Note: this method is deprecated, consider moving to the
