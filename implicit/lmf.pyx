@@ -200,6 +200,15 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
 
 @cython.cdivision(True)
+cdef inline floating sigmoid(floating x) nogil:
+    if x >= 0:
+        return 1 / (1+exp(-x))
+    else:
+        z = exp(x)
+        return z / (1 + z)
+
+
+@cython.cdivision(True)
 @cython.boundscheck(False)
 def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
                floating[:, :] user_vectors, floating[:, :] item_vectors,
@@ -226,7 +235,6 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
                 if indptr[u] == indptr[u + 1]:
                     continue
                 user_seen_item = indptr[u + 1] - indptr[u]
-
                 memset(deriv, 0, sizeof(floating) * n_factors)
 
                 # Positive item indices: c_ui* y_i
@@ -241,10 +249,9 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
                     i = indices[index]
                     for _ in range(n_factors):
                         exp_r += user_vectors[u, _] * item_vectors[i, _]
-                    exp_r = exp(exp_r)
-                    z = (data[index] * exp_r) / (1 + exp_r)
+                    z = sigmoid(exp_r) * data[index]
                     for _ in range(n_factors):
-                        deriv[_] -= z * item_vectors[i, _]
+                        deriv[_] = deriv[_] - z * item_vectors[i, _]
 
                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
                 for _ in range(min(n_items, user_seen_item * neg_prop)):
@@ -252,15 +259,16 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
                     i = indices[index]
                     exp_r = 0
                     for _ in range(n_factors):
-                        exp_r += user_vectors[u, _] * item_vectors[i, _]
-                    exp_r = exp(exp_r)
-                    z = exp_r / (1 + exp_r)
-                    for _ in range(n_factors):
-                        deriv[_] -= z * item_vectors[i, _]
+                        exp_r = exp_r + (user_vectors[u, _] * item_vectors[i, _])
+                    z = sigmoid(exp_r)
 
+                    for _ in range(n_factors):
+                        deriv[_] = deriv[_] - z * item_vectors[i, _]
                 for _ in range(n_factors):
                     deriv[_] -= reg * user_vectors[u, _]
                     deriv_sum_sq[u, _] += deriv[_] * deriv[_]
-                    user_vectors[u, _] += (lr / sqrt(deriv_sum_sq[u, _])) * deriv[_]
+
+                    # a small constant is added for numerical stability
+                    user_vectors[u, _] += (lr / (sqrt(1e-6 + deriv_sum_sq[u, _]))) * deriv[_]
         finally:
             free(deriv)
