@@ -183,6 +183,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)
 
+        self._check_fit_errors()
+
     def _fit_gpu(self, Ciu_host, Cui_host, show_progress=True):
         """ specialized training on the gpu. copies inputs to/from cuda device """
         if not implicit.cuda.HAS_CUDA:
