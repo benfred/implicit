@@ -64,7 +64,7 @@ class ItemItemRecommender(RecommenderBase):
             raise IndexError("Some of selected itemids are not in the model")
 
         # calculate the relevance scores
-        liked_vector = user_items[userid]
+        liked_vector = user_items.getrow(userid)
         recommendations = liked_vector.dot(self.similarity)
 
         # remove items that are not in the selected_items
