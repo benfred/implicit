@@ -17,6 +17,10 @@ cdef extern from "topnc.h":
     cdef void fargsort_c(float A[], int n_row, int m_row, int m_cols, int ktop, int B[]) nogil
 
 
+class ModelFitError(Exception):
+    pass
+
+
 class RecommenderBase(object):
     """ Defines the interface that all recommendations models here expose """
     __metaclass__ = ABCMeta
@@ -349,3 +353,9 @@ class MatrixFactorizationBase(RecommenderBase):
             # don't divide by zero in similar_items, replace with small value
             self._item_norms[self._item_norms == 0] = 1e-10
         return self._item_norms
+
+    def _check_fit_errors(self):
+        is_nan = np.any(np.isnan(self.user_factors), axis=None)
+        is_nan |= np.any(np.isnan(self.item_factors), axis=None)
+        if is_nan:
+            raise ModelFitError('NaN encountered in factors')
