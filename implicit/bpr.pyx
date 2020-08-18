@@ -210,6 +210,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                         {"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
                          "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
+        self._check_fit_errors()
+
     def _fit_gpu(self, user_items, userids_host, random_state=None, show_progress=True):
         # if called from `fit`, this is a passthrough
         rs = check_random_state(random_state)
