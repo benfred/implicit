@@ -48,6 +48,9 @@ def locate_cuda():
                             'your path, or set $CUDAHOME to enable CUDA extensions')
             return None
         home = os.path.dirname(os.path.dirname(nvcc))
+        if not os.path.exists(os.path.join(home, "include")):
+            logging.warning("Failed to find cuda include directory, attempting /usr/local/cuda")
+            home = "/usr/local/cuda"
 
     cudaconfig = {'home': home,
                   'nvcc': nvcc,
