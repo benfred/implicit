@@ -56,10 +56,15 @@ def locate_cuda():
                   'nvcc': nvcc,
                   'include': os.path.join(home, 'include'),
                   'lib64':   os.path.join(home, 'lib64')}
-    post_args = ['-gencode=arch=compute_50,code=sm_50',
-                 '-gencode=arch=compute_60,code=sm_60',
-                 '-gencode=arch=compute_60,code=compute_60',
-                 '-gencode=arch=compute_70,code=compute_70',
+
+    post_args = ["-arch=sm_50",
+                "-gencode=arch=compute_50,code=sm_50",
+                "-gencode=arch=compute_52,code=sm_52",
+                "-gencode=arch=compute_60,code=sm_60",
+                "-gencode=arch=compute_61,code=sm_61",
+                "-gencode=arch=compute_70,code=sm_70",
+                "-gencode=arch=compute_75,code=sm_75",
+                "-gencode=arch=compute_75,code=compute_75",
                  '--ptxas-options=-v', '-O2']
 
     if sys.platform == "win32":
