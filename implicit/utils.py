@@ -29,3 +29,23 @@ def check_blas_config():
         logging.warning("Intel MKL BLAS detected. Its highly recommend to set the environment "
                         "variable 'export MKL_NUM_THREADS=1' to disable its internal "
                         "multithreading")
+
+
+def check_random_state(random_state):
+    """Validate the random state.
+
+    Check a random seed or existing numpy RandomState
+    and get back an initialized RandomState.
+
+    Parameters
+    ----------
+    random_state : int, None or RandomState
+        The existing RandomState. If None, or an int, will be used
+        to seed a new numpy RandomState.
+    """
+    # if it's an existing random state, pass through
+    if isinstance(random_state, np.random.RandomState):
+        return random_state
+    # otherwise try to initialize a new one, and let it fail through
+    # on the numpy side if it doesn't work
+    return np.random.RandomState(random_state)

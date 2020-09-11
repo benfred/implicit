@@ -17,6 +17,10 @@ cdef extern from "topnc.h":
     cdef void fargsort_c(float A[], int n_row, int m_row, int m_cols, int ktop, int B[]) nogil
 
 
+class ModelFitError(Exception):
+    pass
+
+
 class RecommenderBase(object):
     """ Defines the interface that all recommendations models here expose """
     __metaclass__ = ABCMeta
@@ -117,7 +121,8 @@ class RecommenderBase(object):
         pass
 
     @abstractmethod
-    def similar_items(self, itemid, N=10):
+    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
+
         """
         Calculates a list of similar items
 
@@ -127,6 +132,12 @@ class RecommenderBase(object):
             The row id of the item to retrieve similar items for
         N : int, optional
             The number of similar items to return
+        react_users : csr_matrix, optional
+            A sparse matrix of shape (number_items, number_users). This lets us look
+            up the reacted users and their weights for the item.
+        recalculate_item : bool, optional
+            When true, don't rely on stored item state and instead recalculate from the
+            passed in react_users
 
         Returns
         -------
@@ -308,29 +319,42 @@ class MatrixFactorizationBase(RecommenderBase):
         else:
             return self.user_factors[userid]
 
+    def _item_factor(self, itemid, react_users, recalculate_item=False):
+        if recalculate_item:
+            return self.recalculate_item(itemid, react_users)
+        else:
+            return self.item_factors[itemid]
+
     def recalculate_user(self, userid, user_items):
         raise NotImplementedError("recalculate_user is not supported with this model")
+
+    def recalculate_item(self, itemid, react_users):
+        raise NotImplementedError("recalculate_item is not supported with this model")
 
     def similar_users(self, userid, N=10):
         factor = self.user_factors[userid]
         factors = self.user_factors
         norms = self.user_norms
-
-        return self._get_similarity_score(factor, factors, norms, N)
+        norm = norms[userid]
+        return self._get_similarity_score(factor, norm, factors, norms, N)
 
     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
 
-    def similar_items(self, itemid, N=10):
-        factor = self.item_factors[itemid]
+    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
+        factor = self._item_factor(itemid, react_users, recalculate_item)
         factors = self.item_factors
         norms = self.item_norms
-
-        return self._get_similarity_score(factor, factors, norms, N)
+        if recalculate_item:
+            norm = np.linalg.norm(factor)
+            norm = norm if norm != 0 else 1e-10
+        else:
+            norm = norms[itemid]
+        return self._get_similarity_score(factor, norm, factors, norms, N)
 
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
 
-    def _get_similarity_score(self, factor, factors, norms, N):
-        scores = factors.dot(factor) / norms
+    def _get_similarity_score(self, factor, norm, factors, norms, N):
+        scores = factors.dot(factor) / (norm * norms)
         best = np.argpartition(scores, -N)[-N:]
         return sorted(zip(best, scores[best]), key=lambda x: -x[1])
 
@@ -349,3 +373,9 @@ class MatrixFactorizationBase(RecommenderBase):
             # don't divide by zero in similar_items, replace with small value
             self._item_norms[self._item_norms == 0] = 1e-10
         return self._item_norms
+
+    def _check_fit_errors(self):
+        is_nan = np.any(np.isnan(self.user_factors), axis=None)
+        is_nan |= np.any(np.isnan(self.item_factors), axis=None)
+        if is_nan:
+            raise ModelFitError('NaN encountered in factors')

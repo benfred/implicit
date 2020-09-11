@@ -2,22 +2,32 @@ import cython
 from cython cimport floating, integral
 import logging
 import multiprocessing
-import random
 import time
 from tqdm.auto import tqdm
 
 from cython.parallel import parallel, prange
 from libc.math cimport exp
 from libcpp cimport bool
-from libcpp.vector cimport vector
 from libcpp.algorithm cimport binary_search
 
 import numpy as np
 import scipy.sparse
 
+import random
+from libcpp.vector cimport vector
+
 import implicit.cuda
 
 from .recommender_base import MatrixFactorizationBase
+from .utils import check_random_state
+
+
+log = logging.getLogger("implicit")
+
+# thin wrapper around omp_get_thread_num (since referencing directly will cause OSX
+# build to fail)
+cdef extern from "bpr.h" namespace "implicit" nogil:
+    cdef int get_thread_num()
 
 
 cdef extern from "<random>" namespace "std":
@@ -29,12 +39,23 @@ cdef extern from "<random>" namespace "std":
         T operator()(mt19937) nogil
 
 
-log = logging.getLogger("implicit")
+cdef class RNGVector(object):
+    """ This class creates one c++ rng object per thread, and enables us to randomly sample
+    liked/disliked items here in a thread safe manner """
+    cdef vector[mt19937] rng
+    cdef vector[uniform_int_distribution[long]] dist
 
-# thin wrapper around omp_get_thread_num (since referencing directly will cause OSX
-# build to fail)
-cdef extern from "bpr.h" namespace "implicit" nogil:
-    cdef int get_thread_num()
+    def __init__(self, int num_threads, long rows, long[:] rng_seeds):
+        if len(rng_seeds) != num_threads:
+            raise ValueError("length of RNG seeds must be equal to num_threads")
+
+        cdef int i
+        for i in range(num_threads):
+            self.rng.push_back(mt19937(rng_seeds[i]))
+            self.dist.push_back(uniform_int_distribution[long](0, rows))
+
+    cdef inline long generate(self, int thread_id) nogil:
+        return self.dist[thread_id](self.rng[thread_id])
 
 
 @cython.boundscheck(False)
@@ -43,21 +64,6 @@ cdef bool has_non_zero(integral[:] indptr, integral[:] indices,
     """ Given a CSR matrix, returns whether the [rowid, colid] contains a non zero.
     Assumes the CSR matrix has sorted indices """
     return binary_search(&indices[indptr[rowid]], &indices[indptr[rowid + 1]], colid)
-
-
-cdef class RNGVector(object):
-    """ This class creates one c++ rng object per thread, and enables us to randomly sample
-    liked/disliked items here in a thread safe manner """
-    cdef vector[mt19937] rng
-    cdef vector[uniform_int_distribution[long]]  dist
-
-    def __init__(self, int num_threads, long rows):
-        for i in range(num_threads):
-            self.rng.push_back(mt19937(np.random.randint(2**31)))
-            self.dist.push_back(uniform_int_distribution[long](0, rows))
-
-    cdef inline long generate(self, int thread_id) nogil:
-        return self.dist[thread_id](self.rng[thread_id])
 
 
 class BayesianPersonalizedRanking(MatrixFactorizationBase):
@@ -89,6 +95,9 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
         to the number of cores on the machine.
+    random_state : int, RandomState or None, optional
+        The random state for seeding the initial item and user factors.
+        Default is None.
 
     Attributes
     ----------
@@ -99,7 +108,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
     """
     def __init__(self, factors=100, learning_rate=0.01, regularization=0.01, dtype=np.float32,
                  iterations=100, use_gpu=implicit.cuda.HAS_CUDA, num_threads=0,
-                 verify_negative_samples=True):
+                 verify_negative_samples=True, random_state=None):
         super(BayesianPersonalizedRanking, self).__init__()
 
         if use_gpu and (factors + 1) % 32:
@@ -116,6 +125,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.use_gpu = use_gpu
         self.num_threads = num_threads
         self.verify_negative_samples = verify_negative_samples
+        self.random_state = random_state
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
@@ -132,6 +142,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         show_progress : bool, optional
             Whether to show a progress bar
         """
+        rs = check_random_state(self.random_state)
+
         # for now, all we handle is float 32 values
         if item_users.dtype != np.float32:
             item_users = item_users.astype(np.float32)
@@ -154,7 +166,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # Note: the final dimension is for the item bias term - which is set to a 1 for all users
         # this simplifies interfacing with approximate nearest neighbours libraries etc
         if self.item_factors is None:
-            self.item_factors = (np.random.rand(items, self.factors + 1).astype(self.dtype) - .5)
+            self.item_factors = (rs.rand(items, self.factors + 1).astype(self.dtype) - .5)
             self.item_factors /= self.factors
 
             # set factors to all zeros for items without any ratings
@@ -162,7 +174,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.item_factors[item_counts == 0] = np.zeros(self.factors + 1)
 
         if self.user_factors is None:
-            self.user_factors = (np.random.rand(users, self.factors + 1).astype(self.dtype) - .5)
+            self.user_factors = (rs.rand(users, self.factors + 1).astype(self.dtype) - .5)
             self.user_factors /= self.factors
 
             # set factors to all zeros for users without any ratings
@@ -171,7 +183,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.user_factors[:, self.factors] = 1.0
 
         if self.use_gpu:
-            return self._fit_gpu(user_items, userids, show_progress)
+            return self._fit_gpu(user_items, userids, rs, show_progress)
 
         # we accept num_threads = 0 as indicating to create as many threads as we have cores,
         # but in that case we need the number of cores, since we need to initialize RNG state per
@@ -180,8 +192,10 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         if not num_threads:
             num_threads = multiprocessing.cpu_count()
 
-        # initialize RNG's, one per thread.
-        cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1)
+        # initialize RNG's, one per thread. Also pass the seeds for each thread's RNG
+        cdef long[:] rng_seeds = rs.randint(0, 2**31, size=num_threads)
+        cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
+
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
@@ -196,7 +210,12 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                         {"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
                          "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
-    def _fit_gpu(self, user_items, userids_host, show_progress=True):
+        self._check_fit_errors()
+
+    def _fit_gpu(self, user_items, userids_host, random_state=None, show_progress=True):
+        # if called from `fit`, this is a passthrough
+        rs = check_random_state(random_state)
+
         if not implicit.cuda.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
@@ -219,7 +238,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 correct, skipped = implicit.cuda.cu_bpr_update(userids, itemids, indptr,
                                                                X, Y, self.learning_rate,
                                                                self.regularization,
-                                                               np.random.randint(2**31),
+                                                               rs.randint(2**31),
                                                                self.verify_negative_samples)
                 progress.update(1)
                 total = len(user_items.data)

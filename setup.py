@@ -48,17 +48,25 @@ def define_extensions(use_cython=False):
         compile_args.append("-std=c++11")
         link_args.append("-std=c++11")
 
+    # we need numpy to build so we can include the arrayobject.h in the .cpp builds
+    # try:
+    #     import numpy as np
+    # except ImportError:
+    #     raise ValueError("numpy is required to build from source")
+
     src_ext = '.pyx' if use_cython else '.cpp'
     modules = [Extension("implicit." + name,
                          [os.path.join("implicit", name + src_ext)],
                          language='c++',
-                         extra_compile_args=compile_args, extra_link_args=link_args)
+                         extra_compile_args=compile_args,
+                         extra_link_args=link_args)
                for name in ['_als', '_nearest_neighbours', 'bpr', 'lmf', 'evaluation']]
     modules.append(Extension("implicit." + 'recommender_base',
                              [os.path.join("implicit", 'recommender_base' + src_ext),
                               os.path.join("implicit", 'topnc.cpp')],
                              language='c++',
-                             extra_compile_args=compile_args, extra_link_args=link_args))
+                             extra_compile_args=compile_args,
+                             extra_link_args=link_args))
 
     if CUDA:
         modules.append(Extension("implicit.cuda._cuda",

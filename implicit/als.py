@@ -13,7 +13,7 @@ import implicit.cuda
 
 from . import _als
 from .recommender_base import MatrixFactorizationBase
-from .utils import check_blas_config, nonzeros
+from .utils import check_blas_config, check_random_state, nonzeros
 
 log = logging.getLogger("implicit")
 
@@ -49,6 +49,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
         to the number of cores on the machine.
+    random_state : int, RandomState or None, optional
+        The random state for seeding the initial item and user factors.
+        Default is None.
 
     Attributes
     ----------
@@ -60,7 +63,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
     def __init__(self, factors=100, regularization=0.01, dtype=np.float32,
                  use_native=True, use_cg=True, use_gpu=implicit.cuda.HAS_CUDA,
-                 iterations=15, calculate_training_loss=False, num_threads=0):
+                 iterations=15, calculate_training_loss=False, num_threads=0,
+                 random_state=None):
+
         super(AlternatingLeastSquares, self).__init__()
 
         # currently there are some issues when training on the GPU when some of the warps
@@ -87,9 +92,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.num_threads = num_threads
         self.fit_callback = None
         self.cg_steps = 3
+        self.random_state = random_state
 
         # cache for item factors squared
         self._YtY = None
+        # cache for user factors squared
+        self._XtX = None
 
         check_blas_config()
 
@@ -103,9 +111,11 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         users (P_iu in the original paper), as well as how much confidence we have that the user
         liked the item (C_iu).
 
-        The negative items are implicitly defined: This code assumes that non-zero items in the
+        The negative items are implicitly defined: This code assumes that positive items in the
         item_users matrix means that the user liked the item. The negatives are left unset in this
         sparse matrix: the library will assume that means Piu = 0 and Ciu = 1 for all these items.
+        Negative items can also be passed with a higher confidence value by passing a negative
+        value, indicating that the user disliked the item.
 
         Parameters
         ----------
@@ -116,6 +126,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         show_progress : bool, optional
             Whether to show a progress bar during fitting
         """
+        # initialize the random state
+        random_state = check_random_state(self.random_state)
+
         Ciu = item_users
         if not isinstance(Ciu, scipy.sparse.csr_matrix):
             s = time.time()
@@ -135,15 +148,16 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         s = time.time()
         # Initialize the variables randomly if they haven't already been set
         if self.user_factors is None:
-            self.user_factors = np.random.rand(users, self.factors).astype(self.dtype) * 0.01
+            self.user_factors = random_state.rand(users, self.factors).astype(self.dtype) * 0.01
         if self.item_factors is None:
-            self.item_factors = np.random.rand(items, self.factors).astype(self.dtype) * 0.01
+            self.item_factors = random_state.rand(items, self.factors).astype(self.dtype) * 0.01
 
         log.debug("Initialized factors in %s", time.time() - s)
 
         # invalidate cached norms and squared factors
         self._item_norms = None
         self._YtY = None
+        self._XtX = None
 
         if self.use_gpu:
             return self._fit_gpu(Ciu, Cui, show_progress)
@@ -171,6 +185,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)
+
+        self._check_fit_errors()
 
     def _fit_gpu(self, Ciu_host, Cui_host, show_progress=True):
         """ specialized training on the gpu. copies inputs to/from cuda device """
@@ -213,6 +229,11 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     def recalculate_user(self, userid, user_items):
         return user_factor(self.item_factors, self.YtY,
                            user_items.tocsr(), userid,
+                           self.regularization, self.factors)
+
+    def recalculate_item(self, itemid, react_users):
+        return item_factor(self.user_factors, self.XtX,
+                           react_users.tocsr(), itemid,
                            self.regularization, self.factors)
 
     def explain(self, userid, user_items, itemid, user_weights=None, N=10):
@@ -292,6 +313,13 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self._YtY = Y.T.dot(Y)
         return self._YtY
 
+    @property
+    def XtX(self):
+        if self._XtX is None:
+            X = self.user_factors
+            self._XtX = X.T.dot(X)
+        return self._XtX
+
 
 def alternating_least_squares(Ciu, factors, **kwargs):
     """ factorizes the matrix Cui using an implicit alternating least squares
@@ -346,6 +374,12 @@ def user_linear_equation(Y, YtY, Cui, u, regularization, n_factors):
 def user_factor(Y, YtY, Cui, u, regularization, n_factors):
     # Xu = (YtCuY + regularization * I)^-1 (YtCuPu)
     A, b = user_linear_equation(Y, YtY, Cui, u, regularization, n_factors)
+    return np.linalg.solve(A, b)
+
+
+def item_factor(X, XtX, Cui, u, regularization, n_factors):
+    # Yu = (XtCuX + regularization * I)^-1 (XtCuPu)
+    A, b = user_linear_equation(X, XtX, Cui, u, regularization, n_factors)
     return np.linalg.solve(A, b)
 
 
