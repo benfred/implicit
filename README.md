@@ -44,7 +44,7 @@ pip install implicit
 ```
 
 Note that installing with pip requires a C++ compiler to be installed on your system, since this
-method will build implicit form source.
+method will build implicit from source.
 
 #### Basic Usage
 
