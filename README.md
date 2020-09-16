@@ -24,13 +24,29 @@ kernels - enabling fitting on compatible GPU's. Approximate nearest neighbours l
 and [Faiss](https://github.com/facebookresearch/faiss) can also be used by Implicit to [speed up
 making recommendations](https://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/).
 
-To install:
+#### Installation
+There are binary packages on conda-forge for Linux, Windows and OSX. These can be installed with:
+
+```
+conda install -c conda-forge implicit
+```
+
+There are also GPU enabled packages on conda-forge for x86_64 Linux systems using either CUDA
+9.2, 10.0, 10.1 or 10.2. The GPU packages can be installed with:
+
+```
+conda install -c conda-forge implicit implicit-proc=*=gpu
+```
+There is also an sdist package on PyPi. This package can be installed with:
 
 ```
 pip install implicit
 ```
 
-Basic usage:
+Note that installing with pip requires a C++ compiler to be installed on your system, since this
+method will build implicit form source.
+
+#### Basic Usage
 
 ```python
 import implicit
