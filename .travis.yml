@@ -2,8 +2,9 @@ language: python
 sudo: require
 python:
   - "2.7"
-  - "3.5"
   - "3.6"
+  - "3.7"
+  - "3.8"
 
 matrix:
   # xcode11 has a known bug: https://github.com/Homebrew/homebrew-core/issues/44579
@@ -15,7 +16,6 @@ matrix:
       osx_image: xcode11.3
     - language: generic
       os: osx
-      python: 3.6.5
       env: PYTHON=3
       osx_image: xcode11.3
 
@@ -25,9 +25,6 @@ addons:
     - libblas-dev
     - liblapack-dev
     - gfortran
-  homebrew:
-    packages:
-    - python3
 
 before_install:
 - |
