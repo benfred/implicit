@@ -17,7 +17,7 @@ matrix:
     - language: generic
       os: osx
       env: PYTHON=3
-      osx_image: xcode11.3
+      osx_image: xcode12
 
 addons:
   apt:
