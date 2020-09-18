@@ -43,7 +43,7 @@ def get_model(model_name):
 
     # some default params
     if issubclass(model_class, AlternatingLeastSquares):
-        params = {'factors': 16, 'dtype': np.float32}
+        params = {'factors': 64, 'dtype': np.float32}
     elif model_name == "bm25":
         params = {'K1': 100, 'B': 0.5}
     elif model_name == "bpr":
