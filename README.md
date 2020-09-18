@@ -24,13 +24,29 @@ kernels - enabling fitting on compatible GPU's. Approximate nearest neighbours l
 and [Faiss](https://github.com/facebookresearch/faiss) can also be used by Implicit to [speed up
 making recommendations](https://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/).
 
-To install:
+#### Installation
+There are binary packages on conda-forge for Linux, Windows and OSX. These can be installed with:
+
+```
+conda install -c conda-forge implicit
+```
+
+There are also GPU enabled packages on conda-forge for x86_64 Linux systems using either CUDA
+9.2, 10.0, 10.1 or 10.2. The GPU packages can be installed with:
+
+```
+conda install -c conda-forge implicit implicit-proc=*=gpu
+```
+There is also an sdist package on PyPi. This package can be installed with:
 
 ```
 pip install implicit
 ```
 
-Basic usage:
+Note that installing with pip requires a C++ compiler to be installed on your system, since this
+method will build implicit from source.
+
+#### Basic Usage
 
 ```python
 import implicit
@@ -77,10 +93,9 @@ This library requires SciPy version 0.16 or later. Running on OSX requires an Op
 which can be installed with homebrew: ```brew install gcc```. Running on Windows requires Python
 3.5+.
 
-GPU Support requires at least version 8 of the [NVidia CUDA Toolkit](https://developer.nvidia.com/cuda-downloads). The build will use the ```nvcc``` compiler
+GPU Support requires at least version 9 of the [NVidia CUDA Toolkit](https://developer.nvidia.com/cuda-downloads). The build will use the ```nvcc``` compiler
 that is found on the path, but this can be overriden by setting the CUDAHOME enviroment variable
-to point to your cuda installation. Note that the GPU extensions are not included in the version
-on condaforge.
+to point to your cuda installation.
 
 This library has been tested with Python 2.7, 3.5, 3.6 and 3.7 on Ubuntu and OSX, and tested with
 Python 3.5 and 3.6 on Windows.

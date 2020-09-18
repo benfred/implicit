@@ -17,12 +17,12 @@ class BPRTest(unittest.TestCase, TestRecommenderBaseMixin):
     # Test issue #264 causing crashes on empty matrices
     def test_fit_empty_matrix(self):
         raw = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-        return BayesianPersonalizedRanking().fit(csr_matrix(raw), show_progress=False)
+        return BayesianPersonalizedRanking(use_gpu=False).fit(csr_matrix(raw), show_progress=False)
 
     # Test issue #264 causing crashes on almost empty matrices
     def test_fit_almost_empty_matrix(self):
         raw = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
-        return BayesianPersonalizedRanking().fit(csr_matrix(raw), show_progress=False)
+        return BayesianPersonalizedRanking(use_gpu=False).fit(csr_matrix(raw), show_progress=False)
 
 
 if HAS_CUDA:

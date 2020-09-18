@@ -1,8 +1,27 @@
+## v0.4.4
+
+* Adds Precompiled CUDA packages on conda-forge
+* Drops support for CUDA 8
+
+## v0.4.3
+
+* Implement filter_already_liked_items option [#328](https://github.com/benfred/implicit/pull/328)
+* Fix bug in ALS explain when user_items contains negative confidence values [#313](https://github.com/benfred/implicit/pull/313)
+* Improve numerical stability of LMF [#383](https://github.com/benfred/implicit/pull/383)
+* Add error check after training for NaN factors [#381](https://github.com/benfred/implicit/pull/381)
+* Support building with Cuda 11
+
+## v0.4.0
+
+* Add logistic matrix factorization algorithm [#231](https://github.com/benfred/implicit/pull/231)
+* Use tqdm for progress bars [#240](https://github.com/benfred/implicit/pull/240)
+* Add AUC@K [#275](https://github.com/benfred/implicit/pull/275)
+
 ## v0.3.9
 
-* Add ability to pickle nearest neighbours recommenders (#191)[https://github.com/benfred/implicit/issues/191]
-* add NDCG method to evaluation (#212)[https://github.com/benfred/implicit/pull/212]
-* Add a 'recommend_all' method for matrix factorization models (#179[https://github.com/benfred/implicit/pull/179]
+* Add ability to pickle nearest neighbours recommenders [#191](https://github.com/benfred/implicit/issues/191)
+* add NDCG method to evaluation [#212](https://github.com/benfred/implicit/pull/212)
+* Add a 'recommend_all' method for matrix factorization models [#179](https://github.com/benfred/implicit/pull/179)
 
 ## v0.3.8
 
@@ -11,12 +30,12 @@
 
 ## v0.3.7
 
-* Fix GPU faiss model with > 1024 results (#149)[https://github.com/benfred/implicit/issues/149]
+* Fix GPU faiss model with > 1024 results [#149](https://github.com/benfred/implicit/issues/149)
 * Add a reddit votes dataseet
-* Add similar users calculation in MF modeles (#139)[https://github.com/benfred/implicit/pull/139]
-* Add an option to whether to include previously liked items or not (#131)[https://github.com/benfred/implicit/issues/131]
-* Add option for negative preferences to ALS modele (#119)[https://github.com/benfred/implicit/issues/119)
-* Add filtering negative feedback in test set (#124)[https://github.com/benfred/implicit/issues/124)
+* Add similar users calculation in MF modeles [#139](https://github.com/benfred/implicit/pull/139)
+* Add an option to whether to include previously liked items or not [#131](https://github.com/benfred/implicit/issues/13)
+* Add option for negative preferences to ALS modele [#119](https://github.com/benfred/implicit/issues/119)
+* Add filtering negative feedback in test set [#124](https://github.com/benfred/implicit/issues/124)
 
 ## v0.3.6
 
