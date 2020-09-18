@@ -41,9 +41,9 @@ before_install:
 install:
 - |
   travis_wait travis_retry $PIP uninstall numpy -y
-  travis_wait travis_retry $PIP install -r requirements.txt --ignore-installed flake8 isort cpplint faiss annoy
+  travis_wait travis_retry $PIP install -r requirements.txt --ignore-installed flake8 isort cpplint annoy
   if  [ "${PYTHON:0:1}" = "3" ]; then
-     travis_wait travis_retry $PIP install nmslib
+     travis_wait travis_retry $PIP install nmslib faiss
   fi
   travis_retry $PIP install -e .
 
