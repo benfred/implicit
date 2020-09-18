@@ -62,7 +62,8 @@ def _least_squares(integral[:] indptr, integral[:] indices, float[:] data,
                    int num_threads=0):
     dtype = np.float64 if floating is double else np.float32
 
-    cdef int users = X.shape[0], factors = X.shape[1], u, i, j, index, err, one = 1
+    cdef integral users = X.shape[0], u, i, j, index
+    cdef int one = 1, factors = X.shape[1], err
     cdef floating confidence, temp
 
     YtY = np.dot(np.transpose(Y), Y)
@@ -139,7 +140,8 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
                       int num_threads=0, int cg_steps=3):
     dtype = np.float64 if floating is double else np.float32
 
-    cdef int users = X.shape[0], N = X.shape[1], u, i, index, one = 1, it
+    cdef integral users = X.shape[0], u, i, index
+    cdef int one = 1, it, N = X.shape[1]
     cdef floating confidence, temp, alpha, rsnew, rsold
     cdef floating zero = 0.
 
@@ -151,7 +153,6 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
     cdef floating * Ap
 
     with nogil, parallel(num_threads=num_threads):
-
         # allocate temp memory for each thread
         Ap = <floating *> malloc(sizeof(floating) * N)
         p = <floating *> malloc(sizeof(floating) * N)
@@ -242,7 +243,8 @@ def _calculate_loss(Cui, integral[:] indptr, integral[:] indices, float[:] data,
                     floating[:, :] X, floating[:, :] Y, float regularization,
                     int num_threads=0):
     dtype = np.float64 if floating is double else np.float32
-    cdef int users = X.shape[0], N = X.shape[1], items = Y.shape[0], u, i, index, one = 1
+    cdef integral users = X.shape[0], items = Y.shape[0], u, i, index
+    cdef int one = 1, N = X.shape[1]
     cdef floating confidence, temp
     cdef floating zero = 0.
 
