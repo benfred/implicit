@@ -60,7 +60,13 @@ def define_extensions(use_cython=False):
                          language='c++',
                          extra_compile_args=compile_args,
                          extra_link_args=link_args)
-               for name in ['_als', '_nearest_neighbours', 'bpr', 'lmf', 'evaluation']]
+               for name in ['_nearest_neighbours', 'lmf', 'evaluation']]
+    modules.extend([Extension("implicit.cpu." + name,
+                         [os.path.join("implicit", "cpu", name + src_ext)],
+                         language='c++',
+                         extra_compile_args=compile_args,
+                         extra_link_args=link_args)
+               for name in ['_als', 'bpr']])
     modules.append(Extension("implicit." + 'recommender_base',
                              [os.path.join("implicit", 'recommender_base' + src_ext),
                               os.path.join("implicit", 'topnc.cpp')],
@@ -69,11 +75,11 @@ def define_extensions(use_cython=False):
                              extra_link_args=link_args))
 
     if CUDA:
-        modules.append(Extension("implicit.cuda._cuda",
-                                 [os.path.join("implicit", "cuda", "_cuda" + src_ext),
-                                  os.path.join("implicit", "cuda", "als.cu"),
-                                  os.path.join("implicit", "cuda", "bpr.cu"),
-                                  os.path.join("implicit", "cuda", "matrix.cu")],
+        modules.append(Extension("implicit.gpu._cuda",
+                                 [os.path.join("implicit", "gpu", "_cuda" + src_ext),
+                                  os.path.join("implicit", "gpu", "als.cu"),
+                                  os.path.join("implicit", "gpu", "bpr.cu"),
+                                  os.path.join("implicit", "gpu", "matrix.cu")],
                                  language="c++",
                                  extra_compile_args=compile_args,
                                  extra_link_args=link_args,

@@ -5,8 +5,8 @@
 #include <cublas_v2.h>
 
 
-#include "implicit/cuda/als.h"
-#include "implicit/cuda/utils.cuh"
+#include "implicit/gpu/als.h"
+#include "implicit/gpu/utils.cuh"
 
 namespace implicit {
 

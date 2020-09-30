@@ -301,7 +301,7 @@ class MatrixFactorizationBase(RecommenderBase):
         user = self._user_factor(userid, user_items, recalculate_user)
 
         # check selected items are  in the model
-        if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:
+        if max(selected_items) >= self.item_factors.shape[0] or min(selected_items) < 0:
             raise IndexError("Some of selected itemids are not in the model")
 
         item_factors = self.item_factors[selected_items]
