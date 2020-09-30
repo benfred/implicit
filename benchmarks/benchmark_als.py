@@ -16,7 +16,7 @@ from implicit.als import AlternatingLeastSquares
 from implicit.nearest_neighbours import bm25_weight
 
 try:
-    import implicit.cuda  # noqa
+    import implicit.gpu  # noqa
     has_cuda = True
 except ImportError:
     has_cuda = False

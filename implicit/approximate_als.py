@@ -8,8 +8,8 @@ import logging
 
 import numpy
 
-import implicit.cuda
-from implicit.als import AlternatingLeastSquares
+import implicit.gpu
+from implicit.cpu.als import AlternatingLeastSquares
 
 log = logging.getLogger("implicit")
 
@@ -322,7 +322,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
     """
 
     def __init__(self, approximate_similar_items=True, approximate_recommend=True,
-                 nlist=400, nprobe=20, use_gpu=implicit.cuda.HAS_CUDA, random_state=None,
+                 nlist=400, nprobe=20, use_gpu=implicit.gpu.HAS_CUDA, random_state=None,
                  *args, **kwargs):
 
         self.similar_items_index = None
@@ -334,9 +334,10 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         # hyper-parameters for FAISS
         self.nlist = nlist
         self.nprobe = nprobe
+        self.use_gpu = use_gpu
         super(FaissAlternatingLeastSquares, self).__init__(*args,
                                                            random_state=random_state,
-                                                           use_gpu=use_gpu, **kwargs)
+                                                           **kwargs)
 
     def fit(self, Ciu, show_progress=True):
         import faiss

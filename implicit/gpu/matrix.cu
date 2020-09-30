@@ -2,8 +2,8 @@
 #include <cuda_runtime.h>
 #include "cublas_v2.h"
 
-#include "implicit/cuda/matrix.h"
-#include "implicit/cuda/utils.cuh"
+#include "implicit/gpu/matrix.h"
+#include "implicit/gpu/utils.cuh"
 
 namespace implicit {
 template <typename T>
@@ -24,20 +24,27 @@ CudaVector<T>::~CudaVector() {
 template struct CudaVector<int>;
 template struct CudaVector<float>;
 
-CudaDenseMatrix::CudaDenseMatrix(int rows, int cols, const float * host_data)
+CudaDenseMatrix::CudaDenseMatrix(int rows, int cols, float * host_data, bool cpu)
     : rows(rows), cols(cols) {
-    CHECK_CUDA(cudaMalloc(&data, rows * cols * sizeof(float)));
-    if (host_data) {
-        CHECK_CUDA(cudaMemcpy(data, host_data, rows * cols * sizeof(float), cudaMemcpyHostToDevice));
+    if (cpu) {
+        CHECK_CUDA(cudaMalloc(&data, rows * cols * sizeof(float)));
+        if (host_data) {
+            CHECK_CUDA(cudaMemcpy(data, host_data, rows * cols * sizeof(float), cudaMemcpyHostToDevice));
+        }
+        owns_data = true;
+    } else {
+        data = host_data;
+        owns_data = false;
     }
 }
-
 void CudaDenseMatrix::to_host(float * out) const {
     CHECK_CUDA(cudaMemcpy(out, data, rows * cols * sizeof(float), cudaMemcpyDeviceToHost));
 }
 
 CudaDenseMatrix::~CudaDenseMatrix() {
-    CHECK_CUDA(cudaFree(data));
+    if (owns_data) {
+        CHECK_CUDA(cudaFree(data));
+    }
 }
 
 CudaCSRMatrix::CudaCSRMatrix(int rows, int cols, int nonzeros,

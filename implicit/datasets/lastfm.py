@@ -33,7 +33,7 @@ def get_lastfm():
 
 def generate_dataset(filename, outputfilename):
     """ Generates a hdf5 lastfm datasetfile from the raw datafiles found at:
-    http://www.dtic.upf.edu/~ocelma/MusicRecommendationDataset/lastfm-360K.html
+    http://ocelma.net/MusicRecommendationDataset/lastfm-360K.html
 
     You shouldn't have to run this yourself, and can instead just download the
     output using the 'get_lastfm' funciton./

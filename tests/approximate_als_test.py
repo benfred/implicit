@@ -4,7 +4,7 @@ import unittest
 
 from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlternatingLeastSquares,
                                       NMSLibAlternatingLeastSquares)
-from implicit.cuda import HAS_CUDA
+from implicit.gpu import HAS_CUDA
 
 from .recommender_base_test import TestRecommenderBaseMixin
 

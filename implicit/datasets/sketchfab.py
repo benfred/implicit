@@ -37,16 +37,6 @@ def get_sketchfab():
 
 
 def generate_dataset(filename, outputfilename):
-    """ Generates a hdf5 lastfm datasetfile from the raw datafiles found at:
-    http://www.dtic.upf.edu/~ocelma/MusicRecommendationDataset/lastfm-360K.html
-
-    You shouldn't have to run this yourself, and can instead just download the
-    output using the 'get_lastfm' funciton./
-
-    Note there are some invalid entries in this dataset, running
-    this function will clean it up so pandas can read it:
-    https://github.com/benfred/bens-blog-code/blob/master/distance-metrics/musicdata.py#L39
-    """
     data = _read_dataframe(filename)
     _hfd5_from_dataframe(data, outputfilename)
 

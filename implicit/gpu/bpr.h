@@ -1,6 +1,6 @@
-#ifndef IMPLICIT_CUDA_BPR_H_
-#define IMPLICIT_CUDA_BPR_H_
-#include "implicit/cuda/matrix.h"
+#ifndef IMPLICIT_GPU_BPR_H_
+#define IMPLICIT_GPU_BPR_H_
+#include "implicit/gpu/matrix.h"
 #include <utility>
 
 namespace implicit {
@@ -14,4 +14,4 @@ std::pair<int, int>  bpr_update(const CudaVector<int> & userids,
                                 long seed,
                                 bool verify_negative_samples);
 }  // namespace implicit
-#endif  // IMPLICIT_CUDA_BPR_H_
+#endif  // IMPLICIT_GPU_BPR_H_

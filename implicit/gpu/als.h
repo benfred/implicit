@@ -1,6 +1,6 @@
-#ifndef IMPLICIT_CUDA_ALS_H_
-#define IMPLICIT_CUDA_ALS_H_
-#include "implicit/cuda/matrix.h"
+#ifndef IMPLICIT_GPU_ALS_H_
+#define IMPLICIT_GPU_ALS_H_
+#include "implicit/gpu/matrix.h"
 
 // Forward ref: don't require the whole cublas definition here
 struct cublasContext;
@@ -25,4 +25,4 @@ struct CudaLeastSquaresSolver {
     cublasContext * blas_handle;
 };
 }  // namespace implicit
-#endif  // IMPLICIT_CUDA_ALS_H_
+#endif  // IMPLICIT_GPU_ALS_H_

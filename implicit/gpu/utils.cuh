@@ -1,5 +1,5 @@
-#ifndef IMPLICIT_CUDA_UTILS_CUH_
-#define IMPLICIT_CUDA_UTILS_CUH_
+#ifndef IMPLICIT_GPU_UTILS_CUH_
+#define IMPLICIT_GPU_UTILS_CUH_
 #include <stdexcept>
 #include <sstream>
 
@@ -102,4 +102,4 @@ float dot(const float * a, const float * b) {
     return shared[0];
 }
 }  // namespace implicit
-#endif  // IMPLICIT_CUDA_UTILS_CUH_
+#endif  // IMPLICIT_GPU_UTILS_CUH_
