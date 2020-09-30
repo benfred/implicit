@@ -1,9 +1,11 @@
 import logging
 import time
 
+try:
+    import cupy as cp
+except ImportError:
+    pass
 
-# TODO import cupy
-import cupy as cp
 import numpy as np
 import scipy
 import scipy.sparse
@@ -14,32 +16,6 @@ import implicit.gpu
 from .matrix_factorization_base import MatrixFactorizationBase, check_random_state
 
 log = logging.getLogger("implicit")
-
-"""
-TODO:
-    -> move cpu models into subdir (als/bpr) ?
-    -> unify cuda/gpu directories
-    -> add option to convert to CPU model (and vice-versa)
-
-    Later:
-        -> Add recalculate user/item
-            -> move YtY calculation out of solver (pass in instead)
-            -> easy to do if we can pass YtY into solver
-
-    Not immediately important:
-        -> add recommend_all
-        -> add explain
-
-    Done:
-        -> Add docstrings
-        -> Create MatrixFactorization base class for gpu models
-                -> Add rank_items
-            -> add similar_users
-            -> investigate unittest failure in similar_items
-                -> believe its because we have only 50 items in checkboard matrix
-                    (and 32 factors unlike cpu)
-                -> lets just ignore for now
-"""
 
 
 class AlternatingLeastSquares(MatrixFactorizationBase):
