@@ -57,7 +57,6 @@ cdef class CuDenseMatrix(object):
             c_X = X
             self.c_matrix = new CudaDenseMatrix(X.shape[0], X.shape[1], &c_X[0, 0], True)
 
-
     def to_host(self, float[:, :] X):
         self.c_matrix.to_host(&X[0, 0])
 
@@ -107,9 +106,10 @@ cdef class CuLeastSquaresSolver(object):
     def __cinit__(self, int factors):
         self.c_solver = new CudaLeastSquaresSolver(factors)
 
-    def least_squares(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y, float regularization, int cg_steps):
-        self.c_solver.least_squares(dereference(cui.c_matrix), X.c_matrix, dereference(Y.c_matrix), regularization,
-                                    cg_steps)
+    def least_squares(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y,
+                      float regularization, int cg_steps):
+        self.c_solver.least_squares(dereference(cui.c_matrix), X.c_matrix, dereference(Y.c_matrix),
+                                    regularization, cg_steps)
 
     def calculate_loss(self, CuCSRMatrix cui, CuDenseMatrix X, CuDenseMatrix Y,
                        float regularization):

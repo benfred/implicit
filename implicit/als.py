@@ -1,7 +1,7 @@
 import numpy as np
 
-import implicit.gpu.als
 import implicit.cpu.als
+import implicit.gpu.als
 
 
 def AlternatingLeastSquares(

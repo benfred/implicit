@@ -66,7 +66,7 @@ def calculate_similar_artists(output_filename, model_name="als"):
 
     # if we're training an ALS based model, weight input for last.fm
     # by bm25
-    if  model_name.endswith("als"):
+    if model_name.endswith("als"):
         # lets weight these models by bm25weight.
         logging.debug("weighting matrix by bm25_weight")
         plays = bm25_weight(plays, K1=100, B=0.8)
