@@ -11,15 +11,15 @@ import scipy
 import scipy.sparse
 from tqdm.auto import tqdm
 
-
 import implicit.gpu
+
 from .matrix_factorization_base import MatrixFactorizationBase, check_random_state
 
 log = logging.getLogger("implicit")
 
 
 class AlternatingLeastSquares(MatrixFactorizationBase):
-    """ Alternating Least Squares
+    """Alternating Least Squares
 
     A Recommendation Model based off the algorithms described in the paper 'Collaborative
     Filtering for Implicit Feedback Datasets' with performance optimizations described in
@@ -48,9 +48,14 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Array of latent factors for each user in the training set
     """
 
-    def __init__(self, factors=64, regularization=0.01,
-                 iterations=15, calculate_training_loss=False,
-                 random_state=None):
+    def __init__(
+        self,
+        factors=64,
+        regularization=0.01,
+        iterations=15,
+        calculate_training_loss=False,
+        random_state=None,
+    ):
         if not implicit.gpu.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
@@ -62,8 +67,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # the 'dot' function in 'implicit/gpu/utils.cuh)
         if factors % 32:
             padding = 32 - factors % 32
-            log.warning("GPU training requires factor size to be a multiple of 32."
-                        " Increasing factors from %i to %i.", factors, factors + padding)
+            log.warning(
+                "GPU training requires factor size to be a multiple of 32."
+                " Increasing factors from %i to %i.",
+                factors,
+                factors + padding,
+            )
             factors += padding
 
         # parameters on how to factorize
@@ -78,7 +87,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.cg_steps = 3
 
     def fit(self, item_users, show_progress=True):
-        """ Factorizes the item_users matrix.
+        """Factorizes the item_users matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
         initialized with a latent factor model of the input data.
@@ -126,10 +135,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         # Initialize the variables randomly if they haven't already been set
         if self.user_factors is None:
-            self.user_factors = (random_state.rand(users, self.factors, dtype=cp.float32) - .5)
+            self.user_factors = random_state.rand(users, self.factors, dtype=cp.float32) - 0.5
             self.user_factors /= self.factors
         if self.item_factors is None:
-            self.item_factors = (random_state.rand(items, self.factors, dtype=cp.float32) - .5)
+            self.item_factors = random_state.rand(items, self.factors, dtype=cp.float32) - 0.5
             self.item_factors /= self.factors
 
         log.debug("Initialized factors in %s", time.time() - s)

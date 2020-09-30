@@ -3,14 +3,15 @@ try:
 except ImportError:
     pass
 
-import numpy as np
 import itertools
+
+import numpy as np
 
 from ..recommender_base import RecommenderBase
 
 
 class MatrixFactorizationBase(RecommenderBase):
-    """ Base class for MF models running on the GPU.
+    """Base class for MF models running on the GPU.
 
     This adds support for inference to run on the GPU as well as training.
     Factors are stored as cupy arrays.
@@ -29,8 +30,15 @@ class MatrixFactorizationBase(RecommenderBase):
         self._item_norms = None
         self._user_norms = None
 
-    def recommend(self, userid, user_items,
-                  N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
+    def recommend(
+        self,
+        userid,
+        user_items,
+        N=10,
+        filter_already_liked_items=True,
+        filter_items=None,
+        recalculate_user=False,
+    ):
         if recalculate_user:
             raise NotImplementedError("recalculate_user isn't support on GPU yet")
 
@@ -129,7 +137,7 @@ def check_random_state(random_state):
 
     if isinstance(random_state, np.random.RandomState):
         # we need to convert from numpy random state to cupy random state.
-        return cp.random.RandomState(random_state.randint(2**63))
+        return cp.random.RandomState(random_state.randint(2 ** 63))
 
     # otherwise try to initialize a new one, and let it fail through
     # on the numpy side if it doesn't work

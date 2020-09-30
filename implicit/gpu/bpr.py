@@ -15,7 +15,7 @@ log = logging.getLogger("implicit")
 
 
 class BayesianPersonalizedRanking(MatrixFactorizationBase):
-    """ Bayesian Personalized Ranking
+    """Bayesian Personalized Ranking
 
     A recommender model that learns  a matrix factorization embedding based off minimizing the
     pairwise ranking loss described in the paper `BPR: Bayesian Personalized Ranking from Implicit
@@ -46,16 +46,29 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
     user_factors : ndarray
         Array of latent factors for each user in the training set
     """
-    def __init__(self, factors=100, learning_rate=0.01, regularization=0.01, dtype=np.float32,
-                 iterations=100, verify_negative_samples=True, random_state=None):
+
+    def __init__(
+        self,
+        factors=100,
+        learning_rate=0.01,
+        regularization=0.01,
+        dtype=np.float32,
+        iterations=100,
+        verify_negative_samples=True,
+        random_state=None,
+    ):
         super(BayesianPersonalizedRanking, self).__init__()
         if not implicit.gpu.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
         if (factors + 1) % 32:
             padding = 32 - (factors + 1) % 32
-            log.warning("GPU training requires factor size to be a multiple of 32 - 1."
-                        " Increasing factors from %i to %i.", factors, factors + padding)
+            log.warning(
+                "GPU training requires factor size to be a multiple of 32 - 1."
+                " Increasing factors from %i to %i.",
+                factors,
+                factors + padding,
+            )
             factors += padding
 
         self.factors = factors
@@ -66,7 +79,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.random_state = random_state
 
     def fit(self, item_users, show_progress=True):
-        """ Factorizes the item_users matrix
+        """Factorizes the item_users matrix
 
         Parameters
         ----------
@@ -102,7 +115,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # Note: the final dimension is for the item bias term - which is set to a 1 for all users
         # this simplifies interfacing with approximate nearest neighbours libraries etc
         if self.item_factors is None:
-            self.item_factors = rs.rand(items, self.factors + 1, dtype=cp.float32) - .5
+            self.item_factors = rs.rand(items, self.factors + 1, dtype=cp.float32) - 0.5
             self.item_factors /= self.factors
 
             # set factors to all zeros for items without any ratings
@@ -110,7 +123,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.item_factors[item_counts == 0] = cp.zeros(self.factors + 1)
 
         if self.user_factors is None:
-            self.user_factors = rs.rand(users, self.factors + 1, dtype=cp.float32) - .5
+            self.user_factors = rs.rand(users, self.factors + 1, dtype=cp.float32) - 0.5
             self.user_factors /= self.factors
 
             # set factors to all zeros for users without any ratings
@@ -130,14 +143,23 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
-                correct, skipped = implicit.gpu.cu_bpr_update(userids, itemids, indptr,
-                                                              X, Y, self.learning_rate,
-                                                              self.regularization,
-                                                              rs.randint(2**31),
-                                                              self.verify_negative_samples)
+                correct, skipped = implicit.gpu.cu_bpr_update(
+                    userids,
+                    itemids,
+                    indptr,
+                    X,
+                    Y,
+                    self.learning_rate,
+                    self.regularization,
+                    rs.randint(2 ** 31),
+                    self.verify_negative_samples,
+                )
                 progress.update(1)
                 total = len(user_items.data)
                 if total != 0 and total != skipped:
                     progress.set_postfix(
-                        {"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
-                         "skipped": "%.2f%%" % (100.0 * skipped / total)})
+                        {
+                            "correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
+                            "skipped": "%.2f%%" % (100.0 * skipped / total),
+                        }
+                    )

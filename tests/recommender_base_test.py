@@ -12,8 +12,8 @@ from implicit.nearest_neighbours import ItemItemRecommender
 
 
 class TestRecommenderBaseMixin(object):
-    """ Mixin to test a bunch of common functionality in models
-    deriving from RecommenderBase """
+    """Mixin to test a bunch of common functionality in models
+    deriving from RecommenderBase"""
 
     def _get_model(self):
         raise NotImplementedError()
@@ -59,8 +59,9 @@ class TestRecommenderBaseMixin(object):
 
             # we should get the same item if we recalculate_user
             try:
-                recs_from_liked = model.recommend(userid=0, user_items=user_vector,
-                                                  N=1, recalculate_user=True)
+                recs_from_liked = model.recommend(
+                    userid=0, user_items=user_vector, N=1, recalculate_user=True
+                )
                 self.assertEqual(recs[0][0], recs_from_liked[0][0])
 
                 # TODO: if we set regularization for the model to be sufficiently high, the
@@ -80,8 +81,9 @@ class TestRecommenderBaseMixin(object):
 
         # we've withheld the diagnoal for testing, and have verified that in test_recommend
         # it is returned for each user. So p@1 should be 1.0
-        p = precision_at_k(model, user_items.tocsr(), csr_matrix(np.eye(50)), K=1,
-                           show_progress=False)
+        p = precision_at_k(
+            model, user_items.tocsr(), csr_matrix(np.eye(50)), K=1, show_progress=False
+        )
         self.assertEqual(p, 1)
 
     def test_similar_users(self):
@@ -168,9 +170,9 @@ class TestRecommenderBaseMixin(object):
         pickle.loads(pickled)
 
     def get_checker_board(self, X):
-        """ Returns a 'checkerboard' matrix: where every even userid has liked
+        """Returns a 'checkerboard' matrix: where every even userid has liked
         every even itemid and every odd userid has liked every odd itemid.
-        The diagonal is withheld for testing recommend methods """
+        The diagonal is withheld for testing recommend methods"""
         ret = np.zeros((X, X))
         for i in range(X):
             for j in range(i % 2, X, 2):

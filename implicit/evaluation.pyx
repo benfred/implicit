@@ -1,16 +1,16 @@
 # distutils: language = c++
 # cython: language_level=3
 
-from tqdm.auto import tqdm
-import numpy as np
-from scipy.sparse import coo_matrix, csr_matrix
 import cython
+import numpy as np
 from cython.operator import dereference
 from cython.parallel import parallel, prange
-from libc.stdlib cimport malloc, free
-from libc.string cimport memset
-from libc.math cimport fmin
+from scipy.sparse import coo_matrix, csr_matrix
+from tqdm.auto import tqdm
 
+from libc.math cimport fmin
+from libc.stdlib cimport free, malloc
+from libc.string cimport memset
 from libcpp.unordered_set cimport unordered_set
 
 

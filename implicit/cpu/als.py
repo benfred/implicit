@@ -9,15 +9,15 @@ import scipy
 import scipy.sparse
 from tqdm.auto import tqdm
 
-from . import _als
 from ..recommender_base import MatrixFactorizationBase
 from ..utils import check_blas_config, check_random_state, nonzeros
+from . import _als
 
 log = logging.getLogger("implicit")
 
 
 class AlternatingLeastSquares(MatrixFactorizationBase):
-    """ Alternating Least Squares
+    """Alternating Least Squares
 
     A Recommendation Model based off the algorithms described in the paper 'Collaborative
     Filtering for Implicit Feedback Datasets' with performance optimizations described in
@@ -56,10 +56,18 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Array of latent factors for each user in the training set
     """
 
-    def __init__(self, factors=100, regularization=0.01, dtype=np.float32,
-                 use_native=True, use_cg=True,
-                 iterations=15, calculate_training_loss=False, num_threads=0,
-                 random_state=None):
+    def __init__(
+        self,
+        factors=100,
+        regularization=0.01,
+        dtype=np.float32,
+        use_native=True,
+        use_cg=True,
+        iterations=15,
+        calculate_training_loss=False,
+        num_threads=0,
+        random_state=None,
+    ):
 
         super(AlternatingLeastSquares, self).__init__()
 
@@ -86,7 +94,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         check_blas_config()
 
     def fit(self, item_users, show_progress=True):
-        """ Factorizes the item_users matrix.
+        """Factorizes the item_users matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
         initialized with a latent factor model of the input data.
@@ -150,15 +158,30 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             # alternate between learning the user_factors from the item_factors and vice-versa
             for iteration in range(self.iterations):
                 s = time.time()
-                solver(Cui, self.user_factors, self.item_factors, self.regularization,
-                       num_threads=self.num_threads)
-                solver(Ciu, self.item_factors, self.user_factors, self.regularization,
-                       num_threads=self.num_threads)
+                solver(
+                    Cui,
+                    self.user_factors,
+                    self.item_factors,
+                    self.regularization,
+                    num_threads=self.num_threads,
+                )
+                solver(
+                    Ciu,
+                    self.item_factors,
+                    self.user_factors,
+                    self.regularization,
+                    num_threads=self.num_threads,
+                )
                 progress.update(1)
 
                 if self.calculate_training_loss:
-                    loss = _als.calculate_loss(Cui, self.user_factors, self.item_factors,
-                                               self.regularization, num_threads=self.num_threads)
+                    loss = _als.calculate_loss(
+                        Cui,
+                        self.user_factors,
+                        self.item_factors,
+                        self.regularization,
+                        num_threads=self.num_threads,
+                    )
                     progress.set_postfix({"loss": loss})
 
                 if self.fit_callback:
@@ -170,17 +193,27 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self._check_fit_errors()
 
     def recalculate_user(self, userid, user_items):
-        return user_factor(self.item_factors, self.YtY,
-                           user_items.tocsr(), userid,
-                           self.regularization, self.factors)
+        return user_factor(
+            self.item_factors,
+            self.YtY,
+            user_items.tocsr(),
+            userid,
+            self.regularization,
+            self.factors,
+        )
 
     def recalculate_item(self, itemid, react_users):
-        return item_factor(self.user_factors, self.XtX,
-                           react_users.tocsr(), itemid,
-                           self.regularization, self.factors)
+        return item_factor(
+            self.user_factors,
+            self.XtX,
+            react_users.tocsr(),
+            itemid,
+            self.regularization,
+            self.factors,
+        )
 
     def explain(self, userid, user_items, itemid, user_weights=None, N=10):
-        """ Provides explanations for why the item is liked by the user.
+        """Provides explanations for why the item is liked by the user.
 
         Parameters
         ---------
@@ -211,9 +244,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # from section 5 of the paper CF for Implicit Feedback Datasets
         user_items = user_items.tocsr()
         if user_weights is None:
-            A, _ = user_linear_equation(self.item_factors, self.YtY,
-                                        user_items, userid,
-                                        self.regularization, self.factors)
+            A, _ = user_linear_equation(
+                self.item_factors, self.YtY, user_items, userid, self.regularization, self.factors
+            )
             user_weights = scipy.linalg.cho_factor(A)
         seed_item = self.item_factors[itemid]
 
@@ -265,13 +298,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
 
 def alternating_least_squares(Ciu, factors, **kwargs):
-    """ factorizes the matrix Cui using an implicit alternating least squares
+    """factorizes the matrix Cui using an implicit alternating least squares
     algorithm. Note: this method is deprecated, consider moving to the
     AlternatingLeastSquares class instead
 
     """
-    log.warning("This method is deprecated. Please use the AlternatingLeastSquares"
-                " class instead")
+    log.warning("This method is deprecated. Please use the AlternatingLeastSquares class instead")
 
     model = AlternatingLeastSquares(factors=factors, **kwargs)
     model.fit(Ciu)
@@ -279,7 +311,7 @@ def alternating_least_squares(Ciu, factors, **kwargs):
 
 
 def least_squares(Cui, X, Y, regularization, num_threads=0):
-    """ For each user in Cui, calculate factors Xu for them
+    """For each user in Cui, calculate factors Xu for them
     using least squares on Y.
 
     Note: this is at least 10 times slower than the cython version included
@@ -341,7 +373,7 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
                 r += (confidence - (confidence - 1) * Y[i].dot(x)) * Y[i]
             else:
                 confidence *= -1
-                r += - (confidence - 1) * Y[i].dot(x) * Y[i]
+                r += -(confidence - 1) * Y[i].dot(x) * Y[i]
 
         p = r.copy()
         rsold = r.dot(r)
