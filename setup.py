@@ -100,10 +100,10 @@ def define_extensions(use_cython=False):
 
 def extract_gcc_binaries():
     """Try to find GCC on OSX for OpenMP support."""
-    patterns = ['/opt/local/bin/g++-mp-[0-9].[0-9]',
-                '/opt/local/bin/g++-mp-[0-9]',
-                '/usr/local/bin/g++-[0-9].[0-9]',
-                '/usr/local/bin/g++-[0-9]']
+    patterns = ['/opt/local/bin/g++-mp-[0-9]*.[0-9]*',
+                '/opt/local/bin/g++-mp-[0-9]*',
+                '/usr/local/bin/g++-[0-9]*.[0-9]*',
+                '/usr/local/bin/g++-[0-9]*']
     if platform.system() == 'Darwin':
         gcc_binaries = []
         for pattern in patterns:
