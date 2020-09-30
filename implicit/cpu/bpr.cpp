@@ -6400,7 +6400,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_2bpr_update(CYTHON_UNUSED PyObject
  *     with nogil, parallel(num_threads=num_threads):
  * 
  *         thread_id = get_thread_num()             # <<<<<<<<<<<<<<
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  */
                 __pyx_v_thread_id = implicit::get_thread_num();
@@ -6408,7 +6408,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_2bpr_update(CYTHON_UNUSED PyObject
                 /* "implicit/cpu/bpr.pyx":226
  * 
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):             # <<<<<<<<<<<<<<
+ *         for i in prange(samples, schedule='static'):             # <<<<<<<<<<<<<<
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]
  */
@@ -6419,7 +6419,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_2bpr_update(CYTHON_UNUSED PyObject
                     if (__pyx_t_4 > 0)
                     {
                         #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(guided)
+                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(static)
                         #endif /* _OPENMP */
                         for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                             {
@@ -6439,7 +6439,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_2bpr_update(CYTHON_UNUSED PyObject
 
                                 /* "implicit/cpu/bpr.pyx":227
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
  *             liked_id = itemids[liked_index]
  * 
@@ -6447,7 +6447,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_2bpr_update(CYTHON_UNUSED PyObject
                                 __pyx_v_liked_index = __pyx_f_8implicit_3cpu_3bpr_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
                                 /* "implicit/cpu/bpr.pyx":228
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]             # <<<<<<<<<<<<<<
  * 
@@ -7045,7 +7045,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_4bpr_update(CYTHON_UNUSED PyObject
  *     with nogil, parallel(num_threads=num_threads):
  * 
  *         thread_id = get_thread_num()             # <<<<<<<<<<<<<<
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  */
                 __pyx_v_thread_id = implicit::get_thread_num();
@@ -7053,7 +7053,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_4bpr_update(CYTHON_UNUSED PyObject
                 /* "implicit/cpu/bpr.pyx":226
  * 
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):             # <<<<<<<<<<<<<<
+ *         for i in prange(samples, schedule='static'):             # <<<<<<<<<<<<<<
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]
  */
@@ -7064,7 +7064,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_4bpr_update(CYTHON_UNUSED PyObject
                     if (__pyx_t_4 > 0)
                     {
                         #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(guided)
+                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(static)
                         #endif /* _OPENMP */
                         for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                             {
@@ -7084,7 +7084,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_4bpr_update(CYTHON_UNUSED PyObject
 
                                 /* "implicit/cpu/bpr.pyx":227
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
  *             liked_id = itemids[liked_index]
  * 
@@ -7092,7 +7092,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_4bpr_update(CYTHON_UNUSED PyObject
                                 __pyx_v_liked_index = __pyx_f_8implicit_3cpu_3bpr_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
                                 /* "implicit/cpu/bpr.pyx":228
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]             # <<<<<<<<<<<<<<
  * 
@@ -7690,7 +7690,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_6bpr_update(CYTHON_UNUSED PyObject
  *     with nogil, parallel(num_threads=num_threads):
  * 
  *         thread_id = get_thread_num()             # <<<<<<<<<<<<<<
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  */
                 __pyx_v_thread_id = implicit::get_thread_num();
@@ -7698,7 +7698,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_6bpr_update(CYTHON_UNUSED PyObject
                 /* "implicit/cpu/bpr.pyx":226
  * 
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):             # <<<<<<<<<<<<<<
+ *         for i in prange(samples, schedule='static'):             # <<<<<<<<<<<<<<
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]
  */
@@ -7709,7 +7709,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_6bpr_update(CYTHON_UNUSED PyObject
                     if (__pyx_t_4 > 0)
                     {
                         #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(guided)
+                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(static)
                         #endif /* _OPENMP */
                         for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                             {
@@ -7729,7 +7729,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_6bpr_update(CYTHON_UNUSED PyObject
 
                                 /* "implicit/cpu/bpr.pyx":227
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
  *             liked_id = itemids[liked_index]
  * 
@@ -7737,7 +7737,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_6bpr_update(CYTHON_UNUSED PyObject
                                 __pyx_v_liked_index = __pyx_f_8implicit_3cpu_3bpr_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
                                 /* "implicit/cpu/bpr.pyx":228
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]             # <<<<<<<<<<<<<<
  * 
@@ -8335,7 +8335,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_8bpr_update(CYTHON_UNUSED PyObject
  *     with nogil, parallel(num_threads=num_threads):
  * 
  *         thread_id = get_thread_num()             # <<<<<<<<<<<<<<
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  */
                 __pyx_v_thread_id = implicit::get_thread_num();
@@ -8343,7 +8343,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_8bpr_update(CYTHON_UNUSED PyObject
                 /* "implicit/cpu/bpr.pyx":226
  * 
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):             # <<<<<<<<<<<<<<
+ *         for i in prange(samples, schedule='static'):             # <<<<<<<<<<<<<<
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]
  */
@@ -8354,7 +8354,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_8bpr_update(CYTHON_UNUSED PyObject
                     if (__pyx_t_4 > 0)
                     {
                         #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(guided)
+                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(static)
                         #endif /* _OPENMP */
                         for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                             {
@@ -8374,7 +8374,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_8bpr_update(CYTHON_UNUSED PyObject
 
                                 /* "implicit/cpu/bpr.pyx":227
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
  *             liked_id = itemids[liked_index]
  * 
@@ -8382,7 +8382,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_8bpr_update(CYTHON_UNUSED PyObject
                                 __pyx_v_liked_index = __pyx_f_8implicit_3cpu_3bpr_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
                                 /* "implicit/cpu/bpr.pyx":228
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]             # <<<<<<<<<<<<<<
  * 
@@ -8978,7 +8978,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_10bpr_update(CYTHON_UNUSED PyObjec
  *     with nogil, parallel(num_threads=num_threads):
  * 
  *         thread_id = get_thread_num()             # <<<<<<<<<<<<<<
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  */
                 __pyx_v_thread_id = implicit::get_thread_num();
@@ -8986,7 +8986,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_10bpr_update(CYTHON_UNUSED PyObjec
                 /* "implicit/cpu/bpr.pyx":226
  * 
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):             # <<<<<<<<<<<<<<
+ *         for i in prange(samples, schedule='static'):             # <<<<<<<<<<<<<<
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]
  */
@@ -8997,7 +8997,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_10bpr_update(CYTHON_UNUSED PyObjec
                     if (__pyx_t_4 > 0)
                     {
                         #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(guided)
+                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(static)
                         #endif /* _OPENMP */
                         for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                             {
@@ -9017,7 +9017,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_10bpr_update(CYTHON_UNUSED PyObjec
 
                                 /* "implicit/cpu/bpr.pyx":227
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
  *             liked_id = itemids[liked_index]
  * 
@@ -9025,7 +9025,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_10bpr_update(CYTHON_UNUSED PyObjec
                                 __pyx_v_liked_index = __pyx_f_8implicit_3cpu_3bpr_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
                                 /* "implicit/cpu/bpr.pyx":228
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]             # <<<<<<<<<<<<<<
  * 
@@ -9621,7 +9621,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_12bpr_update(CYTHON_UNUSED PyObjec
  *     with nogil, parallel(num_threads=num_threads):
  * 
  *         thread_id = get_thread_num()             # <<<<<<<<<<<<<<
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  */
                 __pyx_v_thread_id = implicit::get_thread_num();
@@ -9629,7 +9629,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_12bpr_update(CYTHON_UNUSED PyObjec
                 /* "implicit/cpu/bpr.pyx":226
  * 
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):             # <<<<<<<<<<<<<<
+ *         for i in prange(samples, schedule='static'):             # <<<<<<<<<<<<<<
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]
  */
@@ -9640,7 +9640,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_12bpr_update(CYTHON_UNUSED PyObjec
                     if (__pyx_t_4 > 0)
                     {
                         #ifdef _OPENMP
-                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(guided)
+                        #pragma omp for lastprivate(__pyx_v_disliked) lastprivate(__pyx_v_disliked_id) lastprivate(__pyx_v_disliked_index) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_liked) lastprivate(__pyx_v_liked_id) lastprivate(__pyx_v_liked_index) lastprivate(__pyx_v_score) lastprivate(__pyx_v_temp) lastprivate(__pyx_v_user) lastprivate(__pyx_v_z) schedule(static)
                         #endif /* _OPENMP */
                         for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                             {
@@ -9660,7 +9660,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_12bpr_update(CYTHON_UNUSED PyObjec
 
                                 /* "implicit/cpu/bpr.pyx":227
  *         thread_id = get_thread_num()
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)             # <<<<<<<<<<<<<<
  *             liked_id = itemids[liked_index]
  * 
@@ -9668,7 +9668,7 @@ static PyObject *__pyx_pf_8implicit_3cpu_3bpr_12bpr_update(CYTHON_UNUSED PyObjec
                                 __pyx_v_liked_index = __pyx_f_8implicit_3cpu_3bpr_9RNGVector_generate(__pyx_v_rng, __pyx_v_thread_id);
 
                                 /* "implicit/cpu/bpr.pyx":228
- *         for i in prange(samples, schedule='guided'):
+ *         for i in prange(samples, schedule='static'):
  *             liked_index = rng.generate(thread_id)
  *             liked_id = itemids[liked_index]             # <<<<<<<<<<<<<<
  * 
