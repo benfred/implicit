@@ -98,7 +98,7 @@ class TestRecommenderBaseMixin(object):
 
     def test_similar_items(self):
         model = self._get_model()
-        model.fit(self.get_checker_board(50), show_progress=False)
+        model.fit(self.get_checker_board(256), show_progress=False)
         for itemid in range(50):
             recs = model.similar_items(itemid, N=10)
             for r, _ in recs:

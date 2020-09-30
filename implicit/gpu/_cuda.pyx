@@ -19,7 +19,7 @@ cdef extern from "als.h" namespace "implicit" nogil:
                       const int * row, const int * col, const float * data) except +
 
     cdef cppclass CudaDenseMatrix:
-        CudaDenseMatrix(int rows, int cols, const float * data) except +
+        CudaDenseMatrix(int rows, int cols, float * data, bool host) except +
         void to_host(float * output) except +
 
     cdef cppclass CudaLeastSquaresSolver:
@@ -44,8 +44,18 @@ cdef extern from "bpr.h" namespace "implicit" nogil:
 cdef class CuDenseMatrix(object):
     cdef CudaDenseMatrix* c_matrix
 
-    def __cinit__(self, float[:, :] X):
-        self.c_matrix = new CudaDenseMatrix(X.shape[0], X.shape[1], &X[0, 0])
+    def __cinit__(self, X):
+        cdef float[:, :] c_X
+        cdef long data
+        cai = getattr(X, "__cuda_array_interface__", None)
+        if cai:
+            shape = cai["shape"]
+            data = cai["data"][0]
+            self.c_matrix = new CudaDenseMatrix(shape[0], shape[1], <float*>data, False)
+        else:
+            # otherwise assume we're a buffer on host
+            c_X = X
+            self.c_matrix = new CudaDenseMatrix(X.shape[0], X.shape[1], &c_X[0, 0], True)
 
     def to_host(self, float[:, :] X):
         self.c_matrix.to_host(&X[0, 0])

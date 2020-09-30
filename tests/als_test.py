@@ -6,7 +6,7 @@ import numpy as np
 from scipy.sparse import csr_matrix, random
 
 from implicit.als import AlternatingLeastSquares
-from implicit.cuda import HAS_CUDA
+from implicit.gpu import HAS_CUDA
 
 from .recommender_base_test import TestRecommenderBaseMixin
 
@@ -128,6 +128,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                                         regularization=20,
                                         use_native=False,
                                         use_cg=False,
+                                        use_gpu=False,
                                         iterations=100,
                                         random_state=23)
         model.fit(user_items, show_progress=False)
@@ -198,6 +199,12 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         recs = model.recommend_all(user_items, N=1, filter_items=[0], show_progress=False)
         self.assertTrue(0 not in recs)
 
+
+if HAS_CUDA:
+    class GPUALSTest(unittest.TestCase, TestRecommenderBaseMixin):
+        def _get_model(self):
+            return AlternatingLeastSquares(factors=32, regularization=0,
+                                           random_state=23)
 
 if __name__ == "__main__":
     unittest.main()

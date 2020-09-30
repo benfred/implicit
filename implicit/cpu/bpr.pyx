@@ -16,10 +16,8 @@ import scipy.sparse
 import random
 from libcpp.vector cimport vector
 
-import implicit.cuda
-
-from .recommender_base import MatrixFactorizationBase
-from .utils import check_random_state
+from ..recommender_base import MatrixFactorizationBase
+from ..utils import check_random_state
 
 
 log = logging.getLogger("implicit")
@@ -83,8 +81,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         The regularization factor to use
     dtype : data-type, optional
         Specifies whether to generate 64 bit or 32 bit floating point factors
-    use_gpu : bool, optional
-        Fit on the GPU if available
     iterations : int, optional
         The number of training epochs to use when fitting the data
     verify_negative_samples: bool, optional
@@ -107,22 +103,15 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         Array of latent factors for each user in the training set
     """
     def __init__(self, factors=100, learning_rate=0.01, regularization=0.01, dtype=np.float32,
-                 iterations=100, use_gpu=implicit.cuda.HAS_CUDA, num_threads=0,
+                 iterations=100, num_threads=0,
                  verify_negative_samples=True, random_state=None):
         super(BayesianPersonalizedRanking, self).__init__()
-
-        if use_gpu and (factors + 1) % 32:
-            padding = 32 - (factors + 1) % 32
-            log.warning("GPU training requires factor size to be a multiple of 32 - 1."
-                        " Increasing factors from %i to %i.", factors, factors + padding)
-            factors += padding
 
         self.factors = factors
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.regularization = regularization
         self.dtype = dtype
-        self.use_gpu = use_gpu
         self.num_threads = num_threads
         self.verify_negative_samples = verify_negative_samples
         self.random_state = random_state
@@ -182,8 +171,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 
             self.user_factors[:, self.factors] = 1.0
 
-        if self.use_gpu:
-            return self._fit_gpu(user_items, userids, rs, show_progress)
+        # invalidate cached norms
+        self._user_norms = self._item_norms = None
 
         # we accept num_threads = 0 as indicating to create as many threads as we have cores,
         # but in that case we need the number of cores, since we need to initialize RNG state per
@@ -211,44 +200,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                          "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
         self._check_fit_errors()
-
-    def _fit_gpu(self, user_items, userids_host, random_state=None, show_progress=True):
-        # if called from `fit`, this is a passthrough
-        rs = check_random_state(random_state)
-
-        if not implicit.cuda.HAS_CUDA:
-            raise ValueError("No CUDA extension has been built, can't train on GPU.")
-
-        if self.dtype == np.float64:
-            log.warning("Factors of dtype float64 aren't supported with gpu fitting. "
-                        "Converting factors to float32")
-            self.user_factors = self.user_factors.astype(np.float32)
-            self.item_factors = self.item_factors.astype(np.float32)
-
-        userids = implicit.cuda.CuIntVector(userids_host)
-        itemids = implicit.cuda.CuIntVector(user_items.indices)
-        indptr = implicit.cuda.CuIntVector(user_items.indptr)
-
-        X = implicit.cuda.CuDenseMatrix(self.user_factors)
-        Y = implicit.cuda.CuDenseMatrix(self.item_factors)
-
-        log.debug("Running %i BPR training epochs", self.iterations)
-        with tqdm(total=self.iterations, disable=not show_progress) as progress:
-            for epoch in range(self.iterations):
-                correct, skipped = implicit.cuda.cu_bpr_update(userids, itemids, indptr,
-                                                               X, Y, self.learning_rate,
-                                                               self.regularization,
-                                                               rs.randint(2**31),
-                                                               self.verify_negative_samples)
-                progress.update(1)
-                total = len(user_items.data)
-                if total != 0 and total != skipped:
-                    progress.set_postfix(
-                        {"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
-                         "skipped": "%.2f%%" % (100.0 * skipped / total)})
-
-        X.to_host(self.user_factors)
-        Y.to_host(self.item_factors)
 
 
 @cython.cdivision(True)

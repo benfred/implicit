@@ -3,7 +3,7 @@ import unittest
 from scipy.sparse import csr_matrix
 
 from implicit.bpr import BayesianPersonalizedRanking
-from implicit.cuda import HAS_CUDA
+from implicit.gpu import HAS_CUDA
 
 from .recommender_base_test import TestRecommenderBaseMixin
 
@@ -29,8 +29,8 @@ if HAS_CUDA:
     class BPRGPUTest(unittest.TestCase, TestRecommenderBaseMixin):
 
         def _get_model(self):
-            return BayesianPersonalizedRanking(factors=3, regularization=0, use_gpu=True,
-                                               random_state=42)
+            return BayesianPersonalizedRanking(factors=31, regularization=0, use_gpu=True,
+                                               learning_rate=0.02, random_state=42)
 
 if __name__ == "__main__":
     unittest.main()
