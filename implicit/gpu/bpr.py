@@ -4,7 +4,6 @@ try:
     import cupy as cp
 except ImportError:
     pass
-
 import numpy as np
 from tqdm.auto import tqdm
 
