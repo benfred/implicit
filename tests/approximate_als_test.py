@@ -14,7 +14,7 @@ try:
 
     class AnnoyALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
-            return AnnoyAlternatingLeastSquares(factors=2, regularization=0, use_gpu=False,
+            return AnnoyAlternatingLeastSquares(factors=2, regularization=0,
                                                 random_state=23)
 
         def test_pickle(self):
@@ -30,7 +30,7 @@ try:
     class NMSLibALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
             return NMSLibAlternatingLeastSquares(factors=2, regularization=0,
-                                                 index_params={'post': 2}, use_gpu=False,
+                                                 index_params={'post': 2},
                                                  random_state=23)
 
         def test_pickle(self):
