@@ -6472,7 +6472,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -6485,7 +6485,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
  *         try:             # <<<<<<<<<<<<<<
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  */
                 /*try:*/ {
@@ -6493,7 +6493,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
                   /* "implicit/lmf.pyx":234
  *         thread_id = threadid()
  *         try:
- *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='static'):             # <<<<<<<<<<<<<<
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue
  */
@@ -6504,7 +6504,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
                       if (__pyx_t_4 > 0)
                       {
                           #ifdef _OPENMP
-                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(static)
                           #endif /* _OPENMP */
                           for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                               {
@@ -6519,7 +6519,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
 
                                   /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -6532,7 +6532,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
                                   if (__pyx_t_7) {
 
                                     /* "implicit/lmf.pyx":236
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue             # <<<<<<<<<<<<<<
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -6542,7 +6542,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_2lmf_update(CYTHON_UNUSED PyObject *__p
 
                                     /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -7246,7 +7246,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -7259,7 +7259,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
  *         try:             # <<<<<<<<<<<<<<
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  */
                 /*try:*/ {
@@ -7267,7 +7267,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
                   /* "implicit/lmf.pyx":234
  *         thread_id = threadid()
  *         try:
- *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='static'):             # <<<<<<<<<<<<<<
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue
  */
@@ -7278,7 +7278,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
                       if (__pyx_t_3 > 0)
                       {
                           #ifdef _OPENMP
-                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(static)
                           #endif /* _OPENMP */
                           for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_3; __pyx_t_2++){
                               {
@@ -7293,7 +7293,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
 
                                   /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -7306,7 +7306,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
                                   if (__pyx_t_6) {
 
                                     /* "implicit/lmf.pyx":236
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue             # <<<<<<<<<<<<<<
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -7316,7 +7316,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_4lmf_update(CYTHON_UNUSED PyObject *__p
 
                                     /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -8021,7 +8021,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -8034,7 +8034,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
  *         try:             # <<<<<<<<<<<<<<
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  */
                 /*try:*/ {
@@ -8042,7 +8042,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
                   /* "implicit/lmf.pyx":234
  *         thread_id = threadid()
  *         try:
- *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='static'):             # <<<<<<<<<<<<<<
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue
  */
@@ -8053,7 +8053,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
                       if (__pyx_t_4 > 0)
                       {
                           #ifdef _OPENMP
-                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(static)
                           #endif /* _OPENMP */
                           for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                               {
@@ -8068,7 +8068,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
 
                                   /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -8081,7 +8081,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
                                   if (__pyx_t_7) {
 
                                     /* "implicit/lmf.pyx":236
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue             # <<<<<<<<<<<<<<
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -8091,7 +8091,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_6lmf_update(CYTHON_UNUSED PyObject *__p
 
                                     /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -8797,7 +8797,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -8810,7 +8810,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
  *         try:             # <<<<<<<<<<<<<<
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  */
                 /*try:*/ {
@@ -8818,7 +8818,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
                   /* "implicit/lmf.pyx":234
  *         thread_id = threadid()
  *         try:
- *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='static'):             # <<<<<<<<<<<<<<
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue
  */
@@ -8829,7 +8829,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
                       if (__pyx_t_4 > 0)
                       {
                           #ifdef _OPENMP
-                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(static)
                           #endif /* _OPENMP */
                           for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                               {
@@ -8844,7 +8844,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
 
                                   /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -8857,7 +8857,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
                                   if (__pyx_t_7) {
 
                                     /* "implicit/lmf.pyx":236
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue             # <<<<<<<<<<<<<<
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -8867,7 +8867,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_8lmf_update(CYTHON_UNUSED PyObject *__p
 
                                     /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -9571,7 +9571,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -9584,7 +9584,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
  *         try:             # <<<<<<<<<<<<<<
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  */
                 /*try:*/ {
@@ -9592,7 +9592,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
                   /* "implicit/lmf.pyx":234
  *         thread_id = threadid()
  *         try:
- *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='static'):             # <<<<<<<<<<<<<<
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue
  */
@@ -9603,7 +9603,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
                       if (__pyx_t_3 > 0)
                       {
                           #ifdef _OPENMP
-                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(static)
                           #endif /* _OPENMP */
                           for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_3; __pyx_t_2++){
                               {
@@ -9618,7 +9618,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
 
                                   /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -9631,7 +9631,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
                                   if (__pyx_t_6) {
 
                                     /* "implicit/lmf.pyx":236
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue             # <<<<<<<<<<<<<<
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -9641,7 +9641,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_10lmf_update(CYTHON_UNUSED PyObject *__
 
                                     /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -10346,7 +10346,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()             # <<<<<<<<<<<<<<
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  */
                 #ifdef _OPENMP
                 __pyx_t_1 = omp_get_thread_num();
@@ -10359,7 +10359,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
  *         deriv = <floating*> malloc(sizeof(floating) * n_factors)
  *         thread_id = threadid()
  *         try:             # <<<<<<<<<<<<<<
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  */
                 /*try:*/ {
@@ -10367,7 +10367,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
                   /* "implicit/lmf.pyx":234
  *         thread_id = threadid()
  *         try:
- *             for u in prange(n_users, schedule='guided'):             # <<<<<<<<<<<<<<
+ *             for u in prange(n_users, schedule='static'):             # <<<<<<<<<<<<<<
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue
  */
@@ -10378,7 +10378,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
                       if (__pyx_t_4 > 0)
                       {
                           #ifdef _OPENMP
-                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(guided)
+                          #pragma omp for lastprivate(__pyx_v__) lastprivate(__pyx_v_exp_r) lastprivate(__pyx_v_i) lastprivate(__pyx_v_index) firstprivate(__pyx_v_u) lastprivate(__pyx_v_u) lastprivate(__pyx_v_user_seen_item) lastprivate(__pyx_v_z) schedule(static)
                           #endif /* _OPENMP */
                           for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_4; __pyx_t_3++){
                               {
@@ -10393,7 +10393,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
 
                                   /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -10406,7 +10406,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
                                   if (__pyx_t_7) {
 
                                     /* "implicit/lmf.pyx":236
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:
  *                     continue             # <<<<<<<<<<<<<<
  *                 user_seen_item = indptr[u + 1] - indptr[u]
@@ -10416,7 +10416,7 @@ static PyObject *__pyx_pf_8implicit_3lmf_12lmf_update(CYTHON_UNUSED PyObject *__
 
                                     /* "implicit/lmf.pyx":235
  *         try:
- *             for u in prange(n_users, schedule='guided'):
+ *             for u in prange(n_users, schedule='static'):
  *                 if indptr[u] == indptr[u + 1]:             # <<<<<<<<<<<<<<
  *                     continue
  *                 user_seen_item = indptr[u + 1] - indptr[u]

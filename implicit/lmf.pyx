@@ -231,7 +231,7 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
         deriv = <floating*> malloc(sizeof(floating) * n_factors)
         thread_id = threadid()
         try:
-            for u in prange(n_users, schedule='guided'):
+            for u in prange(n_users, schedule='static'):
                 if indptr[u] == indptr[u + 1]:
                     continue
                 user_seen_item = indptr[u + 1] - indptr[u]
