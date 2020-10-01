@@ -14,7 +14,7 @@ from libc.math cimport fmin
 from libcpp.unordered_set cimport unordered_set
 
 
-def train_test_split(ratings, train_percentage=0.8):
+def train_test_split(ratings, train_percentage=0.8, seed=None):
     """ Randomly splits the ratings matrix into two matrices for training/testing.
 
     Parameters
@@ -23,14 +23,16 @@ def train_test_split(ratings, train_percentage=0.8):
         A sparse matrix to split
     train_percentage : float
         What percentage of ratings should be used for training
-
+    seed : int (default is None)
+        Random state seed for train-test split. When it is set to be None it does nothing.
+        It has no effect on radnom seed for models.
     Returns
     -------
     (train, test) : csr_matrix, csr_matrix
         A tuple of csr_matrices for training/testing """
     ratings = ratings.tocoo()
-
-    random_index = np.random.random(len(ratings.data))
+    # If seed is None, it works same with np.random.random(len(ratings.data))
+    random_index = np.random.RandomState(seed).random_sample(len(ratings.data))
     train_index = random_index < train_percentage
     test_index = random_index >= train_percentage
 
