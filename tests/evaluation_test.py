@@ -19,5 +19,6 @@ class EvaluationTest(unittest.TestCase):
         train2, test2 = train_test_split(mat, 0.8, seed)
         self.assertTrue(np.all(train.todense() == train2.todense()))
 
+
 if __name__ == "__main__":
     unittest.main()
