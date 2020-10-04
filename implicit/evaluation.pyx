@@ -1,20 +1,19 @@
 # distutils: language = c++
 # cython: language_level=3
 
-from tqdm.auto import tqdm
-import numpy as np
-from scipy.sparse import coo_matrix, csr_matrix
 import cython
+import numpy as np
 from cython.operator import dereference
 from cython.parallel import parallel, prange
-from libc.stdlib cimport malloc, free
-from libc.string cimport memset
-from libc.math cimport fmin
+from scipy.sparse import coo_matrix, csr_matrix
+from tqdm.auto import tqdm
 
-from libcpp.unordered_set cimport unordered_set
+from libc.stdlibcimportmalloc import free
+
+from .utils import check_random_state
 
 
-def train_test_split(ratings, train_percentage=0.8, seed=None):
+def train_test_split(ratings, train_percentage=0.8, random_state=None):
     """ Randomly splits the ratings matrix into two matrices for training/testing.
 
     Parameters
@@ -23,16 +22,17 @@ def train_test_split(ratings, train_percentage=0.8, seed=None):
         A sparse matrix to split
     train_percentage : float
         What percentage of ratings should be used for training
-    seed : int (default is None)
-        Random state seed for train-test split. When it is set to be None it does nothing.
-        It has no effect on radnom seed for models.
+    random_state : int, None or RandomState
+        The existing RandomState. If None, or an int, will be used
+        to seed a new numpy RandomState.
     Returns
     -------
     (train, test) : csr_matrix, csr_matrix
         A tuple of csr_matrices for training/testing """
+
     ratings = ratings.tocoo()
-    # If seed is None, it works same with np.random.random(len(ratings.data))
-    random_index = np.random.RandomState(seed).random_sample(len(ratings.data))
+    random_state = check_random_state(random_state)
+    random_index = random_state.random_sample(len(ratings.data))
     train_index = random_index < train_percentage
     test_index = random_index >= train_percentage
 
