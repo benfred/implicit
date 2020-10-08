@@ -8,7 +8,8 @@ from cython.parallel import parallel, prange
 from scipy.sparse import coo_matrix, csr_matrix
 from tqdm.auto import tqdm
 
-from libc.stdlibcimportmalloc import free
+from libc.stdlib cimport malloc, free
+from libcpp.unordered_set cimport unordered_set 
 
 from .utils import check_random_state
 
