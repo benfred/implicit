@@ -60,7 +60,7 @@ def define_extensions(use_cython=False):
                          language='c++',
                          extra_compile_args=compile_args,
                          extra_link_args=link_args)
-               for name in ['_nearest_neighbours', 'lmf', 'evaluation']]
+               for name in ['_nearest_neighbours', 'lmf', 'cml', 'evaluation']]
     modules.extend([Extension("implicit.cpu." + name,
                               [os.path.join("implicit", "cpu", name + src_ext)],
                               language='c++',

@@ -94,7 +94,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
     user_factors : ndarray
         Array of latent factors for each user in the training set
     """
-    def __init__(self, factors=30, learning_rate=1.00, regularization=0.6, dtype=np.float32,
+    def __init__(self, factors=30, learning_rate=0.10, regularization=0.6, dtype=np.float32,
                  iterations=30, neg_prop=30, use_gpu=False, num_threads=0,
                  random_state=None):
         super(LogisticMatrixFactorization, self).__init__()
