@@ -11,7 +11,7 @@ from tqdm.auto import tqdm
 from libc.stdlib cimport malloc, free
 from libc.string cimport memset
 from libc.math cimport fmin
-from libcpp.unordered_set cimport unordered_set 
+from libcpp.unordered_set cimport unordered_set
 
 from .utils import check_random_state
 
