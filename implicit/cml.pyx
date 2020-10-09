@@ -109,8 +109,8 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
     user_factors : ndarray
         Array of latent factors for each user in the training set
     """
-    def __init__(self, factors=30, learning_rate=0.10, regularization=0.5, dtype=np.float32,
-                 iterations=30, neg_sampling=50, threshold=1.0, use_gpu=False, num_threads=0,
+    def __init__(self, factors=50, learning_rate=0.10, regularization=0.0, dtype=np.float32,
+                 iterations=30, neg_sampling=100, threshold=1.0, use_gpu=False, num_threads=0,
                  random_state=None):
         super(CollaborativeMetricLearning, self).__init__()
 
@@ -172,6 +172,7 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
             self.item_factors = rs.normal(scale=1.0 / (self.factors ** 0.5),
                                           size=(items, self.factors)).astype(np.float32)
             # set factors to all zeros for items without any ratings
+            self.item_factors[item_counts == 0] = np.zeros(self.factors)
 
         if self.user_factors is None:
             self.user_factors = rs.normal(scale=1.0 / (self.factors ** 0.5),
@@ -192,13 +193,14 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
         # It utilizes two RNG. First for sampling items uniformly,
         # and second for sampling items proportional to their popularity.
         cdef long[:] rng_seeds = rs.randint(0, 2**31, size=num_threads)
-        cdef RNGVector rng_items = RNGVector(num_threads, items - 1, rng_seeds)
+        unique_items = np.unique(user_items_coo.col)
+        cdef RNGVector rng_items = RNGVector(num_threads, len(unique_items) - 1, rng_seeds)
         cdef RNGVector rng_coo = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
 
         log.debug("Running %i LMF training epochs", self.iterations)
         with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
-                t = cml_update(rng_items, rng_coo,
+                t = cml_update(rng_items, rng_coo, unique_items,
                                user_vec_deriv_sum, item_vec_deriv_sum,
                                self.user_factors, self.item_factors,
                                user_items.indices, user_items.indptr, user_items.data,
@@ -207,7 +209,19 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
                                self.neg_sampling, num_threads)
                 progress.update(1)
 
+        self.user_factors[user_counts == 0] = 10000.0 * np.ones(self.factors)
+        self.item_factors[item_counts == 0] = 10000.0 * np.ones(self.factors)
         self._check_fit_errors()
+
+    def similar_users(self, userid, N=10):
+        factor = self.user_factors[userid]
+        factors = self.user_factors
+        return self._get_similarity_score(factor, factors, N)
+
+    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
+        factor = self._item_factor(itemid, react_users, recalculate_item)
+        factors = self.item_factors
+        return self._get_similarity_score(factor, factors, N)
 
     def recommend(self, userid, user_items,
                   N=10, filter_already_liked_items=True,
@@ -230,10 +244,15 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
             best = sorted(enumerate(scores), key=lambda x: -x[1])
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
 
+    def _get_similarity_score(self, factor, factors, N):
+        diff = (factor - factors)
+        scores = -(diff * diff).sum(1)
+        best = np.argpartition(scores, -N)[-N:]
+        return sorted(zip(best, scores[best]), key=lambda x: -x[1])
 
 @cython.cdivision(True)
 @cython.boundscheck(False)
-def cml_update(RNGVector rng_items, RNGVector rng_coo,
+def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
                floating[:, :] u_deriv_sum_sq, floating[:, :] i_deriv_sum_sq,
                floating[:, :] user_vectors, floating[:, :] item_vectors,
                integral[:] indices, integral[:] indptr, floating[:] data,
@@ -292,7 +311,7 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo,
                 while neg_sample_cnts[thread_id] < neg_sampling:
                     neg_sample_cnts[thread_id] += 1
                     while True:
-                        j = rng_items.generate(thread_id)
+                        j = unique_items[rng_items.generate(thread_id)]
                         # j should be negative item for user u
                         if not has_non_zero(indptr, indices, u, j):
                             break
