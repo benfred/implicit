@@ -250,6 +250,7 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
         best = np.argpartition(scores, -N)[-N:]
         return sorted(zip(best, scores[best]), key=lambda x: -x[1])
 
+
 @cython.cdivision(True)
 @cython.boundscheck(False)
 def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
