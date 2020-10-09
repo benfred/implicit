@@ -56,12 +56,10 @@ cdef class RNGVector(object):
 
 class LogisticMatrixFactorization(MatrixFactorizationBase):
     """ Logistic Matrix Factorization
-
     A collaborative filtering recommender model that learns probabilistic distribution
     whether user like it or not. Algorithm of the model is described in
     `Logistic Matrix Factorization for Implicit Feedback Data
     <https://web.stanford.edu/~rezab/nips2014workshop/submits/logmat.pdf>`
-
     Parameters
     ----------
     factors : int, optional
@@ -86,7 +84,6 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
     random_state : int, RandomState or None, optional
         The random state for seeding the initial item and user factors.
         Default is None.
-
     Attributes
     ----------
     item_factors : ndarray
@@ -94,7 +91,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
     user_factors : ndarray
         Array of latent factors for each user in the training set
     """
-    def __init__(self, factors=30, learning_rate=0.10, regularization=0.6, dtype=np.float32,
+    def __init__(self, factors=30, learning_rate=1.00, regularization=0.6, dtype=np.float32,
                  iterations=30, neg_prop=30, use_gpu=False, num_threads=0,
                  random_state=None):
         super(LogisticMatrixFactorization, self).__init__()
@@ -117,7 +114,6 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
     @cython.boundscheck(False)
     def fit(self, item_users, show_progress=True):
         """ Factorizes the item_users matrix
-
         Parameters
         ----------
         item_users: coo_matrix
