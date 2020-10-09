@@ -9,10 +9,16 @@ import numpy as np
 import scipy.sparse
 import tqdm
 from cython.parallel import parallel, prange, threadid
+from cython cimport floating, integral
+from libc.math cimport exp
+from libc.math cimport sqrt
+from libc.math cimport log10
 
-from cythoncimportfloating import integral
-from libc.stdlibcimportmalloc import free
-from libc.stringcimportmemcpy import memset
+from libcpp cimport bool
+from libcpp.algorithm cimport binary_search
+from libc.stdlib cimport malloc, free
+from libc.string cimport memcpy, memset
+from libcpp.vector cimport vector
 
 from .recommender_base import MatrixFactorizationBase
 from .utils import check_random_state
@@ -72,13 +78,20 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
     learning_rate : float, optional
         The learning rate to apply for updates during training
     regularization : float, optional
-        The regularization factor to use
+        The regularization factor to use.
+        This model exploits cogswell covariance loss
+        `<https://arxiv.org/abs/1511.06068>`.
+        Currently Not implemented yet.
     dtype : data-type, optional
         Specifies whether to generate 64 bit or 32 bit floating point factors
     iterations : int, optional
         The number of training epochs to use when fitting the data
     neg_sampling : int, optional
         The size of negative sampling estimating ranking weight.
+    threshold : float, optional
+        The threshold to find violation in the personalized ranking.
+        See `<http://www.cs.cornell.edu/~ylongqi/paper/HsiehYCLBE17.pdf>`
+        for reference.
     use_gpu : bool, optional
         Fit on the GPU if available
     num_threads : int, optional
@@ -156,19 +169,16 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
         item_counts = np.bincount(user_items.indices, minlength=items)
 
         if self.item_factors is None:
-            self.item_factors = rs.normal(scale=(1.0 / self.factors ** 2),
+            self.item_factors = rs.normal(scale=1.0 / (self.factors ** 0.5),
                                           size=(items, self.factors)).astype(np.float32)
             # set factors to all zeros for items without any ratings
 
         if self.user_factors is None:
-            self.user_factors = rs.normal(scale=(1.0 / self.factors ** 2),
+            self.user_factors = rs.normal(scale=1.0 / (self.factors ** 0.5),
                                           size=(users, self.factors)).astype(np.float32)
 
             # set factors to all zeros for users without any ratings
             self.user_factors[user_counts == 0] = np.zeros(self.factors)
-
-        self.user_with_no_interactions = np.arange(users)[user_counts == 0]
-        self.item_with_no_interactions = np.arange(items)[item_counts == 0]
 
         # For Adagrad update
         user_vec_deriv_sum = np.zeros((users, self.factors)).astype(np.float32)
@@ -178,9 +188,10 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
         if not num_threads:
             num_threads = multiprocessing.cpu_count()
 
-        # initialize RNG's, one per thread. Also pass the seeds for each thread's RNG
+        # initialize RNG's
+        # It utilizes two RNG. First for sampling items uniformly, and second for sampling items proportional to their popularity.
         cdef long[:] rng_seeds = rs.randint(0, 2**31, size=num_threads)
-        cdef RNGVector rng_items = RNGVector(num_threads, items, rng_seeds)
+        cdef RNGVector rng_items = RNGVector(num_threads, items - 1, rng_seeds)
         cdef RNGVector rng_coo = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
 
         log.debug("Running %i LMF training epochs", self.iterations)
@@ -198,7 +209,8 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
         self._check_fit_errors()
 
     def recommend(self, userid, user_items,
-                  N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
+                  N=10, filter_already_liked_items=True,
+                  filter_items=None, recalculate_user=False):
         user = self._user_factor(userid, user_items, recalculate_user)
         liked = set()
         if filter_already_liked_items:
@@ -309,9 +321,9 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo,
                     i_deriv_sum_sq[j, _] += j_deriv[_] * j_deriv[_]
 
                 for _ in range(n_factors):
-                    user_vectors[u][_] -= (lr / (sqrt(1e-9 + u_deriv_sum_sq[u, _]))) * u_deriv[_]
-                    item_vectors[i][_] -= (lr / (sqrt(1e-9 + i_deriv_sum_sq[i, _]))) * i_deriv[_]
-                    item_vectors[j][_] -= (lr / (sqrt(1e-9 + i_deriv_sum_sq[j, _]))) * j_deriv[_]
+                    user_vectors[u][_] -= (lr / (sqrt(1e-8 + u_deriv_sum_sq[u, _]))) * u_deriv[_]
+                    item_vectors[i][_] -= (lr / (sqrt(1e-8 + i_deriv_sum_sq[i, _]))) * i_deriv[_]
+                    item_vectors[j][_] -= (lr / (sqrt(1e-8 + i_deriv_sum_sq[j, _]))) * j_deriv[_]
                 # 3.4 Add Regularization.
                 # How to get this value approximately, and quite easily...?
 
@@ -339,7 +351,6 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo,
                     item_vectors[j][_] /= tmps[thread_id]
 
         finally:
-            free(deriv)
             free(neg_sample_cnts)
             free(tmps)
             free(cov)
