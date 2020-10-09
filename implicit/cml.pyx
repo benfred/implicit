@@ -1,25 +1,18 @@
-import cython
-from cython cimport floating, integral
+import itertools
 import logging
 import multiprocessing
+import random
 import time
-import tqdm
-import itertools
 
-from cython.parallel import parallel, prange, threadid
-from libc.math cimport exp
-from libc.math cimport sqrt
-from libc.math cimport log10
-from libcpp cimport bool
-from libcpp.algorithm cimport binary_search
-from libc.stdlib cimport malloc, free
-from libc.string cimport memcpy, memset
-
+import cython
 import numpy as np
 import scipy.sparse
+import tqdm
+from cython.parallel import parallel, prange, threadid
 
-import random
-from libcpp.vector cimport vector
+from cythoncimportfloating import integral
+from libc.stdlibcimportmalloc import free
+from libc.stringcimportmemcpy import memset
 
 from .recommender_base import MatrixFactorizationBase
 from .utils import check_random_state
@@ -63,12 +56,13 @@ cdef bool has_non_zero(integral[:] indptr, integral[:] indices,
     return binary_search(&indices[indptr[rowid]], &indices[indptr[rowid + 1]], colid)
 
 
-
-
 class CollaborativeMetricLearning(MatrixFactorizationBase):
     """ Collaborative Metric Learning
-    A collaborative filtering recommender model that learns to embed user and item factors into euclidean metric space, and recommend items to users by their euclidean distance.
-    Algorithm of the model is described in `Collaborative Metric Learning
+    A collaborative filtering recommender model that learns
+    to embed user and item factors into euclidean metric space,
+    and recommend items to users by their euclidean distance.
+    Algorithm of the model is described in
+    `Collaborative Metric Learning
     <http://www.cs.cornell.edu/~ylongqi/paper/HsiehYCLBE17.pdf>`
 
     Parameters
@@ -84,8 +78,7 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
     iterations : int, optional
         The number of training epochs to use when fitting the data
     neg_sampling : int, optional
-        The proportion of negative samples. i.e.) "neg_sampling = 30" means if user have seen 5 items,
-        then 5 * 30 = 150 negative samples are used for training.
+        The size of negative sampling estimating ranking weight.
     use_gpu : bool, optional
         Fit on the GPU if available
     num_threads : int, optional
@@ -163,12 +156,14 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
         item_counts = np.bincount(user_items.indices, minlength=items)
 
         if self.item_factors is None:
-            self.item_factors = 0.01 * rs.normal(size=(items, self.factors)).astype(np.float32)
+            self.item_factors = rs.normal(scale=(1.0 / self.factors ** 2),
+                                          size=(items, self.factors)).astype(np.float32)
             # set factors to all zeros for items without any ratings
-            self.item_factors[item_counts == 0] = np.zeros(self.factors)
 
         if self.user_factors is None:
-            self.user_factors = 0.01 * rs.normal(size=(users, self.factors)).astype(np.float32)
+            self.user_factors = rs.normal(scale=(1.0 / self.factors ** 2),
+                                          size=(users, self.factors)).astype(np.float32)
+
             # set factors to all zeros for users without any ratings
             self.user_factors[user_counts == 0] = np.zeros(self.factors)
 
@@ -185,17 +180,19 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
 
         # initialize RNG's, one per thread. Also pass the seeds for each thread's RNG
         cdef long[:] rng_seeds = rs.randint(0, 2**31, size=num_threads)
-        cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
+        cdef RNGVector rng_items = RNGVector(num_threads, items, rng_seeds)
+        cdef RNGVector rng_coo = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
 
         log.debug("Running %i LMF training epochs", self.iterations)
         with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
-                t = cml_update(rng, user_vec_deriv_sum, item_vec_deriv_sum,
-                           self.user_factors, self.item_factors,
-                           user_items.indices, user_items.indptr, user_items.data,
-                           user_items_coo.row, user_items_coo.col,
-                           self.threshold, self.learning_rate, self.regularization, self.neg_sampling, num_threads)
-                print(t)
+                t = cml_update(rng_items, rng_coo,
+                               user_vec_deriv_sum, item_vec_deriv_sum,
+                               self.user_factors, self.item_factors,
+                               user_items.indices, user_items.indptr, user_items.data,
+                               user_items_coo.row, user_items_coo.col,
+                               self.threshold, self.learning_rate, self.regularization,
+                               self.neg_sampling, num_threads)
                 progress.update(1)
 
         self._check_fit_errors()
@@ -220,9 +217,11 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
             best = sorted(enumerate(scores), key=lambda x: -x[1])
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
 
+
 @cython.cdivision(True)
 @cython.boundscheck(False)
-def cml_update(RNGVector rng, floating[:, :] u_deriv_sum_sq, floating[:, :] i_deriv_sum_sq,
+def cml_update(RNGVector rng_items, RNGVector rng_coo,
+               floating[:, :] u_deriv_sum_sq, floating[:, :] i_deriv_sum_sq,
                floating[:, :] user_vectors, floating[:, :] item_vectors,
                integral[:] indices, integral[:] indptr, floating[:] data,
                integral[:] row, integral[:] col,
@@ -267,7 +266,7 @@ def cml_update(RNGVector rng, floating[:, :] u_deriv_sum_sq, floating[:, :] i_de
                 memset(u_deriv, 0, sizeof(floating) * n_factors)
                 memset(i_deriv, 0, sizeof(floating) * n_factors)
                 memset(j_deriv, 0, sizeof(floating) * n_factors)
-                index = rng.generate(thread_id)
+                index = rng_coo.generate(thread_id)
                 u, i = row[index], col[index]
 
                 uij[0] = 0
@@ -276,14 +275,11 @@ def cml_update(RNGVector rng, floating[:, :] u_deriv_sum_sq, floating[:, :] i_de
                     uij[0] += (user_vectors[u][_] - item_vectors[i][_]) ** 2
 
                 # Sample negative items until the condition is statisfied.
-
-
                 neg_sample_cnts[thread_id] = 0
                 while neg_sample_cnts[thread_id] < neg_sampling:
                     neg_sample_cnts[thread_id] += 1
                     while True:
-                        index = rng.generate(thread_id)
-                        j = indices[index]
+                        j = rng_items.generate(thread_id)
                         # j should be negative item for user u
                         if not has_non_zero(indptr, indices, u, j):
                             break
@@ -295,10 +291,10 @@ def cml_update(RNGVector rng, floating[:, :] u_deriv_sum_sq, floating[:, :] i_de
                     # Assume here that j is negative item, that user u has not interacted with j
                     if threshold + uij[0] - uij[1] > 0:
                         break
-
                 if neg_sample_cnts[thread_id] == neg_sampling:
                     # No update
                     continue
+
                 loss += threshold + uij[0] - uij[1]
                 weight = log10(1.0 + (n_items // neg_sample_cnts[thread_id]))
                 # Factor update
@@ -343,6 +339,13 @@ def cml_update(RNGVector rng, floating[:, :] u_deriv_sum_sq, floating[:, :] i_de
                     item_vectors[j][_] /= tmps[thread_id]
 
         finally:
-            #free(deriv)
+            free(deriv)
+            free(neg_sample_cnts)
+            free(tmps)
+            free(cov)
+            free(vec_avg)
+            free(u_deriv)
+            free(i_deriv)
+            free(j_deriv)
             pass
     return loss
