@@ -189,7 +189,8 @@ class CollaborativeMetricLearning(MatrixFactorizationBase):
             num_threads = multiprocessing.cpu_count()
 
         # initialize RNG's
-        # It utilizes two RNG. First for sampling items uniformly, and second for sampling items proportional to their popularity.
+        # It utilizes two RNG. First for sampling items uniformly,
+        # and second for sampling items proportional to their popularity.
         cdef long[:] rng_seeds = rs.randint(0, 2**31, size=num_threads)
         cdef RNGVector rng_items = RNGVector(num_threads, items - 1, rng_seeds)
         cdef RNGVector rng_coo = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
