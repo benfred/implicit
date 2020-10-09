@@ -9,9 +9,9 @@ from .recommender_base_test import TestRecommenderBaseMixin
 
 class CMLTest(unittest.TestCase, TestRecommenderBaseMixin):
     def _get_model(self, factors=8):
-        return CollaborativeMetricLearning(factors=3,
+        return CollaborativeMetricLearning(factors=4,
                                            use_gpu=False,
-                                           random_state=33)
+                                           random_state=15)
 
     def test_fit_empty_matrix(self):
         raw = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
