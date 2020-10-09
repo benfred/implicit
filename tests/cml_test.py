@@ -9,7 +9,7 @@ from .recommender_base_test import TestRecommenderBaseMixin
 
 class CMLTest(unittest.TestCase, TestRecommenderBaseMixin):
     def _get_model(self, factors=8):
-        return CollaborativeMetricLearning(factors=4,
+        return CollaborativeMetricLearning(factors=16,
                                            use_gpu=False,
                                            random_state=15)
 
