@@ -127,7 +127,7 @@ def _sample_index(arr):
 
 
 def leave_k_out_split(
-    ratings, int K = 1, float train_only_size=0.0, random_state=None
+    ratings, int K=1, float train_only_size=0.0, random_state=None
 ):
     """Implements the 'leave-k-out' split protocol for a ratings matrix. Default
     parameters will produce a 'leave-one-out' split.
@@ -229,7 +229,6 @@ def leave_k_out_split(
                            shape=ratings.shape, dtype=ratings.dtype)
 
     return train_mat, test_mat
-
 
 
 @cython.boundscheck(False)
