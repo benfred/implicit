@@ -53,35 +53,132 @@ def train_test_split(ratings, train_percentage=0.8, random_state=None):
 
 
 def _choose(rng, int n, float frac):
+    """Given a range of numbers, select *approximately* 'frac' of them _without_
+    replacement.
+
+    Parameters
+    ----------
+    rng : int, None or RandomState
+        The existing RandomState. If None, or an int, will be used
+        to seed a new numpy RandomState.
+    n: int
+        The upper bound on the range to sample from. Will draw from range(0 -> n).
+    frac: float
+        The fraction of the total range to be sampled. Must be in interval (0 -> 1).
+
+    Returns
+    -------
+    ndarray
+        An array of randomly sampled integers in the range (0 -> n).
+
+    """
+
     size = max(1, int(n * frac))
-    return rng.choice(n, size=size, replace=False)
+    arr = rng.choice(n, size=size, replace=False)
+    return arr
 
 
-def _single_sample(arr):
-    idx = arr.argsort()
-    bins = np.bincount(arr)
-    rand = np.random.rand(bins.sum()) + np.repeat(np.arange(len(bins)), bins)
-    offset = np.r_[0, bins[: -1].cumsum()]
-    return idx[rand.argsort()[offset]]
+def _sample_index(arr):
+    """Given an *ordered* array of integers, randomly select one index for each unique
+    element.
+
+    Parameters
+    ----------
+    arr : ndarray
+        An ordered array of integers.
+
+    Returns
+    -------
+    ndarray
+        An array of indices of shape (n_unique, ), where each element corresponds to a
+        randomly sampled index for each unique integer appearing in the input array.
+
+    Examples
+    --------
+    >>> x = np.array([0, 0, 1, 3, 3, 3, 4, 4, 4, 4, 5, 5, 7, 7, 7])
+    >>> y = np.asarray([0, 1, 0, 0, 1, 2, 0, 1, 2, 3, 0, 1, 0, 1, 2])
+    >>> s = _sample_index(x)
+    >>> s
+    [ 1  2  3  7 11 13]
+    >>> x[s]
+    [0 1 3 4 5 7]
+    >>> y[s]
+    [0 0 1 3 0 2] """
+
+    # Count number of occurrences of each value in array of non-negative ints.
+    counts = np.bincount(arr)
+    # remove any elements with zero count (addresses non-consecutive ints case)
+    counts = counts[counts.nonzero()[0]]
+
+    # generate an array of indices mapped to the counts (i.e. if the zeroth element
+    # appears twice, and the first element once, we'd have [0, 0, 1 ... ]
+    count_idx = np.repeat(np.arange(counts.shape[0]), counts)
+
+    # add 'noise' to the indices, and then get the new order for the indices. Note that
+    # as the increment >= 1, this will only act to reorder elements associated with the
+    # same unique value.
+    shuffled_idx = (count_idx + np.random.random(arr.shape)).argsort()
+
+    # sample the first occurrence of each unique element
+    sampled = np.r_[0, counts.cumsum()[:-1]]
+
+    # return the first occurrence of an element in the shuffled indices.
+    return shuffled_idx[sampled]
 
 
-def recommender_split(
-    mat, int n_samples = 1, float train_only_size=0.0, random_state=None
+def leave_k_out_split(
+    ratings, int K = 1, float train_only_size=0.0, random_state=None
 ):
+    """Implements the 'leave-k-out' split protocol for a ratings matrix. Default
+    parameters will produce a 'leave-one-out' split.
 
+    This will create two matrices, one where each eligible user (i.e. user with > K + 1
+    ratings) will have a single rating held in the test set, and all other ratings held
+    in the train set. Optionally, a percentage of users can be reserved to appear _only_
+    in the train set. By default, all eligible users may appear in the test set.
+
+    Parameters
+    ----------
+    ratings : csr_matrix
+        The input ratings CSR matrix to be split.
+    K : int
+        The total number of samples to be 'left out' in the test set.
+    train_only_size : float
+        The size (as a fraction) of the users set that should appear *only* in the
+        training matrix.
+    random_state : int, None or RandomState
+        The existing RandomState. If None, or an int, will be used
+        to seed a new numpy RandomState.
+
+    Returns
+    -------
+    (train, test) : csr_matrix, csr_matrix
+        A tuple of CSR matrix corresponding to training/testing matrices.
+
+    Notes
+    -----
+    * For K=1, this is fully vectorized. Be aware that for K > 1, you may experience
+      some performance issues for very large ratings matrices. This can be partially
+      mitigated by setting train_only_size to higher values (e.g. ~1.0).
+
+    """
+
+    if K < 1:
+        raise ValueError("The 'K' must be >= 1.")
+    if not 0.0 <= train_only_size < 1.0:
+        raise ValueError("The 'train_only_size' must be in the range (0.0 <= x < 1.0).")
+
+    ratings = ratings.tocoo()  # this will sort row/cols unless ratings is COO.
     random_state = check_random_state(random_state)
 
-    if n_samples < 1:
-        raise ValueError("The 'n_samples' must be >= 1.")
-
-    users = mat.row  # user ids, assumes sorted (!)
-    items = mat.col  # item ids
-    data = mat.data
+    users = ratings.row
+    items = ratings.col
+    data = ratings.data
 
     unique_users, counts = np.unique(users, return_counts=True)
 
     # get only users with n + 1 interactions
-    candidate_mask = counts > n_samples + 1
+    candidate_mask = counts > K + 1
 
     # keep a given subset of users _only_ in the training set.
     if train_only_size > 0.0:
@@ -100,30 +197,36 @@ def recommender_split(
     candidate_items = items[full_candidate_mask]
     candidate_data = data[full_candidate_mask]
 
-    if n_samples == 1:
+    if K == 1:
         # sample a single item for each candidate user
         # (i.e. get index of each sampled item)
-        test_idx = _single_sample(candidate_users)
+        test_idx = _sample_index(candidate_users)
     else:
-        # todo: can this be vectorized too?
+        # todo: this can probably be vectorized too by extending the above.
         test_idx = np.ravel(
-            [random_state.choice(np.where(candidate_users==user)[0], n_samples) for user in unique_candidate_users]
+            [
+                random_state.choice(np.where(candidate_users==user)[0], K)
+                for user in unique_candidate_users
+            ]
         )
 
-    # get all remaining remaining candidate user-item pairs, and prepare to append to training set.
+    # get all remaining remaining candidate user-item pairs, and prepare to append to
+    # training set.
     train_idx = np.setdiff1d(np.arange(len(candidate_users), dtype=int), test_idx)
 
     # build test matrix
     test_users = candidate_users[test_idx]
     test_items = candidate_items[test_idx]
     test_data = candidate_data[test_idx]
-    test_mat = coo_matrix((test_data, (test_users, test_items)), shape=mat.shape)
+    test_mat = csr_matrix((test_data, (test_users, test_items)),
+                          shape=ratings.shape, dtype=ratings.dtype)
 
     # build training matrix
     train_users = np.r_[users[~full_candidate_mask], candidate_users[train_idx]]
     train_items = np.r_[items[~full_candidate_mask], candidate_items[train_idx]]
     train_data = np.r_[data[~full_candidate_mask], candidate_data[train_idx]]
-    train_mat = coo_matrix((train_data, (train_users, train_items)), shape=mat.shape)
+    train_mat = csr_matrix((train_data, (train_users, train_items)),
+                           shape=ratings.shape, dtype=ratings.dtype)
 
     return train_mat, test_mat
 
