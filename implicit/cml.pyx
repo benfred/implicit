@@ -54,6 +54,10 @@ cdef class RNGVector(object):
         return self.dist[thread_id](self.rng[thread_id])
 
 
+cdef inline float sgn(float x) nogil:
+    return (2.0 * (x > 0.0) - 1.0)
+
+
 @cython.boundscheck(False)
 cdef bool has_non_zero(integral[:] indptr, integral[:] indices,
                        integral rowid, integral colid) nogil:
@@ -261,7 +265,7 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
                floating threshold, floating lr, floating reg, integral neg_sampling,
                integral num_threads):
     cdef float loss = 0.0
-    cdef floating expected_dist_in_sphere_sq = (0.36 / 0.35) ** 2
+    cdef floating C = (0.36 / 0.35) ** 2
     cdef integral samples = len(indices)
     cdef integral n_users = user_vectors.shape[0]
     cdef integral n_items = item_vectors.shape[1]
@@ -273,8 +277,6 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
     cdef floating* u_deriv
     cdef floating* i_deriv
     cdef floating* j_deriv
-    cdef floating* cov
-    cdef floating* vec_avg
 
     cdef floating score, z, temp
     cdef int user_seen_item
@@ -285,13 +287,9 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
     with nogil, parallel(num_threads=num_threads):
         neg_sample_cnts = <integral*>malloc(sizeof(integral) * num_threads)
         tmps = <floating *> malloc(sizeof(floating) * num_threads)
-        cov = <floating*> malloc(sizeof(floating) * n_factors * n_factors)
-        vec_avg = <floating*> malloc(sizeof(floating) * n_factors)
         u_deriv = <floating*> malloc(sizeof(floating) * n_factors)
         i_deriv = <floating*> malloc(sizeof(floating) * n_factors)
         j_deriv = <floating*> malloc(sizeof(floating) * n_factors)
-        memset(cov, 0, sizeof(floating) * n_factors * n_factors)
-        memset(vec_avg, 0, sizeof(floating) * n_factors)
         uij = <floating*> malloc(sizeof(floating) * 3)
 
         thread_id = threadid()
@@ -305,6 +303,7 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
 
                 uij[0] = 0
                 uij[1] = 0
+                uij[2] = 0
                 for _ in range(n_factors):
                     uij[0] += (user_vectors[u][_] - item_vectors[i][_]) ** 2
 
@@ -333,10 +332,9 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
                 weight = log10(1.0 + (n_items // neg_sample_cnts[thread_id]))
 
                 # Factor update
-
                 for _ in range(n_factors):
                     uij[2] += (item_vectors[i][_] - item_vectors[j][_]) ** 2
-                #ui
+                # ui
                 for _ in range(n_factors):
                     u_deriv[_] = i_deriv[_] = j_deriv[_] = 0
 
@@ -347,14 +345,22 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
 
                 # Approximation of Cogswell Regularization:
 
-                if reg > 0.0:
-                    for _ in range(n_factors):
-                        u_deriv[_] += reg * (2 * (uij[0] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (user_vectors[u][_] - item_vectors[i][_])
-                        i_deriv[_] += -reg * (2 * (uij[0] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (user_vectors[u][_] - item_vectors[i][_])
-                        u_deriv[_] += reg * (2 * (uij[1] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (user_vectors[u][_] - item_vectors[j][_])
-                        j_deriv[_] += -reg * (2 * (uij[1] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (user_vectors[u][_] - item_vectors[j][_])
-                        i_deriv[_] += reg * (2 * (uij[2] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (item_vectors[i][_] - item_vectors[j][_])
-                        j_deriv[_] += -reg * (2 * (uij[2] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (item_vectors[i][_] - item_vectors[j][_])
+                for _ in range(n_factors):
+                    tmps[thread_id] = (user_vectors[u][_] - item_vectors[i][_])
+                    u_deriv[_] += (
+                        reg * sgn(uij[0] - C) * sqrt(uij[0]) * tmps[thread_id])
+                    i_deriv[_] -= (
+                        reg * sgn(uij[0] - C) * sqrt(uij[0]) * tmps[thread_id])
+                    tmps[thread_id] = (user_vectors[u][_] - item_vectors[j][_])
+                    u_deriv[_] += (
+                        reg * sgn(uij[1] - C) * sqrt(uij[1]) * tmps[thread_id])
+                    j_deriv[_] -= (
+                        reg * sgn(uij[1] - C) * sqrt(uij[1]) * tmps[thread_id])
+                    tmps[thread_id] = (item_vectors[i][_] - item_vectors[j][_])
+                    i_deriv[_] += (
+                        reg * sgn(uij[2] - C) * sqrt(uij[2]) * tmps[thread_id])
+                    j_deriv[_] -= (
+                        reg * sgn(uij[2] - C) * sqrt(uij[2]) * tmps[thread_id])
 
                 for _ in range(n_factors):
                     u_deriv_sum_sq[u, _] += u_deriv[_] * u_deriv[_]
@@ -390,8 +396,6 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
         finally:
             free(neg_sample_cnts)
             free(tmps)
-            free(cov)
-            free(vec_avg)
             free(u_deriv)
             free(i_deriv)
             free(j_deriv)
