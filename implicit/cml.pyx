@@ -261,6 +261,7 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
                floating threshold, floating lr, floating reg, integral neg_sampling,
                integral num_threads):
     cdef float loss = 0.0
+    cdef floating expected_dist_in_sphere_sq = (0.36 / 0.35) ** 2
     cdef integral samples = len(indices)
     cdef integral n_users = user_vectors.shape[0]
     cdef integral n_items = item_vectors.shape[1]
@@ -291,7 +292,7 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
         j_deriv = <floating*> malloc(sizeof(floating) * n_factors)
         memset(cov, 0, sizeof(floating) * n_factors * n_factors)
         memset(vec_avg, 0, sizeof(floating) * n_factors)
-        uij = <floating*> malloc(sizeof(floating) * 2)
+        uij = <floating*> malloc(sizeof(floating) * 3)
 
         thread_id = threadid()
         try:
@@ -330,25 +331,40 @@ def cml_update(RNGVector rng_items, RNGVector rng_coo, integral[:] unique_items,
 
                 loss += threshold + uij[0] - uij[1]
                 weight = log10(1.0 + (n_items // neg_sample_cnts[thread_id]))
-                # Factor update
-                for _ in range(n_factors):
-                    u_deriv[_] = -weight * (item_vectors[i][_] - item_vectors[j][_])
-                    u_deriv_sum_sq[u, _] += u_deriv[_] * u_deriv[_]
-                for _ in range(n_factors):
-                    i_deriv[_] = weight * lr * (item_vectors[i][_] - user_vectors[u][_])
-                    i_deriv_sum_sq[i, _] += i_deriv[_] * i_deriv[_]
-                for _ in range(n_factors):
-                    j_deriv[_] = -weight * (item_vectors[j][_] - user_vectors[u][_])
-                    i_deriv_sum_sq[j, _] += j_deriv[_] * j_deriv[_]
 
+                # Factor update
+
+                for _ in range(n_factors):
+                    uij[2] += (item_vectors[i][_] - item_vectors[j][_]) ** 2
+                #ui
+                for _ in range(n_factors):
+                    u_deriv[_] = i_deriv[_] = j_deriv[_] = 0
+
+                for _ in range(n_factors):
+                    u_deriv[_] += -weight * (item_vectors[i][_] - item_vectors[j][_])
+                    i_deriv[_] += weight * lr * (item_vectors[i][_] - user_vectors[u][_])
+                    j_deriv[_] += -weight * (item_vectors[j][_] - user_vectors[u][_])
+
+                # Approximation of Cogswell Regularization:
+
+                if reg > 0.0:
+                    for _ in range(n_factors):
+                        u_deriv[_] += reg * (2 * (uij[0] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (user_vectors[u][_] - item_vectors[i][_])
+                        i_deriv[_] += -reg * (2 * (uij[0] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (user_vectors[u][_] - item_vectors[i][_])
+                        u_deriv[_] += reg * (2 * (uij[1] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (user_vectors[u][_] - item_vectors[j][_])
+                        j_deriv[_] += -reg * (2 * (uij[1] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (user_vectors[u][_] - item_vectors[j][_])
+                        i_deriv[_] += reg * (2 * (uij[2] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (item_vectors[i][_] - item_vectors[j][_])
+                        j_deriv[_] += -reg * (2 * (uij[2] > expected_dist_in_sphere_sq) - 1) * 4 * sqrt(uij[0]) * (item_vectors[i][_] - item_vectors[j][_])
+
+                for _ in range(n_factors):
+                    u_deriv_sum_sq[u, _] += u_deriv[_] * u_deriv[_]
+                    i_deriv_sum_sq[i, _] += i_deriv[_] * i_deriv[_]
+                    i_deriv_sum_sq[j, _] += j_deriv[_] * j_deriv[_]
                 for _ in range(n_factors):
                     user_vectors[u][_] -= (lr / (sqrt(1e-8 + u_deriv_sum_sq[u, _]))) * u_deriv[_]
                     item_vectors[i][_] -= (lr / (sqrt(1e-8 + i_deriv_sum_sq[i, _]))) * i_deriv[_]
                     item_vectors[j][_] -= (lr / (sqrt(1e-8 + i_deriv_sum_sq[j, _]))) * j_deriv[_]
-                # 3.4 Add Regularization.
-                # How to get this value approximately, and quite easily...?
 
-                # Forcing Updated params in unit sphere
                 tmps[thread_id] = 0.0
                 for _ in range(n_factors):
                     tmps[thread_id] += user_vectors[u][_] * user_vectors[u][_]
