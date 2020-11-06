@@ -5,8 +5,8 @@ import os.path
 import platform
 import sys
 
-from setuptools import Extension, find_packages, setup
 from Cython.Build import cythonize
+from setuptools import Extension, find_packages, setup
 
 from cuda_setup import CUDA, build_ext
 
