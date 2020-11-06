@@ -3,8 +3,8 @@
 import logging
 import os
 import sys
-
 from distutils import ccompiler, errors, msvccompiler, unixccompiler
+
 from setuptools.command.build_ext import build_ext as setuptools_build_ext
 
 

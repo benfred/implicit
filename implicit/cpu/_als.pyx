@@ -1,13 +1,16 @@
-import numpy as np
 import cython
-from cython cimport floating, integral
-from cython.parallel import parallel, prange
-from libc.stdlib cimport malloc, free
-from libc.string cimport memcpy, memset
+import numpy as np
 
+from cython cimport floating, integral
+
+from cython.parallel import parallel, prange
+
+cimport scipy.linalg.cython_blas as cython_blas
 # requires scipy v0.16
 cimport scipy.linalg.cython_lapack as cython_lapack
-cimport scipy.linalg.cython_blas as cython_blas
+from libc.stdlib cimport free, malloc
+from libc.string cimport memcpy, memset
+
 
 # lapack/blas wrappers for cython fused types
 cdef inline void axpy(int * n, floating * da, floating * dx, int * incx, floating * dy,

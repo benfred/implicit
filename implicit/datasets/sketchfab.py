@@ -1,12 +1,12 @@
-import h5py
-import time
-import os
 import logging
-from scipy.sparse import coo_matrix, csr_matrix
+import os
+import time
+
+import h5py
 import numpy as np
+from scipy.sparse import coo_matrix, csr_matrix
 
 from implicit.datasets import _download
-
 
 log = logging.getLogger("implicit")
 

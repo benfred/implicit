@@ -1,11 +1,11 @@
 import os
+
 try:
     from urllib.request import urlretrieve
 except ImportError:
     from urllib import urlretrieve
 
 from tqdm.auto import tqdm
-
 
 LOCAL_CACHE_DIR = os.path.join(os.path.expanduser("~"), "implicit_datasets")
 
