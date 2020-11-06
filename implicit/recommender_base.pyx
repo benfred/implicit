@@ -3,14 +3,16 @@
 # cython: language_level=3
 
 import itertools
-from abc import ABCMeta, abstractmethod
-from tqdm.auto import tqdm
-import numpy as np
 import multiprocessing
-from scipy.sparse import csr_matrix
-import cython
-from cython.parallel import prange
+from abc import ABCMeta, abstractmethod
 from math import ceil
+
+import cython
+import numpy as np
+from cython.parallel import prange
+from scipy.sparse import csr_matrix
+from tqdm.auto import tqdm
+
 
 # Define wrapper for C++ sorting function
 cdef extern from "topnc.h":

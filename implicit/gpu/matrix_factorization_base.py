@@ -3,8 +3,9 @@ try:
 except ImportError:
     pass
 
-import numpy as np
 import itertools
+
+import numpy as np
 
 from ..recommender_base import RecommenderBase
 

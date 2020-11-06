@@ -1,10 +1,11 @@
 """ Various thin cython wrappers on top of CUDA functions """
-import numpy as np
 import cython
+import numpy as np
 from cython.operator import dereference
 
 from libcpp cimport bool
 from libcpp.utility cimport pair
+
 
 cdef extern from "als.h" namespace "implicit" nogil:
     cdef cppclass CudaCSRMatrix:

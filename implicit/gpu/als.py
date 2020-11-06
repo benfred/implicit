@@ -11,8 +11,8 @@ import scipy
 import scipy.sparse
 from tqdm.auto import tqdm
 
-
 import implicit.gpu
+
 from .matrix_factorization_base import MatrixFactorizationBase, check_random_state
 
 log = logging.getLogger("implicit")

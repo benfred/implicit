@@ -1,8 +1,7 @@
 Implicit
 =======
 
-[![Build Status](https://travis-ci.org/benfred/implicit.svg?branch=master)](https://travis-ci.org/benfred/implicit)
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/9kfbvx5i6dc48yr0?svg=true)](https://ci.appveyor.com/project/benfred/implicit)
+[![Build Status](https://github.com/benfred/implicit/workflows/Build/badge.svg)](https://github.com/benfred/implicit/actions?query=workflow%3ABuild+branch%3Amaster)
 
 Fast Python Collaborative Filtering for Implicit Datasets.
 
