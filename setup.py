@@ -6,26 +6,18 @@ import platform
 import sys
 
 from setuptools import Extension, find_packages, setup
+from Cython.Build import cythonize
 
 from cuda_setup import CUDA, build_ext
 
 NAME = 'implicit'
 VERSION = "0.4.4"
 
-try:
-    from Cython.Build import cythonize
-    use_cython = True
-except ImportError:
-    use_cython = False
-
-is_dev = 'dev' in VERSION
-if is_dev and not use_cython:
-    raise RuntimeError('Cython required to build dev version of %s.' % NAME)
 
 use_openmp = True
 
 
-def define_extensions(use_cython=False):
+def define_extensions():
     if sys.platform.startswith("win"):
         # compile args from
         # https://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
@@ -53,7 +45,7 @@ def define_extensions(use_cython=False):
     # except ImportError:
     #     raise ValueError("numpy is required to build from source")
 
-    src_ext = '.pyx' if use_cython else '.cpp'
+    src_ext = '.pyx'
     modules = [Extension("implicit." + name,
                          [os.path.join("implicit", name + src_ext)],
                          language='c++',
@@ -88,10 +80,7 @@ def define_extensions(use_cython=False):
     else:
         print("Failed to find CUDA toolkit. Building without GPU acceleration.")
 
-    if use_cython:
-        return cythonize(modules)
-    else:
-        return modules
+    return cythonize(modules)
 
 
 # set_gcc copied from glove-python project
@@ -147,7 +136,7 @@ def read(file_name):
 setup(
     name=NAME,
     version=VERSION,
-    description='Collaborative Filtering for Implicit Datasets',
+    description='Collaborative Filtering for Implicit Feedback Datasets',
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     url='http://github.com/benfred/implicit/',
@@ -172,7 +161,7 @@ setup(
     packages=find_packages(),
     install_requires=['numpy', 'scipy>=0.16', 'tqdm>=4.27'],
     setup_requires=["Cython>=0.24"],
-    ext_modules=define_extensions(use_cython),
+    ext_modules=define_extensions(),
     cmdclass={'build_ext': build_ext},
     test_suite="tests",
 )

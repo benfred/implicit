@@ -1,3 +1,11 @@
+implicit/_nearest_neighbours.cpp
+implicit/cpu/_als.cpp
+implicit/cpu/bpr.cpp
+implicit/evaluation.cpp
+implicit/gpu/_cuda.cpp
+implicit/lmf.cpp
+implicit/recommender_base.cpp
+
 # Mac stuff
 .DS_Store
 
