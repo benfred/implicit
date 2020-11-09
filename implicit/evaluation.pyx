@@ -217,9 +217,9 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
     cdef int users = test_user_items.shape[0], items = test_user_items.shape[1]
     cdef int u, i
     # precision
-    cdef double relevant = 0, pr_div = 0, total = 0
+    cdef double relevant = 0, pr_div = 0, pr_div_correct = 0, rec_div_correct = 0, total = 0
     # map
-    cdef double mean_ap = 0, ap = 0
+    cdef double mean_ap = 0, mean_ap_correct = 0, ap = 0
     # ndcg
     cdef double[:] cg = (1.0 / np.log2(np.arange(2, K + 2)))
     cdef double[:] cg_sum = np.cumsum(cg)
