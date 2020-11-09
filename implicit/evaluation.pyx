@@ -260,6 +260,8 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                     likes.insert(test_indices[i])
 
                 pr_div += fmin(K, likes.size())
+                pr_div_correct += K
+                rec_div_correct += likes.size()
                 ap = 0
                 hit = 0
                 miss = 0
@@ -279,6 +281,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                         auc += hit
                 auc += ((hit + num_pos_items) / 2.0) * (num_neg_items - miss)
                 mean_ap += ap / fmin(K, likes.size())
+                mean_ap_correct += ap / K
                 mean_auc += auc / (num_pos_items * num_neg_items)
                 total += 1
         finally:
@@ -290,5 +293,8 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
         "precision": relevant / pr_div,
         "map": mean_ap / total,
         "ndcg": ndcg / total,
-        "auc": mean_auc / total
+        "auc": mean_auc / total,
+        "precision_correct": relevant / pr_div_correct,
+        "recall_correct": relevant / pr_rec_correct,
+        "map_correct": mean_ap_correct / total
     }
