@@ -9,9 +9,9 @@ import scipy
 import scipy.sparse
 from tqdm.auto import tqdm
 
-from . import _als
 from ..recommender_base import MatrixFactorizationBase
 from ..utils import check_blas_config, check_random_state, nonzeros
+from . import _als
 
 log = logging.getLogger("implicit")
 

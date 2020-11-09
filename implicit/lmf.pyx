@@ -1,23 +1,25 @@
 import cython
+
 from cython cimport floating, integral
+
 import logging
 import multiprocessing
 import time
+
 import tqdm
-
 from cython.parallel import parallel, prange, threadid
-from libc.math cimport exp
-from libc.math cimport sqrt
 
+from libc.math cimport exp, sqrt
+from libc.stdlib cimport free, malloc
+from libc.string cimport memcpy, memset
 from libcpp cimport bool
 from libcpp.algorithm cimport binary_search
-from libc.stdlib cimport malloc, free
-from libc.string cimport memcpy, memset
+
+import random
 
 import numpy as np
 import scipy.sparse
 
-import random
 from libcpp.vector cimport vector
 
 from .recommender_base import MatrixFactorizationBase
