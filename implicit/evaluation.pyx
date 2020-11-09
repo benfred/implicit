@@ -295,6 +295,6 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
         "ndcg": ndcg / total,
         "auc": mean_auc / total,
         "precision_correct": relevant / pr_div_correct,
-        "recall_correct": relevant / pr_rec_correct,
+        "recall_correct": relevant / rec_div_correct,
         "map_correct": mean_ap_correct / total
     }
