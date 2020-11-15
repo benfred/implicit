@@ -142,7 +142,6 @@ cdef _take_tails(arr, int n, return_complement=False, shuffled=False):
         return idx[tails]
 
 
-
 cpdef leave_k_out_split(
     ratings, int K=1, float train_only_size=0.0, random_state=None
 ):
