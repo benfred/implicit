@@ -6,6 +6,7 @@ from cython cimport floating, integral
 from cython.parallel import parallel, prange
 
 cimport scipy.linalg.cython_blas as cython_blas
+
 # requires scipy v0.16
 cimport scipy.linalg.cython_lapack as cython_lapack
 from libc.stdlib cimport free, malloc
