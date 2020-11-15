@@ -13,6 +13,7 @@ from cuda_setup import CUDA, build_ext
 NAME = "implicit"
 VERSION = "0.4.4"
 
+
 use_openmp = True
 
 
@@ -44,8 +45,7 @@ def define_extensions():
     # except ImportError:
     #     raise ValueError("numpy is required to build from source")
 
-<<<<<<< HEAD
-    src_ext = ".pyx" if use_cython else ".cpp"
+    src_ext = ".pyx"
     modules = [
         Extension(
             "implicit." + name,
@@ -80,27 +80,6 @@ def define_extensions():
             extra_link_args=link_args,
         )
     )
-=======
-    src_ext = '.pyx'
-    modules = [Extension("implicit." + name,
-                         [os.path.join("implicit", name + src_ext)],
-                         language='c++',
-                         extra_compile_args=compile_args,
-                         extra_link_args=link_args)
-               for name in ['_nearest_neighbours', 'lmf', 'evaluation']]
-    modules.extend([Extension("implicit.cpu." + name,
-                              [os.path.join("implicit", "cpu", name + src_ext)],
-                              language='c++',
-                              extra_compile_args=compile_args,
-                              extra_link_args=link_args)
-                    for name in ['_als', 'bpr']])
-    modules.append(Extension("implicit." + 'recommender_base',
-                             [os.path.join("implicit", 'recommender_base' + src_ext),
-                              os.path.join("implicit", 'topnc.cpp')],
-                             language='c++',
-                             extra_compile_args=compile_args,
-                             extra_link_args=link_args))
->>>>>>> origin
 
     if CUDA:
         modules.append(
@@ -183,11 +162,7 @@ def read(file_name):
 setup(
     name=NAME,
     version=VERSION,
-<<<<<<< HEAD
-    description="Collaborative Filtering for Implicit Datasets",
-=======
-    description='Collaborative Filtering for Implicit Feedback Datasets',
->>>>>>> origin
+    description="Collaborative Filtering for Implicit Feedback Datasets",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     url="http://github.com/benfred/implicit/",
@@ -211,12 +186,7 @@ setup(
     packages=find_packages(),
     install_requires=["numpy", "scipy>=0.16", "tqdm>=4.27"],
     setup_requires=["Cython>=0.24"],
-<<<<<<< HEAD
-    ext_modules=define_extensions(use_cython),
-    cmdclass={"build_ext": build_ext},
-=======
     ext_modules=define_extensions(),
-    cmdclass={'build_ext': build_ext},
->>>>>>> origin
+    cmdclass={"build_ext": build_ext},
     test_suite="tests",
 )
