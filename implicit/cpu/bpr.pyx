@@ -226,7 +226,7 @@ def bpr_update(RNGVector rng,
     with nogil, parallel(num_threads=num_threads):
 
         thread_id = get_thread_num()
-        for i in prange(samples, schedule='guided'):
+        for i in prange(samples, schedule='static'):
             liked_index = rng.generate(thread_id)
             liked_id = itemids[liked_index]
 

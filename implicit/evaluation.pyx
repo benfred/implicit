@@ -13,8 +13,10 @@ from libc.stdlib cimport free, malloc
 from libc.string cimport memset
 from libcpp.unordered_set cimport unordered_set
 
+from .utils import check_random_state
 
-def train_test_split(ratings, train_percentage=0.8):
+
+def train_test_split(ratings, train_percentage=0.8, random_state=None):
     """ Randomly splits the ratings matrix into two matrices for training/testing.
 
     Parameters
@@ -23,14 +25,17 @@ def train_test_split(ratings, train_percentage=0.8):
         A sparse matrix to split
     train_percentage : float
         What percentage of ratings should be used for training
-
+    random_state : int, None or RandomState
+        The existing RandomState. If None, or an int, will be used
+        to seed a new numpy RandomState.
     Returns
     -------
     (train, test) : csr_matrix, csr_matrix
         A tuple of csr_matrices for training/testing """
-    ratings = ratings.tocoo()
 
-    random_index = np.random.random(len(ratings.data))
+    ratings = ratings.tocoo()
+    random_state = check_random_state(random_state)
+    random_index = random_state.random_sample(len(ratings.data))
     train_index = random_index < train_percentage
     test_index = random_index >= train_percentage
 
