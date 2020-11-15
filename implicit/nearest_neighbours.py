@@ -10,7 +10,7 @@ from .utils import nonzeros
 
 
 class ItemItemRecommender(RecommenderBase):
-    """ Base class for Item-Item Nearest Neighbour recommender models
+    """Base class for Item-Item Nearest Neighbour recommender models
     here.
 
     Parameters
@@ -22,6 +22,7 @@ class ItemItemRecommender(RecommenderBase):
         The number of threads to use for fitting the model. Specifying 0
         means to default to the number of cores on the machine.
     """
+
     def __init__(self, K=20, num_threads=0):
         self.similarity = None
         self.K = K
@@ -30,13 +31,20 @@ class ItemItemRecommender(RecommenderBase):
 
     def fit(self, weighted, show_progress=True):
         """ Computes and stores the similarity matrix """
-        self.similarity = all_pairs_knn(weighted, self.K,
-                                        show_progress=show_progress,
-                                        num_threads=self.num_threads).tocsr()
+        self.similarity = all_pairs_knn(
+            weighted, self.K, show_progress=show_progress, num_threads=self.num_threads
+        ).tocsr()
         self.scorer = NearestNeighboursScorer(self.similarity)
 
-    def recommend(self, userid, user_items,
-                  N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
+    def recommend(
+        self,
+        userid,
+        user_items,
+        N=10,
+        filter_already_liked_items=True,
+        filter_items=None,
+        recalculate_user=False,
+    ):
         """ returns the best N recommendations for a user given its id"""
         if userid >= user_items.shape[0]:
             raise ValueError("userid is out of bounds of the user_items matrix")
@@ -46,9 +54,14 @@ class ItemItemRecommender(RecommenderBase):
         if filter_items:
             items += len(filter_items)
 
-        indices, data = self.scorer.recommend(userid, user_items.indptr, user_items.indices,
-                                              user_items.data, K=items,
-                                              remove_own_likes=filter_already_liked_items)
+        indices, data = self.scorer.recommend(
+            userid,
+            user_items.indptr,
+            user_items.indices,
+            user_items.data,
+            K=items,
+            remove_own_likes=filter_already_liked_items,
+        )
         best = sorted(zip(indices, data), key=lambda x: -x[1])
 
         if not filter_items:
@@ -90,7 +103,7 @@ class ItemItemRecommender(RecommenderBase):
     def __getstate__(self):
         state = self.__dict__.copy()
         # scorer isn't picklable
-        del state['scorer']
+        del state["scorer"]
         return state
 
     def __setstate__(self, state):
@@ -102,8 +115,9 @@ class ItemItemRecommender(RecommenderBase):
 
     def save(self, filename):
         m = self.similarity
-        numpy.savez(filename, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape,
-                    K=self.K)
+        numpy.savez(
+            filename, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape, K=self.K
+        )
 
     @classmethod
     def load(cls, filename):
@@ -112,17 +126,18 @@ class ItemItemRecommender(RecommenderBase):
             filename = filename + ".npz"
 
         m = numpy.load(filename)
-        similarity = csr_matrix((m['data'], m['indices'], m['indptr']), shape=m['shape'])
+        similarity = csr_matrix((m["data"], m["indices"], m["indptr"]), shape=m["shape"])
 
         ret = cls()
         ret.similarity = similarity
         ret.scorer = NearestNeighboursScorer(similarity)
-        ret.K = m['K']
+        ret.K = m["K"]
         return ret
 
 
 class CosineRecommender(ItemItemRecommender):
     """ An Item-Item Recommender on Cosine distances between items """
+
     def fit(self, counts, show_progress=True):
         # cosine distance is just the dot-product of a normalized matrix
         ItemItemRecommender.fit(self, normalize(counts), show_progress)
@@ -130,6 +145,7 @@ class CosineRecommender(ItemItemRecommender):
 
 class TFIDFRecommender(ItemItemRecommender):
     """ An Item-Item Recommender on TF-IDF distances between items """
+
     def fit(self, counts, show_progress=True):
         weighted = normalize(tfidf_weight(counts))
         ItemItemRecommender.fit(self, weighted, show_progress)
@@ -137,7 +153,8 @@ class TFIDFRecommender(ItemItemRecommender):
 
 class BM25Recommender(ItemItemRecommender):
     """ An Item-Item Recommender on BM25 distance between items """
-    def __init__(self, K=20, K1=1.2, B=.75, num_threads=0):
+
+    def __init__(self, K=20, K1=1.2, B=0.75, num_threads=0):
         super(BM25Recommender, self).__init__(K, num_threads)
         self.K1 = K1
         self.B = B
@@ -161,8 +178,8 @@ def tfidf_weight(X):
 
 
 def normalize(X):
-    """ equivalent to scipy.preprocessing.normalize on sparse matrices
-    , but lets avoid another depedency just for a small utility function """
+    """equivalent to scipy.preprocessing.normalize on sparse matrices
+    , but lets avoid another depedency just for a small utility function"""
     X = coo_matrix(X)
     X.data = X.data / sqrt(bincount(X.row, X.data ** 2))[X.row]
     return X

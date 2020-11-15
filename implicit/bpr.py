@@ -15,7 +15,7 @@ def BayesianPersonalizedRanking(
     verify_negative_samples=True,
     random_state=None,
 ):
-    """ Bayesian Personalized Ranking
+    """Bayesian Personalized Ranking
 
     A recommender model that learns  a matrix factorization embedding based off minimizing the
     pairwise ranking loss described in the paper `BPR: Bayesian Personalized Ranking from Implicit

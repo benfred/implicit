@@ -29,55 +29,62 @@ def locate_cuda():
 
     If nvcc can't be found, this returns None
     """
-    nvcc_bin = 'nvcc'
+    nvcc_bin = "nvcc"
     if sys.platform.startswith("win"):
-        nvcc_bin = 'nvcc.exe'
+        nvcc_bin = "nvcc.exe"
 
     # first check if the CUDAHOME env variable is in use
-    if 'CUDAHOME' in os.environ:
-        home = os.environ['CUDAHOME']
-        nvcc = os.path.join(home, 'bin', nvcc_bin)
-    elif 'CUDA_PATH' in os.environ:
-        home = os.environ['CUDA_PATH']
-        nvcc = os.path.join(home, 'bin', nvcc_bin)
+    if "CUDAHOME" in os.environ:
+        home = os.environ["CUDAHOME"]
+        nvcc = os.path.join(home, "bin", nvcc_bin)
+    elif "CUDA_PATH" in os.environ:
+        home = os.environ["CUDA_PATH"]
+        nvcc = os.path.join(home, "bin", nvcc_bin)
     else:
         # otherwise, search the PATH for NVCC
-        nvcc = find_in_path(nvcc_bin, os.environ['PATH'])
+        nvcc = find_in_path(nvcc_bin, os.environ["PATH"])
         if nvcc is None:
-            logging.warning('The nvcc binary could not be located in your $PATH. Either add it to '
-                            'your path, or set $CUDAHOME to enable CUDA extensions')
+            logging.warning(
+                "The nvcc binary could not be located in your $PATH. Either add it to "
+                "your path, or set $CUDAHOME to enable CUDA extensions"
+            )
             return None
         home = os.path.dirname(os.path.dirname(nvcc))
         if not os.path.exists(os.path.join(home, "include")):
             logging.warning("Failed to find cuda include directory, attempting /usr/local/cuda")
             home = "/usr/local/cuda"
 
-    cudaconfig = {'home': home,
-                  'nvcc': nvcc,
-                  'include': os.path.join(home, 'include'),
-                  'lib64':   os.path.join(home, 'lib64')}
+    cudaconfig = {
+        "home": home,
+        "nvcc": nvcc,
+        "include": os.path.join(home, "include"),
+        "lib64": os.path.join(home, "lib64"),
+    }
 
-    post_args = ["-arch=sm_50",
-                 "-gencode=arch=compute_50,code=sm_50",
-                 "-gencode=arch=compute_52,code=sm_52",
-                 "-gencode=arch=compute_60,code=sm_60",
-                 "-gencode=arch=compute_61,code=sm_61",
-                 "-gencode=arch=compute_70,code=sm_70",
-                 "-gencode=arch=compute_70,code=compute_70",
-                 "--ptxas-options=-v", "-O2"]
+    post_args = [
+        "-arch=sm_50",
+        "-gencode=arch=compute_50,code=sm_50",
+        "-gencode=arch=compute_52,code=sm_52",
+        "-gencode=arch=compute_60,code=sm_60",
+        "-gencode=arch=compute_61,code=sm_61",
+        "-gencode=arch=compute_70,code=sm_70",
+        "-gencode=arch=compute_70,code=compute_70",
+        "--ptxas-options=-v",
+        "-O2",
+    ]
 
     if sys.platform == "win32":
-        cudaconfig['lib64'] = os.path.join(home, 'lib', 'x64')
-        post_args += ['-Xcompiler', '/MD']
+        cudaconfig["lib64"] = os.path.join(home, "lib", "x64")
+        post_args += ["-Xcompiler", "/MD"]
     else:
-        post_args += ['-c', '--compiler-options', "'-fPIC'"]
+        post_args += ["-c", "--compiler-options", "'-fPIC'"]
 
     for k, v in cudaconfig.items():
         if not os.path.exists(v):
-            logging.warning('The CUDA %s path could not be located in %s', k, v)
+            logging.warning("The CUDA %s path could not be located in %s", k, v)
             return None
 
-    cudaconfig['post_args'] = post_args
+    cudaconfig["post_args"] = post_args
     return cudaconfig
 
 
@@ -85,45 +92,55 @@ def locate_cuda():
 # https://github.com/cupy/cupy/blob/master/cupy_setup_build.py
 class _UnixCCompiler(unixccompiler.UnixCCompiler):
     src_extensions = list(unixccompiler.UnixCCompiler.src_extensions)
-    src_extensions.append('.cu')
+    src_extensions.append(".cu")
 
     def _compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts):
         # For sources other than CUDA C ones, just call the super class method.
-        if os.path.splitext(src)[1] != '.cu':
+        if os.path.splitext(src)[1] != ".cu":
             return unixccompiler.UnixCCompiler._compile(
-                self, obj, src, ext, cc_args, extra_postargs, pp_opts)
+                self, obj, src, ext, cc_args, extra_postargs, pp_opts
+            )
 
         # For CUDA C source files, compile them with NVCC.
         _compiler_so = self.compiler_so
         try:
-            nvcc_path = CUDA['nvcc']
-            post_args = CUDA['post_args']
+            nvcc_path = CUDA["nvcc"]
+            post_args = CUDA["post_args"]
             # TODO? base_opts = build.get_compiler_base_options()
-            self.set_executable('compiler_so', nvcc_path)
+            self.set_executable("compiler_so", nvcc_path)
 
             return unixccompiler.UnixCCompiler._compile(
-                self, obj, src, ext, cc_args, post_args, pp_opts)
+                self, obj, src, ext, cc_args, post_args, pp_opts
+            )
         finally:
             self.compiler_so = _compiler_so
 
 
 class _MSVCCompiler(msvccompiler.MSVCCompiler):
-    _cu_extensions = ['.cu']
+    _cu_extensions = [".cu"]
 
     src_extensions = list(unixccompiler.UnixCCompiler.src_extensions)
     src_extensions.extend(_cu_extensions)
 
-    def _compile_cu(self, sources, output_dir=None, macros=None,
-                    include_dirs=None, debug=0, extra_preargs=None,
-                    extra_postargs=None, depends=None):
+    def _compile_cu(
+        self,
+        sources,
+        output_dir=None,
+        macros=None,
+        include_dirs=None,
+        debug=0,
+        extra_preargs=None,
+        extra_postargs=None,
+        depends=None,
+    ):
         # Compile CUDA C files, mainly derived from UnixCCompiler._compile().
-        macros, objects, extra_postargs, pp_opts, _build = \
-            self._setup_compile(output_dir, macros, include_dirs, sources,
-                                depends, extra_postargs)
+        macros, objects, extra_postargs, pp_opts, _build = self._setup_compile(
+            output_dir, macros, include_dirs, sources, depends, extra_postargs
+        )
 
-        compiler_so = CUDA['nvcc']
+        compiler_so = CUDA["nvcc"]
         cc_args = self._get_cc_args(pp_opts, debug, extra_preargs)
-        post_args = CUDA['post_args']
+        post_args = CUDA["post_args"]
 
         for obj in objects:
             try:
@@ -131,7 +148,7 @@ class _MSVCCompiler(msvccompiler.MSVCCompiler):
             except KeyError:
                 continue
             try:
-                self.spawn([compiler_so] + cc_args + [src, '-o', obj] + post_args)
+                self.spawn([compiler_so] + cc_args + [src, "-o", obj] + post_args)
             except errors.DistutilsExecError as e:
                 raise errors.CompileError(str(e))
 
@@ -142,14 +159,13 @@ class _MSVCCompiler(msvccompiler.MSVCCompiler):
         cu_sources = []
         other_sources = []
         for source in sources:
-            if os.path.splitext(source)[1] == '.cu':
+            if os.path.splitext(source)[1] == ".cu":
                 cu_sources.append(source)
             else:
                 other_sources.append(source)
 
         # Compile source files other than CUDA C ones.
-        other_objects = msvccompiler.MSVCCompiler.compile(
-            self, other_sources, **kwargs)
+        other_objects = msvccompiler.MSVCCompiler.compile(self, other_sources, **kwargs)
 
         # Compile CUDA C sources.
         cu_objects = self._compile_cu(cu_sources, **kwargs)
@@ -163,22 +179,24 @@ class cuda_build_ext(setuptools_build_ext):
 
     def run(self):
         if CUDA is not None:
+
             def wrap_new_compiler(func):
                 def _wrap_new_compiler(*args, **kwargs):
                     try:
                         return func(*args, **kwargs)
                     except errors.DistutilsPlatformError:
-                        if not sys.platform == 'win32':
+                        if not sys.platform == "win32":
                             CCompiler = _UnixCCompiler
                         else:
                             CCompiler = _MSVCCompiler
-                        return CCompiler(
-                            None, kwargs['dry_run'], kwargs['force'])
+                        return CCompiler(None, kwargs["dry_run"], kwargs["force"])
+
                 return _wrap_new_compiler
+
             ccompiler.new_compiler = wrap_new_compiler(ccompiler.new_compiler)
             # Intentionally causes DistutilsPlatformError in
             # ccompiler.new_compiler() function to hook.
-            self.compiler = 'nvidia'
+            self.compiler = "nvidia"
 
         setuptools_build_ext.run(self)
 

@@ -32,15 +32,24 @@ def benchmark_implicit(matrix, factors, reg, iterations):
 def benchmark_qmf(qmfpath, matrix, factors, reg, iterations):
     matrix = matrix.tocoo()
     datafile = "qmf_data.txt"
-    open(datafile, "w").write("\n".join("%s %s %s" % vals
-                                        for vals in zip(matrix.row, matrix.col, matrix.data)))
+    open(datafile, "w").write(
+        "\n".join("%s %s %s" % vals for vals in zip(matrix.row, matrix.col, matrix.data))
+    )
 
     def get_qmf_command(nepochs):
-        return [qmfpath, "--train_dataset", datafile,
-                "--nfactors", str(factors),
-                "--confidence_weight", "1",
-                "--nepochs", str(nepochs),
-                "--regularization_lambda", str(reg)]
+        return [
+            qmfpath,
+            "--train_dataset",
+            datafile,
+            "--nfactors",
+            str(factors),
+            "--confidence_weight",
+            "1",
+            "--nepochs",
+            str(nepochs),
+            "--regularization_lambda",
+            str(reg),
+        ]
 
     # ok, so QMF needs to read the data in - and including
     # that in the timing isn't fair. So run it once with no iterations
@@ -58,8 +67,9 @@ def benchmark_qmf(qmfpath, matrix, factors, reg, iterations):
 def run_benchmark(args):
     plays = bm25_weight(scipy.io.mmread(args.inputfile))
 
-    qmf_time = benchmark_qmf(args.qmfpath, plays, args.factors, args.regularization,
-                             args.iterations)
+    qmf_time = benchmark_qmf(
+        args.qmfpath, plays, args.factors, args.regularization, args.iterations
+    )
 
     implicit_time = benchmark_implicit(plays, args.factors, args.regularization, args.iterations)
 
@@ -69,19 +79,25 @@ def run_benchmark(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generates Benchmark",
-                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description="Generates Benchmark", formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
 
-    parser.add_argument('--input', type=str,
-                        dest='inputfile', help='dataset file in matrix market format')
-    parser.add_argument('--qmfpath', type=str,
-                        dest='qmfpath', help='full path to qmf wals.bin file', required=True)
-    parser.add_argument('--factors', type=int, default=50, dest='factors',
-                        help='Number of factors to calculate')
-    parser.add_argument('--reg', type=float, default=0.8, dest='regularization',
-                        help='regularization weight')
-    parser.add_argument('--iter', type=int, default=15, dest='iterations',
-                        help='Number of ALS iterations')
+    parser.add_argument(
+        "--input", type=str, dest="inputfile", help="dataset file in matrix market format"
+    )
+    parser.add_argument(
+        "--qmfpath", type=str, dest="qmfpath", help="full path to qmf wals.bin file", required=True
+    )
+    parser.add_argument(
+        "--factors", type=int, default=50, dest="factors", help="Number of factors to calculate"
+    )
+    parser.add_argument(
+        "--reg", type=float, default=0.8, dest="regularization", help="regularization weight"
+    )
+    parser.add_argument(
+        "--iter", type=int, default=15, dest="iterations", help="Number of ALS iterations"
+    )
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.DEBUG)
