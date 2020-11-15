@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 isort cpplint
+        pip install flake8 isort cpplint black
         pip install -r requirements.txt
     - name: Lint with flake8
       run: |
@@ -36,6 +36,9 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=11 --max-line-length=127 --statistics
         flake8 --filename='*.pyx,*.px*' --ignore E901,E225,E226,E227,E402,E999
+    - name: Lint with black
+      run: |
+        black --check .
     - name: Lint with isort
       run: |
         isort -c .
