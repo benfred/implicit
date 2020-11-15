@@ -52,7 +52,7 @@ def train_test_split(ratings, train_percentage=0.8, random_state=None):
     return train, test
 
 
-def _choose(rng, int n, float frac):
+cdef _choose(rng, int n, float frac):
     """Given a range of numbers, select *approximately* 'frac' of them _without_
     replacement.
 
@@ -78,55 +78,72 @@ def _choose(rng, int n, float frac):
     return arr
 
 
-def _sample_index(arr):
-    """Given an *ordered* array of integers, randomly select one index for each unique
-    element.
+cdef _take_tails(arr, int n, return_complement=False, shuffled=False):
+    """
+    Given an array of (optionally shuffled) integers in the range 0->n, take the indices
+    of the last 'n' occurrences of each integer (tail) -- subject to shuffling.
+
+    Concretely, given an array of 25 integers in the range 0->4:
+
+    arr = [4 0 1 2 0 3 1 3 3 2 0 3 2 3 3 1 1 2 3 2 3 4 4 0 4]
+
+    Return the index of the last 'n' elements for each unique integer. For n=2:
+
+    idx = [ 4 23 16 15  9  3 18 20 21 24]
+
+    Such that:
+
+    arr[idx] = [0 0 1 1 2 2 3 3 4 4]
 
     Parameters
     ----------
-    arr : ndarray
-        An ordered array of integers.
+    arr: ndarray
+        The input array. This should be an array of integers in the range 0->n, where
+        the ordered unique set of integers in said array should produce an array of
+        consecutive integers. Concretely, the array [1, 0, 1, 1, 0, 3] would be invalid,
+        but the array [1, 0, 1, 1, 0, 2] would not be.
+    n: int
+        The number of elements in the tail to take. Note that no checks are made to
+        ensure that this value is correct (i.e. that a given integer occurs > n times in
+        the given array). Invalid values of 'n' will produce IndexErrors.
+    return_complement: bool
+        If True, returns the complement (i.e. heads) of the tail indices.
+        Default is False (only returns tails).
+    shuffled: bool
+        Optionally indicate whether you wish the dataset to be shuffled. This will act
+        to randomise the 'tails' selected.
 
     Returns
     -------
-    ndarray
-        An array of indices of shape (n_unique, ), where each element corresponds to a
-        randomly sampled index for each unique integer appearing in the input array.
+    output: ndarray or tuple
+        If 'return_complement' is False, this will return an array of integers
+        corresponding to the tails
 
-    Examples
-    --------
-    >>> x = np.array([0, 0, 1, 3, 3, 3, 4, 4, 4, 4, 5, 5, 7, 7, 7])
-    >>> y = np.asarray([0, 1, 0, 0, 1, 2, 0, 1, 2, 3, 0, 1, 0, 1, 2])
-    >>> s = _sample_index(x)
-    >>> s
-    [ 1  2  3  7 11 13]
-    >>> x[s]
-    [0 1 3 4 5 7]
-    >>> y[s]
-    [0 0 1 3 0 2] """
+    """
 
-    # Count number of occurrences of each value in array of non-negative ints.
-    counts = np.bincount(arr)
-    # remove any elements with zero count (addresses non-consecutive ints case)
-    counts = counts[counts.nonzero()[0]]
+    idx = arr.argsort()
+    sorted_arr = arr[idx]
 
-    # generate an array of indices mapped to the counts (i.e. if the zeroth element
-    # appears twice, and the first element once, we'd have [0, 0, 1 ... ]
-    count_idx = np.repeat(np.arange(counts.shape[0]), counts)
+    end = np.bincount(sorted_arr).cumsum() - 1
+    start = end - n
+    ranges = np.linspace(start, end, num=n + 1, dtype=int)[1:]
 
-    # add 'noise' to the indices, and then get the new order for the indices. Note that
-    # as the increment >= 1, this will only act to reorder elements associated with the
-    # same unique value.
-    shuffled_idx = (count_idx + np.random.random(arr.shape)).argsort()
+    if shuffled:
+        shuffled_idx = (sorted_arr + np.random.random(arr.shape)).argsort()
+        tails = shuffled_idx[np.ravel(ranges, order="f")]
+    else:
+        tails = np.ravel(ranges, order="f")
 
-    # sample the first occurrence of each unique element
-    sampled = np.r_[0, counts.cumsum()[:-1]]
+    heads = np.setdiff1d(idx, tails)
 
-    # return the first occurrence of an element in the shuffled indices.
-    return shuffled_idx[sampled]
+    if return_complement:
+        return idx[tails], idx[heads]
+    else:
+        return idx[tails]
 
 
-def leave_k_out_split(
+
+cpdef leave_k_out_split(
     ratings, int K=1, float train_only_size=0.0, random_state=None
 ):
     """Implements the 'leave-k-out' split protocol for a ratings matrix. Default
@@ -154,12 +171,6 @@ def leave_k_out_split(
     -------
     (train, test) : csr_matrix, csr_matrix
         A tuple of CSR matrix corresponding to training/testing matrices.
-
-    Notes
-    -----
-    * For K=1, this is fully vectorized. Be aware that for K > 1, you may experience
-      some performance issues for very large ratings matrices. This can be partially
-      mitigated by setting train_only_size to higher values (e.g. ~1.0).
 
     """
 
@@ -197,18 +208,9 @@ def leave_k_out_split(
     candidate_items = items[full_candidate_mask]
     candidate_data = data[full_candidate_mask]
 
-    if K == 1:
-        # sample a single item for each candidate user
-        # (i.e. get index of each sampled item)
-        test_idx = _sample_index(candidate_users)
-    else:
-        # todo: this can probably be vectorized too by extending the above.
-        test_idx = np.ravel(
-            [
-                random_state.choice(np.where(candidate_users==user)[0], K)
-                for user in unique_candidate_users
-            ]
-        )
+    test_idx, train_idx = _take_tails(
+        candidate_users, K, shuffled=True, return_complement=True
+    )
 
     # get all remaining remaining candidate user-item pairs, and prepare to append to
     # training set.
@@ -218,15 +220,19 @@ def leave_k_out_split(
     test_users = candidate_users[test_idx]
     test_items = candidate_items[test_idx]
     test_data = candidate_data[test_idx]
-    test_mat = csr_matrix((test_data, (test_users, test_items)),
-                          shape=ratings.shape, dtype=ratings.dtype)
+    test_mat = csr_matrix(
+        (test_data, (test_users, test_items)), shape=ratings.shape, dtype=ratings.dtype
+    )
 
     # build training matrix
     train_users = np.r_[users[~full_candidate_mask], candidate_users[train_idx]]
     train_items = np.r_[items[~full_candidate_mask], candidate_items[train_idx]]
     train_data = np.r_[data[~full_candidate_mask], candidate_data[train_idx]]
-    train_mat = csr_matrix((train_data, (train_users, train_items)),
-                           shape=ratings.shape, dtype=ratings.dtype)
+    train_mat = csr_matrix(
+        (train_data, (train_users, train_items)),
+        shape=ratings.shape,
+        dtype=ratings.dtype,
+    )
 
     return train_mat, test_mat
 
