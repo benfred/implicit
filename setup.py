@@ -10,7 +10,7 @@ from setuptools import Extension, find_packages, setup
 
 from cuda_setup import CUDA, build_ext
 
-NAME = 'implicit'
+NAME = "implicit"
 VERSION = "0.4.4"
 
 
@@ -21,17 +21,17 @@ def define_extensions():
     if sys.platform.startswith("win"):
         # compile args from
         # https://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
-        compile_args = ['/O2', '/openmp']
+        compile_args = ["/O2", "/openmp"]
         link_args = []
     else:
         gcc = extract_gcc_binaries()
         if gcc is not None:
-            rpath = '/usr/local/opt/gcc/lib/gcc/' + gcc[-1] + '/'
-            link_args = ['-Wl,-rpath,' + rpath]
+            rpath = "/usr/local/opt/gcc/lib/gcc/" + gcc[-1] + "/"
+            link_args = ["-Wl,-rpath," + rpath]
         else:
             link_args = []
 
-        compile_args = ['-Wno-unused-function', '-Wno-maybe-uninitialized', '-O3', '-ffast-math']
+        compile_args = ["-Wno-unused-function", "-Wno-maybe-uninitialized", "-O3", "-ffast-math"]
         if use_openmp:
             compile_args.append("-fopenmp")
             link_args.append("-fopenmp")
@@ -45,38 +45,60 @@ def define_extensions():
     # except ImportError:
     #     raise ValueError("numpy is required to build from source")
 
-    src_ext = '.pyx'
-    modules = [Extension("implicit." + name,
-                         [os.path.join("implicit", name + src_ext)],
-                         language='c++',
-                         extra_compile_args=compile_args,
-                         extra_link_args=link_args)
-               for name in ['_nearest_neighbours', 'lmf', 'evaluation']]
-    modules.extend([Extension("implicit.cpu." + name,
-                              [os.path.join("implicit", "cpu", name + src_ext)],
-                              language='c++',
-                              extra_compile_args=compile_args,
-                              extra_link_args=link_args)
-                    for name in ['_als', 'bpr']])
-    modules.append(Extension("implicit." + 'recommender_base',
-                             [os.path.join("implicit", 'recommender_base' + src_ext),
-                              os.path.join("implicit", 'topnc.cpp')],
-                             language='c++',
-                             extra_compile_args=compile_args,
-                             extra_link_args=link_args))
+    src_ext = ".pyx"
+    modules = [
+        Extension(
+            "implicit." + name,
+            [os.path.join("implicit", name + src_ext)],
+            language="c++",
+            extra_compile_args=compile_args,
+            extra_link_args=link_args,
+        )
+        for name in ["_nearest_neighbours", "lmf", "evaluation"]
+    ]
+    modules.extend(
+        [
+            Extension(
+                "implicit.cpu." + name,
+                [os.path.join("implicit", "cpu", name + src_ext)],
+                language="c++",
+                extra_compile_args=compile_args,
+                extra_link_args=link_args,
+            )
+            for name in ["_als", "bpr"]
+        ]
+    )
+    modules.append(
+        Extension(
+            "implicit." + "recommender_base",
+            [
+                os.path.join("implicit", "recommender_base" + src_ext),
+                os.path.join("implicit", "topnc.cpp"),
+            ],
+            language="c++",
+            extra_compile_args=compile_args,
+            extra_link_args=link_args,
+        )
+    )
 
     if CUDA:
-        modules.append(Extension("implicit.gpu._cuda",
-                                 [os.path.join("implicit", "gpu", "_cuda" + src_ext),
-                                  os.path.join("implicit", "gpu", "als.cu"),
-                                  os.path.join("implicit", "gpu", "bpr.cu"),
-                                  os.path.join("implicit", "gpu", "matrix.cu")],
-                                 language="c++",
-                                 extra_compile_args=compile_args,
-                                 extra_link_args=link_args,
-                                 library_dirs=[CUDA['lib64']],
-                                 libraries=['cudart', 'cublas', 'curand'],
-                                 include_dirs=[CUDA['include'], '.']))
+        modules.append(
+            Extension(
+                "implicit.gpu._cuda",
+                [
+                    os.path.join("implicit", "gpu", "_cuda" + src_ext),
+                    os.path.join("implicit", "gpu", "als.cu"),
+                    os.path.join("implicit", "gpu", "bpr.cu"),
+                    os.path.join("implicit", "gpu", "matrix.cu"),
+                ],
+                language="c++",
+                extra_compile_args=compile_args,
+                extra_link_args=link_args,
+                library_dirs=[CUDA["lib64"]],
+                libraries=["cudart", "cublas", "curand"],
+                include_dirs=[CUDA["include"], "."],
+            )
+        )
     else:
         print("Failed to find CUDA toolkit. Building without GPU acceleration.")
 
@@ -86,13 +108,16 @@ def define_extensions():
 # set_gcc copied from glove-python project
 # https://github.com/maciejkula/glove-python
 
+
 def extract_gcc_binaries():
     """Try to find GCC on OSX for OpenMP support."""
-    patterns = ['/opt/local/bin/g++-mp-[0-9]*.[0-9]*',
-                '/opt/local/bin/g++-mp-[0-9]*',
-                '/usr/local/bin/g++-[0-9]*.[0-9]*',
-                '/usr/local/bin/g++-[0-9]*']
-    if platform.system() == 'Darwin':
+    patterns = [
+        "/opt/local/bin/g++-mp-[0-9]*.[0-9]*",
+        "/opt/local/bin/g++-mp-[0-9]*",
+        "/usr/local/bin/g++-[0-9]*.[0-9]*",
+        "/usr/local/bin/g++-[0-9]*",
+    ]
+    if platform.system() == "Darwin":
         gcc_binaries = []
         for pattern in patterns:
             gcc_binaries += glob.glob(pattern)
@@ -109,7 +134,7 @@ def extract_gcc_binaries():
 def set_gcc():
     """Try to use GCC on OSX for OpenMP support."""
     # For macports and homebrew
-    if platform.system() == 'Darwin':
+    if platform.system() == "Darwin":
         gcc = extract_gcc_binaries()
 
         if gcc is not None:
@@ -119,8 +144,9 @@ def set_gcc():
         else:
             global use_openmp
             use_openmp = False
-            logging.warning('No GCC available. Install gcc from Homebrew '
-                            'using brew install gcc.')
+            logging.warning(
+                "No GCC available. Install gcc from Homebrew " "using brew install gcc."
+            )
 
 
 set_gcc()
@@ -136,32 +162,31 @@ def read(file_name):
 setup(
     name=NAME,
     version=VERSION,
-    description='Collaborative Filtering for Implicit Feedback Datasets',
+    description="Collaborative Filtering for Implicit Feedback Datasets",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
-    url='http://github.com/benfred/implicit/',
-    author='Ben Frederickson',
-    author_email='ben@benfrederickson.com',
-    license='MIT',
+    url="http://github.com/benfred/implicit/",
+    author="Ben Frederickson",
+    author_email="ben@benfrederickson.com",
+    license="MIT",
     classifiers=[
-        'Development Status :: 4 - Beta',
-        'Natural Language :: English',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Cython',
-        'Operating System :: OS Independent',
-        'Topic :: Software Development :: Libraries :: Python Modules'],
-
-    keywords='Matrix Factorization, Implicit Alternating Least Squares, '
-             'Collaborative Filtering, Recommender Systems',
-
+        "Development Status :: 4 - Beta",
+        "Natural Language :: English",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Cython",
+        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ],
+    keywords="Matrix Factorization, Implicit Alternating Least Squares, "
+    "Collaborative Filtering, Recommender Systems",
     packages=find_packages(),
-    install_requires=['numpy', 'scipy>=0.16', 'tqdm>=4.27'],
+    install_requires=["numpy", "scipy>=0.16", "tqdm>=4.27"],
     setup_requires=["Cython>=0.24"],
     ext_modules=define_extensions(),
-    cmdclass={'build_ext': build_ext},
+    cmdclass={"build_ext": build_ext},
     test_suite="tests",
 )

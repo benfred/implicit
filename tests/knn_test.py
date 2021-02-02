@@ -27,13 +27,18 @@ class CosineTest(unittest.TestCase, TestRecommenderBaseMixin):
 
 class NearestNeighboursTest(unittest.TestCase):
     def test_all_pairs_knn(self):
-        counts = csr_matrix([[5, 1, 0, 9, 0, 0],
-                             [0, 2, 1, 1, 0, 0],
-                             [7, 0, 3, 0, 0, 0],
-                             [1, 8, 0, 0, 0, 0],
-                             [0, 0, 4, 4, 0, 0],
-                             [0, 3, 0, 0, 0, 2],
-                             [0, 0, 0, 0, 6, 0]], dtype=np.float64)
+        counts = csr_matrix(
+            [
+                [5, 1, 0, 9, 0, 0],
+                [0, 2, 1, 1, 0, 0],
+                [7, 0, 3, 0, 0, 0],
+                [1, 8, 0, 0, 0, 0],
+                [0, 0, 4, 4, 0, 0],
+                [0, 3, 0, 0, 0, 2],
+                [0, 0, 0, 0, 6, 0],
+            ],
+            dtype=np.float64,
+        )
         counts = implicit.nearest_neighbours.tfidf_weight(counts).tocsr()
 
         # compute all neighbours using matrix dot product
@@ -48,9 +53,13 @@ class NearestNeighboursTest(unittest.TestCase):
 
             # make sure top K selected
             row = all_neighbours[rowid]
-            self.assertEqual(set(knn[rowid].indices),
-                             set(colid for colid, _ in
-                                 sorted(zip(row.indices, row.data), key=lambda x: -x[1])[:K]))
+            self.assertEqual(
+                set(knn[rowid].indices),
+                set(
+                    colid
+                    for colid, _ in sorted(zip(row.indices, row.data), key=lambda x: -x[1])[:K]
+                ),
+            )
 
 
 if __name__ == "__main__":

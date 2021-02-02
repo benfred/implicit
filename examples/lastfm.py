@@ -15,24 +15,33 @@ import numpy as np
 import tqdm
 
 from implicit.als import AlternatingLeastSquares
-from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlternatingLeastSquares,
-                                      NMSLibAlternatingLeastSquares)
+from implicit.approximate_als import (
+    AnnoyAlternatingLeastSquares,
+    FaissAlternatingLeastSquares,
+    NMSLibAlternatingLeastSquares,
+)
 from implicit.bpr import BayesianPersonalizedRanking
 from implicit.datasets.lastfm import get_lastfm
 from implicit.lmf import LogisticMatrixFactorization
-from implicit.nearest_neighbours import (BM25Recommender, CosineRecommender,
-                                         TFIDFRecommender, bm25_weight)
+from implicit.nearest_neighbours import (
+    BM25Recommender,
+    CosineRecommender,
+    TFIDFRecommender,
+    bm25_weight,
+)
 
 # maps command line model argument to class name
-MODELS = {"als":  AlternatingLeastSquares,
-          "nmslib_als": NMSLibAlternatingLeastSquares,
-          "annoy_als": AnnoyAlternatingLeastSquares,
-          "faiss_als": FaissAlternatingLeastSquares,
-          "tfidf": TFIDFRecommender,
-          "cosine": CosineRecommender,
-          "bpr": BayesianPersonalizedRanking,
-          "lmf": LogisticMatrixFactorization,
-          "bm25": BM25Recommender}
+MODELS = {
+    "als": AlternatingLeastSquares,
+    "nmslib_als": NMSLibAlternatingLeastSquares,
+    "annoy_als": AnnoyAlternatingLeastSquares,
+    "faiss_als": FaissAlternatingLeastSquares,
+    "tfidf": TFIDFRecommender,
+    "cosine": CosineRecommender,
+    "bpr": BayesianPersonalizedRanking,
+    "lmf": LogisticMatrixFactorization,
+    "bm25": BM25Recommender,
+}
 
 
 def get_model(model_name):
@@ -43,13 +52,13 @@ def get_model(model_name):
 
     # some default params
     if model_name.endswith("als"):
-        params = {'factors': 64, 'dtype': np.float32}
+        params = {"factors": 64, "dtype": np.float32}
     elif model_name == "bm25":
-        params = {'K1': 100, 'B': 0.5}
+        params = {"K1": 100, "B": 0.5}
     elif model_name == "bpr":
-        params = {'factors': 63}
+        params = {"factors": 63}
     elif model_name == "lmf":
-        params = {'factors': 30, "iterations": 40, "regularization": 1.5}
+        params = {"factors": 30, "iterations": 40, "regularization": 1.5}
     else:
         params = {}
 
@@ -57,8 +66,8 @@ def get_model(model_name):
 
 
 def calculate_similar_artists(output_filename, model_name="als"):
-    """ generates a list of similar artists in lastfm by utilizing the 'similar_items'
-    api of the models """
+    """generates a list of similar artists in lastfm by utilizing the 'similar_items'
+    api of the models"""
     artists, users, plays = get_lastfm()
 
     # create a model from the input data
@@ -99,7 +108,7 @@ def calculate_similar_artists(output_filename, model_name="als"):
                     o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
                 progress.update(1)
 
-    logging.debug("generated similar artists in %0.2fs",  time.time() - start)
+    logging.debug("generated similar artists in %0.2fs", time.time() - start)
 
 
 def calculate_recommendations(output_filename, model_name="als"):
@@ -137,22 +146,37 @@ def calculate_recommendations(output_filename, model_name="als"):
                 for artistid, score in model.recommend(userid, user_plays):
                     o.write("%s\t%s\t%s\n" % (username, artists[artistid], score))
                 progress.update(1)
-    logging.debug("generated recommendations in %0.2fs",  time.time() - start)
+    logging.debug("generated recommendations in %0.2fs", time.time() - start)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generates similar artists on the last.fm dataset"
-                                     " or generates personalized recommendations for each user",
-                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--output', type=str, default='similar-artists.tsv',
-                        dest='outputfile', help='output file name')
-    parser.add_argument('--model', type=str, default='als',
-                        dest='model', help='model to calculate (%s)' % "/".join(MODELS.keys()))
-    parser.add_argument('--recommend',
-                        help='Recommend items for each user rather than calculate similar_items',
-                        action="store_true")
-    parser.add_argument('--param', action='append',
-                        help="Parameters to pass to the model, formatted as 'KEY=VALUE")
+    parser = argparse.ArgumentParser(
+        description="Generates similar artists on the last.fm dataset"
+        " or generates personalized recommendations for each user",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default="similar-artists.tsv",
+        dest="outputfile",
+        help="output file name",
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="als",
+        dest="model",
+        help="model to calculate (%s)" % "/".join(MODELS.keys()),
+    )
+    parser.add_argument(
+        "--recommend",
+        help="Recommend items for each user rather than calculate similar_items",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--param", action="append", help="Parameters to pass to the model, formatted as 'KEY=VALUE"
+    )
 
     args = parser.parse_args()
 

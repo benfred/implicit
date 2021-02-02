@@ -12,35 +12,37 @@ from .recommender_base_test import TestRecommenderBaseMixin
 
 
 class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
-
     def _get_model(self):
-        return AlternatingLeastSquares(factors=3, regularization=0, use_gpu=False,
-                                       random_state=23)
+        return AlternatingLeastSquares(factors=3, regularization=0, use_gpu=False, random_state=23)
 
     def test_cg_nan(self):
         # test issue with CG code that was causing NaN values in output:
         # https://github.com/benfred/implicit/issues/19#issuecomment-283164905
-        raw = [[0.0, 2.0, 1.5, 1.33333333, 1.25, 1.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-               [0.0, 0.0, 2.0, 1.5, 1.33333333, 1.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-               [0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-               [0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-               [0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333, 1.25, 1.2],
-               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333, 1.25],
-               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333],
-               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5],
-               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0],
-               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+        raw = [
+            [0.0, 2.0, 1.5, 1.33333333, 1.25, 1.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 2.0, 1.5, 1.33333333, 1.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333, 1.25, 1.2],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333, 1.25],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5, 1.33333333],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.5],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        ]
         counts = csr_matrix(raw, dtype=np.float64)
         for use_native in (True, False):
-            model = AlternatingLeastSquares(factors=3,
-                                            regularization=0.01,
-                                            dtype=np.float64,
-                                            use_native=use_native,
-                                            use_cg=True,
-                                            use_gpu=False,
-                                            random_state=23)
+            model = AlternatingLeastSquares(
+                factors=3,
+                regularization=0.01,
+                dtype=np.float64,
+                use_native=use_native,
+                use_cg=True,
+                use_gpu=False,
+                random_state=23,
+            )
             model.fit(counts, show_progress=False)
             rows, cols = model.item_factors, model.user_factors
 
@@ -49,38 +51,57 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
     def test_cg_nan2(self):
         # test out Nan appearing in CG code (from https://github.com/benfred/implicit/issues/106)
-        Ciu = random(m=100, n=100, density=0.0005, format='coo', dtype=np.float32,
-                     random_state=42, data_rvs=None).T.tocsr()
+        Ciu = random(
+            m=100,
+            n=100,
+            density=0.0005,
+            format="coo",
+            dtype=np.float32,
+            random_state=42,
+            data_rvs=None,
+        ).T.tocsr()
 
-        configs = [{'use_native': True, 'use_gpu': False}, {'use_native': False, 'use_gpu': False}]
+        configs = [{"use_native": True, "use_gpu": False}, {"use_native": False, "use_gpu": False}]
         if HAS_CUDA:
-            configs.append({'use_gpu': True})
+            configs.append({"use_gpu": True})
 
         for options in configs:
-            model = AlternatingLeastSquares(factors=32, regularization=10, iterations=10,
-                                            dtype=np.float32, random_state=23,
-                                            **options)
+            model = AlternatingLeastSquares(
+                factors=32,
+                regularization=10,
+                iterations=10,
+                dtype=np.float32,
+                random_state=23,
+                **options
+            )
             model.fit(Ciu, show_progress=False)
 
             self.assertTrue(np.isfinite(model.item_factors).all())
             self.assertTrue(np.isfinite(model.user_factors).all())
 
     def test_factorize(self):
-        counts = csr_matrix([[1, 1, 0, 1, 0, 0],
-                             [0, 1, 1, 1, 0, 0],
-                             [1, 0, 1, 0, 0, 0],
-                             [1, 1, 0, 0, 0, 0],
-                             [0, 0, 1, 1, 0, 1],
-                             [0, 1, 0, 0, 0, 1],
-                             [0, 0, 0, 0, 1, 1]], dtype=np.float64)
+        counts = csr_matrix(
+            [
+                [1, 1, 0, 1, 0, 0],
+                [0, 1, 1, 1, 0, 0],
+                [1, 0, 1, 0, 0, 0],
+                [1, 1, 0, 0, 0, 0],
+                [0, 0, 1, 1, 0, 1],
+                [0, 1, 0, 0, 0, 1],
+                [0, 0, 0, 0, 1, 1],
+            ],
+            dtype=np.float64,
+        )
         user_items = counts * 2
 
         # try all 8 variants of native/python, cg/cholesky, and
         # 64 vs 32 bit factors
-        options = [(dtype, cg, native, False)
-                   for dtype in (np.float32, np.float64)
-                   for cg in (False, True)
-                   for native in (False, True)]
+        options = [
+            (dtype, cg, native, False)
+            for dtype in (np.float32, np.float64)
+            for cg in (False, True)
+            for native in (False, True)
+        ]
 
         # also try out GPU support if available
         if HAS_CUDA:
@@ -88,49 +109,61 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
         for dtype, use_cg, use_native, use_gpu in options:
             try:
-                model = AlternatingLeastSquares(factors=6,
-                                                regularization=0,
-                                                dtype=dtype,
-                                                use_native=use_native,
-                                                use_cg=use_cg,
-                                                use_gpu=use_gpu,
-                                                random_state=23)
+                model = AlternatingLeastSquares(
+                    factors=6,
+                    regularization=0,
+                    dtype=dtype,
+                    use_native=use_native,
+                    use_cg=use_cg,
+                    use_gpu=use_gpu,
+                    random_state=23,
+                )
                 model.fit(user_items, show_progress=False)
                 rows, cols = model.item_factors, model.user_factors
 
             except Exception as e:
-                self.fail(msg="failed to factorize matrix. Error=%s"
-                              " dtype=%s, cg=%s, native=%s gpu=%s"
-                              % (e, dtype, use_cg, use_native, use_gpu))
+                self.fail(
+                    msg="failed to factorize matrix. Error=%s"
+                    " dtype=%s, cg=%s, native=%s gpu=%s" % (e, dtype, use_cg, use_native, use_gpu)
+                )
 
             reconstructed = rows.dot(cols.T)
             for i in range(counts.shape[0]):
                 for j in range(counts.shape[1]):
-                    self.assertAlmostEqual(counts[i, j], reconstructed[i, j],
-                                           delta=0.0001,
-                                           msg="failed to reconstruct row=%s, col=%s,"
-                                               " value=%.5f, dtype=%s, cg=%s, native=%s gpu=%s"
-                                               % (i, j, reconstructed[i, j], dtype, use_cg,
-                                                  use_native, use_gpu))
+                    self.assertAlmostEqual(
+                        counts[i, j],
+                        reconstructed[i, j],
+                        delta=0.0001,
+                        msg="failed to reconstruct row=%s, col=%s,"
+                        " value=%.5f, dtype=%s, cg=%s, native=%s gpu=%s"
+                        % (i, j, reconstructed[i, j], dtype, use_cg, use_native, use_gpu),
+                    )
 
     def test_explain(self):
-        counts = csr_matrix([[1, 1, 0, 1, 0, 0],
-                             [0, 1, 1, 1, 0, 0],
-                             [1, 4, 1, 0, 7, 0],
-                             [1, 1, 0, 0, 0, 0],
-                             [9, 0, 4, 1, 0, 1],
-                             [0, 1, 0, 0, 0, 1],
-                             [0, 0, 2, 0, 1, 1]], dtype=np.float64)
+        counts = csr_matrix(
+            [
+                [1, 1, 0, 1, 0, 0],
+                [0, 1, 1, 1, 0, 0],
+                [1, 4, 1, 0, 7, 0],
+                [1, 1, 0, 0, 0, 0],
+                [9, 0, 4, 1, 0, 1],
+                [0, 1, 0, 0, 0, 1],
+                [0, 0, 2, 0, 1, 1],
+            ],
+            dtype=np.float64,
+        )
         user_items = counts * 2
         item_users = user_items.T
 
-        model = AlternatingLeastSquares(factors=4,
-                                        regularization=20,
-                                        use_native=False,
-                                        use_cg=False,
-                                        use_gpu=False,
-                                        iterations=100,
-                                        random_state=23)
+        model = AlternatingLeastSquares(
+            factors=4,
+            regularization=20,
+            use_native=False,
+            use_cg=False,
+            use_gpu=False,
+            iterations=100,
+            random_state=23,
+        )
         model.fit(user_items, show_progress=False)
 
         userid = 0
@@ -154,7 +187,8 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
         # Assert explanation with precomputed user weights is correct
         top_score_explained, top_contributions, W = model.explain(
-            userid, item_users, itemid=top_rec, user_weights=W, N=2)
+            userid, item_users, itemid=top_rec, user_weights=W, N=2
+        )
         top_scores = [s for _, s in top_contributions]
         top_items = [i for i, _ in top_contributions]
         self.assertEqual(2, len(top_contributions))
@@ -180,20 +214,22 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
         offset = 2
         recs = model.recommend_all(
-            user_items[[2, 3, 4]],
-            N=1,
-            show_progress=False,
-            users_items_offset=offset)
+            user_items[[2, 3, 4]], N=1, show_progress=False, users_items_offset=offset
+        )
 
         for userid in range(2, 5):
-            self.assertEqual(len(recs[userid-offset]), 1)
-            self.assertEqual(recs[userid-offset][0], userid)
+            self.assertEqual(len(recs[userid - offset]), 1)
+            self.assertEqual(recs[userid - offset][0], userid)
 
         # try asking for more items than possible
         self.assertRaises(ValueError, model.recommend_all, user_items, N=10000, show_progress=False)
         self.assertRaises(
-            ValueError, model.recommend_all, user_items, filter_items=list(range(10000)),
-            show_progress=False)
+            ValueError,
+            model.recommend_all,
+            user_items,
+            filter_items=list(range(10000)),
+            show_progress=False,
+        )
 
         # filter recommended items using an additional filter list
         recs = model.recommend_all(user_items, N=1, filter_items=[0], show_progress=False)
@@ -201,10 +237,11 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
 
 if HAS_CUDA:
+
     class GPUALSTest(unittest.TestCase, TestRecommenderBaseMixin):
         def _get_model(self):
-            return AlternatingLeastSquares(factors=32, regularization=0,
-                                           random_state=23)
+            return AlternatingLeastSquares(factors=32, regularization=0, random_state=23)
+
 
 if __name__ == "__main__":
     unittest.main()
