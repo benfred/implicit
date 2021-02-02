@@ -9,7 +9,6 @@ from implicit.evaluation import leave_k_out_split, train_test_split
 
 
 class EvaluationTest(unittest.TestCase):
-
     @staticmethod
     def _get_sample_matrix():
         return csr_matrix((np.random.random((10, 10)) > 0.5).astype(np.float64))
@@ -82,18 +81,14 @@ class EvaluationTest(unittest.TestCase):
         Test that an error is raised when train_only_size < 0.
         """
 
-        self.assertRaises(
-            ValueError, leave_k_out_split, None, K=1, train_only_size=-1.0
-        )
+        self.assertRaises(ValueError, leave_k_out_split, None, K=1, train_only_size=-1.0)
 
     def test_leave_k_out_raises_error_for_invalid_train_only_size_upper_bound(self):
         """
         Test that an error is raised when train_only_size >= 1.
         """
 
-        self.assertRaises(
-            ValueError, leave_k_out_split, None, K=1, train_only_size=1.0
-        )
+        self.assertRaises(ValueError, leave_k_out_split, None, K=1, train_only_size=1.0)
 
 
 if __name__ == "__main__":
