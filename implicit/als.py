@@ -16,7 +16,7 @@ def AlternatingLeastSquares(
     num_threads=0,
     random_state=None,
 ):
-    """ Alternating Least Squares
+    """Alternating Least Squares
 
     A Recommendation Model based off the algorithms described in the paper 'Collaborative
     Filtering for Implicit Feedback Datasets' with performance optimizations described in

@@ -1,15 +1,17 @@
 import cython
+
 from cython cimport floating, integral
-import numpy as np
-import scipy.sparse
+
 import threading
 
+import numpy as np
+import scipy.sparse
 from cython.operator import dereference
 from cython.parallel import parallel, prange
 
 from libcpp cimport bool
-from libcpp.vector cimport vector
 from libcpp.utility cimport pair
+from libcpp.vector cimport vector
 
 from tqdm.auto import tqdm
 
