@@ -42,7 +42,6 @@ inline void checkCublas(cublasStatus_t code, const char * file, int line) {
     }
 }
 
-
 #define WARP_SIZE 32
 
 // https://devblogs.nvidia.com/parallelforall/faster-parallel-reductions-kepler/
@@ -66,16 +65,13 @@ float warp_reduce_sum(float val) {
 }
 
 __inline__ __device__
-float dot(const float * a, const float * b) {
-    __syncthreads();
-    static __shared__ float shared[32];
-
+float dot(float a, float b, float * shared) {
     // figure out the warp/ position inside the warp
-    int warp =  threadIdx.x / WARP_SIZE;
+    int warp = threadIdx.x / WARP_SIZE;
     int lane = threadIdx.x % WARP_SIZE;
 
     // partially reduce the dot product inside each warp using a shuffle
-    float val = a[threadIdx.x] * b[threadIdx.x];
+    float val = a * b ;
     val = warp_reduce_sum(val);
 
     // write out the partial reduction to shared memory if appropiate

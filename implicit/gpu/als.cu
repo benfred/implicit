@@ -15,17 +15,19 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
                                         float * X, const float * Y, const float * YtY,
                                         const int * indptr, const int * indices,
                                         const float * data, int cg_steps) {
-    // Ap/r/p are vectors for CG update - use dynamic shared memory to store
-    // https://devblogs.nvidia.com/parallelforall/using-shared-memory-cuda-cc/
     extern __shared__ float shared_memory[];
-    float * Ap = &shared_memory[0];
-    float * r = &shared_memory[factors];
-    float * p = &shared_memory[2*factors];
+    float * P = &shared_memory[0];
+    float * shared = &shared_memory[factors];
+
+    float Ap = 0;
+    float p = 0;
+    float r = 0;
 
     // Stride over users in the grid:
     // https://devblogs.nvidia.com/parallelforall/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/
     for (int u = blockIdx.x; u < user_count; u += gridDim.x) {
         float * x = &X[u * factors];
+        float x_value = x[threadIdx.x];
 
         // handle 0-sized rows
         if (indptr[u] == indptr[u+1]) {
@@ -34,47 +36,50 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
         }
 
         // calculate residual r = YtCuPu - YtCuY Xu
-        float temp = 0;
+        r = 0;
         for (int i = 0; i < factors; ++i) {
-            temp -= x[i] * YtY[i * factors + threadIdx.x];
+            r -= x[i] * YtY[i * factors + threadIdx.x];
         }
         for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
-            const float * Yi = &Y[indices[index] * factors];
+            float Yi = Y[indices[index] * factors + threadIdx.x];
             float confidence = data[index];
 
             if (confidence > 0) {
-                temp += (confidence - (confidence - 1) * dot(Yi, x)) * Yi[threadIdx.x];
+                r += (confidence - (confidence - 1) * dot(Yi,  x_value, shared)) * Yi;
             } else {
                 confidence *= -1;
-                temp += (- (confidence - 1) * dot(Yi, x)) * Yi[threadIdx.x];
+                r += (- (confidence - 1) * dot(Yi,  x_value, shared)) * Yi;
             }
         }
-        p[threadIdx.x] = r[threadIdx.x] = temp;
+        P[threadIdx.x] = p = r;
+        __syncthreads();
 
-        float rsold = dot(r, r);
+        float rsold = dot(r, r, shared);
         if (rsold < 1e-20) continue;
 
         for (int it = 0; it < cg_steps; ++it) {
             // calculate Ap = YtCuYp - without actually calculating YtCuY
-            Ap[threadIdx.x] = 0;
+            Ap = 0;
             for (int i = 0; i < factors; ++i) {
-                Ap[threadIdx.x] += p[i] * YtY[i * factors + threadIdx.x];
+                Ap += P[i] * YtY[i * factors + threadIdx.x];
             }
             for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
-                const float * Yi = &Y[indices[index] * factors];
+                float Yi = Y[indices[index] * factors + threadIdx.x];
                 float confidence = data[index];
                 if (confidence < 0) confidence *= -1;
 
-                Ap[threadIdx.x] += (confidence - 1) * dot(Yi, p) * Yi[threadIdx.x];
+                Ap += (confidence - 1) * dot(Yi, p, shared) * Yi;
             }
 
             // standard CG update
-            float alpha = rsold / dot(p, Ap);
-            x[threadIdx.x] += alpha * p[threadIdx.x];
-            r[threadIdx.x] -= alpha * Ap[threadIdx.x];
-            float rsnew = dot(r, r);
+            float alpha = rsold / dot(p, Ap, shared);
+            x_value += alpha * p;
+            r -= alpha * Ap;
+            __syncthreads();
+            float rsnew = dot(r, r, shared);
             if (rsnew < 1e-20) break;
-            p[threadIdx.x] = r[threadIdx.x] + (rsnew/rsold) * p[threadIdx.x];
+
+            P[threadIdx.x] = p = r + (rsnew/rsold) * p;
             rsold = rsnew;
             __syncthreads();
         }
@@ -86,6 +91,8 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
                 printf("Warning NaN Detected in row %d of %d\n", u, user_count);
             }
             x[threadIdx.x] = 0;
+        } else {
+            x[threadIdx.x] = x_value;
         }
     }
 }
@@ -93,6 +100,7 @@ __global__ void least_squares_cg_kernel(int factors, int user_count, int item_co
 __global__ void l2_regularize_kernel(int factors, float regularization, float * YtY) {
     YtY[threadIdx.x * factors + threadIdx.x] += regularization;
 }
+
 CudaLeastSquaresSolver::CudaLeastSquaresSolver(int factors)
     : YtY(factors, factors, NULL) {
     CHECK_CUBLAS(cublasCreate(&blas_handle));
@@ -135,9 +143,9 @@ void CudaLeastSquaresSolver::least_squares(const CudaCSRMatrix & Cui,
                                       cudaDevAttrMultiProcessorCount,
                                       devId));
 
-    int block_count = 128 * multiprocessor_count;
+    int block_count = 256 * multiprocessor_count;
     int thread_count = factors;
-    int shared_memory_size = sizeof(float) * (3 * factors);
+    int shared_memory_size = sizeof(float) * (2 * factors);
 
     least_squares_cg_kernel<<<block_count, thread_count, shared_memory_size>>>(
         factors, user_count, item_count,
@@ -153,39 +161,40 @@ void calculate_loss_kernel(int factors, int user_count, int item_count,
                            const float * data, float regularization, float * output) {
     // https://devblogs.nvidia.com/parallelforall/using-shared-memory-cuda-cc/
     extern __shared__ float shared_memory[];
-    float * r = &shared_memory[0];
+    float * shared = &shared_memory[0];
 
-    float loss = 0, user_norm = 0, item_norm = 0, total_confidence = 0;
+    float loss = 0, user_norm = 0, item_norm = 0, total_confidence = 0, r = 0;
 
     for (int u = blockIdx.x; u < user_count; u += gridDim.x) {
         const float * x = &X[u * factors];
+        float x_value = x[threadIdx.x];
 
         // calculates r = (YtCuY.dot(Xu) - 2 * YtCuPu).dot(Xu), without calculating YtCuY
-        float temp = 0;
+        r = 0;
         for (int i = 0; i < factors; ++i) {
-            temp += x[i] * YtY[i * factors + threadIdx.x];
+            r += x[i] * YtY[i * factors + threadIdx.x];
         }
 
         for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
-            const float * Yi = &Y[indices[index] * factors];
+            float Yi = Y[indices[index] * factors + threadIdx.x];
             float confidence = data[index];
             if (confidence > 0) {
-                temp += ((confidence - 1 ) * dot(Yi, x) - 2 * confidence) * Yi[threadIdx.x];
+                r += ((confidence - 1 ) * dot(Yi, x_value, shared) - 2 * confidence) * Yi;
             } else {
                 confidence *= -1;
-                temp += ((confidence - 1 ) * dot(Yi, x)) * Yi[threadIdx.x];
+                r += ((confidence - 1 ) * dot(Yi, x_value, shared)) * Yi;
             }
             loss += confidence;
             total_confidence += confidence;
         }
-        r[threadIdx.x] = temp;
-        loss += dot(x, r);
+        loss += dot(x_value, r, shared);
 
-        user_norm += dot(x, x);
+        user_norm += dot(x_value, x_value, shared);
     }
+
     for (int i = blockIdx.x; i < item_count; i += gridDim.x) {
-        const float * y = &Y[i * factors];
-        item_norm += dot(y, y);
+        float y = Y[i * factors + threadIdx.x];
+        item_norm += dot(y, y, shared);
     }
 
     loss += regularization * (item_norm + user_norm);

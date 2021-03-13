@@ -13,9 +13,9 @@ namespace implicit {
 // TODO: we could use an n-ary search here instead, but
 // that will only be faster when the number of likes for a user is
 // much greater than the number of threads (factors) we are using.
-// Since most users on most datasets have relatively few likes, I'm 
+// Since most users on most datasets have relatively few likes, I'm
 // using a simple linear scan here instea
-__inline__ __device__ 
+__inline__ __device__
 bool linear_search(int * start, int * end, int target) {
     __shared__ bool ret;
 
@@ -52,7 +52,7 @@ __global__ void bpr_update_kernel(int samples, unsigned int * random_likes, unsi
             likedid = itemids[liked_index],
             dislikedid = itemids[disliked_index];
 
-        if (verify_negative_samples && 
+        if (verify_negative_samples &&
                 linear_search(&itemids[indptr[userid]], &itemids[indptr[userid+1]], dislikedid)) {
             skipped += 1;
             continue;
@@ -66,8 +66,7 @@ __global__ void bpr_update_kernel(int samples, unsigned int * random_likes, unsi
               liked_val = liked[threadIdx.x],
               disliked_val = disliked[threadIdx.x];
 
-        temp[threadIdx.x] = liked_val - disliked_val;
-        float score = dot(user, temp);
+        float score = dot(user_val, liked_val - disliked_val, temp);
         float z = 1.0 / (1.0 + exp(score));
 
         if (z < .5) correct++;
@@ -140,7 +139,7 @@ std::pair<int, int> bpr_update(const CudaVector<int> & userids,
                                       devId));
 
     int factors = X->cols;
-    int block_count = 128 * multiprocessor_count;
+    int block_count = 256 * multiprocessor_count;
     int thread_count = factors;
     int shared_memory_size = sizeof(float) * (factors);
 
@@ -149,7 +148,7 @@ std::pair<int, int> bpr_update(const CudaVector<int> & userids,
         nonzeros, random_likes, random_dislikes,
         itemids.data, userids.data, indptr.data,
         factors,
-        X->data, Y->data, learning_rate, reg, 
+        X->data, Y->data, learning_rate, reg,
         verify_negative_samples,
         stats);
 
