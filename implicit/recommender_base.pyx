@@ -86,10 +86,9 @@ class RecommenderBase(object):
         userid : int
             The userid to calculate recommendations for
         user_items : csr_matrix
-            A sparse matrix of shape (number_users, number_items). This lets us look
-            up the liked items and their weights for the user. This is used to filter out
-            items that have already been liked from the output, and to also potentially
-            calculate the best items for this user.
+            A sparse matrix of shape (number_users, number_items). This lets us
+            (optionally) recalculate user factors (see `recalculate_user` parameter) as
+            required
         selected_items : List of itemids
         recalculate_user : bool, optional
             When true, don't rely on stored user state and instead recalculate from the
