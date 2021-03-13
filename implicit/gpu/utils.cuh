@@ -90,8 +90,9 @@ float dot(const float * a, const float * b) {
     }
 
     // otherwise reduce again in the first warp
-    val = (threadIdx.x < blockDim.x / WARP_SIZE) ? shared[lane] : 0;
     if (warp == 0) {
+        int num_warps = (blockDim.x + WARP_SIZE - 1) / WARP_SIZE;
+        val = (lane  < num_warps) ? shared[lane] : 0;
         val = warp_reduce_sum(val);
         // broadcast back to shared memory
         if (threadIdx.x == 0) {
