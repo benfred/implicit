@@ -61,16 +61,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         if not implicit.gpu.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
-        if (factors + 1) % 32:
-            padding = 32 - (factors + 1) % 32
-            log.warning(
-                "GPU training requires factor size to be a multiple of 32 - 1."
-                " Increasing factors from %i to %i.",
-                factors,
-                factors + padding,
-            )
-            factors += padding
-
         self.factors = factors
         self.learning_rate = learning_rate
         self.iterations = iterations
