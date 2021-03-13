@@ -116,7 +116,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
                     use_native=use_native,
                     use_cg=use_cg,
                     use_gpu=use_gpu,
-                    random_state=23,
+                    random_state=42,
                 )
                 model.fit(user_items, show_progress=False)
                 rows, cols = model.item_factors, model.user_factors
