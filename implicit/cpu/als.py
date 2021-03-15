@@ -193,6 +193,17 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self._check_fit_errors()
 
     def recalculate_user(self, userid, user_items):
+        if user_items.getformat() == 'csr':
+            return user_factor(
+                self.item_factors,
+                self.YtY,
+                user_items,
+                userid,
+                self.regularization,
+                self.factors,
+            )
+        
+        # if the format of user_items is not 'csr' then convert to 'csr'
         return user_factor(
             self.item_factors,
             self.YtY,
@@ -203,6 +214,17 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         )
 
     def recalculate_item(self, itemid, react_users):
+        if react_users.getformat() == 'csr':
+            return item_factor(
+                self.user_factors,
+                self.XtX,
+                react_users,
+                itemid,
+                self.regularization,
+                self.factors,
+            )
+        
+        # if the format of react_users is not 'csr' then convert to 'csr'
         return item_factor(
             self.user_factors,
             self.XtX,
