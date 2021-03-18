@@ -269,6 +269,39 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
     return ranking_metrics_at_k(
         model, train_user_items, test_user_items, K, show_progress, num_threads)['precision']
 
+@cython.boundscheck(False)
+def recall_at_k(model, train_user_items, test_user_items, int K=10,
+                show_progress=True, int num_threads=1):
+    """ Calculates R@K for a given trained model
+
+    Parameters
+    ----------
+    model : RecommenderBase
+        The fitted recommendation model to test
+    train_user_items : csr_matrix
+        Sparse matrix of user by item that contains elements that were used
+            in training the model
+    test_user_items : csr_matrix
+        Sparse matrix of user by item that contains withheld elements to
+        test on
+    K : int
+        Number of items to test on
+    show_progress : bool, optional
+        Whether to show a progress bar
+    num_threads : int, optional
+        The number of threads to use for testing. Specifying 0 means to default
+        to the number of cores on the machine. Note: aside from the ALS and BPR
+        models, setting this to more than 1 will likely hurt performance rather than
+        help.
+
+    Returns
+    -------
+    float
+        the calculated r@k
+    """
+    return ranking_metrics_at_k(
+        model, train_user_items, test_user_items, K, show_progress, num_threads)['recall']
+
 
 @cython.boundscheck(False)
 def mean_average_precision_at_k(model, train_user_items, test_user_items, int K=10,
@@ -405,7 +438,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
     cdef int users = test_user_items.shape[0], items = test_user_items.shape[1]
     cdef int u, i
     # precision
-    cdef double relevant = 0, pr_div = 0, total = 0
+    cdef double relevant = 0, pr_div = 0, rec_div = 0, total = 0
     # map
     cdef double mean_ap = 0, ap = 0
     # ndcg
@@ -448,6 +481,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                     likes.insert(test_indices[i])
 
                 pr_div += fmin(K, likes.size())
+                rec_div += likes.size()
                 ap = 0
                 hit = 0
                 miss = 0
@@ -476,6 +510,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
     progress.close()
     return {
         "precision": relevant / pr_div,
+        "recall": relevant / rec_div,
         "map": mean_ap / total,
         "ndcg": ndcg / total,
         "auc": mean_auc / total
