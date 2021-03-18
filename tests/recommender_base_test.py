@@ -7,7 +7,7 @@ import pickle
 import numpy as np
 from scipy.sparse import csr_matrix
 
-from implicit.evaluation import precision_at_k
+from implicit.evaluation import precision_at_k, recall_at_k
 from implicit.nearest_neighbours import ItemItemRecommender
 
 
@@ -82,6 +82,20 @@ class TestRecommenderBaseMixin(object):
         # we've withheld the diagnoal for testing, and have verified that in test_recommend
         # it is returned for each user. So p@1 should be 1.0
         p = precision_at_k(
+            model, user_items.tocsr(), csr_matrix(np.eye(50)), K=1, show_progress=False
+        )
+        self.assertEqual(p, 1)
+
+    def test_evaluation_recall(self):
+        item_users = self.get_checker_board(50)
+        user_items = item_users.T.tocsr()
+
+        model = self._get_model()
+        model.fit(item_users, show_progress=False)
+
+        # we've withheld the diagnoal for testing, and have verified that in test_recommend
+        # it is returned for each user. So r@1 should be 1.0
+        p = recall_at_k(
             model, user_items.tocsr(), csr_matrix(np.eye(50)), K=1, show_progress=False
         )
         self.assertEqual(p, 1)
