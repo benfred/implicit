@@ -269,6 +269,7 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
     return ranking_metrics_at_k(
         model, train_user_items, test_user_items, K, show_progress, num_threads)['precision']
 
+
 @cython.boundscheck(False)
 def recall_at_k(model, train_user_items, test_user_items, int K=10,
                 show_progress=True, int num_threads=1):
