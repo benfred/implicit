@@ -95,9 +95,7 @@ class TestRecommenderBaseMixin(object):
 
         # we've withheld the diagnoal for testing, and have verified that in test_recommend
         # it is returned for each user. So r@1 should be 1.0
-        p = recall_at_k(
-            model, user_items.tocsr(), csr_matrix(np.eye(50)), K=1, show_progress=False
-        )
+        p = recall_at_k(model, user_items.tocsr(), csr_matrix(np.eye(50)), K=1, show_progress=False)
         self.assertEqual(p, 1)
 
     def test_similar_users(self):
