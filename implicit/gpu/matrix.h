@@ -1,38 +1,38 @@
 #ifndef IMPLICIT_GPU_MATRIX_H_
 #define IMPLICIT_GPU_MATRIX_H_
 
-namespace implicit {
+namespace implicit { namespace gpu {
 /// Thin wrappers of CUDA memory: copies to from host, frees in destructor
 template <typename T>
-struct CudaVector {
-    CudaVector(int size, const T * elements);
-    ~CudaVector();
+struct Vector {
+    Vector(int size, const T * elements = NULL);
+    ~Vector();
 
     int size;
     T * data;
 };
 
-struct CudaCSRMatrix {
-    CudaCSRMatrix(int rows, int cols, int nonzeros,
+struct CSRMatrix {
+    CSRMatrix(int rows, int cols, int nonzeros,
                   const int * indptr, const int * indices, const float * data);
-    ~CudaCSRMatrix();
+    ~CSRMatrix();
     int * indptr, * indices;
     float * data;
     int rows, cols, nonzeros;
 };
 
-struct CudaCOOMatrix {
-    CudaCOOMatrix(int rows, int cols, int nonzeros,
+struct COOMatrix {
+    COOMatrix(int rows, int cols, int nonzeros,
                   const int * row, const int * col, const float * data);
-    ~CudaCOOMatrix();
+    ~COOMatrix();
     int * row, * col;
     float * data;
     int rows, cols, nonzeros;
 };
 
-struct CudaDenseMatrix {
-    CudaDenseMatrix(int rows, int cols, float * data, bool host=true);
-    ~CudaDenseMatrix();
+struct Matrix {
+    Matrix(int rows, int cols, float * data, bool host=true);
+    ~Matrix();
 
     void to_host(float * output) const;
 
@@ -40,5 +40,5 @@ struct CudaDenseMatrix {
     float * data;
     bool owns_data;
 };
-}  // namespace implicit
+}}  // namespace implicit/gpu
 #endif  // IMPLICIT_GPU_MATRIX_H_

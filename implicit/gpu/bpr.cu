@@ -8,7 +8,7 @@
 #include "implicit/gpu/als.h"
 #include "implicit/gpu/utils.cuh"
 
-namespace implicit {
+namespace implicit { namespace gpu {
 
 // TODO: we could use an n-ary search here instead, but
 // that will only be faster when the number of likes for a user is
@@ -96,11 +96,11 @@ inline void checkCurand(curandStatus_t code, const char *file, int line) {
     }
 }
 
-std::pair<int, int> bpr_update(const CudaVector<int> & userids,
-                               const CudaVector<int> & itemids,
-                               const CudaVector<int> & indptr,
-                               CudaDenseMatrix * X,
-                               CudaDenseMatrix * Y,
+std::pair<int, int> bpr_update(const Vector<int> & userids,
+                               const Vector<int> & itemids,
+                               const Vector<int> & indptr,
+                               Matrix * X,
+                               Matrix * Y,
                                float learning_rate, float reg, long seed,
                                bool verify_negative_samples) {
     if (X->cols != Y->cols) throw std::invalid_argument("X and Y should have the same number of columns");
@@ -164,4 +164,4 @@ std::pair<int, int> bpr_update(const CudaVector<int> & userids,
     curandDestroyGenerator(rng);
     return std::make_pair(output[0], output[1]);
 }
-}
+}} // namespace
