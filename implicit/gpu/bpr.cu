@@ -87,15 +87,6 @@ __global__ void bpr_update_kernel(int samples, unsigned int * random_likes, unsi
     }
 }
 
-#define CHECK_CURAND(code) { checkCurand((code), __FILE__, __LINE__); }
-inline void checkCurand(curandStatus_t code, const char *file, int line) {
-    if (code != CURAND_STATUS_SUCCESS) {
-        std::stringstream err;
-        err << "CURAND error: " << code << " (" << file << ":" << line << ")";
-        throw std::runtime_error(err.str());
-    }
-}
-
 std::pair<int, int> bpr_update(const Vector<int> & userids,
                                const Vector<int> & itemids,
                                const Vector<int> & indptr,

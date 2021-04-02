@@ -52,11 +52,12 @@ def get_model(model_name):
 
     # some default params
     if model_name.endswith("als"):
-        params = {"factors": 64, "dtype": np.float32}
+        params = {"factors": 64, "dtype": np.float32, "use_gpu": True}
     elif model_name == "bm25":
         params = {"K1": 100, "B": 0.5}
     elif model_name == "bpr":
-        params = {"factors": 63}
+        params = {"factors": 63, "verify_negative_samples": False, "use_gpu": True,
+        "regularization": 0.15, "learning_rate": 0.1}
     elif model_name == "lmf":
         params = {"factors": 30, "iterations": 40, "regularization": 1.5}
     else:
@@ -121,7 +122,7 @@ def calculate_recommendations(output_filename, model_name="als"):
 
     # if we're training an ALS based model, weight input for last.fm
     # by bm25
-    if issubclass(model.__class__, AlternatingLeastSquares):
+    if model_name.endswith("als"):
         # lets weight these models by bm25weight.
         logging.debug("weighting matrix by bm25_weight")
         plays = bm25_weight(plays, K1=100, B=0.8)

@@ -28,6 +28,7 @@ def get_lastfm():
     with h5py.File(filename, "r") as f:
         m = f.get("artist_user_plays")
         plays = csr_matrix((m.get("data"), m.get("indices"), m.get("indptr")))
+        print(f["artist"].__class__)
         return np.array(f["artist"]), np.array(f["user"]), plays
 
 

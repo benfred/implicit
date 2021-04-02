@@ -34,14 +34,16 @@ def locate_cuda():
         nvcc_bin = "nvcc.exe"
 
     # first check if the CUDAHOME env variable is in use
+    nvcc = None
     if "CUDAHOME" in os.environ:
         home = os.environ["CUDAHOME"]
         nvcc = os.path.join(home, "bin", nvcc_bin)
     elif "CUDA_PATH" in os.environ:
         home = os.environ["CUDA_PATH"]
         nvcc = os.path.join(home, "bin", nvcc_bin)
-    else:
-        # otherwise, search the PATH for NVCC
+
+    # otherwise, search the PATH for NVCC
+    if not nvcc or not os.path.exists(nvcc):
         nvcc = find_in_path(nvcc_bin, os.environ["PATH"])
         if nvcc is None:
             logging.warning(
@@ -62,7 +64,7 @@ def locate_cuda():
     }
 
     post_args = [
-        "-arch=sm_50",
+        "-arch=sm_60",
         "-gencode=arch=compute_50,code=sm_50",
         "-gencode=arch=compute_52,code=sm_52",
         "-gencode=arch=compute_60,code=sm_60",
@@ -70,6 +72,7 @@ def locate_cuda():
         "-gencode=arch=compute_70,code=sm_70",
         "-gencode=arch=compute_70,code=compute_70",
         "--ptxas-options=-v",
+        "--extended-lambda",
         "-O2",
     ]
 

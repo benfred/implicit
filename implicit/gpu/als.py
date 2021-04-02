@@ -1,11 +1,6 @@
 import logging
 import time
 
-try:
-    import cupy as cp
-except ImportError:
-    pass
-
 import numpy as np
 import scipy
 import scipy.sparse
@@ -121,11 +116,13 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         # Initialize the variables randomly if they haven't already been set
         if self.user_factors is None:
-            self.user_factors = random_state.rand(users, self.factors, dtype=cp.float32) - 0.5
-            self.user_factors /= self.factors
+            self.user_factors = random_state.uniform(
+                users, self.factors, low=-0.5 / self.factors, high=0.5 / self.factors
+            )
         if self.item_factors is None:
-            self.item_factors = random_state.rand(items, self.factors, dtype=cp.float32) - 0.5
-            self.item_factors /= self.factors
+            self.item_factors = random_state.uniform(
+                items, self.factors, low=-0.5 / self.factors, high=0.5 / self.factors
+            )
 
         log.debug("Initialized factors in %s", time.time() - s)
 
@@ -134,8 +131,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         Ciu = implicit.gpu.CSRMatrix(Ciu)
         Cui = implicit.gpu.CSRMatrix(Cui)
-        X = implicit.gpu.Matrix(self.user_factors)
-        Y = implicit.gpu.Matrix(self.item_factors)
+        X = self.user_factors
+        Y = self.item_factors
 
         solver = implicit.gpu.LeastSquaresSolver(self.factors)
         log.debug("Running %i ALS iterations", self.iterations)
