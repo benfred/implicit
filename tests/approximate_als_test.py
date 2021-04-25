@@ -9,13 +9,13 @@ from implicit.approximate_als import (
 )
 from implicit.gpu import HAS_CUDA
 
-from .recommender_base_test import TestRecommenderBaseMixin
+from .recommender_base_test import RecommenderBaseTestMixin
 
 # don't require annoy/faiss/nmslib to be installed
 try:
     import annoy  # noqa
 
-    class AnnoyALSTest(unittest.TestCase, TestRecommenderBaseMixin):
+    class AnnoyALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
             return AnnoyAlternatingLeastSquares(factors=2, regularization=0, random_state=23)
 
@@ -30,7 +30,7 @@ except ImportError:
 try:
     import nmslib  # noqa
 
-    class NMSLibALSTest(unittest.TestCase, TestRecommenderBaseMixin):
+    class NMSLibALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
             return NMSLibAlternatingLeastSquares(
                 factors=2, regularization=0, index_params={"post": 2}, random_state=23
@@ -47,7 +47,7 @@ except ImportError:
 try:
     import faiss  # noqa
 
-    class FaissALSTest(unittest.TestCase, TestRecommenderBaseMixin):
+    class FaissALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
             return FaissAlternatingLeastSquares(
                 nlist=1, nprobe=1, factors=2, regularization=0, use_gpu=False, random_state=23
@@ -59,7 +59,7 @@ try:
 
     if HAS_CUDA:
 
-        class FaissALSGPUTest(unittest.TestCase, TestRecommenderBaseMixin):
+        class FaissALSGPUTest(unittest.TestCase, RecommenderBaseTestMixin):
             __regularization = 0
 
             def _get_model(self):

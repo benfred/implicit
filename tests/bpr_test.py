@@ -5,10 +5,10 @@ from scipy.sparse import csr_matrix
 from implicit.bpr import BayesianPersonalizedRanking
 from implicit.gpu import HAS_CUDA
 
-from .recommender_base_test import TestRecommenderBaseMixin
+from .recommender_base_test import RecommenderBaseTestMixin
 
 
-class BPRTest(unittest.TestCase, TestRecommenderBaseMixin):
+class BPRTest(unittest.TestCase, RecommenderBaseTestMixin):
     def _get_model(self):
         return BayesianPersonalizedRanking(
             factors=3, regularization=0, use_gpu=False, random_state=42
@@ -27,7 +27,7 @@ class BPRTest(unittest.TestCase, TestRecommenderBaseMixin):
 
 if HAS_CUDA:
 
-    class BPRGPUTest(unittest.TestCase, TestRecommenderBaseMixin):
+    class BPRGPUTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
             return BayesianPersonalizedRanking(
                 factors=31, regularization=0, use_gpu=True, learning_rate=0.02, random_state=42

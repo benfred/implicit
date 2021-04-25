@@ -7,20 +7,20 @@ from scipy.sparse import csr_matrix
 
 import implicit
 
-from .recommender_base_test import TestRecommenderBaseMixin
+from .recommender_base_test import RecommenderBaseTestMixin
 
 
-class BM25Test(unittest.TestCase, TestRecommenderBaseMixin):
+class BM25Test(unittest.TestCase, RecommenderBaseTestMixin):
     def _get_model(self):
         return implicit.nearest_neighbours.BM25Recommender(K=50)
 
 
-class TFIDFTest(unittest.TestCase, TestRecommenderBaseMixin):
+class TFIDFTest(unittest.TestCase, RecommenderBaseTestMixin):
     def _get_model(self):
         return implicit.nearest_neighbours.TFIDFRecommender(K=50)
 
 
-class CosineTest(unittest.TestCase, TestRecommenderBaseMixin):
+class CosineTest(unittest.TestCase, RecommenderBaseTestMixin):
     def _get_model(self):
         return implicit.nearest_neighbours.CosineRecommender(K=50)
 
