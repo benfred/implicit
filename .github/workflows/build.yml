@@ -47,4 +47,4 @@ jobs:
         python setup.py develop
     - name: Run unittests
       run: |
-        pytest tests
+        python -m pytest tests
