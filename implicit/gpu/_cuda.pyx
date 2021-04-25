@@ -54,7 +54,7 @@ cdef class CSRMatrix(object):
         cdef int[:] indices = X.indices
         cdef float[:] data = X.data.astype(np.float32)
         self.c_matrix = new CppCSRMatrix(X.shape[0], X.shape[1], len(X.data),
-                                          &indptr[0], &indices[0], &data[0])
+                                         &indptr[0], &indices[0], &data[0])
 
     def __dealloc__(self):
         del self.c_matrix
@@ -67,7 +67,7 @@ cdef class COOMatrix(object):
         cdef int[:] col = X.col
         cdef float[:] data = X.data.astype(np.float32)
         self.c_matrix = new CppCOOMatrix(X.shape[0], X.shape[1], len(X.data),
-                                          &row[0], &col[0], &data[0])
+                                         &row[0], &col[0], &data[0])
 
     def __dealloc__(self):
         del self.c_matrix
@@ -95,8 +95,8 @@ cdef class LeastSquaresSolver(object):
 
 
 def bpr_update(IntVector userids, IntVector itemids, IntVector indptr,
-                  Matrix X, Matrix Y,
-                  float learning_rate, float regularization, long seed, bool verify_negative):
+               Matrix X, Matrix Y,
+               float learning_rate, float regularization, long seed, bool verify_negative):
     ret = cpp_bpr_update(dereference(userids.c_vector),
                          dereference(itemids.c_vector),
                          dereference(indptr.c_vector),

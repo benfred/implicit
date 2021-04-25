@@ -15,4 +15,3 @@ cdef extern from "matrix.h" namespace "implicit::gpu" nogil:
     cdef cppclass Matrix:
         Matrix(int rows, int cols, float * data, bool host) except +
         void to_host(float * output) except +
-

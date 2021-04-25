@@ -9,4 +9,3 @@ cdef extern from "als.h" namespace "implicit::gpu" nogil:
 
         float calculate_loss(const CSRMatrix & Cui, const Matrix & X,
                              const Matrix & Y, float regularization) except +
-
