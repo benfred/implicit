@@ -123,17 +123,17 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 
         self._item_norms = self._user_norms = None
 
-        userids = implicit.gpu.CuIntVector(userids)
-        itemids = implicit.gpu.CuIntVector(user_items.indices)
-        indptr = implicit.gpu.CuIntVector(user_items.indptr)
+        userids = implicit.gpu.IntVector(userids)
+        itemids = implicit.gpu.IntVector(user_items.indices)
+        indptr = implicit.gpu.IntVector(user_items.indptr)
 
-        X = implicit.gpu.CuDenseMatrix(self.user_factors)
-        Y = implicit.gpu.CuDenseMatrix(self.item_factors)
+        X = implicit.gpu.Matrix(self.user_factors)
+        Y = implicit.gpu.Matrix(self.item_factors)
 
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
-                correct, skipped = implicit.gpu.cu_bpr_update(
+                correct, skipped = implicit.gpu.bpr_update(
                     userids,
                     itemids,
                     indptr,

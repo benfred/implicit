@@ -132,12 +132,12 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # invalidate cached norms and squared factors
         self._item_norms = self._user_norms = None
 
-        Ciu = implicit.gpu.CuCSRMatrix(Ciu)
-        Cui = implicit.gpu.CuCSRMatrix(Cui)
-        X = implicit.gpu.CuDenseMatrix(self.user_factors)
-        Y = implicit.gpu.CuDenseMatrix(self.item_factors)
+        Ciu = implicit.gpu.CSRMatrix(Ciu)
+        Cui = implicit.gpu.CSRMatrix(Cui)
+        X = implicit.gpu.Matrix(self.user_factors)
+        Y = implicit.gpu.Matrix(self.item_factors)
 
-        solver = implicit.gpu.CuLeastSquaresSolver(self.factors)
+        solver = implicit.gpu.LeastSquaresSolver(self.factors)
         log.debug("Running %i ALS iterations", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for iteration in range(self.iterations):

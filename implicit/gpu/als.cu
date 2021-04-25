@@ -7,7 +7,7 @@
 #include "implicit/gpu/als.h"
 #include "implicit/gpu/utils.cuh"
 
-namespace implicit {
+namespace implicit { namespace gpu {
 
 using std::invalid_argument;
 
@@ -101,14 +101,14 @@ __global__ void l2_regularize_kernel(int factors, float regularization, float * 
     YtY[threadIdx.x * factors + threadIdx.x] += regularization;
 }
 
-CudaLeastSquaresSolver::CudaLeastSquaresSolver(int factors)
+LeastSquaresSolver::LeastSquaresSolver(int factors)
     : YtY(factors, factors, NULL) {
     CHECK_CUBLAS(cublasCreate(&blas_handle));
 }
 
-void CudaLeastSquaresSolver::least_squares(const CudaCSRMatrix & Cui,
-                                           CudaDenseMatrix * X,
-                                           const CudaDenseMatrix & Y,
+void LeastSquaresSolver::least_squares(const CSRMatrix & Cui,
+                                           Matrix * X,
+                                           const Matrix & Y,
                                            float regularization,
                                            int cg_steps) const {
     int item_count = Y.rows, user_count = X->rows, factors = X->cols;
@@ -204,9 +204,9 @@ void calculate_loss_kernel(int factors, int user_count, int item_count,
     }
 }
 
-float CudaLeastSquaresSolver::calculate_loss(const CudaCSRMatrix & Cui,
-                                            const CudaDenseMatrix & X,
-                                            const CudaDenseMatrix & Y,
+float LeastSquaresSolver::calculate_loss(const CSRMatrix & Cui,
+                                            const Matrix & X,
+                                            const Matrix & Y,
                                             float regularization) {
     int item_count = Y.rows, factors = Y.cols, user_count = X.rows;
 
@@ -220,7 +220,7 @@ float CudaLeastSquaresSolver::calculate_loss(const CudaCSRMatrix & Cui,
                              YtY.data, factors));
     CHECK_CUDA(cudaDeviceSynchronize());
     float temp[2] = {0, 0};
-    CudaDenseMatrix output(2, 1, temp);
+    Matrix output(2, 1, temp);
     calculate_loss_kernel<<<1024, factors, sizeof(float) * factors>>>(
         factors, user_count, item_count, X.data, Y.data, YtY.data,
         Cui.indptr, Cui.indices, Cui.data, regularization, output.data);
@@ -230,7 +230,7 @@ float CudaLeastSquaresSolver::calculate_loss(const CudaCSRMatrix & Cui,
     return temp[0] / (temp[1] + Cui.rows * Cui.cols - Cui.nonzeros);
 }
 
-CudaLeastSquaresSolver::~CudaLeastSquaresSolver() {
+LeastSquaresSolver::~LeastSquaresSolver() {
     CHECK_CUBLAS(cublasDestroy(blas_handle));
 }
-}  // namespace implicit
+}}  // namespace implicit

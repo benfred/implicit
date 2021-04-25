@@ -3,15 +3,15 @@
 #include "implicit/gpu/matrix.h"
 #include <utility>
 
-namespace implicit {
-std::pair<int, int>  bpr_update(const CudaVector<int> & userids,
-                                const CudaVector<int> & itemids,
-                                const CudaVector<int> & indptr,
-                                CudaDenseMatrix * X,
-                                CudaDenseMatrix * Y,
+namespace implicit { namespace gpu {
+std::pair<int, int>  bpr_update(const Vector<int> & userids,
+                                const Vector<int> & itemids,
+                                const Vector<int> & indptr,
+                                Matrix * X,
+                                Matrix * Y,
                                 float learning_rate,
                                 float regularization,
                                 long seed,
                                 bool verify_negative_samples);
-}  // namespace implicit
+}}  // namespace implicit::gpu
 #endif  // IMPLICIT_GPU_BPR_H_

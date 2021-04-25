@@ -5,9 +5,9 @@
 #include "implicit/gpu/matrix.h"
 #include "implicit/gpu/utils.cuh"
 
-namespace implicit {
+namespace implicit { namespace gpu {
 template <typename T>
-CudaVector<T>::CudaVector(int size, const T * host_data)
+Vector<T>::Vector(int size, const T * host_data)
     : size(size) {
     CHECK_CUDA(cudaMalloc(&data, size * sizeof(T)));
     if (host_data) {
@@ -17,14 +17,14 @@ CudaVector<T>::CudaVector(int size, const T * host_data)
 
 
 template <typename T>
-CudaVector<T>::~CudaVector() {
+Vector<T>::~Vector() {
     CHECK_CUDA(cudaFree(data));
 }
 
-template struct CudaVector<int>;
-template struct CudaVector<float>;
+template struct Vector<int>;
+template struct Vector<float>;
 
-CudaDenseMatrix::CudaDenseMatrix(int rows, int cols, float * host_data, bool cpu)
+Matrix::Matrix(int rows, int cols, float * host_data, bool cpu)
     : rows(rows), cols(cols) {
     if (cpu) {
         CHECK_CUDA(cudaMalloc(&data, rows * cols * sizeof(float)));
@@ -37,17 +37,18 @@ CudaDenseMatrix::CudaDenseMatrix(int rows, int cols, float * host_data, bool cpu
         owns_data = false;
     }
 }
-void CudaDenseMatrix::to_host(float * out) const {
+
+void Matrix::to_host(float * out) const {
     CHECK_CUDA(cudaMemcpy(out, data, rows * cols * sizeof(float), cudaMemcpyDeviceToHost));
 }
 
-CudaDenseMatrix::~CudaDenseMatrix() {
+Matrix::~Matrix() {
     if (owns_data) {
         CHECK_CUDA(cudaFree(data));
     }
 }
 
-CudaCSRMatrix::CudaCSRMatrix(int rows, int cols, int nonzeros,
+CSRMatrix::CSRMatrix(int rows, int cols, int nonzeros,
                              const int * indptr_, const int * indices_, const float * data_)
     : rows(rows), cols(cols), nonzeros(nonzeros) {
 
@@ -61,13 +62,13 @@ CudaCSRMatrix::CudaCSRMatrix(int rows, int cols, int nonzeros,
     CHECK_CUDA(cudaMemcpy(data, data_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
 }
 
-CudaCSRMatrix::~CudaCSRMatrix() {
+CSRMatrix::~CSRMatrix() {
     CHECK_CUDA(cudaFree(indices));
     CHECK_CUDA(cudaFree(indptr));
     CHECK_CUDA(cudaFree(data));
 }
 
-CudaCOOMatrix::CudaCOOMatrix(int rows, int cols, int nonzeros,
+COOMatrix::COOMatrix(int rows, int cols, int nonzeros,
                              const int * row_, const int * col_, const float * data_)
     : rows(rows), cols(cols), nonzeros(nonzeros) {
 
@@ -81,9 +82,9 @@ CudaCOOMatrix::CudaCOOMatrix(int rows, int cols, int nonzeros,
     CHECK_CUDA(cudaMemcpy(data, data_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
 }
 
-CudaCOOMatrix::~CudaCOOMatrix() {
+COOMatrix::~COOMatrix() {
     CHECK_CUDA(cudaFree(row));
     CHECK_CUDA(cudaFree(col));
     CHECK_CUDA(cudaFree(data));
 }
-}  // namespace implicit
+}}  // namespace implicit::gpu

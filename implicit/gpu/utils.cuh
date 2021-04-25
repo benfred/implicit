@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <sstream>
 
-namespace implicit {
+namespace implicit { namespace gpu {
 using std::invalid_argument;
 
 // Error Checking utilities, checks status codes from cuda calls
@@ -98,5 +98,5 @@ float dot(float a, float b, float * shared) {
     __syncthreads();
     return shared[0];
 }
-}  // namespace implicit
+}}  // namespace implicit::gpu
 #endif  // IMPLICIT_GPU_UTILS_CUH_
