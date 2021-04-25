@@ -6,13 +6,13 @@ from cython.operator import dereference
 from libcpp cimport bool
 from libcpp.utility cimport pair
 
-from .matrix cimport CSRMatrix as CppCSRMatrix
+from .als cimport LeastSquaresSolver as CppLeastSquaresSolver
+from .bpr cimport bpr_update as cpp_bpr_update
 from .matrix cimport COOMatrix as CppCOOMatrix
+from .matrix cimport CSRMatrix as CppCSRMatrix
 from .matrix cimport Matrix as CppMatrix
 from .matrix cimport Vector as CppVector
 
-from .bpr cimport bpr_update as cpp_bpr_update
-from .als cimport LeastSquaresSolver as CppLeastSquaresSolver
 
 cdef class Matrix(object):
     cdef CppMatrix * c_matrix

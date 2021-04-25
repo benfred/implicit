@@ -1,7 +1,8 @@
 from libcpp cimport bool
 from libcpp.utility cimport pair
 
-from .matrix cimport Vector, Matrix
+from .matrix cimport Matrix, Vector
+
 
 cdef extern from "bpr.h" namespace "implicit::gpu" nogil:
     cdef pair[int, int] bpr_update(const Vector[int] & userids,

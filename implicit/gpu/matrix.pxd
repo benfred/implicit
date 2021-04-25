@@ -1,5 +1,6 @@
 from libcpp cimport bool
 
+
 cdef extern from "matrix.h" namespace "implicit::gpu" nogil:
     cdef cppclass CSRMatrix:
         CSRMatrix(int rows, int cols, int nonzeros,
