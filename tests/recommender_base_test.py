@@ -11,7 +11,7 @@ from implicit.evaluation import precision_at_k
 from implicit.nearest_neighbours import ItemItemRecommender
 
 
-class TestRecommenderBaseMixin(object):
+class RecommenderBaseTestMixin(object):
     """Mixin to test a bunch of common functionality in models
     deriving from RecommenderBase"""
 

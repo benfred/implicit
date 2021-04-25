@@ -8,10 +8,10 @@ from scipy.sparse import csr_matrix, random
 from implicit.als import AlternatingLeastSquares
 from implicit.gpu import HAS_CUDA
 
-from .recommender_base_test import TestRecommenderBaseMixin
+from .recommender_base_test import RecommenderBaseTestMixin
 
 
-class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
+class ALSTest(unittest.TestCase, RecommenderBaseTestMixin):
     def _get_model(self):
         return AlternatingLeastSquares(factors=3, regularization=0, use_gpu=False, random_state=23)
 
@@ -238,7 +238,7 @@ class ALSTest(unittest.TestCase, TestRecommenderBaseMixin):
 
 if HAS_CUDA:
 
-    class GPUALSTest(unittest.TestCase, TestRecommenderBaseMixin):
+    class GPUALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
             return AlternatingLeastSquares(factors=32, regularization=0, random_state=23)
 
