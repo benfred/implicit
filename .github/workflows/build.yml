@@ -44,7 +44,7 @@ jobs:
         isort -c .
     - name: Build
       run: |
-        python setup.py install
+        python setup.py develop
     - name: Run unittests
       run: |
         pytest tests
