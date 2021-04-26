@@ -51,7 +51,7 @@ def locate_cuda():
 
     cudaconfig = {'home': home,
                   'nvcc': nvcc,
-                  'include': os.path.join(home, 'include'),
+                  'include': os.path.join(home, 'renamebecausethisgivesmeabuilderror'),
                   'lib64':   os.path.join(home, 'lib64')}
     post_args = ['-gencode=arch=compute_30,code=sm_30',
                  '-gencode=arch=compute_50,code=sm_50',
