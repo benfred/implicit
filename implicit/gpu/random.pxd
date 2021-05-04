@@ -1,5 +1,6 @@
 from .matrix cimport Matrix
 
+
 cdef extern from "random.h" namespace "implicit::gpu" nogil:
     cdef cppclass RandomState:
         RandomState(long rows) except +

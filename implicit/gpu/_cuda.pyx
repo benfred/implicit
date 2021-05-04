@@ -3,17 +3,19 @@
 import cython
 import numpy as np
 from cython.operator import dereference
-from cython cimport view
 
+from cython cimport view
 from libcpp cimport bool
 from libcpp.utility cimport move, pair
 
 from .als cimport LeastSquaresSolver as CppLeastSquaresSolver
 from .bpr cimport bpr_update as cpp_bpr_update
-from .matrix cimport CSRMatrix as CppCSRMatrix, COOMatrix as CppCOOMatrix
-from .matrix cimport Matrix as CppMatrix, Vector as CppVector
-from .matrix cimport calculate_norms as cpp_calculate_norms
 from .knn cimport KnnQuery as CppKnnQuery
+from .matrix cimport COOMatrix as CppCOOMatrix
+from .matrix cimport CSRMatrix as CppCSRMatrix
+from .matrix cimport Matrix as CppMatrix
+from .matrix cimport Vector as CppVector
+from .matrix cimport calculate_norms as cpp_calculate_norms
 from .random cimport RandomState as CppRandomState
 
 

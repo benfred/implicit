@@ -5,9 +5,8 @@ from tqdm.auto import tqdm
 
 import implicit.gpu
 
-from .matrix_factorization_base import MatrixFactorizationBase
-
 from ..utils import check_random_state
+from .matrix_factorization_base import MatrixFactorizationBase
 
 log = logging.getLogger("implicit")
 
