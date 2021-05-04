@@ -47,7 +47,7 @@ def generate_dataset(filename, outputfilename):
 
 
 def _read_dataframe(filename):
-    """ Reads the original dataset TSV as a pandas dataframe """
+    """Reads the original dataset TSV as a pandas dataframe"""
     # delay importing this to avoid another dependency
     import pandas
 

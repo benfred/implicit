@@ -42,7 +42,7 @@ def generate_dataset(filename, outputfilename):
 
 
 def _read_dataframe(filename):
-    """ Reads the original dataset PSV as a pandas dataframe """
+    """Reads the original dataset PSV as a pandas dataframe"""
     import pandas
 
     # read in triples of user/artist/playcount from the input dataset

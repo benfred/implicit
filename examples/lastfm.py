@@ -112,7 +112,7 @@ def calculate_similar_artists(output_filename, model_name="als"):
 
 
 def calculate_recommendations(output_filename, model_name="als"):
-    """ Generates artist recommendations for each user in the dataset """
+    """Generates artist recommendations for each user in the dataset"""
     # train the model based off input params
     artists, users, plays = get_lastfm()
 
