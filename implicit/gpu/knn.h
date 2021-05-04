@@ -11,7 +11,7 @@ struct StackAllocator;
 
 class KnnQuery {
 public:
-    KnnQuery(size_t temp_memory=500000000);
+    KnnQuery(size_t temp_memory=512000000);
     ~KnnQuery();
     cublasContext * blas_handle;
 

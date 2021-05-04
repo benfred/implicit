@@ -52,12 +52,11 @@ def get_model(model_name):
 
     # some default params
     if model_name.endswith("als"):
-        params = {"factors": 64, "dtype": np.float32, "use_gpu": True}
+        params = {"factors": 64, "dtype": np.float32}
     elif model_name == "bm25":
         params = {"K1": 100, "B": 0.5}
     elif model_name == "bpr":
-        params = {"factors": 63, "verify_negative_samples": False, "use_gpu": True,
-        "regularization": 0.15, "learning_rate": 0.1}
+        params = {"factors": 63}
     elif model_name == "lmf":
         params = {"factors": 30, "iterations": 40, "regularization": 1.5}
     else:

@@ -6,4 +6,3 @@ try:
     HAS_CUDA = True
 except ImportError:
     HAS_CUDA = False
-    raise
