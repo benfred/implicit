@@ -63,7 +63,7 @@ def generate_dataset(
 
 
 def _read_triplets_dataframe(filename):
-    """ Reads the original dataset TSV as a pandas dataframe """
+    """Reads the original dataset TSV as a pandas dataframe"""
     # delay importing this to avoid another dependency
     import pandas
 
@@ -84,7 +84,7 @@ def _read_triplets_dataframe(filename):
 
 
 def _join_summary_file(data, summary_filename="msd_summary_file.h5"):
-    """ Gets the trackinfo array by joining taste profile to the track summary file """
+    """Gets the trackinfo array by joining taste profile to the track summary file"""
     msd = h5py.File(summary_filename)
 
     # create a lookup table of trackid -> position

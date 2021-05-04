@@ -65,7 +65,7 @@ def generate_dataset(path, variant="20m", outputpath="."):
 
 
 def _read_dataframes_20M(path):
-    """ reads in the movielens 20M"""
+    """reads in the movielens 20M"""
     import pandas
 
     ratings = pandas.read_csv(os.path.join(path, "ratings.csv"))
@@ -75,7 +75,7 @@ def _read_dataframes_20M(path):
 
 
 def _read_dataframes_100k(path):
-    """ reads in the movielens 100k dataset"""
+    """reads in the movielens 100k dataset"""
     import pandas
 
     ratings = pandas.read_table(

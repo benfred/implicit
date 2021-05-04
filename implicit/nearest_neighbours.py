@@ -30,7 +30,7 @@ class ItemItemRecommender(RecommenderBase):
         self.scorer = None
 
     def fit(self, weighted, show_progress=True):
-        """ Computes and stores the similarity matrix """
+        """Computes and stores the similarity matrix"""
         self.similarity = all_pairs_knn(
             weighted, self.K, show_progress=show_progress, num_threads=self.num_threads
         ).tocsr()
@@ -45,7 +45,7 @@ class ItemItemRecommender(RecommenderBase):
         filter_items=None,
         recalculate_user=False,
     ):
-        """ returns the best N recommendations for a user given its id"""
+        """returns the best N recommendations for a user given its id"""
         if userid >= user_items.shape[0]:
             raise ValueError("userid is out of bounds of the user_items matrix")
 
@@ -71,7 +71,7 @@ class ItemItemRecommender(RecommenderBase):
         return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
 
     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
-        """ Rank given items for a user and returns sorted item list """
+        """Rank given items for a user and returns sorted item list"""
         # check if selected_items contains itemids that are not in the model(user_items)
         if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:
             raise IndexError("Some of selected itemids are not in the model")
@@ -94,7 +94,7 @@ class ItemItemRecommender(RecommenderBase):
         raise NotImplementedError("Not implemented Yet")
 
     def similar_items(self, itemid, N=10):
-        """ Returns a list of the most similar other items """
+        """Returns a list of the most similar other items"""
         if itemid >= self.similarity.shape[0]:
             return []
 
@@ -136,7 +136,7 @@ class ItemItemRecommender(RecommenderBase):
 
 
 class CosineRecommender(ItemItemRecommender):
-    """ An Item-Item Recommender on Cosine distances between items """
+    """An Item-Item Recommender on Cosine distances between items"""
 
     def fit(self, counts, show_progress=True):
         # cosine distance is just the dot-product of a normalized matrix
@@ -144,7 +144,7 @@ class CosineRecommender(ItemItemRecommender):
 
 
 class TFIDFRecommender(ItemItemRecommender):
-    """ An Item-Item Recommender on TF-IDF distances between items """
+    """An Item-Item Recommender on TF-IDF distances between items"""
 
     def fit(self, counts, show_progress=True):
         weighted = normalize(tfidf_weight(counts))
@@ -152,7 +152,7 @@ class TFIDFRecommender(ItemItemRecommender):
 
 
 class BM25Recommender(ItemItemRecommender):
-    """ An Item-Item Recommender on BM25 distance between items """
+    """An Item-Item Recommender on BM25 distance between items"""
 
     def __init__(self, K=20, K1=1.2, B=0.75, num_threads=0):
         super(BM25Recommender, self).__init__(K, num_threads)
@@ -165,7 +165,7 @@ class BM25Recommender(ItemItemRecommender):
 
 
 def tfidf_weight(X):
-    """ Weights a Sparse Matrix by TF-IDF Weighted """
+    """Weights a Sparse Matrix by TF-IDF Weighted"""
     X = coo_matrix(X)
 
     # calculate IDF
@@ -186,7 +186,7 @@ def normalize(X):
 
 
 def bm25_weight(X, K1=100, B=0.8):
-    """ Weighs each row of a sparse matrix X  by BM25 weighting """
+    """Weighs each row of a sparse matrix X  by BM25 weighting"""
     # calculate idf per term (user)
     X = coo_matrix(X)
 

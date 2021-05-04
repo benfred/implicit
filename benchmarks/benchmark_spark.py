@@ -18,7 +18,7 @@ import implicit
 
 
 def convert_sparse_to_dataframe(spark, context, sparse_matrix):
-    """ Converts a scipy sparse matrix to a spark dataframe """
+    """Converts a scipy sparse matrix to a spark dataframe"""
     m = sparse_matrix.tocoo()
     data = context.parallelize(numpy.array([m.row, m.col, m.data]).T, numSlices=len(m.row) / 1024)
     return spark.createDataFrame(
