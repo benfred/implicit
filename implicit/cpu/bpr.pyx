@@ -199,7 +199,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 total = len(user_items.data)
                 if total != 0 and total != skipped:
                     progress.set_postfix(
-                        {"correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
+                        {"train_auc": "%.2f%%" % (100.0 * correct / (total - skipped)),
                          "skipped": "%.2f%%" % (100.0 * skipped / total)})
 
         self._check_fit_errors()

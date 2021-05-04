@@ -2,6 +2,8 @@
 #define IMPLICIT_GPU_UTILS_CUH_
 #include <stdexcept>
 #include <sstream>
+#include <cublas_v2.h>
+#include <curand.h>
 
 namespace implicit { namespace gpu {
 using std::invalid_argument;
@@ -38,6 +40,16 @@ inline void checkCublas(cublasStatus_t code, const char * file, int line) {
         std::stringstream err;
         err << "cublas error: " << cublasGetErrorString(code)
             << " (" << file << ":" << line << ")";
+        throw std::runtime_error(err.str());
+    }
+}
+
+
+#define CHECK_CURAND(code) { checkCurand((code), __FILE__, __LINE__); }
+inline void checkCurand(curandStatus_t code, const char *file, int line) {
+    if (code != CURAND_STATUS_SUCCESS) {
+        std::stringstream err;
+        err << "CURAND error: " << code << " (" << file << ":" << line << ")";
         throw std::runtime_error(err.str());
     }
 }

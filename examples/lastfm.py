@@ -121,7 +121,7 @@ def calculate_recommendations(output_filename, model_name="als"):
 
     # if we're training an ALS based model, weight input for last.fm
     # by bm25
-    if issubclass(model.__class__, AlternatingLeastSquares):
+    if model_name.endswith("als"):
         # lets weight these models by bm25weight.
         logging.debug("weighting matrix by bm25_weight")
         plays = bm25_weight(plays, K1=100, B=0.8)

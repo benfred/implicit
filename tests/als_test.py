@@ -76,8 +76,12 @@ class ALSTest(unittest.TestCase, RecommenderBaseTestMixin):
             )
             model.fit(Ciu, show_progress=False)
 
-            self.assertTrue(np.isfinite(model.item_factors).all())
-            self.assertTrue(np.isfinite(model.user_factors).all())
+            item_factors, user_factors = model.item_factors, model.user_factors
+            if options["use_gpu"]:
+                item_factors, user_factors = item_factors.to_numpy(), user_factors.to_numpy()
+
+            self.assertTrue(np.isfinite(item_factors).all())
+            self.assertTrue(np.isfinite(user_factors).all())
 
     def test_factorize(self):
         counts = csr_matrix(
@@ -120,6 +124,9 @@ class ALSTest(unittest.TestCase, RecommenderBaseTestMixin):
                 )
                 model.fit(user_items, show_progress=False)
                 rows, cols = model.item_factors, model.user_factors
+
+                if use_gpu:
+                    rows, cols = rows.to_numpy(), cols.to_numpy()
 
             except Exception as e:
                 self.fail(

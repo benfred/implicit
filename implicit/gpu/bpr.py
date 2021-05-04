@@ -1,15 +1,12 @@
 import logging
 
-try:
-    import cupy as cp
-except ImportError:
-    pass
 import numpy as np
 from tqdm.auto import tqdm
 
 import implicit.gpu
 
-from .matrix_factorization_base import MatrixFactorizationBase, check_random_state
+from ..utils import check_random_state
+from .matrix_factorization_base import MatrixFactorizationBase
 
 log = logging.getLogger("implicit")
 
@@ -105,21 +102,23 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # Note: the final dimension is for the item bias term - which is set to a 1 for all users
         # this simplifies interfacing with approximate nearest neighbours libraries etc
         if self.item_factors is None:
-            self.item_factors = rs.rand(items, self.factors + 1, dtype=cp.float32) - 0.5
-            self.item_factors /= self.factors
+            item_factors = rs.rand(items, self.factors + 1).astype("float32") - 0.5
+            item_factors /= self.factors
 
             # set factors to all zeros for items without any ratings
             item_counts = np.bincount(user_items.indices, minlength=items)
-            self.item_factors[item_counts == 0] = cp.zeros(self.factors + 1)
+            item_factors[item_counts == 0] = np.zeros(self.factors + 1)
+            self.item_factors = implicit.gpu.Matrix(item_factors)
 
         if self.user_factors is None:
-            self.user_factors = rs.rand(users, self.factors + 1, dtype=cp.float32) - 0.5
-            self.user_factors /= self.factors
+            user_factors = rs.rand(users, self.factors + 1).astype("float32") - 0.5
+            user_factors /= self.factors
 
             # set factors to all zeros for users without any ratings
-            self.user_factors[user_counts == 0] = cp.zeros(self.factors + 1)
+            user_factors[user_counts == 0] = np.zeros(self.factors + 1)
+            user_factors[:, self.factors] = 1.0
 
-            self.user_factors[:, self.factors] = 1.0
+            self.user_factors = implicit.gpu.Matrix(user_factors)
 
         self._item_norms = self._user_norms = None
 
@@ -127,8 +126,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         itemids = implicit.gpu.IntVector(user_items.indices)
         indptr = implicit.gpu.IntVector(user_items.indptr)
 
-        X = implicit.gpu.Matrix(self.user_factors)
-        Y = implicit.gpu.Matrix(self.item_factors)
+        X = self.user_factors
+        Y = self.item_factors
 
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
@@ -149,7 +148,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 if total != 0 and total != skipped:
                     progress.set_postfix(
                         {
-                            "correct": "%.2f%%" % (100.0 * correct / (total - skipped)),
+                            "train_auc": "%.2f%%" % (100.0 * correct / (total - skipped)),
                             "skipped": "%.2f%%" % (100.0 * skipped / total),
                         }
                     )

@@ -82,6 +82,13 @@ def define_extensions():
     )
 
     if CUDA:
+        conda_prefix = os.getenv("CONDA_PREFIX")
+        include_dirs = [CUDA["include"], "."]
+        library_dirs = [CUDA["lib64"]]
+        if conda_prefix:
+            include_dirs.append(os.path.join(conda_prefix, "include"))
+            library_dirs.append(os.path.join(conda_prefix, "lib"))
+
         modules.append(
             Extension(
                 "implicit.gpu._cuda",
@@ -90,13 +97,16 @@ def define_extensions():
                     os.path.join("implicit", "gpu", "als.cu"),
                     os.path.join("implicit", "gpu", "bpr.cu"),
                     os.path.join("implicit", "gpu", "matrix.cu"),
+                    os.path.join("implicit", "gpu", "device_buffer.cu"),
+                    os.path.join("implicit", "gpu", "random.cu"),
+                    os.path.join("implicit", "gpu", "knn.cu"),
                 ],
                 language="c++",
                 extra_compile_args=compile_args,
                 extra_link_args=link_args,
-                library_dirs=[CUDA["lib64"]],
+                library_dirs=library_dirs,
                 libraries=["cudart", "cublas", "curand"],
-                include_dirs=[CUDA["include"], "."],
+                include_dirs=include_dirs,
             )
         )
     else:
