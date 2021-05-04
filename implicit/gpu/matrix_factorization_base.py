@@ -3,8 +3,9 @@ import time
 
 import numpy as np
 
+import implicit.gpu
+
 from ..recommender_base import RecommenderBase
-from . import _cuda
 
 
 class MatrixFactorizationBase(RecommenderBase):
@@ -14,9 +15,9 @@ class MatrixFactorizationBase(RecommenderBase):
 
     Attributes
     ----------
-    item_factors : _cuda.Matrix
+    item_factors : implicit.gpu.Matrix
         Array of latent factors for each item in the training set
-    user_factors : _cuda.Matrix
+    user_factors : implicit.gpu.Matrix
         Array of latent factors for each user in the training set
     """
 
@@ -25,7 +26,7 @@ class MatrixFactorizationBase(RecommenderBase):
         self.user_factors = None
         self._item_norms = None
         self._user_norms = None
-        self._knn = _cuda.KnnQuery()
+        self._knn = implicit.gpu.KnnQuery()
 
     def recommend(
         self,
@@ -78,14 +79,14 @@ class MatrixFactorizationBase(RecommenderBase):
     @property
     def user_norms(self):
         if self._user_norms is None:
-            self._user_norms = _cuda.calculate_norms(self.user_factors)
+            self._user_norms = implicit.gpu.calculate_norms(self.user_factors)
             self._user_norms_host = self._user_norms.to_numpy().reshape(self._user_norms.shape[1])
         return self._user_norms
 
     @property
     def item_norms(self):
         if self._item_norms is None:
-            self._item_norms = _cuda.calculate_norms(self.item_factors)
+            self._item_norms = implicit.gpu.calculate_norms(self.item_factors)
             self._item_norms_host = self._item_norms.to_numpy().reshape(self._item_norms.shape[1])
         return self._item_norms
 
@@ -133,8 +134,8 @@ def check_random_state(random_state):
     """
     if isinstance(random_state, np.random.RandomState):
         # we need to convert from numpy random state our internal random state
-        return _cuda.RandomState(random_state.randint(2 ** 31))
+        return implicit.gpu.RandomState(random_state.randint(2 ** 31))
 
     # otherwise try to initialize a new one, and let it fail through
     # on the numpy side if it doesn't work
-    return _cuda.RandomState(random_state or int(time.time()))
+    return implicit.gpu.RandomState(random_state or int(time.time()))
