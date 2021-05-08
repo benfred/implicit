@@ -115,7 +115,7 @@ void KnnQuery::topk(const Matrix & items, const Matrix & query, int k,
     // We need 6 copies of the matrix for argsort code - and then some
     // extra memory per SM as well.
     int batch_size = available_temp_memory / (sizeof(float) * items.rows);
-    if (k > MAX_SELECT_K) {
+    if (k >= MAX_SELECT_K) {
         batch_size *= 0.15;
     } else {
         batch_size *= 0.5;
@@ -212,7 +212,7 @@ __global__ void argpartition_kernel(const int * indices, const float * distances
 void KnnQuery::argpartition(const Matrix & items, int k, int * indices, float * distances) {
     k = std::min(k, items.cols);
 
-    if (k > MAX_SELECT_K) {
+    if (k >= MAX_SELECT_K) {
         int * temp_indices = reinterpret_cast<int *>(alloc->allocate(items.rows * items.cols * sizeof(int)));
         float * temp_distances = reinterpret_cast<float *>(alloc->allocate(items.rows * items.cols * sizeof(float)));
         argsort(items, temp_indices, temp_distances);
