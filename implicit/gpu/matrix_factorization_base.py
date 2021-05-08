@@ -117,7 +117,8 @@ class MatrixFactorizationBase(RecommenderBase):
         }
 
     def __setstate__(self, state):
-        self.__dict__.update(state)
+        self.item_factors = implicit.gpu.Matrix(state["item_factors"])
+        self.user_factors = implicit.gpu.Matrix(state["user_factors"])
 
 
 def check_random_state(random_state):
