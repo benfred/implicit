@@ -19,10 +19,10 @@ public:
               int * indices, float * distances,
               float * item_norms = NULL);
 
-protected:
     void argpartition(const Matrix & items, int k, int * indices, float * distances);
     void argsort(const Matrix & items, int * indices, float * distances);
 
+protected:
     size_t max_temp_memory;
     std::unique_ptr<StackAllocator> alloc;
 };
