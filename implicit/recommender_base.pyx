@@ -172,7 +172,7 @@ class MatrixFactorizationBase(RecommenderBase):
 
         liked = set()
         if filter_already_liked_items:
-            liked.update(user_items[userid].indices)
+            liked.update(user_items[userid].nonzero()[1])
         if filter_items:
             liked.update(filter_items)
 
