@@ -33,10 +33,10 @@ def locate_cuda():
     elif "CUDA_PATH" in os.environ:
         home = os.environ["CUDA_PATH"]
 
-    if home and (not nvcc or not os.path.exists(nvcc)):
+    if not nvcc or not os.path.exists(nvcc):
         # if we can't find nvcc or it doesn't exist, try getting from root cuda directory
-        nvcc = os.path.join(home, "bin", nvcc_bin)
-        if not os.path.exists(nvcc):
+        nvcc = os.path.join(home, "bin", nvcc_bin) if home else None
+        if not nvcc or not os.path.exists(nvcc):
             logging.warning(
                 "The nvcc binary could not be located in your $PATH. Either add it to "
                 "your path, or set $CUDAHOME to enable CUDA extensions"
