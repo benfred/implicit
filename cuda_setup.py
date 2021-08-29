@@ -46,7 +46,9 @@ def locate_cuda():
     if not home:
         home = os.path.dirname(os.path.dirname(nvcc))
 
-    if not os.path.exists(os.path.join(home, "include")) or not os.path.exists(os.path.join(home, "lib64")):
+    if not os.path.exists(os.path.join(home, "include")) or not os.path.exists(
+        os.path.join(home, "lib64")
+    ):
         logging.warning("Failed to find cuda include directory, attempting /usr/local/cuda")
         home = "/usr/local/cuda"
 
