@@ -11,7 +11,7 @@ from setuptools import Extension, find_packages, setup
 from cuda_setup import CUDA, build_ext
 
 NAME = "implicit"
-VERSION = "0.4.4"
+VERSION = "0.4.5"
 
 
 use_openmp = True
