@@ -1,3 +1,12 @@
+## v0.4.5
+
+* GPU Inference [#406](https://github.com/benfred/implicit/pull/406)
+* Fix ALS model for case of > 2^31 interactions [#400](https://github.com/benfred/implicit/pull/400)
+* Fix GPU dot product when the # of factors wasn't warp aligned [#427](https://github.com/benfred/implicit/pull/427)
+* Use gpu registers for dot product [#448](https://github.com/benfred/implicit/pull/448)
+* Fix random output with LMF/BPR models [#408](https://github.com/benfred/implicit/pull/408)
+* Add seed for test-train split [#411](https://github.com/benfred/implicit/pull/411)
+
 ## v0.4.4
 
 * Adds Precompiled CUDA packages on conda-forge
