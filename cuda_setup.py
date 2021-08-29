@@ -4,18 +4,9 @@ import logging
 import os
 import sys
 from distutils import ccompiler, errors, msvccompiler, unixccompiler
+from distutils.spawn import find_executable
 
 from setuptools.command.build_ext import build_ext as setuptools_build_ext
-
-
-def find_in_path(name, path):
-    "Find a file in a search path"
-    # adapted fom http://code.activestate.com/recipes/52224-find-a-file-given-a-search-path/
-    for dir in path.split(os.pathsep):
-        binpath = os.path.join(dir, name)
-        if os.path.exists(binpath):
-            return os.path.abspath(binpath)
-    return None
 
 
 def locate_cuda():
@@ -34,27 +25,32 @@ def locate_cuda():
         nvcc_bin = "nvcc.exe"
 
     # first check if the CUDAHOME env variable is in use
-    nvcc = None
+    nvcc = find_executable(nvcc_bin)
+
+    home = None
     if "CUDAHOME" in os.environ:
         home = os.environ["CUDAHOME"]
-        nvcc = os.path.join(home, "bin", nvcc_bin)
     elif "CUDA_PATH" in os.environ:
         home = os.environ["CUDA_PATH"]
-        nvcc = os.path.join(home, "bin", nvcc_bin)
 
-    # otherwise, search the PATH for NVCC
     if not nvcc or not os.path.exists(nvcc):
-        nvcc = find_in_path(nvcc_bin, os.environ["PATH"])
-        if nvcc is None:
+        # if we can't find nvcc or it doesn't exist, try getting from root cuda directory
+        nvcc = os.path.join(home, "bin", nvcc_bin) if home else None
+        if not nvcc or not os.path.exists(nvcc):
             logging.warning(
                 "The nvcc binary could not be located in your $PATH. Either add it to "
                 "your path, or set $CUDAHOME to enable CUDA extensions"
             )
             return None
+
+    if not home:
         home = os.path.dirname(os.path.dirname(nvcc))
-        if not os.path.exists(os.path.join(home, "include")):
-            logging.warning("Failed to find cuda include directory, attempting /usr/local/cuda")
-            home = "/usr/local/cuda"
+
+    if not os.path.exists(os.path.join(home, "include")) or not os.path.exists(
+        os.path.join(home, "lib64")
+    ):
+        logging.warning("Failed to find cuda include directory, attempting /usr/local/cuda")
+        home = "/usr/local/cuda"
 
     cudaconfig = {
         "home": home,
