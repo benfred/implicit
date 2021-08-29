@@ -113,6 +113,7 @@ def define_extensions():
 
     try:
         from Cython.Build import cythonize
+
         return cythonize(modules)
     except ImportError:
         return modules
@@ -198,7 +199,7 @@ setup(
     "Collaborative Filtering, Recommender Systems",
     packages=find_packages(),
     install_requires=["numpy", "scipy>=0.16", "tqdm>=4.27"],
-    setup_requires=["Cython>=0.24"],
+    setup_requires=["Cython>=0.24", "scipy>=0.16"],
     ext_modules=define_extensions(),
     cmdclass={"build_ext": build_ext},
     test_suite="tests",
