@@ -5,7 +5,6 @@ import os.path
 import platform
 import sys
 
-from Cython.Build import cythonize
 from setuptools import Extension, find_packages, setup
 
 from cuda_setup import CUDA, build_ext
@@ -112,7 +111,11 @@ def define_extensions():
     else:
         print("Failed to find CUDA toolkit. Building without GPU acceleration.")
 
-    return cythonize(modules)
+    try:
+        from Cython.Build import cythonize
+        return cythonize(modules)
+    except ImportError:
+        return modules
 
 
 # set_gcc copied from glove-python project
