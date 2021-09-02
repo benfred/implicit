@@ -67,7 +67,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.random_state = random_state
         self.cg_steps = 3
 
-    def fit(self, item_users, show_progress=True):
+    def fit(self, item_users, show_progress=True, output_loss_logs=False):
         """Factorizes the item_users matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
@@ -149,6 +149,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                 if self.calculate_training_loss:
                     loss = solver.calculate_loss(Cui, X, Y, self.regularization)
                     progress.set_postfix({"loss": loss})
+
+                    if output_loss_logs:
+                        log.info("loss %.4f", loss)
+
 
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)

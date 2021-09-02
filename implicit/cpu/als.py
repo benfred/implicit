@@ -93,7 +93,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         check_blas_config()
 
-    def fit(self, item_users, show_progress=True):
+    def fit(self, item_users, show_progress=True, output_loss_logs=False):
         """Factorizes the item_users matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
@@ -183,6 +183,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                         num_threads=self.num_threads,
                     )
                     progress.set_postfix({"loss": loss})
+
+                    if output_loss_logs:
+                        log.info("loss %.4f", loss)
 
                 if self.fit_callback:
                     self.fit_callback(iteration, time.time() - s)
