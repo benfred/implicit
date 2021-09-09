@@ -143,12 +143,16 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                 solver.least_squares(Ciu, Y, X, self.regularization, self.cg_steps)
                 progress.update(1)
 
-                if self.fit_callback:
-                    self.fit_callback(iteration, time.time() - s)
-
+                loss = None
                 if self.calculate_training_loss:
                     loss = solver.calculate_loss(Cui, X, Y, self.regularization)
                     progress.set_postfix({"loss": loss})
+
+                    if not show_progress:
+                        log.info("loss %.4f", loss)
+
+                if self.fit_callback:
+                    self.fit_callback(iteration, time.time() - s, loss)
 
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)

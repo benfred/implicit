@@ -174,6 +174,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                 )
                 progress.update(1)
 
+                loss = None
                 if self.calculate_training_loss:
                     loss = _als.calculate_loss(
                         Cui,
@@ -184,8 +185,11 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                     )
                     progress.set_postfix({"loss": loss})
 
+                    if not show_progress:
+                        log.info("loss %.4f", loss)
+
                 if self.fit_callback:
-                    self.fit_callback(iteration, time.time() - s)
+                    self.fit_callback(iteration, time.time() - s, loss)
 
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)

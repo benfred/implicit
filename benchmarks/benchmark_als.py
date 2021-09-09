@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import scipy.io
 import seaborn
 
-from implicit._als import calculate_loss
 from implicit.als import AlternatingLeastSquares
 from implicit.nearest_neighbours import bm25_weight
 
@@ -26,9 +25,8 @@ except ImportError:
 def benchmark_accuracy(plays):
     output = defaultdict(list)
 
-    def store_loss(model, name):
-        def inner(iteration, elapsed):
-            loss = calculate_loss(plays, model.item_factors, model.user_factors, 0)
+    def store_loss(name):
+        def inner(iteration, elapsed, loss):
             print("model %s iteration %i loss %.5f" % (name, iteration, loss))
             output[name].append(loss)
 
@@ -36,24 +34,39 @@ def benchmark_accuracy(plays):
 
     for steps in [2, 3, 4]:
         model = AlternatingLeastSquares(
-            factors=100, use_native=True, use_cg=True, regularization=0, iterations=25
+            factors=100,
+            use_native=True,
+            use_cg=True,
+            regularization=0,
+            iterations=25,
+            calculate_training_loss=True,
         )
         model.cg_steps = steps
-        model.fit_callback = store_loss(model, "cg%i" % steps)
+        model.fit_callback = store_loss("cg%i" % steps)
         model.fit(plays)
 
     if has_cuda:
         model = AlternatingLeastSquares(
-            factors=100, use_native=True, use_gpu=True, regularization=0, iterations=25
+            factors=100,
+            use_native=True,
+            use_gpu=True,
+            regularization=0,
+            iterations=25,
+            calculate_training_loss=True,
         )
-        model.fit_callback = store_loss(model, "gpu")
+        model.fit_callback = store_loss("gpu")
         model.use_gpu = True
         model.fit(plays)
 
     model = AlternatingLeastSquares(
-        factors=100, use_native=True, use_cg=False, regularization=0, iterations=25
+        factors=100,
+        use_native=True,
+        use_cg=False,
+        regularization=0,
+        iterations=25,
+        calculate_training_loss=True,
     )
-    model.fit_callback = store_loss(model, "cholesky")
+    model.fit_callback = store_loss("cholesky")
     model.fit(plays)
 
     return output
@@ -63,7 +76,7 @@ def benchmark_times(plays, iterations=3):
     times = defaultdict(lambda: defaultdict(list))
 
     def store_time(model, name):
-        def inner(iteration, elapsed):
+        def inner(iteration, elapsed, loss):
             print(name, model.factors, iteration, elapsed)
             times[name][model.factors].append(elapsed)
 
