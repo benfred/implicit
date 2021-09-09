@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import scipy.io
 import seaborn
 
-from implicit._als import calculate_loss
 from implicit.als import AlternatingLeastSquares
 from implicit.nearest_neighbours import bm25_weight
 
@@ -35,7 +34,7 @@ def benchmark_accuracy(plays):
 
     for steps in [2, 3, 4]:
         model = AlternatingLeastSquares(
-            factors=100, use_native=True, use_cg=True, regularization=0, iterations=25
+            factors=100, use_native=True, use_cg=True, regularization=0, iterations=25, calculate_training_loss=True
         )
         model.cg_steps = steps
         model.fit_callback = store_loss("cg%i" % steps)
@@ -43,14 +42,14 @@ def benchmark_accuracy(plays):
 
     if has_cuda:
         model = AlternatingLeastSquares(
-            factors=100, use_native=True, use_gpu=True, regularization=0, iterations=25
+            factors=100, use_native=True, use_gpu=True, regularization=0, iterations=25, calculate_training_loss=True
         )
         model.fit_callback = store_loss("gpu")
         model.use_gpu = True
         model.fit(plays)
 
     model = AlternatingLeastSquares(
-        factors=100, use_native=True, use_cg=False, regularization=0, iterations=25
+        factors=100, use_native=True, use_cg=False, regularization=0, iterations=25, calculate_training_loss=True
     )
     model.fit_callback = store_loss("cholesky")
     model.fit(plays)
