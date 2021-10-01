@@ -247,7 +247,9 @@ if HAS_CUDA:
 
     class GPUALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
-            return AlternatingLeastSquares(factors=32, regularization=0, random_state=23)
+            return AlternatingLeastSquares(
+                factors=32, regularization=0, random_state=23, use_gpu=True
+            )
 
 
 if __name__ == "__main__":

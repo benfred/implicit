@@ -70,8 +70,6 @@ class MatrixFactorizationBase(RecommenderBase):
         ids, scores = self._knn.topk(item_factors, user, len(selected_items))
         ids = np.array(selected_items)[ids]
 
-        print(ids)
-        print(scores)
         return list(zip(ids[0], scores[0]))
 
     rank_items.__doc__ = RecommenderBase.rank_items.__doc__

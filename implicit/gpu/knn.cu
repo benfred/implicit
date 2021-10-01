@@ -195,7 +195,7 @@ __global__ void argpartition_kernel(const int * indices, const float * distances
             keys[i] = distances[rowid * cols + colid];
             values[i] = indices == NULL ? colid : indices[rowid * cols + colid];
         } else {
-            keys[i] = FLT_MIN;
+            keys[i] = -FLT_MAX;
             values[i] = -1;
         }
     }
