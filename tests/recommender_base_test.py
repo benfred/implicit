@@ -11,6 +11,17 @@ from implicit.evaluation import precision_at_k
 from implicit.nearest_neighbours import ItemItemRecommender
 
 
+def get_checker_board(X):
+    """Returns a 'checkerboard' matrix: where every even userid has liked
+    every even itemid and every odd userid has liked every odd itemid.
+    The diagonal is withheld for testing recommend methods"""
+    ret = np.zeros((X, X))
+    for i in range(X):
+        for j in range(i % 2, X, 2):
+            ret[i, j] = 1.0
+    return csr_matrix(ret - np.eye(X))
+
+
 class RecommenderBaseTestMixin(object):
     """Mixin to test a bunch of common functionality in models
     deriving from RecommenderBase"""
@@ -19,7 +30,7 @@ class RecommenderBaseTestMixin(object):
         raise NotImplementedError()
 
     def test_recommend(self):
-        item_users = self.get_checker_board(50)
+        item_users = get_checker_board(50)
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
@@ -46,7 +57,7 @@ class RecommenderBaseTestMixin(object):
         self.assertTrue(0 not in dict(recs))
 
     def test_recalculate_user(self):
-        item_users = self.get_checker_board(50)
+        item_users = get_checker_board(50)
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
@@ -73,7 +84,7 @@ class RecommenderBaseTestMixin(object):
                 pass
 
     def test_evaluation(self):
-        item_users = self.get_checker_board(50)
+        item_users = get_checker_board(50)
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
@@ -92,7 +103,7 @@ class RecommenderBaseTestMixin(object):
         # calculating similar users in nearest-neighbours is not implemented yet
         if isinstance(model, ItemItemRecommender):
             return
-        model.fit(self.get_checker_board(50), show_progress=False)
+        model.fit(get_checker_board(50), show_progress=False)
         for userid in range(50):
             recs = model.similar_users(userid, N=10)
             for r, _ in recs:
@@ -100,7 +111,7 @@ class RecommenderBaseTestMixin(object):
 
     def test_similar_items(self):
         model = self._get_model()
-        model.fit(self.get_checker_board(256), show_progress=False)
+        model.fit(get_checker_board(256), show_progress=False)
         for itemid in range(50):
             recs = model.similar_items(itemid, N=10)
             for r, _ in recs:
@@ -108,7 +119,7 @@ class RecommenderBaseTestMixin(object):
 
     def test_zero_length_row(self):
         # get a matrix where a row/column is 0
-        item_users = self.get_checker_board(50).todense()
+        item_users = get_checker_board(50).todense()
         item_users[42] = 0
         item_users[:, 42] = 0
 
@@ -127,7 +138,7 @@ class RecommenderBaseTestMixin(object):
 
     def test_dtype(self):
         # models should be able to accept input of either float32 or float64
-        item_users = self.get_checker_board(50)
+        item_users = get_checker_board(50)
         model = self._get_model()
         model.fit(item_users.astype(np.float64), show_progress=False)
 
@@ -135,7 +146,7 @@ class RecommenderBaseTestMixin(object):
         model.fit(item_users.astype(np.float32), show_progress=False)
 
     def test_rank_items(self):
-        item_users = self.get_checker_board(50)
+        item_users = get_checker_board(50)
         user_items = item_users.T.tocsr()
 
         model = self._get_model()
@@ -162,7 +173,7 @@ class RecommenderBaseTestMixin(object):
                 model.rank_items(userid, user_items, wrong_item_list)
 
     def test_pickle(self):
-        item_users = self.get_checker_board(50)
+        item_users = get_checker_board(50)
         model = self._get_model()
         model.fit(item_users, show_progress=False)
 

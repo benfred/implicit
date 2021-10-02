@@ -39,6 +39,7 @@ class MatrixFactorizationBase(RecommenderBase):
     ):
         if recalculate_user:
             raise NotImplementedError("recalculate_user isn't support on GPU yet")
+
         liked = set()
         if filter_already_liked_items:
             liked.update(user_items[userid].indices)
