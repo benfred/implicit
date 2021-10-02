@@ -10,7 +10,3 @@ class LMFTest(unittest.TestCase, RecommenderBaseTestMixin):
         return LogisticMatrixFactorization(
             factors=3, regularization=0, use_gpu=False, random_state=43
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

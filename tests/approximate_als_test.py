@@ -9,7 +9,7 @@ from implicit.approximate_als import (
 )
 from implicit.gpu import HAS_CUDA
 
-from .recommender_base_test import RecommenderBaseTestMixin
+from .recommender_base_test import RecommenderBaseTestMixin, get_checker_board
 
 # don't require annoy/faiss/nmslib to be installed
 try:
@@ -86,7 +86,7 @@ try:
             def test_large_recommend(self):
                 # the GPU version of FAISS can't return more than 1K result (and will assert/exit)
                 # this tests out that we fall back in this case to the exact version and don't die
-                plays = self.get_checker_board(2048)
+                plays = get_checker_board(2048)
                 model = self._get_model()
                 model.fit(plays, show_progress=False)
 
