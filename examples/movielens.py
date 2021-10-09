@@ -91,7 +91,7 @@ def calculate_similar_movies(output_filename, model_name="als", min_rating=4.0, 
                 # no ratings > 4 meaning we've filtered out all data for it.
                 if ratings.indptr[movieid] != ratings.indptr[movieid + 1]:
                     title = titles[movieid]
-                    for other, score in model.similar_items(movieid, 11):
+                    for other, score in zip(*model.similar_items(movieid, 11)):
                         o.write("%s\t%s\t%s\n" % (title, titles[other], score))
                 progress.update(1)
 

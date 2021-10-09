@@ -37,24 +37,24 @@ class RecommenderBaseTestMixin(object):
         model.fit(item_users, show_progress=False)
 
         for userid in range(50):
-            recs = model.recommend(userid, user_items, N=1)
-            self.assertEqual(len(recs), 1)
+            ids, scores = model.recommend(userid, user_items, N=1)
+            self.assertEqual(len(ids), 1)
 
             # the top item recommended should be the same as the userid:
             # its the one withheld item for the user that is liked by
             # all the other similar users
-            self.assertEqual(recs[0][0], userid)
+            self.assertEqual(ids[0], userid)
 
         # try asking for more items than possible,
         # should return only the available items
         # https://github.com/benfred/implicit/issues/22
-        recs = model.recommend(0, user_items, N=10000)
-        self.assertTrue(len(recs))
+        ids, scores = model.recommend(0, user_items, N=10000)
+        self.assertTrue(len(ids))
 
         # filter recommended items using an additional filter list
         # https://github.com/benfred/implicit/issues/26
-        recs = model.recommend(0, user_items, N=1, filter_items=[0])
-        self.assertTrue(0 not in dict(recs))
+        ids, scores = model.recommend(0, user_items, N=1, filter_items=[0])
+        self.assertTrue(0 not in set(ids))
 
     def test_recalculate_user(self):
         item_users = get_checker_board(50)
@@ -64,21 +64,21 @@ class RecommenderBaseTestMixin(object):
         model.fit(item_users, show_progress=False)
 
         for userid in range(item_users.shape[1]):
-            recs = model.recommend(userid, user_items, N=1)
-            self.assertEqual(len(recs), 1)
+            ids, scores = model.recommend(userid, user_items, N=1)
+            self.assertEqual(len(ids), 1)
             user_vector = user_items[userid]
 
             # we should get the same item if we recalculate_user
             try:
-                recs_from_liked = model.recommend(
+                ids_from_liked, scores_from_liked = model.recommend(
                     userid=0, user_items=user_vector, N=1, recalculate_user=True
                 )
-                self.assertEqual(recs[0][0], recs_from_liked[0][0])
+                self.assertEqual(ids[0], ids_from_liked[0])
 
                 # TODO: if we set regularization for the model to be sufficiently high, the
                 # scores from recalculate_user are slightly different. Investigate
                 # (could be difference between CG and cholesky optimizers?)
-                self.assertAlmostEqual(recs[0][1], recs_from_liked[0][1], places=4)
+                self.assertAlmostEqual(scores[0], scores_from_liked[0], places=4)
             except NotImplementedError:
                 # some models don't support recalculating user on the fly, and thats ok
                 pass
@@ -98,23 +98,22 @@ class RecommenderBaseTestMixin(object):
         self.assertEqual(p, 1)
 
     def test_similar_users(self):
-
         model = self._get_model()
         # calculating similar users in nearest-neighbours is not implemented yet
         if isinstance(model, ItemItemRecommender):
             return
         model.fit(get_checker_board(50), show_progress=False)
         for userid in range(50):
-            recs = model.similar_users(userid, N=10)
-            for r, _ in recs:
+            ids, _ = model.similar_users(userid, N=10)
+            for r in ids:
                 self.assertEqual(r % 2, userid % 2)
 
     def test_similar_items(self):
         model = self._get_model()
         model.fit(get_checker_board(256), show_progress=False)
         for itemid in range(50):
-            recs = model.similar_items(itemid, N=10)
-            for r, _ in recs:
+            ids, _ = model.similar_items(itemid, N=10)
+            for r in ids:
                 self.assertEqual(r % 2, itemid % 2)
 
     def test_zero_length_row(self):
@@ -133,8 +132,8 @@ class RecommenderBaseTestMixin(object):
 
         # item 42 has no users, shouldn't be similar to anything
         for itemid in range(40):
-            recs = model.similar_items(itemid, 10)
-            self.assertTrue(42 not in [r for r, _ in recs])
+            ids, _ = model.similar_items(itemid, 10)
+            self.assertTrue(42 not in ids)
 
     def test_dtype(self):
         # models should be able to accept input of either float32 or float64
@@ -154,17 +153,15 @@ class RecommenderBaseTestMixin(object):
 
         for userid in range(50):
             selected_items = np.random.randint(50, size=10).tolist()
-            ranked_list = model.rank_items(userid, user_items, selected_items)
-            ordered_items = [itemid for (itemid, score) in ranked_list]
+            ids, scores = model.rank_items(userid, user_items, selected_items)
 
             # ranked list should have same items
-            self.assertEqual(set(ordered_items), set(selected_items))
+            self.assertEqual(set(ids), set(selected_items))
 
             wrong_neg_items = [-1, -3, -5]
             wrong_pos_items = [51, 300, 200]
 
             # rank_items should raise IndexError if selected items contains wrong itemids
-
             with self.assertRaises(IndexError):
                 wrong_item_list = selected_items + wrong_neg_items
                 model.rank_items(userid, user_items, wrong_item_list)

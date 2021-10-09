@@ -71,8 +71,8 @@ class RecommenderBase(object):
 
         Returns
         -------
-        list
-            List of (itemid, score) tuples
+        tuple
+            Tuple of (itemids, scores) arrays
         """
         pass
 
@@ -96,8 +96,8 @@ class RecommenderBase(object):
 
         Returns
         -------
-        list
-            List of (itemid, score) tuples. it only contains items that appears in
+        tuple
+            Tuple of (itemids, scores) arrays. it only contains items that appears in
             input parameter selected_items
         """
         pass
@@ -116,8 +116,8 @@ class RecommenderBase(object):
 
         Returns
         -------
-        list
-            List of (userid, score) tuples
+        tuple
+            Tuple of (itemids, scores) arrays
         """
         pass
 
@@ -142,8 +142,8 @@ class RecommenderBase(object):
 
         Returns
         -------
-        list
-            List of (itemid, score) tuples
+        tuple
+            Tuple of (itemids, scores) arrays
         """
         pass
 
@@ -170,22 +170,22 @@ class MatrixFactorizationBase(RecommenderBase):
                   N=10, filter_already_liked_items=True, filter_items=None, recalculate_user=False):
         user = self._user_factor(userid, user_items, recalculate_user)
 
-        liked = set()
-        if filter_already_liked_items:
-            liked.update(user_items[userid].indices)
-        if filter_items:
-            liked.update(filter_items)
-
         # calculate the top N items, removing the users own liked items from the results
         scores = self.item_factors.dot(user)
 
-        count = N + len(liked)
-        if count < len(scores):
-            ids = np.argpartition(scores, -count)[-count:]
-            best = sorted(zip(ids, scores[ids]), key=lambda x: -x[1])
+        # filter out liked items
+        if filter_already_liked_items:
+            scores[user_items[userid].indices] = -np.finfo(scores.dtype).max
+        if filter_items:
+            scores[filter_items] = -np.finfo(scores.dtype).max
+
+        if N < len(scores):
+            ids = np.argpartition(scores, -N)[-N:]
         else:
-            best = sorted(enumerate(scores), key=lambda x: -x[1])
-        return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
+            ids = np.arange(len(scores))
+
+        ids = ids[np.argsort(scores[ids])[::-1]]
+        return ids, scores[ids]
 
     @cython.boundscheck(False)
     @cython.wraparound(False)
@@ -310,7 +310,9 @@ class MatrixFactorizationBase(RecommenderBase):
         scores = item_factors.dot(user)
 
         # return sorted results
-        return sorted(zip(selected_items, scores), key=lambda x: -x[1])
+        selected_items = np.array(selected_items)
+        best = np.argsort(scores)[::-1]
+        return selected_items[best], scores[best]
 
     recommend.__doc__ = RecommenderBase.recommend.__doc__
 
@@ -357,7 +359,8 @@ class MatrixFactorizationBase(RecommenderBase):
     def _get_similarity_score(self, factor, norm, factors, norms, N):
         scores = factors.dot(factor) / (norm * norms)
         best = np.argpartition(scores, -N)[-N:]
-        return sorted(zip(best, scores[best]), key=lambda x: -x[1])
+        ids = best[np.argsort(scores[best])[::-1]]
+        return ids, scores[ids]
 
     @property
     def user_norms(self):

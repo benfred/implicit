@@ -1,12 +1,9 @@
-import itertools
-
 import numpy
 from numpy import bincount, log, log1p, sqrt
 from scipy.sparse import coo_matrix, csr_matrix
 
 from ._nearest_neighbours import NearestNeighboursScorer, all_pairs_knn
 from .recommender_base import RecommenderBase
-from .utils import nonzeros
 
 
 class ItemItemRecommender(RecommenderBase):
@@ -54,7 +51,7 @@ class ItemItemRecommender(RecommenderBase):
         if filter_items:
             items += len(filter_items)
 
-        indices, data = self.scorer.recommend(
+        ids, scores = self.scorer.recommend(
             userid,
             user_items.indptr,
             user_items.indices,
@@ -62,13 +59,12 @@ class ItemItemRecommender(RecommenderBase):
             K=items,
             remove_own_likes=filter_already_liked_items,
         )
-        best = sorted(zip(indices, data), key=lambda x: -x[1])
 
-        if not filter_items:
-            return best
+        if filter_items:
+            mask = numpy.in1d(ids, filter_items, invert=True)
+            ids, scores = ids[mask][:N], scores[mask][:N]
 
-        liked = set(filter_items)
-        return list(itertools.islice((rec for rec in best if rec[0] not in liked), N))
+        return ids, scores
 
     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
         """Rank given items for a user and returns sorted item list"""
@@ -76,19 +72,23 @@ class ItemItemRecommender(RecommenderBase):
         if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:
             raise IndexError("Some of selected itemids are not in the model")
 
+        selected_items = numpy.array(selected_items)
+
         # calculate the relevance scores
         liked_vector = user_items.getrow(userid)
         recommendations = liked_vector.dot(self.similarity)
 
         # remove items that are not in the selected_items
-        best = sorted(zip(recommendations.indices, recommendations.data), key=lambda x: -x[1])
-        ret = [rec for rec in best if rec[0] in selected_items]
+        ids, scores = recommendations.indices, recommendations.data
+        mask = numpy.in1d(ids, selected_items)
+        ids, scores = ids[mask], scores[mask]
 
         # returned items should be equal to input selected items
-        for itemid in selected_items:
-            if itemid not in recommendations.indices:
-                ret.append((itemid, -1.0))
-        return ret
+        missing = selected_items[numpy.in1d(selected_items, ids, invert=True)]
+        if missing.size:
+            ids = numpy.append(ids, missing)
+            scores = numpy.append(scores, numpy.full(missing.size, -numpy.finfo(scores.dtype).max))
+        return ids, scores
 
     def similar_users(self, userid, N=10):
         raise NotImplementedError("Not implemented Yet")
@@ -96,9 +96,12 @@ class ItemItemRecommender(RecommenderBase):
     def similar_items(self, itemid, N=10):
         """Returns a list of the most similar other items"""
         if itemid >= self.similarity.shape[0]:
-            return []
+            return numpy.array([]), numpy.array([])
 
-        return sorted(list(nonzeros(self.similarity, itemid)), key=lambda x: -x[1])[:N]
+        ids = self.similarity[itemid].indices
+        scores = self.similarity[itemid].data
+        best = numpy.argsort(scores)[::-1][:N]
+        return ids[best], scores[best]
 
     def __getstate__(self):
         state = self.__dict__.copy()
