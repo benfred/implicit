@@ -1,4 +1,3 @@
-import itertools
 import time
 
 import numpy as np
@@ -48,11 +47,16 @@ class MatrixFactorizationBase(RecommenderBase):
         count = N + len(liked)
 
         # calculate the top N items, removing the users own liked items from the results
-        # TODO: own like filtering (direct in topk class
+        # TODO: own like filtering (direct in topk class)
         ids, scores = self._knn.topk(self.item_factors, self.user_factors[userid], count)
-        return list(
-            itertools.islice((rec for rec in zip(ids[0], scores[0]) if rec[0] not in liked), N)
-        )
+
+        # TODO: handle batch mode
+        ids, scores = ids[0], scores[0]
+
+        if liked:
+            mask = np.in1d(ids, list(liked), invert=True)
+            ids, scores = ids[mask][:N], scores[mask][:N]
+        return ids, scores
 
     recommend.__doc__ = RecommenderBase.recommend.__doc__
 
@@ -69,9 +73,9 @@ class MatrixFactorizationBase(RecommenderBase):
 
         # once we have item_factors here, this should work
         ids, scores = self._knn.topk(item_factors, user, len(selected_items))
+        ids, scores = ids[0], scores[0]
         ids = np.array(selected_items)[ids]
-
-        return list(zip(ids[0], scores[0]))
+        return ids, scores
 
     rank_items.__doc__ = RecommenderBase.rank_items.__doc__
 
@@ -91,10 +95,15 @@ class MatrixFactorizationBase(RecommenderBase):
 
     def similar_users(self, userid, N=10):
         ids, scores = self._knn.topk(
-            self.user_factors, self.user_factors[int(userid)], N, self.user_norms
+            self.user_factors, self.user_factors[userid], N, self.user_norms
         )
-        scores /= self._user_norms_host[userid]
-        return list(zip(ids[0], scores[0]))
+        ids, scores = ids[0], scores[0]
+
+        user_norms = self._user_norms_host[userid]
+        if not np.isscalar(user_norms):
+            user_norms = user_norms.reshape((len(user_norms), 1))
+        scores /= user_norms
+        return ids, scores
 
     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
 
@@ -102,10 +111,15 @@ class MatrixFactorizationBase(RecommenderBase):
         if recalculate_item:
             raise NotImplementedError("recalculate_item isn't support on GPU yet")
         ids, scores = self._knn.topk(
-            self.item_factors, self.item_factors[int(itemid)], N, self.item_norms
+            self.item_factors, self.item_factors[itemid], N, self.item_norms
         )
-        scores /= self._item_norms_host[itemid]
-        return list(zip(ids[0], scores[0]))
+        ids, scores = ids[0], scores[0]
+
+        item_norms = self._item_norms_host[itemid]
+        if not np.isscalar(item_norms):
+            item_norms = item_norms.reshape((len(item_norms), 1))
+        scores /= item_norms
+        return ids, scores
 
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
 

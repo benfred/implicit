@@ -117,8 +117,11 @@ cdef class Matrix(object):
             except Exception:
                 raise ValueError(f"don't know how to handle __getitem__ on {idx}")
 
+            if len(idx.shape) == 0:
+                idx = idx.reshape([1])
+
             if len(idx.shape) != 1:
-                raise ValueError(f"don't know how to handle __getitem__ on {idx}")
+                raise ValueError(f"don't know how to handle __getitem__ on {idx} - shape={idx.shape}")
 
             if ((idx < 0) | (idx >= self.c_matrix.rows)).any():
                 raise ValueError(f"row id out of range for selecting items from matrix")
