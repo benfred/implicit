@@ -73,10 +73,6 @@ def _hfd5_from_dataframe(data, outputfilename):
             (data["item"].cat.codes.copy(), data["user"].cat.codes.copy()),
         )
     ).tocsr()
-    print(repr(ratings))
-    print(repr(ratings.indices))
-    print(repr(ratings.indptr))
-
     with h5py.File(outputfilename, "w") as f:
         g = f.create_group("item_user_ratings")
         g.create_dataset("data", data=ratings.data)
