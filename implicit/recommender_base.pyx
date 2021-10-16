@@ -28,14 +28,14 @@ class RecommenderBase(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def fit(self, item_users):
+    def fit(self, user_items):
         """
         Trains the model on a sparse matrix of item/user/weight
 
         Parameters
         ----------
-        item_user : csr_matrix
-            A matrix of shape (number_of_items, number_of_users). The nonzero
+        user_items : csr_matrix
+            A matrix of shape (number_of_users, number_of_items). The nonzero
             entries in this matrix are the items that are liked by each user.
             The values are how confident you are that the item is liked by the user.
         """

@@ -117,14 +117,15 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, item_users, show_progress=True):
-        """ Factorizes the item_users matrix
+    def fit(self, user_items, show_progress=True):
+        """ Factorizes the user_items matrix
 
         Parameters
         ----------
-        item_users: coo_matrix
-            Matrix of confidences for the liked items. This matrix should be a coo_matrix where
-            the rows of the matrix are the item, and the columns are the users that liked that item.
+        user_items: csr_matrix
+            Matrix of confidences for the liked items. This matrix should be a csr_matrix where
+            the rows of the matrix are the user, and the columns are the items that are liked by
+            the user.
             BPR ignores the weight value of the matrix right now - it treats non zero entries
             as a binary signal that the user liked the item.
         show_progress : bool, optional
@@ -133,13 +134,13 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         rs = check_random_state(self.random_state)
 
         # for now, all we handle is float 32 values
-        if item_users.dtype != np.float32:
-            item_users = item_users.astype(np.float32)
+        if user_items.dtype != np.float32:
+            user_items = user_items.astype(np.float32)
 
-        items, users = item_users.shape
+        users, items = user_items.shape
 
-        item_users = item_users.tocsr()
-        user_items = item_users.T.tocsr()
+        user_items = user_items.tocsr()
+        item_users = user_items.T.tocsr()
 
         if not item_users.has_sorted_indices:
             item_users.sort_indices()

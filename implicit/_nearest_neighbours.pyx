@@ -97,11 +97,11 @@ cdef class NearestNeighboursScorer(object):
 
 
 @cython.boundscheck(False)
-def all_pairs_knn(items, unsigned int K=100, int num_threads=0, show_progress=True):
+def all_pairs_knn(users, unsigned int K=100, int num_threads=0, show_progress=True):
     """ Returns the top K nearest neighbours for each row in the matrix.
     """
-    items = items.tocsr()
-    users = items.T.tocsr()
+    users = users.tocsr()
+    items = users.T.tocsr()
 
     cdef int item_count = items.shape[0]
     cdef int i, u, index1, index2, j

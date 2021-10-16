@@ -73,10 +73,12 @@ def calculate_similar_movies(output_filename, model_name="als", min_rating=4.0, 
     else:
         raise NotImplementedError("TODO: model %s" % model_name)
 
+    user_ratings = ratings.T.tocsr()
+
     # train the model
     log.debug("training model %s", model_name)
     start = time.time()
-    model.fit(ratings)
+    model.fit(user_ratings)
     log.debug("trained model '%s' in %s", model_name, time.time() - start)
     log.debug("calculating top movies")
 

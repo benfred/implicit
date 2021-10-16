@@ -85,10 +85,11 @@ def calculate_similar_artists(output_filename, model_name="als"):
 
     # this is actually disturbingly expensive:
     plays = plays.tocsr()
+    user_plays = plays.T.tocsr()
 
     logging.debug("training model %s", model_name)
     start = time.time()
-    model.fit(plays)
+    model.fit(user_plays)
     logging.debug("trained model '%s' in %0.2fs", model_name, time.time() - start)
 
     # write out similar artists by popularity
@@ -131,15 +132,15 @@ def calculate_recommendations(output_filename, model_name="als"):
 
     # this is actually disturbingly expensive:
     plays = plays.tocsr()
+    user_plays = plays.T.tocsr()
 
     logging.debug("training model %s", model_name)
     start = time.time()
-    model.fit(plays)
+    model.fit(user_plays)
     logging.debug("trained model '%s' in %0.2fs", model_name, time.time() - start)
 
     # generate recommendations for each user and write out to a file
     start = time.time()
-    user_plays = plays.T.tocsr()
     with tqdm.tqdm(total=len(users)) as progress:
         with codecs.open(output_filename, "w", "utf8") as o:
             for userid, username in enumerate(users):
