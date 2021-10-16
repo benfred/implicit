@@ -93,27 +93,27 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         check_blas_config()
 
-    def fit(self, item_users, show_progress=True):
-        """Factorizes the item_users matrix.
+    def fit(self, user_items, show_progress=True):
+        """Factorizes the user_items matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
         initialized with a latent factor model of the input data.
 
-        The item_users matrix does double duty here. It defines which items are liked by which
-        users (P_iu in the original paper), as well as how much confidence we have that the user
-        liked the item (C_iu).
+        The user_items matrix does double duty here. It defines which items are liked by which
+        users (P_ui in the original paper), as well as how much confidence we have that the user
+        liked the item (C_ui).
 
         The negative items are implicitly defined: This code assumes that positive items in the
-        item_users matrix means that the user liked the item. The negatives are left unset in this
+        user_items matrix means that the user liked the item. The negatives are left unset in this
         sparse matrix: the library will assume that means Piu = 0 and Ciu = 1 for all these items.
         Negative items can also be passed with a higher confidence value by passing a negative
         value, indicating that the user disliked the item.
 
         Parameters
         ----------
-        item_users: csr_matrix
+        user_items: csr_matrix
             Matrix of confidences for the liked items. This matrix should be a csr_matrix where
-            the rows of the matrix are the item, the columns are the users that liked that item,
+            the rows of the matrix are the users, the columns are the items liked that user,
             and the value is the confidence that the user liked the item.
         show_progress : bool, optional
             Whether to show a progress bar during fitting
@@ -121,18 +121,18 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # initialize the random state
         random_state = check_random_state(self.random_state)
 
-        Ciu = item_users
-        if not isinstance(Ciu, scipy.sparse.csr_matrix):
+        Cui = user_items
+        if not isinstance(Cui, scipy.sparse.csr_matrix):
             s = time.time()
             log.debug("Converting input to CSR format")
-            Ciu = Ciu.tocsr()
+            Cui = Cui.tocsr()
             log.debug("Converted input to CSR in %.3fs", time.time() - s)
 
-        if Ciu.dtype != np.float32:
-            Ciu = Ciu.astype(np.float32)
+        if Cui.dtype != np.float32:
+            Cui = Cui.astype(np.float32)
 
         s = time.time()
-        Cui = Ciu.T.tocsr()
+        Ciu = Cui.T.tocsr()
         log.debug("Calculated transpose in %.3fs", time.time() - s)
 
         items, users = Ciu.shape

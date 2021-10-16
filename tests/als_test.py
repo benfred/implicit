@@ -126,7 +126,7 @@ def test_factorize(use_native, use_gpu, use_cg, dtype):
         random_state=42,
     )
     model.fit(user_items, show_progress=False)
-    rows, cols = model.item_factors, model.user_factors
+    rows, cols = model.user_factors, model.item_factors
 
     if use_gpu:
         rows, cols = rows.to_numpy(), cols.to_numpy()
@@ -154,8 +154,8 @@ def test_explain():
         ],
         dtype=np.float64,
     )
-    user_items = counts * 2
-    item_users = user_items.T
+    item_users = counts * 2
+    user_items = item_users.T.tocsr()
 
     model = AlternatingLeastSquares(
         factors=4,
@@ -174,9 +174,9 @@ def test_explain():
     # TODO: this doesn't quite work with N=10 (because we returns items that should have been
     # filtered with large negative score?) also seems like the dtype is different between
     # recalculate and not
-    ids, scores = model.recommend(userid, item_users, N=5)
+    ids, scores = model.recommend(userid, user_items, N=3)
     recalculated_ids, recalculated_scores = model.recommend(
-        userid, item_users, N=5, recalculate_user=True
+        userid, user_items, N=3, recalculate_user=True
     )
     for item1, score1, item2, score2 in zip(ids, scores, recalculated_ids, recalculated_scores):
         assert item1 == item2
@@ -184,7 +184,7 @@ def test_explain():
 
     # Assert explanation makes sense
     top_rec, score = recalculated_ids[0], recalculated_scores[0]
-    score_explained, contributions, W = model.explain(userid, item_users, itemid=top_rec)
+    score_explained, contributions, W = model.explain(userid, user_items, itemid=top_rec)
     scores = [s for _, s in contributions]
     items = [i for i, _ in contributions]
     assert pytest.approx(score, abs=1e-4) == score_explained
@@ -196,7 +196,7 @@ def test_explain():
 
     # Assert explanation with precomputed user weights is correct
     top_score_explained, top_contributions, W = model.explain(
-        userid, item_users, itemid=top_rec, user_weights=W, N=2
+        userid, user_items, itemid=top_rec, user_weights=W, N=2
     )
     top_scores = [s for _, s in top_contributions]
     top_items = [i for i, _ in top_contributions]

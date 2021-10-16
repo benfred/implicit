@@ -97,14 +97,14 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
             *args, random_state=random_state, **kwargs
         )
 
-    def fit(self, Ciu, show_progress=True):
+    def fit(self, Cui, show_progress=True):
         # nmslib can be a little chatty when first imported, disable some of
         # the logging
         logging.getLogger("nmslib").setLevel(logging.WARNING)
         import nmslib
 
         # train the model
-        super(NMSLibAlternatingLeastSquares, self).fit(Ciu, show_progress)
+        super(NMSLibAlternatingLeastSquares, self).fit(Cui, show_progress)
 
         # create index for similar_items
         if self.approximate_similar_items:
@@ -238,12 +238,12 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
         self.n_trees = n_trees
         self.search_k = search_k
 
-    def fit(self, Ciu, show_progress=True):
+    def fit(self, Cui, show_progress=True):
         # delay loading the annoy library in case its not installed here
         import annoy
 
         # train the model
-        super(AnnoyAlternatingLeastSquares, self).fit(Ciu, show_progress)
+        super(AnnoyAlternatingLeastSquares, self).fit(Cui, show_progress)
 
         # build up an Annoy Index with all the item_factors (for calculating
         # similar items)
@@ -377,11 +377,11 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
             *args, random_state=random_state, **kwargs
         )
 
-    def fit(self, Ciu, show_progress=True):
+    def fit(self, Cui, show_progress=True):
         import faiss
 
         # train the model
-        super(FaissAlternatingLeastSquares, self).fit(Ciu, show_progress)
+        super(FaissAlternatingLeastSquares, self).fit(Cui, show_progress)
 
         self.quantizer = faiss.IndexFlat(self.factors)
 
