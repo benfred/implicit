@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from numpy import bincount, log, log1p, sqrt
 from scipy.sparse import coo_matrix, csr_matrix
 
@@ -41,66 +41,78 @@ class ItemItemRecommender(RecommenderBase):
         filter_already_liked_items=True,
         filter_items=None,
         recalculate_user=False,
+        items=None,
     ):
         """returns the best N recommendations for a user given its id"""
+        if not np.isscalar(userid):
+            return _batch(
+                self.recommend,
+                userid,
+                user_items=user_items,
+                N=N,
+                filter_already_liked_items=filter_already_liked_items,
+                filter_items=filter_items,
+                recalculate_user=recalculate_user,
+                items=items,
+            )
+
         if userid >= user_items.shape[0]:
             raise ValueError("userid is out of bounds of the user_items matrix")
 
-        # recalculate_user is ignored because this is not a model based algorithm
-        items = N
-        if filter_items:
-            items += len(filter_items)
+        if filter_items and items:
+            raise ValueError("Can't specify both filter_items and items")
+
+        if filter_items is not None:
+            N += len(filter_items)
+        elif items is not None:
+            items = np.array(items)
+            N = self.similarity.shape[0]
+            # check if items contains itemids that are not in the model(user_items)
+            if items.max() >= N or items.min() < 0:
+                raise IndexError("Some of selected itemids are not in the model")
 
         ids, scores = self.scorer.recommend(
             userid,
             user_items.indptr,
             user_items.indices,
             user_items.data,
-            K=items,
+            K=N,
             remove_own_likes=filter_already_liked_items,
         )
 
-        if filter_items:
-            mask = numpy.in1d(ids, filter_items, invert=True)
+        if filter_items is not None:
+            mask = np.in1d(ids, filter_items, invert=True)
             ids, scores = ids[mask][:N], scores[mask][:N]
 
-        return ids, scores
+        elif items is not None:
+            mask = np.in1d(ids, items)
+            ids, scores = ids[mask], scores[mask]
 
-    def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
-        """Rank given items for a user and returns sorted item list"""
-        # check if selected_items contains itemids that are not in the model(user_items)
-        if max(selected_items) >= user_items.shape[1] or min(selected_items) < 0:
-            raise IndexError("Some of selected itemids are not in the model")
+            # returned items should be equal to input selected items
+            missing = items[np.in1d(items, ids, invert=True)]
+            if missing.size:
+                ids = np.append(ids, missing)
+                scores = np.append(scores, np.full(missing.size, -np.finfo(scores.dtype).max))
 
-        selected_items = numpy.array(selected_items)
-
-        # calculate the relevance scores
-        liked_vector = user_items.getrow(userid)
-        recommendations = liked_vector.dot(self.similarity)
-
-        # remove items that are not in the selected_items
-        ids, scores = recommendations.indices, recommendations.data
-        mask = numpy.in1d(ids, selected_items)
-        ids, scores = ids[mask], scores[mask]
-
-        # returned items should be equal to input selected items
-        missing = selected_items[numpy.in1d(selected_items, ids, invert=True)]
-        if missing.size:
-            ids = numpy.append(ids, missing)
-            scores = numpy.append(scores, numpy.full(missing.size, -numpy.finfo(scores.dtype).max))
         return ids, scores
 
     def similar_users(self, userid, N=10):
         raise NotImplementedError("Not implemented Yet")
 
-    def similar_items(self, itemid, N=10):
+    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
         """Returns a list of the most similar other items"""
+        if recalculate_item:
+            raise NotImplementedError("Recalculate_item isn't implemented")
+
+        if not np.isscalar(itemid):
+            return _batch(self.similar_items, itemid, N=N)
+
         if itemid >= self.similarity.shape[0]:
-            return numpy.array([]), numpy.array([])
+            return np.array([]), np.array([])
 
         ids = self.similarity[itemid].indices
         scores = self.similarity[itemid].data
-        best = numpy.argsort(scores)[::-1][:N]
+        best = np.argsort(scores)[::-1][:N]
         return ids[best], scores[best]
 
     def __getstate__(self):
@@ -118,9 +130,7 @@ class ItemItemRecommender(RecommenderBase):
 
     def save(self, filename):
         m = self.similarity
-        numpy.savez(
-            filename, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape, K=self.K
-        )
+        np.savez(filename, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape, K=self.K)
 
     @classmethod
     def load(cls, filename):
@@ -128,7 +138,7 @@ class ItemItemRecommender(RecommenderBase):
         if not filename.endswith(".npz"):
             filename = filename + ".npz"
 
-        m = numpy.load(filename)
+        m = np.load(filename)
         similarity = csr_matrix((m["data"], m["indices"], m["indptr"]), shape=m["shape"])
 
         ret = cls()
@@ -182,7 +192,7 @@ def tfidf_weight(X):
 
 def normalize(X):
     """equivalent to scipy.preprocessing.normalize on sparse matrices
-    , but lets avoid another depedency just for a small utility function"""
+    , but lets avoid another dependency just for a small utility function"""
     X = coo_matrix(X)
     X.data = X.data / sqrt(bincount(X.row, X.data ** 2))[X.row]
     return X
@@ -197,10 +207,33 @@ def bm25_weight(X, K1=100, B=0.8):
     idf = log(N) - log1p(bincount(X.col))
 
     # calculate length_norm per document (artist)
-    row_sums = numpy.ravel(X.sum(axis=1))
+    row_sums = np.ravel(X.sum(axis=1))
     average_length = row_sums.mean()
     length_norm = (1.0 - B) + B * row_sums / average_length
 
     # weight matrix rows by bm25
     X.data = X.data * (K1 + 1.0) / (K1 * length_norm[X.row] + X.data) * idf[X.col]
     return X
+
+
+def _batch(func, ids, *args, N=10, **kwargs):
+    # we're running in batch mode, just loop over each item and call the scalar version of the
+    # function
+    output_ids = np.zeros((len(ids), N), dtype=np.int32)
+    output_scores = np.zeros((len(ids), N), dtype=np.float32)
+
+    for i, idx in enumerate(ids):
+        batch_ids, batch_scores = func(idx, *args, N=N, **kwargs)
+
+        # pad out to N items if we're returned fewer
+        missing_items = len(batch_ids) - N
+        if missing_items:
+            batch_ids = np.append(batch_ids, np.full(missing_items, -1))
+            batch_scores = np.append(
+                batch_scores, np.full(missing_items, -np.finfo(np.float32).max)
+            )
+
+        output_ids[i] = batch_ids[:N]
+        output_scores[i] = batch_scores[:N]
+
+    return output_ids, output_scores

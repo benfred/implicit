@@ -17,7 +17,9 @@ public:
 
     void topk(const Matrix & items, const Matrix & query, int k,
               int * indices, float * distances,
-              float * item_norms = NULL);
+              float * item_norms = NULL,
+              const COOMatrix * query_filter = NULL,
+              Vector<int> * item_filter = NULL);
 
     void argpartition(const Matrix & items, int k, int * indices, float * distances);
     void argsort(const Matrix & items, int * indices, float * distances);

@@ -64,20 +64,8 @@ def define_extensions():
                 extra_compile_args=compile_args,
                 extra_link_args=link_args,
             )
-            for name in ["_als", "bpr"]
+            for name in ["_als", "bpr", "topk"]
         ]
-    )
-    modules.append(
-        Extension(
-            "implicit." + "recommender_base",
-            [
-                os.path.join("implicit", "recommender_base" + src_ext),
-                os.path.join("implicit", "topnc.cpp"),
-            ],
-            language="c++",
-            extra_compile_args=compile_args,
-            extra_link_args=link_args,
-        )
     )
 
     if CUDA:

@@ -48,15 +48,25 @@ cdef class KnnQuery(object):
     def __dealloc__(self):
         del self.c_knn
 
-    def topk(self, Matrix items, Matrix m, int k, Matrix item_norms=None):
+    def topk(self, Matrix items, Matrix m, int k, Matrix item_norms=None,
+             COOMatrix query_filter=None, IntVector item_filter=None):
         cdef CppMatrix * queries = m.c_matrix
+        cdef CppCOOMatrix * c_query_filter = NULL
+        cdef CppVector[int] * c_item_filter = NULL
         cdef int rows = queries.rows
         cdef int[:, :] x
         cdef float[:, :] y
 
         cdef float * c_item_norms = NULL
-        if item_norms:
+        if item_norms is not None:
             c_item_norms = item_norms.c_matrix.data
+
+        if query_filter is not None:
+            c_query_filter = query_filter.c_matrix
+
+        if item_filter is not None:
+            c_item_filter = item_filter.c_vector
+
 
         indices = np.zeros((rows, k), dtype="int32")
         distances = np.zeros((rows, k), dtype="float32")
@@ -64,7 +74,7 @@ cdef class KnnQuery(object):
         y = distances
 
         self.c_knn.topk(dereference(items.c_matrix), dereference(queries), k,
-                        &x[0, 0], &y[0, 0], c_item_norms)
+                        &x[0, 0], &y[0, 0], c_item_norms, c_query_filter, c_item_filter)
 
         return indices, distances
 
@@ -115,16 +125,16 @@ cdef class Matrix(object):
             try:
                 idx = np.array(idx).astype("int32")
             except Exception:
-                raise ValueError(f"don't know how to handle __getitem__ on {idx}")
+                raise IndexError(f"don't know how to handle __getitem__ on {idx}")
 
             if len(idx.shape) == 0:
                 idx = idx.reshape([1])
 
             if len(idx.shape) != 1:
-                raise ValueError(f"don't know how to handle __getitem__ on {idx} - shape={idx.shape}")
+                raise IndexError(f"don't know how to handle __getitem__ on {idx} - shape={idx.shape}")
 
             if ((idx < 0) | (idx >= self.c_matrix.rows)).any():
-                raise ValueError(f"row id out of range for selecting items from matrix")
+                raise IndexError(f"row id out of range for selecting items from matrix")
 
             ids = IntVector(idx)
             ret.c_matrix = new CppMatrix(dereference(self.c_matrix), dereference(ids.c_vector))

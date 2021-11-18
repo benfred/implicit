@@ -89,7 +89,9 @@ KnnQuery::KnnQuery(size_t temp_memory)
 const static int MAX_SELECT_K = 128;
 
 void KnnQuery::topk(const Matrix & items, const Matrix & query, int k,
-                    int * indices, float * distances, float * item_norms) {
+                    int * indices, float * distances, float * item_norms,
+                    const COOMatrix * query_filter,
+                    Vector<int> * item_filter) {
     if (query.cols != items.cols) {
         throw std::invalid_argument("Must have same number of columns in each matrix for topk");
     }
@@ -153,6 +155,30 @@ void KnnQuery::topk(const Matrix & items, const Matrix & query, int k,
             thrust::for_each(count, count + (temp_distances.rows * temp_distances.cols),
                [=] __device__(int i) {
                  data[i] /= item_norms[i % cols];
+            });
+        }
+
+        if (item_filter != NULL) {
+            auto count = thrust::make_counting_iterator<int>(0);
+            float * data = temp_distances.data;
+            int * items = item_filter->data;
+            thrust::for_each(count, count + item_filter->size,
+               [=] __device__(int i) {
+                  data[items[i]] = -FLT_MAX;
+            });
+        }
+
+        if (query_filter != NULL) {
+            auto count = thrust::make_counting_iterator<int>(0);
+            int * row = query_filter->row;
+            int * col = query_filter->col;
+            float * data = temp_distances.data;
+            int items = temp_distances.cols;
+            thrust::for_each(count, count + query_filter->nonzeros,
+                [=] __device__(int i) {
+                    if ((row[i] >= start) && (row[i] < end)) {
+                        data[(row[i] -start) * items + col[i]] = -FLT_MAX;
+                    }
             });
         }
 

@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 import pickle
+import random
 
 import numpy as np
 from scipy.sparse import csr_matrix
@@ -56,6 +57,32 @@ class RecommenderBaseTestMixin(object):
         ids, scores = model.recommend(0, user_items, N=1, filter_items=[0])
         self.assertTrue(0 not in set(ids))
 
+    def test_recommend_batch(self):
+        user_items = get_checker_board(50)
+
+        model = self._get_model()
+        model.fit(user_items, show_progress=False)
+
+        ids, _ = model.recommend(np.arange(50), user_items, N=1)
+        for userid in range(50):
+            assert len(ids[userid]) == 1
+
+            # the top item recommended should be the same as the userid:
+            # its the one withheld item for the user that is liked by
+            # all the other similar users
+            assert ids[userid][0] == userid
+
+        userids = np.array([2, 3, 4])
+        ids, _ = model.recommend(userids, user_items, N=1)
+
+        for i, userid in enumerate(userids):
+            assert ids[i][0] == userid
+
+        # filter recommended items using an additional filter list
+        ids, _ = model.recommend(userids, user_items, N=1, filter_items=[0])
+        for i, _ in enumerate(userids):
+            assert 0 not in ids[i]
+
     def test_recalculate_user(self):
         item_users = get_checker_board(50)
         user_items = item_users.T.tocsr()
@@ -63,25 +90,33 @@ class RecommenderBaseTestMixin(object):
         model = self._get_model()
         model.fit(item_users, show_progress=False)
 
+        try:
+            batch_ids, batch_scores = model.recommend(
+                np.arange(50), user_items, N=1, recalculate_user=True
+            )
+        except NotImplementedError:
+            # some models don't support recalculating user on the fly, and thats ok
+            return
+
         for userid in range(item_users.shape[1]):
             ids, scores = model.recommend(userid, user_items, N=1)
             self.assertEqual(len(ids), 1)
             user_vector = user_items[userid]
 
             # we should get the same item if we recalculate_user
-            try:
-                ids_from_liked, scores_from_liked = model.recommend(
-                    userid=0, user_items=user_vector, N=1, recalculate_user=True
-                )
-                self.assertEqual(ids[0], ids_from_liked[0])
+            ids_from_liked, scores_from_liked = model.recommend(
+                userid=0, user_items=user_vector, N=1, recalculate_user=True
+            )
+            self.assertEqual(ids[0], ids_from_liked[0])
 
-                # TODO: if we set regularization for the model to be sufficiently high, the
-                # scores from recalculate_user are slightly different. Investigate
-                # (could be difference between CG and cholesky optimizers?)
-                self.assertAlmostEqual(scores[0], scores_from_liked[0], places=4)
-            except NotImplementedError:
-                # some models don't support recalculating user on the fly, and thats ok
-                pass
+            # TODO: if we set regularization for the model to be sufficiently high, the
+            # scores from recalculate_user are slightly different. Investigate
+            # (could be difference between CG and cholesky optimizers?)
+            self.assertAlmostEqual(scores[0], scores_from_liked[0], places=4)
+
+            # we should also get the same from the batch recommend call already done
+            self.assertEqual(batch_ids[userid][0], ids_from_liked[0])
+            self.assertAlmostEqual(batch_scores[userid][0], scores_from_liked[0], places=4)
 
     def test_evaluation(self):
         item_users = get_checker_board(50)
@@ -90,7 +125,7 @@ class RecommenderBaseTestMixin(object):
         model = self._get_model()
         model.fit(item_users, show_progress=False)
 
-        # we've withheld the diagnoal for testing, and have verified that in test_recommend
+        # we've withheld the diagonal for testing, and have verified that in test_recommend
         # it is returned for each user. So p@1 should be 1.0
         p = precision_at_k(
             model, user_items.tocsr(), csr_matrix(np.eye(50)), K=1, show_progress=False
@@ -108,6 +143,26 @@ class RecommenderBaseTestMixin(object):
             for r in ids:
                 self.assertEqual(r % 2, userid % 2)
 
+    def test_similar_users_batch(self):
+        model = self._get_model()
+        # calculating similar users in nearest-neighbours is not implemented yet
+        if isinstance(model, ItemItemRecommender):
+            return
+        model.fit(get_checker_board(256), show_progress=False)
+        userids = np.arange(50)
+        ids, scores = model.similar_users(userids, N=10)
+
+        self.assertEqual(ids.shape, (50, 10))
+
+        for userid in userids:
+            # first user returned should be itself, and score should be ~1.0
+            self.assertEqual(ids[userid][0], userid)
+            self.assertAlmostEqual(scores[userid][0], 1.0, places=4)
+
+            # the rest of the users should be even or odd depending on the userid
+            for r in ids[userid]:
+                self.assertEqual(r % 2, userid % 2)
+
     def test_similar_items(self):
         model = self._get_model()
         model.fit(get_checker_board(256), show_progress=False)
@@ -115,6 +170,33 @@ class RecommenderBaseTestMixin(object):
             ids, _ = model.similar_items(itemid, N=10)
             for r in ids:
                 self.assertEqual(r % 2, itemid % 2)
+
+    def test_similar_items_batch(self):
+        model = self._get_model()
+        user_items = get_checker_board(256)
+        model.fit(user_items, show_progress=False)
+        itemids = np.arange(50)
+
+        def check_results(ids):
+            self.assertEqual(ids.shape, (50, 10))
+            for itemid in itemids:
+                # first item returned should be itself
+                self.assertEqual(ids[itemid][0], itemid)
+
+                # the rest of the items should be even or odd depending on the itemid
+                for r in ids[itemid]:
+                    self.assertEqual(r % 2, itemid % 2)
+
+        ids, _ = model.similar_items(itemids, N=10)
+        check_results(ids)
+        try:
+            ids, _ = model.similar_items(
+                itemids, N=10, recalculate_item=True, react_users=user_items.T.tocsr()
+            )
+            check_results(ids)
+        except NotImplementedError:
+            # some models don't support recalculating user on the fly, and thats ok
+            pass
 
     def test_zero_length_row(self):
         # get a matrix where a row/column is 0
@@ -152,8 +234,11 @@ class RecommenderBaseTestMixin(object):
         model.fit(item_users, show_progress=False)
 
         for userid in range(50):
-            selected_items = np.random.randint(50, size=10).tolist()
-            ids, scores = model.rank_items(userid, user_items, selected_items)
+            selected_items = random.sample(range(50), 10)
+
+            ids, scores = model.recommend(
+                userid, user_items, items=selected_items, filter_already_liked_items=False
+            )
 
             # ranked list should have same items
             self.assertEqual(set(ids), set(selected_items))
@@ -164,10 +249,24 @@ class RecommenderBaseTestMixin(object):
             # rank_items should raise IndexError if selected items contains wrong itemids
             with self.assertRaises(IndexError):
                 wrong_item_list = selected_items + wrong_neg_items
-                model.rank_items(userid, user_items, wrong_item_list)
+                model.recommend(userid, user_items, items=wrong_item_list)
             with self.assertRaises(IndexError):
                 wrong_item_list = selected_items + wrong_pos_items
-                model.rank_items(userid, user_items, wrong_item_list)
+                model.recommend(userid, user_items, items=wrong_item_list)
+
+    def test_rank_items_batch(self):
+        item_users = get_checker_board(50)
+        user_items = item_users.T.tocsr()
+
+        model = self._get_model()
+        model.fit(item_users, show_progress=False)
+
+        selected_items = np.arange(10) * 3
+        ids, scores = model.recommend(np.arange(50), user_items, items=selected_items)
+
+        for userid in range(50):
+            current_ids = ids[userid]
+            self.assertEqual(set(current_ids), set(selected_items))
 
     def test_pickle(self):
         item_users = get_checker_board(50)
