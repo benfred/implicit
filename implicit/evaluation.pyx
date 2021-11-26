@@ -436,9 +436,9 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                 memset(ids, -1, sizeof(int) * K)
 
                 with gil:
-                    recs = model.recommend(u, train_user_items, N=K)
+                    recs, _ = model.recommend(u, train_user_items, N=K)
                     for i in range(len(recs)):
-                        ids[i] = recs[i][0]
+                        ids[i] = recs[i]
                     progress.update(1)
 
                 # mostly we're going to be blocked on the gil here,

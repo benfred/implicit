@@ -1,4 +1,4 @@
-from .matrix cimport Matrix
+from .matrix cimport COOMatrix, Matrix, Vector
 
 
 cdef extern from "knn.h" namespace "implicit::gpu" nogil:
@@ -6,4 +6,7 @@ cdef extern from "knn.h" namespace "implicit::gpu" nogil:
         KnnQuery(size_t max_temp_memory) except +
 
         void topk(const Matrix & items, const Matrix & query, int k,
-                  int * indices, float * distances, float * item_norms) except +
+                  int * indices, float * distances,
+                  float * item_norms,
+                  COOMatrix * query_filter,
+                  Vector[int] * item_filter) except +

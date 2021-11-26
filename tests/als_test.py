@@ -9,12 +9,12 @@ from scipy.sparse import csr_matrix, random
 from implicit.als import AlternatingLeastSquares
 from implicit.gpu import HAS_CUDA
 
-from .recommender_base_test import RecommenderBaseTestMixin, get_checker_board
+from .recommender_base_test import RecommenderBaseTestMixin
 
 
 class ALSTest(unittest.TestCase, RecommenderBaseTestMixin):
     def _get_model(self):
-        return AlternatingLeastSquares(factors=3, regularization=0, use_gpu=False, random_state=23)
+        return AlternatingLeastSquares(factors=32, regularization=0, use_gpu=False, random_state=23)
 
 
 if HAS_CUDA:
@@ -152,7 +152,7 @@ def test_explain():
             [0, 1, 0, 0, 0, 1],
             [0, 0, 2, 0, 1, 1],
         ],
-        dtype=np.float64,
+        dtype=np.float32,
     )
     item_users = counts * 2
     user_items = item_users.T.tocsr()
@@ -205,39 +205,3 @@ def test_explain():
     assert pytest.approx(score, abs=1e-4) == top_score_explained
     assert scores[:2] == top_scores
     assert items[:2] == top_items
-
-
-def test_recommend_all():
-    item_users = get_checker_board(50)
-    user_items = item_users.T.tocsr()
-
-    model = AlternatingLeastSquares(factors=3, regularization=0, use_gpu=False, random_state=23)
-    model.fit(item_users, show_progress=False)
-
-    recs = model.recommend_all(user_items, N=1, show_progress=False)
-    for userid in range(50):
-        assert len(recs[userid]) == 1
-
-        # the top item recommended should be the same as the userid:
-        # its the one withheld item for the user that is liked by
-        # all the other similar users
-        assert recs[userid][0] == userid
-
-    offset = 2
-    recs = model.recommend_all(
-        user_items[[2, 3, 4]], N=1, show_progress=False, users_items_offset=offset
-    )
-
-    for userid in range(2, 5):
-        assert len(recs[userid - offset]) == 1
-        assert recs[userid - offset][0] == userid
-
-    # try asking for more items than possible
-    with pytest.raises(ValueError):
-        model.recommend_all(user_items, N=10000, show_progress=False)
-    with pytest.raises(ValueError):
-        model.recommend_all(user_items, filter_items=list(range(10000)), show_progress=False)
-
-    # filter recommended items using an additional filter list
-    recs = model.recommend_all(user_items, N=1, filter_items=[0], show_progress=False)
-    assert 0 not in recs

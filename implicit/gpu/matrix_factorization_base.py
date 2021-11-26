@@ -4,6 +4,7 @@ import numpy as np
 
 import implicit.gpu
 
+from ..cpu.matrix_factorization_base import _filter_items_from_sparse_matrix
 from ..recommender_base import RecommenderBase
 
 
@@ -35,49 +36,58 @@ class MatrixFactorizationBase(RecommenderBase):
         filter_already_liked_items=True,
         filter_items=None,
         recalculate_user=False,
+        items=None,
     ):
         if recalculate_user:
             raise NotImplementedError("recalculate_user isn't support on GPU yet")
 
-        liked = set()
-        if filter_already_liked_items:
-            liked.update(user_items[userid].indices)
+        item_factors = self.item_factors
+        if items is not None:
+            if filter_items:
+                raise ValueError("Can't set both items and filter_items in recommend call")
+
+            items = np.array(items)
+            items.sort()
+            item_factors = item_factors[items]
+
+            # check selected items are in the model
+            if items.max() >= self.item_factors.shape[0] or items.min() < 0:
+                raise IndexError("Some itemids are not in the model")
+
         if filter_items:
-            liked.update(filter_items)
-        count = N + len(liked)
+            filter_items = implicit.gpu.IntVector(np.array(filter_items, dtype="int32"))
+
+        query_filter = None
+        if filter_already_liked_items:
+            query_filter = user_items[userid]
+
+            # if we've been given a list of explicit itemids to rank, we need to filter down
+            if items is not None:
+                query_filter = _filter_items_from_sparse_matrix(items, query_filter)
+
+            if query_filter.nnz:
+                query_filter = implicit.gpu.COOMatrix(query_filter.tocoo())
+            else:
+                query_filter = None
 
         # calculate the top N items, removing the users own liked items from the results
-        # TODO: own like filtering (direct in topk class)
-        ids, scores = self._knn.topk(self.item_factors, self.user_factors[userid], count)
+        ids, scores = self._knn.topk(
+            item_factors,
+            self.user_factors[userid],
+            N,
+            query_filter=query_filter,
+            item_filter=filter_items,
+        )
 
-        # TODO: handle batch mode
-        ids, scores = ids[0], scores[0]
+        if np.isscalar(userid):
+            ids, scores = ids[0], scores[0]
 
-        if liked:
-            mask = np.in1d(ids, list(liked), invert=True)
-            ids, scores = ids[mask][:N], scores[mask][:N]
+        if items is not None:
+            ids = items[ids]
+
         return ids, scores
 
     recommend.__doc__ = RecommenderBase.recommend.__doc__
-
-    def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
-        if recalculate_user:
-            raise NotImplementedError("recalculate_user isn't support on GPU yet")
-
-        # check selected items are  in the model
-        if max(selected_items) >= self.item_factors.shape[0] or min(selected_items) < 0:
-            raise IndexError("Some of selected itemids are not in the model")
-
-        item_factors = self.item_factors[selected_items]
-        user = self.user_factors[userid]
-
-        # once we have item_factors here, this should work
-        ids, scores = self._knn.topk(item_factors, user, len(selected_items))
-        ids, scores = ids[0], scores[0]
-        ids = np.array(selected_items)[ids]
-        return ids, scores
-
-    rank_items.__doc__ = RecommenderBase.rank_items.__doc__
 
     @property
     def user_norms(self):
@@ -97,12 +107,13 @@ class MatrixFactorizationBase(RecommenderBase):
         ids, scores = self._knn.topk(
             self.user_factors, self.user_factors[userid], N, self.user_norms
         )
-        ids, scores = ids[0], scores[0]
 
         user_norms = self._user_norms_host[userid]
-        if not np.isscalar(user_norms):
-            user_norms = user_norms.reshape((len(user_norms), 1))
-        scores /= user_norms
+        if np.isscalar(userid):
+            ids, scores = ids[0], scores[0]
+            scores /= user_norms
+        else:
+            scores /= user_norms[:, None]
         return ids, scores
 
     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
@@ -113,12 +124,13 @@ class MatrixFactorizationBase(RecommenderBase):
         ids, scores = self._knn.topk(
             self.item_factors, self.item_factors[itemid], N, self.item_norms
         )
-        ids, scores = ids[0], scores[0]
 
         item_norms = self._item_norms_host[itemid]
-        if not np.isscalar(item_norms):
-            item_norms = item_norms.reshape((len(item_norms), 1))
-        scores /= item_norms
+        if np.isscalar(itemid):
+            ids, scores = ids[0], scores[0]
+            scores /= item_norms
+        else:
+            scores /= item_norms[:, None]
         return ids, scores
 
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__

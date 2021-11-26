@@ -22,7 +22,7 @@ import scipy.sparse
 
 from libcpp.vector cimport vector
 
-from .recommender_base import MatrixFactorizationBase
+from .cpu.matrix_factorization_base import MatrixFactorizationBase
 from .utils import check_random_state
 
 log = logging.getLogger("implicit")
