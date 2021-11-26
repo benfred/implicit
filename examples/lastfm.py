@@ -103,11 +103,15 @@ def calculate_similar_artists(output_filename, model_name="als"):
     logging.debug("writing similar items")
     with tqdm.tqdm(total=len(to_generate)) as progress:
         with codecs.open(output_filename, "w", "utf8") as o:
-            for artistid in to_generate:
-                artist = artists[artistid]
-                for other, score in zip(*model.similar_items(artistid, 11)):
-                    o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
-                progress.update(1)
+            batch_size = 1000
+            for startidx in range(0, len(to_generate), batch_size):
+                batch = to_generate[startidx : startidx + batch_size]
+                ids, scores = model.similar_items(batch, 11)
+                for i, artistid in enumerate(batch):
+                    artist = artists[artistid]
+                    for other, score in zip(ids[i], scores[i]):
+                        o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
+                progress.update(batch_size)
 
     logging.debug("generated similar artists in %0.2fs", time.time() - start)
 
@@ -143,10 +147,16 @@ def calculate_recommendations(output_filename, model_name="als"):
     start = time.time()
     with tqdm.tqdm(total=len(users)) as progress:
         with codecs.open(output_filename, "w", "utf8") as o:
-            for userid, username in enumerate(users):
-                for artistid, score in zip(*model.recommend(userid, user_plays)):
-                    o.write("%s\t%s\t%s\n" % (username, artists[artistid], score))
-                progress.update(1)
+            batch_size = 1000
+            to_generate = np.arange(len(users))
+            for startidx in range(0, len(to_generate), batch_size):
+                batch = to_generate[startidx : startidx + batch_size]
+                ids, scores = model.recommend(batch, user_plays, filter_already_liked_items=True)
+                for i, userid in enumerate(batch):
+                    username = users[userid]
+                    for other, score in zip(ids[i], scores[i]):
+                        o.write("%s\t%s\t%s\n" % (username, artists[other], score))
+                progress.update(batch_size)
     logging.debug("generated recommendations in %0.2fs", time.time() - start)
 
 

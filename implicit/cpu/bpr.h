@@ -1,7 +1,7 @@
-// Copyright 2018 Ben Frederickson
+// Copyright 2018-2021 Ben Frederickson
 
-#ifndef IMPLICIT_BPR_H_
-#define IMPLICIT_BPR_H_
+#ifndef IMPLICIT_CPU_BPR_H_
+#define IMPLICIT_CPU_BPR_H_
 
 // We need to get the thread number to figure out which RNG to use,
 // but this will fail on OSX etc if we have no openmp enabled compiler.
@@ -18,4 +18,4 @@ inline int get_thread_num() { return omp_get_thread_num(); }
 inline int get_thread_num() { return 0; }
 #endif
 }  // namespace implicit
-#endif  // IMPLICIT_BPR_H_
+#endif  // IMPLICIT_CPU_BPR_H_

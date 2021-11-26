@@ -21,7 +21,7 @@ Matrix RandomState::uniform(int rows, int cols, float low, float high) {
 
     if ((low != 0.0) || (high != 1.0)) {
         auto start = thrust::device_pointer_cast(ret.data);
-        thrust::transform(start, start + rows*cols, start, 
+        thrust::transform(start, start + rows*cols, start,
             thrust::placeholders::_1 = thrust::placeholders::_1 * (high - low) + low);
     }
 
