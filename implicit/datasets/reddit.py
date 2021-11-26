@@ -40,7 +40,7 @@ def generate_dataset(filename, outputfilename):
     https://www.reddit.com/r/redditdev/comments/dtg4j/want_to_help_reddit_build_a_recommender_a_public/
 
     You shouldn't have to run this yourself, and can instead just download the
-    output using the 'get_reddit' funciton.
+    output using the 'get_reddit' function.
     """
     data = _read_dataframe(filename)
     _hfd5_from_dataframe(data, outputfilename)

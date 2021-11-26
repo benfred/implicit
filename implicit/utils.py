@@ -17,7 +17,7 @@ def check_blas_config():
     """checks to see if using OpenBlas/Intel MKL. If so, warn if the number of threads isn't set
     to 1 (causes severe perf issues when training - can be 10x slower)"""
     # don't warn repeatedly
-    global _checked_blas_config
+    global _checked_blas_config  # pylint: disable=global-statement
     if _checked_blas_config:
         return
     _checked_blas_config = True

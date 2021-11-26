@@ -120,18 +120,14 @@ class MatrixFactorizationBase(RecommenderBase):
         if recalculate_user:
             if np.isscalar(userid):
                 return self.recalculate_user(userid, user_items)
-            else:
-                return np.stack([self.recalculate_user(i, user_items) for i in userid])
-
+            return np.stack([self.recalculate_user(i, user_items) for i in userid])
         return self.user_factors[userid]
 
     def _item_factor(self, itemid, react_users, recalculate_item=False):
         if recalculate_item:
             if np.isscalar(itemid):
                 return self.recalculate_item(itemid, react_users)
-            else:
-                return np.stack([self.recalculate_item(i, react_users) for i in itemid])
-
+            return np.stack([self.recalculate_item(i, react_users) for i in itemid])
         return self.item_factors[itemid]
 
     def recalculate_user(self, userid, user_items):

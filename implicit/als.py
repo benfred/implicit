@@ -61,15 +61,14 @@ def AlternatingLeastSquares(
             calculate_training_loss=calculate_training_loss,
             random_state=random_state,
         )
-    else:
-        return implicit.cpu.als.AlternatingLeastSquares(
-            factors,
-            regularization,
-            dtype,
-            use_native,
-            use_cg,
-            iterations,
-            calculate_training_loss,
-            num_threads,
-            random_state,
-        )
+    return implicit.cpu.als.AlternatingLeastSquares(
+        factors,
+        regularization,
+        dtype,
+        use_native,
+        use_cg,
+        iterations,
+        calculate_training_loss,
+        num_threads,
+        random_state,
+    )

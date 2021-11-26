@@ -69,7 +69,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         random_state=None,
     ):
 
-        super(AlternatingLeastSquares, self).__init__()
+        super().__init__()
 
         # parameters on how to factorize
         self.factors = factors
@@ -260,15 +260,15 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         total_score = 0.0
         h = []
         h_len = 0
-        for itemid, confidence in nonzeros(user_items, userid):
+        for other_itemid, confidence in nonzeros(user_items, userid):
             if confidence < 0:
                 continue
 
-            factor = self.item_factors[itemid]
+            factor = self.item_factors[other_itemid]
             # s_u^ij = (y_i^t W^u) y_j
             score = weighted_item.dot(factor) * confidence
             total_score += score
-            contribution = (score, itemid)
+            contribution = (score, other_itemid)
             if h_len < N:
                 heapq.heappush(h, contribution)
                 h_len += 1
@@ -384,7 +384,7 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
         if rsold < 1e-20:
             continue
 
-        for it in range(cg_steps):
+        for _ in range(cg_steps):
             # calculate Ap = YtCuYp - without actually calculating YtCuY
             Ap = YtY.dot(p)
             for i, confidence in nonzeros(Cui, u):

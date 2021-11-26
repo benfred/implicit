@@ -66,4 +66,4 @@ Note that this dataset was filtered down for all versions to reviews that were p
 stars), to simulate a truly implicit dataset.
 
 Implicit on the CPU seems to suffer a bit here relative to the other options. It seems like there might
-be a single threaded bottleneck at some point thats worth examining later.
+be a single threaded bottleneck at some point that's worth examining later.
