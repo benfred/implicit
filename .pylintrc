@@ -1,0 +1,46 @@
+[MASTER]
+
+extension-pkg-whitelist=implicit.cpu._als,implicit._nearest_neighbours,implicit.gpu._cuda,implicit.cpu.bpr,implicit.cpu.topk,numpy.random.mtrand
+
+[MESSAGES CONTROL]
+disable=fixme,
+    missing-function-docstring,
+    missing-module-docstring,
+    missing-class-docstring,
+    wrong-import-order,
+    wrong-import-position,
+    ungrouped-imports,
+    line-too-long,
+    superfluous-parens,
+    trailing-whitespace,
+    invalid-name,
+    import-error,
+    no-self-use,
+
+    # disable code-complexity check
+    too-many-function-args,
+    too-many-instance-attributes,
+    too-many-locals,
+    too-many-branches,
+    too-many-nested-blocks,
+    too-many-statements,
+    too-many-arguments,
+    too-many-return-statements,
+    too-many-lines,
+    too-few-public-methods,
+
+    # TODO: fix underlying errors for these
+    import-outside-toplevel,
+    not-callable,
+    unused-argument,
+    abstract-method,
+    arguments-differ,
+    no-member,
+    no-name-in-module,
+    arguments-renamed,
+    import-self,
+
+[SIMILARITIES]
+min-similarity-lines=16
+ignore-docstrings=yes
+ignore-imports=yes

@@ -1,0 +1,22 @@
+repos:
+      - repo: https://github.com/timothycrosley/isort
+        rev: 5.10.1
+        hooks:
+        - id: isort
+          additional_dependencies: [toml]
+      - repo: https://github.com/python/black
+        rev: 21.11b1
+        hooks:
+        - id: black
+      - repo: https://github.com/pycqa/flake8
+        rev: 4.0.1
+        hooks:
+        - id: flake8
+      - repo: https://github.com/pycqa/pylint
+        rev: v2.12.1
+        hooks:
+        - id: pylint
+      - repo: https://github.com/codespell-project/codespell
+        rev: v2.1.0
+        hooks:
+        - id: codespell

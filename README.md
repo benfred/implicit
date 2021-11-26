@@ -93,7 +93,7 @@ which can be installed with homebrew: ```brew install gcc```. Running on Windows
 3.5+.
 
 GPU Support requires at least version 11 of the [NVidia CUDA Toolkit](https://developer.nvidia.com/cuda-downloads). The build will use the ```nvcc``` compiler
-that is found on the path, but this can be overriden by setting the CUDAHOME enviroment variable
+that is found on the path, but this can be overridden by setting the CUDAHOME environment variable
 to point to your cuda installation.
 
 This library has been tested with Python 3.6, 3.7, 3.8 and 3.9 on Ubuntu, OSX and Windows.

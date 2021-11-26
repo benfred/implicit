@@ -113,7 +113,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
         # TODO: Add GPU training
         if self.use_gpu:
-            raise NotImplementedError("GPU version of LMF is not implemeneted yet!")
+            raise NotImplementedError("GPU version of LMF is not implemented yet!")
 
     @cython.cdivision(True)
     @cython.boundscheck(False)

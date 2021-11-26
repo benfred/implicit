@@ -60,14 +60,13 @@ def BayesianPersonalizedRanking(
             verify_negative_samples=verify_negative_samples,
             random_state=random_state,
         )
-    else:
-        return implicit.cpu.bpr.BayesianPersonalizedRanking(
-            factors,
-            learning_rate,
-            regularization,
-            dtype=dtype,
-            num_threads=num_threads,
-            iterations=iterations,
-            verify_negative_samples=verify_negative_samples,
-            random_state=random_state,
-        )
+    return implicit.cpu.bpr.BayesianPersonalizedRanking(
+        factors,
+        learning_rate,
+        regularization,
+        dtype=dtype,
+        num_threads=num_threads,
+        iterations=iterations,
+        verify_negative_samples=verify_negative_samples,
+        random_state=random_state,
+    )

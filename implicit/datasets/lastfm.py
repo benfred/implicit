@@ -36,7 +36,7 @@ def generate_dataset(filename, outputfilename):
     http://ocelma.net/MusicRecommendationDataset/lastfm-360K.html
 
     You shouldn't have to run this yourself, and can instead just download the
-    output using the 'get_lastfm' funciton./
+    output using the 'get_lastfm' function./
 
     Note there are some invalid entries in this dataset, running
     this function will clean it up so pandas can read it:

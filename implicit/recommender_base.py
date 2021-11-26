@@ -7,7 +7,7 @@ class ModelFitError(Exception):
     pass
 
 
-class RecommenderBase(object):
+class RecommenderBase:
     """Defines the interface that all recommendations models here expose"""
 
     __metaclass__ = ABCMeta
@@ -54,7 +54,7 @@ class RecommenderBase(object):
             The number of results to return
         filter_already_liked_items: bool, optional
             When true, don't return items present in the training set that were rated
-            by the specificed user.
+            by the specified user.
         filter_items : sequence of ints, optional
             List of extra item ids to filter out from the output
         recalculate_user : bool, optional
@@ -93,7 +93,6 @@ class RecommenderBase(object):
 
     @abstractmethod
     def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
-
         """
         Calculates a list of similar items
 

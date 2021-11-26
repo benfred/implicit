@@ -54,7 +54,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         if not implicit.gpu.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
-        super(AlternatingLeastSquares, self).__init__()
+        super().__init__()
 
         # parameters on how to factorize
         self.factors = factors

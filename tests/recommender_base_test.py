@@ -38,7 +38,7 @@ class RecommenderBaseTestMixin(object):
         model.fit(item_users, show_progress=False)
 
         for userid in range(50):
-            ids, scores = model.recommend(userid, user_items, N=1)
+            ids, _ = model.recommend(userid, user_items, N=1)
             self.assertEqual(len(ids), 1)
 
             # the top item recommended should be the same as the userid:
@@ -49,12 +49,12 @@ class RecommenderBaseTestMixin(object):
         # try asking for more items than possible,
         # should return only the available items
         # https://github.com/benfred/implicit/issues/22
-        ids, scores = model.recommend(0, user_items, N=10000)
+        ids, _ = model.recommend(0, user_items, N=10000)
         self.assertTrue(len(ids))
 
         # filter recommended items using an additional filter list
         # https://github.com/benfred/implicit/issues/26
-        ids, scores = model.recommend(0, user_items, N=1, filter_items=[0])
+        ids, _ = model.recommend(0, user_items, N=1, filter_items=[0])
         self.assertTrue(0 not in set(ids))
 
     def test_recommend_batch(self):
@@ -95,7 +95,7 @@ class RecommenderBaseTestMixin(object):
                 np.arange(50), user_items, N=1, recalculate_user=True
             )
         except NotImplementedError:
-            # some models don't support recalculating user on the fly, and thats ok
+            # some models don't support recalculating user on the fly, and that's ok
             return
 
         for userid in range(item_users.shape[1]):
@@ -195,7 +195,7 @@ class RecommenderBaseTestMixin(object):
             )
             check_results(ids)
         except NotImplementedError:
-            # some models don't support recalculating user on the fly, and thats ok
+            # some models don't support recalculating user on the fly, and that's ok
             pass
 
     def test_zero_length_row(self):
@@ -236,7 +236,7 @@ class RecommenderBaseTestMixin(object):
         for userid in range(50):
             selected_items = random.sample(range(50), 10)
 
-            ids, scores = model.recommend(
+            ids, _ = model.recommend(
                 userid, user_items, items=selected_items, filter_already_liked_items=False
             )
 
@@ -262,7 +262,7 @@ class RecommenderBaseTestMixin(object):
         model.fit(item_users, show_progress=False)
 
         selected_items = np.arange(10) * 3
-        ids, scores = model.recommend(np.arange(50), user_items, items=selected_items)
+        ids, _ = model.recommend(np.arange(50), user_items, items=selected_items)
 
         for userid in range(50):
             current_ids = ids[userid]

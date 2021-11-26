@@ -54,7 +54,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         verify_negative_samples=True,
         random_state=None,
     ):
-        super(BayesianPersonalizedRanking, self).__init__()
+        super().__init__()
         if not implicit.gpu.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
@@ -142,10 +142,10 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 )
                 progress.update(1)
                 total = len(user_items.data)
-                if total != 0 and total != skipped:
+                if total and total != skipped:
                     progress.set_postfix(
                         {
-                            "train_auc": "%.2f%%" % (100.0 * correct / (total - skipped)),
-                            "skipped": "%.2f%%" % (100.0 * skipped / total),
+                            "train_auc": f"{100.0 * correct / (total - skipped):0.2f}%",
+                            "skipped": f"{100.0 * skipped / total:0.2f}%",
                         }
                     )
