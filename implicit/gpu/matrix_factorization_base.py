@@ -26,6 +26,8 @@ class MatrixFactorizationBase(RecommenderBase):
         self.user_factors = None
         self._item_norms = None
         self._user_norms = None
+        self._user_norms_host = None
+        self._item_norms_host = None
         self._knn = implicit.gpu.KnnQuery()
 
     def recommend(

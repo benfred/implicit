@@ -69,13 +69,13 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
 
     def __init__(
         self,
+        *args,
         approximate_similar_items=True,
         approximate_recommend=True,
         method="hnsw",
         index_params=None,
         query_params=None,
         random_state=None,
-        *args,
         **kwargs
     ):
         if index_params is None:
@@ -93,9 +93,9 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         self.index_params = index_params
         self.query_params = query_params
 
-        super(NMSLibAlternatingLeastSquares, self).__init__(
-            *args, random_state=random_state, **kwargs
-        )
+        self.max_norm = None
+
+        super().__init__(*args, random_state=random_state, **kwargs)
 
     def fit(self, Cui, show_progress=True):
         # nmslib can be a little chatty when first imported, disable some of
@@ -104,7 +104,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         import nmslib
 
         # train the model
-        super(NMSLibAlternatingLeastSquares, self).fit(Cui, show_progress)
+        super().fit(Cui, show_progress)
 
         # create index for similar_items
         if self.approximate_similar_items:
@@ -137,7 +137,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
 
     def similar_items(self, itemid, N=10):
         if not self.approximate_similar_items:
-            return super(NMSLibAlternatingLeastSquares, self).similar_items(itemid, N)
+            return super().similar_items(itemid, N)
 
         neighbours, distances = self.similar_items_index.knnQuery(self.item_factors[itemid], N)
         return zip(neighbours, 1.0 - distances)
@@ -152,7 +152,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         recalculate_user=False,
     ):
         if not self.approximate_recommend:
-            return super(NMSLibAlternatingLeastSquares, self).recommend(
+            return super().recommend(
                 userid,
                 user_items,
                 N=N,
@@ -216,21 +216,20 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
 
     def __init__(
         self,
+        *args,
         approximate_similar_items=True,
         approximate_recommend=True,
         n_trees=50,
         search_k=-1,
         random_state=None,
-        *args,
         **kwargs
     ):
 
-        super(AnnoyAlternatingLeastSquares, self).__init__(
-            *args, random_state=random_state, **kwargs
-        )
+        super().__init__(*args, random_state=random_state, **kwargs)
 
         self.similar_items_index = None
         self.recommend_index = None
+        self.max_norm = None
 
         self.approximate_similar_items = approximate_similar_items
         self.approximate_recommend = approximate_recommend
@@ -243,7 +242,7 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
         import annoy
 
         # train the model
-        super(AnnoyAlternatingLeastSquares, self).fit(Cui, show_progress)
+        super().fit(Cui, show_progress)
 
         # build up an Annoy Index with all the item_factors (for calculating
         # similar items)
@@ -267,7 +266,7 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
 
     def similar_items(self, itemid, N=10):
         if not self.approximate_similar_items:
-            return super(AnnoyAlternatingLeastSquares, self).similar_items(itemid, N)
+            return super().similar_items(itemid, N)
 
         neighbours, dist = self.similar_items_index.get_nns_by_item(
             itemid, N, search_k=self.search_k, include_distances=True
@@ -285,7 +284,7 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
         recalculate_user=False,
     ):
         if not self.approximate_recommend:
-            return super(AnnoyAlternatingLeastSquares, self).recommend(
+            return super().recommend(
                 userid,
                 user_items,
                 N=N,
@@ -353,18 +352,20 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
 
     def __init__(
         self,
+        *args,
         approximate_similar_items=True,
         approximate_recommend=True,
         nlist=400,
         nprobe=20,
         use_gpu=implicit.gpu.HAS_CUDA,
         random_state=None,
-        *args,
         **kwargs
     ):
 
         self.similar_items_index = None
         self.recommend_index = None
+        self.quantizer = None
+        self.gpu_resources = None
 
         self.approximate_similar_items = approximate_similar_items
         self.approximate_recommend = approximate_recommend
@@ -373,15 +374,13 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         self.nlist = nlist
         self.nprobe = nprobe
         self.use_gpu = use_gpu
-        super(FaissAlternatingLeastSquares, self).__init__(
-            *args, random_state=random_state, **kwargs
-        )
+        super().__init__(*args, random_state=random_state, **kwargs)
 
     def fit(self, Cui, show_progress=True):
         import faiss
 
         # train the model
-        super(FaissAlternatingLeastSquares, self).fit(Cui, show_progress)
+        super().fit(Cui, show_progress)
 
         self.quantizer = faiss.IndexFlat(self.factors)
 
@@ -433,7 +432,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
 
     def similar_items(self, itemid, N=10):
         if not self.approximate_similar_items or (self.use_gpu and N >= 1024):
-            return super(FaissAlternatingLeastSquares, self).similar_items(itemid, N)
+            return super().similar_items(itemid, N)
 
         factors = self.item_factors[itemid]
         factors /= numpy.linalg.norm(factors)
@@ -452,7 +451,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         recalculate_user=False,
     ):
         if not self.approximate_recommend:
-            return super(FaissAlternatingLeastSquares, self).recommend(
+            return super().recommend(
                 userid,
                 user_items,
                 N=N,
@@ -474,7 +473,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         # the GPU variant of faiss doesn't support returning more than 1024 results.
         # fall back to the exact match when this happens
         if self.use_gpu and count >= 1024:
-            return super(FaissAlternatingLeastSquares, self).recommend(
+            return super().recommend(
                 userid,
                 user_items,
                 N=N,

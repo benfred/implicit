@@ -176,7 +176,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 
         # we accept num_threads = 0 as indicating to create as many threads as we have cores,
         # but in that case we need the number of cores, since we need to initialize RNG state per
-        # thread. Get the appropiate value back from openmp
+        # thread. Get the appropriate value back from openmp
         cdef int num_threads = self.num_threads
         if not num_threads:
             num_threads = multiprocessing.cpu_count()

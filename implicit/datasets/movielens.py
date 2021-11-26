@@ -30,7 +30,7 @@ def get_movielens(variant="20m"):
         A sparse matrix where the row is the movieId, the column is the userId and the value is
         the rating.
     """
-    filename = "movielens_%s.hdf5" % variant
+    filename = f"movielens_{variant}.hdf5"
 
     path = os.path.join(_download.LOCAL_CACHE_DIR, filename)
     if not os.path.isfile(path):
@@ -50,9 +50,9 @@ def generate_dataset(path, variant="20m", outputpath="."):
     https://grouplens.org/datasets/movielens/20m/
 
     You shouldn't have to run this yourself, and can instead just download the
-    output using the 'get_movielens' funciton./
+    output using the 'get_movielens' function./
     """
-    filename = os.path.join(outputpath, "movielens_%s.hdf5" % variant)
+    filename = os.path.join(outputpath, f"movielens_{variant}.hdf5")
 
     if variant == "20m":
         ratings, movies = _read_dataframes_20M(path)

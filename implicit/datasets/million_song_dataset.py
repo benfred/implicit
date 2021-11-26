@@ -54,7 +54,7 @@ def generate_dataset(
     https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset
 
     You shouldn't have to run this yourself, and can instead just download the
-    output using the 'get_msd_taste_profile' funciton
+    output using the 'get_msd_taste_profile' function
     """
     data = _read_triplets_dataframe(triplets_filename)
     track_info = _join_summary_file(data, summary_filename)

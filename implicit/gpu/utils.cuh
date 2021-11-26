@@ -86,7 +86,7 @@ float dot(float a, float b, float * shared) {
     float val = a * b ;
     val = warp_reduce_sum(val);
 
-    // write out the partial reduction to shared memory if appropiate
+    // write out the partial reduction to shared memory if appropriate
     if (lane == 0) {
         shared[warp] = val;
     }

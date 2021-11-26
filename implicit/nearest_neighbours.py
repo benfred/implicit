@@ -168,7 +168,7 @@ class BM25Recommender(ItemItemRecommender):
     """An Item-Item Recommender on BM25 distance between items"""
 
     def __init__(self, K=20, K1=1.2, B=0.75, num_threads=0):
-        super(BM25Recommender, self).__init__(K, num_threads)
+        super().__init__(K, num_threads)
         self.K1 = K1
         self.B = B
 
