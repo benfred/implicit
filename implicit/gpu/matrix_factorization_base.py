@@ -56,7 +56,7 @@ class MatrixFactorizationBase(RecommenderBase):
             if items.max() >= self.item_factors.shape[0] or items.min() < 0:
                 raise IndexError("Some itemids are not in the model")
 
-        if filter_items:
+        if filter_items is not None:
             filter_items = implicit.gpu.IntVector(np.array(filter_items, dtype="int32"))
 
         query_filter = None
@@ -105,10 +105,32 @@ class MatrixFactorizationBase(RecommenderBase):
             self._item_norms_host = self._item_norms.to_numpy().reshape(self._item_norms.shape[1])
         return self._item_norms
 
-    def similar_users(self, userid, N=10):
+    def similar_users(self, userid, N=10, filter_users=None, users=None):
+        norms = self.user_norms
+        user_factors = self.user_factors
+        if users is not None:
+            if filter_users:
+                raise ValueError("Can't set both users and filter_users in similar_users call")
+
+            users = np.array(users)
+            user_factors = user_factors[users]
+
+            # TODO: we should be able to do this all on the GPU
+            norms = implicit.gpu.Matrix(self._user_norms_host[users].reshape(1, len(users)))
+
+            # check selected items are in the model
+            if users.max() >= self.user_factors.shape[0] or users.min() < 0:
+                raise IndexError("Some userids in the users parameter are not in the model")
+
+        if filter_users is not None:
+            filter_users = implicit.gpu.IntVector(np.array(filter_users, dtype="int32"))
+
         ids, scores = self._knn.topk(
-            self.user_factors, self.user_factors[userid], N, self.user_norms
+            user_factors, self.user_factors[userid], N, norms, item_filter=filter_users
         )
+
+        if users is not None:
+            ids = users[ids]
 
         user_norms = self._user_norms_host[userid]
         if np.isscalar(userid):
@@ -120,12 +142,37 @@ class MatrixFactorizationBase(RecommenderBase):
 
     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
 
-    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
+    def similar_items(
+        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+    ):
         if recalculate_item:
             raise NotImplementedError("recalculate_item isn't support on GPU yet")
+
+        item_factors = self.item_factors
+        norms = self.item_norms
+        if items is not None:
+            if filter_items:
+                raise ValueError("Can't set both items and filter_items in similar_items call")
+
+            items = np.array(items)
+
+            # TODO: we should be able to do this all on the GPU
+            norms = implicit.gpu.Matrix(self._item_norms_host[items].reshape(1, len(items)))
+            item_factors = item_factors[items]
+
+            # check selected items are in the model
+            if items.max() >= self.item_factors.shape[0] or items.min() < 0:
+                raise IndexError("Some itemids are not in the model")
+
+        if filter_items is not None:
+            filter_items = implicit.gpu.IntVector(np.array(filter_items, dtype="int32"))
+
         ids, scores = self._knn.topk(
-            self.item_factors, self.item_factors[itemid], N, self.item_norms
+            item_factors, self.item_factors[itemid], N, norms, item_filter=filter_items
         )
+
+        if items is not None:
+            ids = items[ids]
 
         item_norms = self._item_norms_host[itemid]
         if np.isscalar(itemid):

@@ -162,9 +162,13 @@ void KnnQuery::topk(const Matrix & items, const Matrix & query, int k,
             auto count = thrust::make_counting_iterator<int>(0);
             float * data = temp_distances.data;
             int * items = item_filter->data;
-            thrust::for_each(count, count + item_filter->size,
+            int items_size = item_filter->size;
+            int cols = temp_distances.cols;
+            thrust::for_each(count, count + items_size * temp_distances.rows,
                [=] __device__(int i) {
-                  data[items[i]] = -FLT_MAX;
+                  int col = items[i % items_size];
+                  int row = i / items_size;
+                  data[row * cols + col] = -FLT_MAX;
             });
         }
 
