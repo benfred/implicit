@@ -74,25 +74,32 @@ class RecommenderBase:
         """
 
     @abstractmethod
-    def similar_users(self, userid, N=10):
+    def similar_users(self, userid, N=10, filter_users=None, users=None):
         """
-        Calculates a list of similar users
+        Calculates the most similar users for a userid or array of userids
 
         Parameters
         ----------
         userid : Union[int, array_like]
-            The userid or an array of userids to retrieve similar users for
+            The userid or an array of userids to retrieve similar users for.
         N : int, optional
             The number of similar users to return
+        filter_users: array_like, optional
+            An array of user ids to filter out from the results being returned
+        users: array_like, optional
+            An array of user ids to include in the output. If not set all users in the training
+            set will be included. Cannot be used with the filter_users options
 
         Returns
         -------
         tuple
-            Tuple of (itemids, scores) arrays
+            Tuple of (userids, scores) arrays
         """
 
     @abstractmethod
-    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
+    def similar_items(
+        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+    ):
         """
         Calculates a list of similar items
 
@@ -108,6 +115,11 @@ class RecommenderBase:
         recalculate_item : bool, optional
             When true, don't rely on stored item state and instead recalculate from the
             passed in react_users
+        filter_items: array_like, optional
+            An array of item ids to filter out from the results being returned
+        items: array_like, optional
+            An array of item ids to include in the output. If not set all items in the training
+            set will be included. Cannot be used with the filter_items options
 
         Returns
         -------

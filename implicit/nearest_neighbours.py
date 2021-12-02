@@ -59,7 +59,7 @@ class ItemItemRecommender(RecommenderBase):
         if userid >= user_items.shape[0]:
             raise ValueError("userid is out of bounds of the user_items matrix")
 
-        if filter_items and items:
+        if filter_items is not None and items is not None:
             raise ValueError("Can't specify both filter_items and items")
 
         if filter_items is not None:
@@ -96,22 +96,43 @@ class ItemItemRecommender(RecommenderBase):
 
         return ids, scores
 
-    def similar_users(self, userid, N=10):
-        raise NotImplementedError("Not implemented Yet")
+    def similar_users(self, userid, N=10, filter_users=None, users=None):
+        raise NotImplementedError("similar_users isn't implemented for item-item recommenders")
 
-    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
+    def similar_items(
+        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+    ):
         """Returns a list of the most similar other items"""
         if recalculate_item:
             raise NotImplementedError("Recalculate_item isn't implemented")
 
+        print("N", N)
         if not np.isscalar(itemid):
-            return _batch(self.similar_items, itemid, N=N)
+            return _batch(self.similar_items, itemid, N=N, filter_items=filter_items, items=items)
+
+        if filter_items is not None and items is not None:
+            raise ValueError("Can't specify both filter_items and items")
 
         if itemid >= self.similarity.shape[0]:
             return np.array([]), np.array([])
 
         ids = self.similarity[itemid].indices
         scores = self.similarity[itemid].data
+
+        if filter_items is not None:
+            mask = np.in1d(ids, filter_items, invert=True)
+            ids, scores = ids[mask], scores[mask]
+
+        elif items is not None:
+            mask = np.in1d(ids, items)
+            ids, scores = ids[mask], scores[mask]
+
+            # returned items should be equal to input selected items
+            missing = items[np.in1d(items, ids, invert=True)]
+            if missing.size:
+                ids = np.append(ids, missing)
+                scores = np.append(scores, np.full(missing.size, -np.finfo(scores.dtype).max))
+
         best = np.argsort(scores)[::-1][:N]
         return ids[best], scores[best]
 
@@ -226,8 +247,9 @@ def _batch(func, ids, *args, N=10, **kwargs):
         batch_ids, batch_scores = func(idx, *args, N=N, **kwargs)
 
         # pad out to N items if we're returned fewer
-        missing_items = len(batch_ids) - N
-        if missing_items:
+        missing_items = N - len(batch_ids)
+        print("i", i, "idx", idx, " missing ", missing_items)
+        if missing_items > 0:
             batch_ids = np.append(batch_ids, np.full(missing_items, -1))
             batch_scores = np.append(
                 batch_scores, np.full(missing_items, -np.finfo(np.float32).max)

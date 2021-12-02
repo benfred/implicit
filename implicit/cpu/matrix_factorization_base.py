@@ -53,7 +53,7 @@ class MatrixFactorizationBase(RecommenderBase):
 
             # check selected items are in the model
             if items.max() >= self.item_factors.shape[0] or items.min() < 0:
-                raise IndexError("Some itemids are not in the model")
+                raise IndexError("Some itemids in the items parameter in are not in the model")
 
         # get a CSR matrix of items to filter per-user
         filter_query_items = None
@@ -136,19 +136,42 @@ class MatrixFactorizationBase(RecommenderBase):
     def recalculate_item(self, itemid, react_users):
         raise NotImplementedError("recalculate_item is not supported with this model")
 
-    def similar_users(self, userid, N=10):
-        factor = self.user_factors[userid]
-        factors = self.user_factors
+    def similar_users(self, userid, N=10, filter_users=None, users=None):
+        user_factors = self.user_factors
         norms = self.user_norms
         norm = norms[userid]
-        return self._get_similarity_score(factor, norm, factors, norms, N)
+
+        # if we have an user list to restrict down to, we need to filter the user_factors
+        if users is not None:
+            if filter_users:
+                raise ValueError("Can't set both users and filter_users in similar_users call")
+
+            users = np.array(users)
+            user_factors = user_factors[users]
+            norms = norms[users]
+
+            # check selected items are in the model
+            if users.max() >= self.user_factors.shape[0] or users.min() < 0:
+                raise IndexError("Some userids in the users parameter are not in the model")
+
+        factor = self.user_factors[userid]
+        ids, scores = self._get_similarity_score(
+            factor, norm, user_factors, norms, N, filter_items=filter_users
+        )
+        if users is not None:
+            ids = users[ids]
+
+        return ids, scores
 
     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
 
-    def similar_items(self, itemid, N=10, react_users=None, recalculate_item=False):
+    def similar_items(
+        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+    ):
         factor = self._item_factor(itemid, react_users, recalculate_item)
         factors = self.item_factors
         norms = self.item_norms
+
         if recalculate_item:
             if np.isscalar(itemid):
                 norm = np.linalg.norm(factor)
@@ -159,12 +182,30 @@ class MatrixFactorizationBase(RecommenderBase):
         else:
             norm = norms[itemid]
 
-        return self._get_similarity_score(factor, norm, factors, norms, N)
+        # if we have an item list to restrict down to, we need to filter the item_factors
+        if items is not None:
+            if filter_items:
+                raise ValueError("Can't set both items and filter_items in similar_items call")
+
+            items = np.array(items)
+            factors = factors[items]
+            norms = norms[items]
+
+            # check selected items are in the model
+            if items.max() >= self.item_factors.shape[0] or items.min() < 0:
+                raise IndexError("Some itemids in the items parameter are not in the model")
+
+        ids, scores = self._get_similarity_score(
+            factor, norm, factors, norms, N, filter_items=filter_items
+        )
+        if items is not None:
+            ids = items[ids]
+        return ids, scores
 
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
 
-    def _get_similarity_score(self, factor, norm, factors, norms, N):
-        ids, scores = topk(factors, factor, N, item_norms=norms)
+    def _get_similarity_score(self, factor, norm, factors, norms, N, filter_items=None):
+        ids, scores = topk(factors, factor, N, item_norms=norms, filter_items=filter_items)
         if np.isscalar(norm):
             ids, scores = ids[0], scores[0]
             scores /= norm

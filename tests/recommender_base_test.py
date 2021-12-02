@@ -23,7 +23,7 @@ def get_checker_board(X):
     return csr_matrix(ret - np.eye(X))
 
 
-class RecommenderBaseTestMixin(object):
+class RecommenderBaseTestMixin:
     """Mixin to test a bunch of common functionality in models
     deriving from RecommenderBase"""
 
@@ -163,6 +163,25 @@ class RecommenderBaseTestMixin(object):
             for r in ids[userid]:
                 self.assertEqual(r % 2, userid % 2)
 
+    def test_similar_users_filter(self):
+        model = self._get_model()
+        # calculating similar users in nearest-neighbours is not implemented yet
+        if isinstance(model, ItemItemRecommender):
+            return
+
+        model.fit(get_checker_board(256), show_progress=False)
+        userids = np.arange(50)
+
+        ids, _ = model.similar_users(userids, N=10, filter_users=np.arange(52) * 5)
+        for userid in userids:
+            for r in ids[userid]:
+                self.assertTrue(r % 5 != 0)
+
+        selected = np.arange(10)
+        ids, _ = model.similar_users(userids, N=10, users=selected)
+        for userid in userids:
+            self.assertEqual(set(ids[userid]), set(selected))
+
     def test_similar_items(self):
         model = self._get_model()
         model.fit(get_checker_board(256), show_progress=False)
@@ -197,6 +216,22 @@ class RecommenderBaseTestMixin(object):
         except NotImplementedError:
             # some models don't support recalculating user on the fly, and that's ok
             pass
+
+    def test_similar_items_filter(self):
+        model = self._get_model()
+
+        model.fit(get_checker_board(256), show_progress=False)
+        itemids = np.arange(50)
+
+        ids, _ = model.similar_items(itemids, N=10, filter_items=np.arange(52) * 5)
+        for itemid in itemids:
+            for r in ids[itemid]:
+                self.assertTrue(r % 5 != 0)
+
+        selected = np.arange(10)
+        ids, _ = model.similar_items(itemids, N=10, items=selected)
+        for itemid in itemids:
+            self.assertEqual(set(ids[itemid]), set(selected))
 
     def test_zero_length_row(self):
         # get a matrix where a row/column is 0
