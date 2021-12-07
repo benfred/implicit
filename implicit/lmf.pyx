@@ -6,7 +6,7 @@ import logging
 import multiprocessing
 import time
 
-import tqdm
+from tqdm.auto import tqdm
 from cython.parallel import parallel, prange, threadid
 
 from libc.math cimport exp, sqrt
