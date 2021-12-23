@@ -23,7 +23,6 @@ try:
             # pickle isn't supported on annoy indices
             pass
 
-
 except ImportError:
     pass
 
@@ -39,7 +38,6 @@ try:
         def test_pickle(self):
             # pickle isn't supported on nmslib indices
             pass
-
 
 except ImportError:
     pass
@@ -99,7 +97,6 @@ try:
             def test_pickle(self):
                 # pickle isn't supported on faiss indices
                 pass
-
 
 except ImportError:
     pass

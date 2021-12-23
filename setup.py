@@ -5,6 +5,11 @@ import os.path
 import platform
 import sys
 
+try:
+    import numpy.distutils
+except ImportError:
+    pass
+
 from setuptools import Extension, find_packages, setup
 
 from cuda_setup import CUDA, build_ext
@@ -37,12 +42,6 @@ def define_extensions():
 
         compile_args.append("-std=c++11")
         link_args.append("-std=c++11")
-
-    # we need numpy to build so we can include the arrayobject.h in the .cpp builds
-    # try:
-    #     import numpy as np
-    # except ImportError:
-    #     raise ValueError("numpy is required to build from source")
 
     src_ext = ".pyx"
     modules = [
@@ -101,7 +100,8 @@ def define_extensions():
                     os.path.join("implicit", "gpu", "knn.cu"),
                 ],
                 language="c++",
-                extra_compile_args=compile_args,
+                # The CPU compile args don't seem to work with NVCC right now?
+                # extra_compile_args=compile_args,
                 extra_link_args=link_args,
                 library_dirs=library_dirs,
                 libraries=["cudart", "cublas", "curand"],
