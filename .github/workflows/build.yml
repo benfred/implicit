@@ -25,7 +25,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 isort cpplint black pytest codespell h5py pylint
         pip install -r requirements.txt
-    - Name: Install ANN Libraries
+    - name: Install ANN Libraries
       run: pip install annoy nmslib 
       if: runner.os == 'Linux'
     - name: Lint with flake8
