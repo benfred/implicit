@@ -1,6 +1,8 @@
 [MASTER]
 
-extension-pkg-whitelist=implicit.cpu._als,implicit._nearest_neighbours,implicit.gpu._cuda,implicit.cpu.bpr,implicit.cpu.topk,numpy.random.mtrand
+ignore-patterns=setup.py
+
+extension-pkg-whitelist=implicit.cpu._als,implicit._nearest_neighbours,implicit.gpu._cuda,implicit.cpu.bpr,implicit.cpu.topk,numpy.random.mtrand,nmslib,faiss
 
 [MESSAGES CONTROL]
 disable=fixme,
@@ -39,8 +41,9 @@ disable=fixme,
     no-name-in-module,
     arguments-renamed,
     import-self,
+    protected-access,
 
 [SIMILARITIES]
-min-similarity-lines=16
+min-similarity-lines=50
 ignore-docstrings=yes
 ignore-imports=yes

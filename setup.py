@@ -6,7 +6,7 @@ import platform
 import sys
 
 try:
-    import numpy.distutils
+    import numpy.distutils  # noqa
 except ImportError:
     pass
 

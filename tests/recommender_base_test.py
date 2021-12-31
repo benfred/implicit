@@ -151,23 +151,26 @@ class RecommenderBaseTestMixin:
 
     def test_similar_users(self):
         model = self._get_model()
-        # calculating similar users in nearest-neighbours is not implemented yet
-        if isinstance(model, ItemItemRecommender):
-            return
         model.fit(get_checker_board(50), show_progress=False)
-        for userid in range(50):
-            ids, _ = model.similar_users(userid, N=10)
-            for r in ids:
-                self.assertEqual(r % 2, userid % 2)
+
+        try:
+            for userid in range(50):
+                ids, _ = model.similar_users(userid, N=10)
+                for r in ids:
+                    self.assertEqual(r % 2, userid % 2)
+        except NotImplementedError:
+            pass
 
     def test_similar_users_batch(self):
         model = self._get_model()
-        # calculating similar users in nearest-neighbours is not implemented yet
-        if isinstance(model, ItemItemRecommender):
-            return
         model.fit(get_checker_board(256), show_progress=False)
         userids = np.arange(50)
-        ids, scores = model.similar_users(userids, N=10)
+
+        try:
+            ids, scores = model.similar_users(userids, N=10)
+        except NotImplementedError:
+            # similar users isn't implemented for many models (ItemItemRecommeder/ ANN models)
+            return
 
         self.assertEqual(ids.shape, (50, 10))
 
@@ -189,7 +192,11 @@ class RecommenderBaseTestMixin:
         model.fit(get_checker_board(256), show_progress=False)
         userids = np.arange(50)
 
-        ids, _ = model.similar_users(userids, N=10, filter_users=np.arange(52) * 5)
+        try:
+            ids, _ = model.similar_users(userids, N=10, filter_users=np.arange(52) * 5)
+        except NotImplementedError:
+            return
+
         for userid in userids:
             for r in ids[userid]:
                 self.assertTrue(r % 5 != 0)
@@ -292,9 +299,12 @@ class RecommenderBaseTestMixin:
         for userid in range(50):
             selected_items = random.sample(range(50), 10)
 
-            ids, _ = model.recommend(
-                userid, user_items, items=selected_items, filter_already_liked_items=False
-            )
+            try:
+                ids, _ = model.recommend(
+                    userid, user_items, items=selected_items, filter_already_liked_items=False
+                )
+            except NotImplementedError:
+                return
 
             # ranked list should have same items
             self.assertEqual(set(ids), set(selected_items))
@@ -318,7 +328,10 @@ class RecommenderBaseTestMixin:
         model.fit(item_users, show_progress=False)
 
         selected_items = np.arange(10) * 3
-        ids, _ = model.recommend(np.arange(50), user_items, items=selected_items)
+        try:
+            ids, _ = model.recommend(np.arange(50), user_items, items=selected_items)
+        except NotImplementedError:
+            return
 
         for userid in range(50):
             current_ids = ids[userid]

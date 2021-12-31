@@ -55,6 +55,26 @@ def check_random_state(random_state):
     return np.random.RandomState(random_state)
 
 
+def augment_inner_product_matrix(factors):
+    """This function transforms a factor matrix such that an angular nearest neighbours search
+    will return top related items of the inner product.
+
+    This involves transforming each row by adding one extra dimension as suggested in the paper:
+    "Speeding Up the Xbox Recommender System Using a Euclidean Transformation for Inner-Product
+    Spaces" https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/XboxInnerProduct.pdf
+
+    Basically this involves transforming each feature vector so that they have the same norm, which
+    means the cosine of this transformed vector is proportional to the dot product (if the other
+    vector in the cosine has a 0 in the extra dimension)."""
+    norms = np.linalg.norm(factors, axis=1)
+    max_norm = norms.max()
+
+    # add an extra dimension so that the norm of each row is the same
+    # (max_norm)
+    extra_dimension = np.sqrt(max_norm ** 2 - norms ** 2)
+    return max_norm, np.append(factors, extra_dimension.reshape(norms.shape[0], 1), axis=1)
+
+
 def _batch_call(func, ids, *args, N=10, **kwargs):
     # we're running in batch mode, just loop over each item and call the scalar version of the
     # function
@@ -76,3 +96,19 @@ def _batch_call(func, ids, *args, N=10, **kwargs):
         output_scores[i] = batch_scores[:N]
 
     return output_ids, output_scores
+
+
+def _filter_items_from_results(queryid, ids, scores, filter_items, N):
+    if np.isscalar(queryid):
+        mask = np.in1d(ids, filter_items, invert=True)
+        ids, scores = ids[mask][:N], scores[mask][:N]
+    else:
+        rows = len(queryid)
+        filtered_scores = np.zeros((rows, N), dtype=scores.dtype)
+        filtered_ids = np.zeros((rows, N), dtype=ids.dtype)
+        for row in range(rows):
+            mask = np.in1d(ids[row], filter_items, invert=True)
+            filtered_ids[row] = ids[row][mask][:N]
+            filtered_scores[row] = scores[row][mask][:N]
+        ids, scores = filtered_ids, filtered_scores
+    return ids, scores

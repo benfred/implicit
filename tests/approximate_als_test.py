@@ -17,17 +17,25 @@ try:
 
     class AnnoyALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
-            return AnnoyAlternatingLeastSquares(factors=32, regularization=0, random_state=23)
+            return AnnoyAlternatingLeastSquares(
+                factors=32, regularization=0, random_state=23, use_gpu=False
+            )
 
         def test_pickle(self):
             # pickle isn't supported on annoy indices
             pass
 
-        def test_rank_items(self):
-            pass
+    if HAS_CUDA:
 
-        def test_rank_items_batch(self):
-            pass
+        class AnnoyALSGPUTest(unittest.TestCase, RecommenderBaseTestMixin):
+            def _get_model(self):
+                return AnnoyAlternatingLeastSquares(
+                    factors=32, regularization=0, random_state=23, use_gpu=True
+                )
+
+            def test_pickle(self):
+                # pickle isn't supported on annoy indices
+                pass
 
 except ImportError:
     pass
@@ -38,18 +46,33 @@ try:
     class NMSLibALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
             return NMSLibAlternatingLeastSquares(
-                factors=32, regularization=0, index_params={"post": 2}, random_state=23
+                factors=32,
+                regularization=0,
+                index_params={"post": 2},
+                random_state=23,
+                use_gpu=False,
             )
 
         def test_pickle(self):
             # pickle isn't supported on nmslib indices
             pass
 
-        def test_rank_items(self):
-            pass
+    if HAS_CUDA:
+        # nmslib doesn't support querying on the gpu, but we should be able to still use a GPU als
+        # model with the nmslib index
+        class NMSLibALSGPUTest(unittest.TestCase, RecommenderBaseTestMixin):
+            def _get_model(self):
+                return NMSLibAlternatingLeastSquares(
+                    factors=32,
+                    regularization=0,
+                    index_params={"post": 2},
+                    random_state=23,
+                    use_gpu=True,
+                )
 
-        def test_rank_items_batch(self):
-            pass
+            def test_pickle(self):
+                # pickle isn't supported on nmslib indices
+                pass
 
 except ImportError:
     pass
@@ -65,12 +88,6 @@ try:
 
         def test_pickle(self):
             # pickle isn't supported on faiss indices
-            pass
-
-        def test_rank_items(self):
-            pass
-
-        def test_rank_items_batch(self):
             pass
 
     if HAS_CUDA:
@@ -114,12 +131,6 @@ try:
 
             def test_pickle(self):
                 # pickle isn't supported on faiss indices
-                pass
-
-            def test_rank_items(self):
-                pass
-
-            def test_rank_items_batch(self):
                 pass
 
 except ImportError:
