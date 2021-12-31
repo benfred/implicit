@@ -3,13 +3,14 @@ generate recommendations and lists of similar items.
 
 See http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/
 """
-import itertools
 import logging
 
-import numpy
+import numpy as np
 
 import implicit.gpu
 from implicit.cpu.als import AlternatingLeastSquares
+
+from .utils import _batch_call
 
 log = logging.getLogger("implicit")
 
@@ -25,13 +26,13 @@ def augment_inner_product_matrix(factors):
     Basically this involves transforming each feature vector so that they have the same norm, which
     means the cosine of this transformed vector is proportional to the dot product (if the other
     vector in the cosine has a 0 in the extra dimension)."""
-    norms = numpy.linalg.norm(factors, axis=1)
+    norms = np.linalg.norm(factors, axis=1)
     max_norm = norms.max()
 
     # add an extra dimension so that the norm of each row is the same
     # (max_norm)
-    extra_dimension = numpy.sqrt(max_norm ** 2 - norms ** 2)
-    return max_norm, numpy.append(factors, extra_dimension.reshape(norms.shape[0], 1), axis=1)
+    extra_dimension = np.sqrt(max_norm ** 2 - norms ** 2)
+    return max_norm, np.append(factors, extra_dimension.reshape(norms.shape[0], 1), axis=1)
 
 
 class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
@@ -79,7 +80,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         **kwargs
     ):
         if index_params is None:
-            index_params = {"M": 16, "post": 0, "efConstruction": 400}
+            index_params = {"M": 32, "post": 0, "efConstruction": 400}
         if query_params is None:
             query_params = {"ef": 90}
 
@@ -114,11 +115,11 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
             # there are some numerical instability issues here with
             # building a cosine index with vectors with 0 norms, hack around this
             # by just not indexing them
-            norms = numpy.linalg.norm(self.item_factors, axis=1)
-            ids = numpy.arange(self.item_factors.shape[0])
+            norms = np.linalg.norm(self.item_factors, axis=1)
+            ids = np.arange(self.item_factors.shape[0])
 
             # delete zero valued rows from the matrix
-            item_factors = numpy.delete(self.item_factors, ids[norms == 0], axis=0)
+            item_factors = np.delete(self.item_factors, ids[norms == 0], axis=0)
             ids = ids[norms != 0]
 
             self.similar_items_index.addDataPointBatch(item_factors, ids=ids)
@@ -135,12 +136,39 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
             self.recommend_index.createIndex(self.index_params, print_progress=show_progress)
             self.recommend_index.setQueryTimeParams(self.query_params)
 
-    def similar_items(self, itemid, N=10):
+    def similar_items(
+        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+    ):
         if not self.approximate_similar_items:
-            return super().similar_items(itemid, N)
+            return super().similar_items(
+                itemid,
+                N,
+                react_users=react_users,
+                recalculate_item=recalculate_item,
+                filter_items=filter_items,
+                items=items,
+            )
 
-        neighbours, distances = self.similar_items_index.knnQuery(self.item_factors[itemid], N)
-        return zip(neighbours, 1.0 - distances)
+        if items is not None:
+            raise NotImplementedError("using an items filter isn't supported with ANN lookup")
+
+        factors = self._item_factor(itemid, react_users, recalculate_item)
+        count = N
+        if filter_items is not None:
+            count += len(filter_items)
+
+        if np.isscalar(itemid):
+            ids, scores = self.similar_items_index.knnQuery(factors, count)
+        else:
+            results = self.similar_items_index.knnQueryBatch(factors, count)
+            ids = np.stack([result[0] for result in results])
+            scores = np.stack([result[1] for result in results])
+
+        scores = 1.0 - scores
+        if filter_items is not None:
+            ids, scores = _filter_items_from_results(itemid, ids, scores, filter_items, N)
+
+        return ids, scores
 
     def recommend(
         self,
@@ -150,35 +178,60 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         filter_already_liked_items=True,
         filter_items=None,
         recalculate_user=False,
+        items=None,
     ):
+        if items and self.approximate_recommend:
+            raise NotImplementedError("using a 'items' list with ANN search isn't supported")
+
         if not self.approximate_recommend:
             return super().recommend(
                 userid,
                 user_items,
                 N=N,
+                filter_already_liked_items=filter_already_liked_items,
                 filter_items=filter_items,
                 recalculate_user=recalculate_user,
+                items=items,
+            )
+
+        # batch computation is hard here, fallback to looping over items
+        if not np.isscalar(userid):
+            return _batch_call(
+                self.recommend,
+                userid,
+                user_items=user_items,
+                N=N,
+                filter_already_liked_items=filter_already_liked_items,
+                filter_items=filter_items,
+                recalculate_user=recalculate_user,
+                items=items,
             )
 
         user = self._user_factor(userid, user_items, recalculate_user)
 
         # calculate the top N items, removing the users own liked items from
         # the results
-        liked = set()
-        if filter_already_liked_items:
-            liked.update(user_items[userid].indices)
+        count = N
         if filter_items:
-            liked.update(filter_items)
-        count = N + len(liked)
+            count += len(filter_items)
+            filter_items = np.array(filter_items)
 
-        query = numpy.append(user, 0)
-        ids, dist = self.recommend_index.knnQuery(query, count)
+        if filter_already_liked_items:
+            user_likes = user_items[userid].indices
+            filter_items = (
+                np.append(filter_items, user_likes) if filter_items is not None else user_likes
+            )
+            count += len(user_likes)
 
-        # convert the distances from euclidean to cosine distance,
-        # and then rescale the cosine distance to go back to inner product
-        scaling = self.max_norm * numpy.linalg.norm(query)
-        dist = scaling * (1.0 - dist)
-        return list(itertools.islice((rec for rec in zip(ids, dist) if rec[0] not in liked), N))
+        query = np.append(user, 0)
+        ids, scores = self.recommend_index.knnQuery(query, count)
+        scaling = self.max_norm * np.linalg.norm(query)
+        scores = scaling * (1.0 - (scores))
+
+        if filter_items is not None:
+            ids, scores = _filter_items_from_results(userid, ids, scores, filter_items, N)
+
+        return ids, scores
 
 
 class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
@@ -264,15 +317,48 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
                 self.recommend_index.add_item(i, row)
             self.recommend_index.build(self.n_trees)
 
-    def similar_items(self, itemid, N=10):
-        if not self.approximate_similar_items:
-            return super().similar_items(itemid, N)
+    def similar_items(
+        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+    ):
+        if items is not None and self.approximate_similar_items:
+            raise NotImplementedError("using an items filter isn't supported with ANN lookup")
 
-        neighbours, dist = self.similar_items_index.get_nns_by_item(
-            itemid, N, search_k=self.search_k, include_distances=True
+        count = N
+        if filter_items is not None:
+            count += len(filter_items)
+
+        if not self.approximate_similar_items:
+            return super().similar_items(
+                itemid,
+                N,
+                react_users=react_users,
+                recalculate_item=recalculate_item,
+                filter_items=filter_items,
+                items=items,
+            )
+
+        # annoy doesn't have a batch mode we can use
+        if not np.isscalar(itemid):
+            return _batch_call(
+                self.similar_items,
+                itemid,
+                N=N,
+                react_users=react_users,
+                recalculate_item=recalculate_item,
+                filter_items=filter_items,
+            )
+
+        factor = self._item_factor(itemid, react_users, recalculate_item)
+
+        ids, scores = self.similar_items_index.get_nns_by_vector(
+            factor, N, search_k=self.search_k, include_distances=True
         )
-        # transform distances back to cosine from euclidean distance
-        return zip(neighbours, 1 - (numpy.array(dist) ** 2) / 2)
+        ids, scores = np.array(ids), np.array(scores)
+
+        if filter_items is not None:
+            ids, scores = _filter_items_from_results(itemid, ids, scores, filter_items, N)
+
+        return ids, 1 - (scores ** 2) / 2
 
     def recommend(
         self,
@@ -282,37 +368,64 @@ class AnnoyAlternatingLeastSquares(AlternatingLeastSquares):
         filter_already_liked_items=True,
         filter_items=None,
         recalculate_user=False,
+        items=None,
     ):
+        if items and self.approximate_recommend:
+            raise NotImplementedError("using a 'items' list with ANN search isn't supported")
+
         if not self.approximate_recommend:
             return super().recommend(
                 userid,
                 user_items,
                 N=N,
+                filter_already_liked_items=filter_already_liked_items,
                 filter_items=filter_items,
                 recalculate_user=recalculate_user,
+                items=items,
             )
 
+        # batch computation isn't supported by annoy, fallback to looping over items
+        if not np.isscalar(userid):
+            return _batch_call(
+                self.recommend,
+                userid,
+                user_items=user_items,
+                N=N,
+                filter_already_liked_items=filter_already_liked_items,
+                filter_items=filter_items,
+                recalculate_user=recalculate_user,
+                items=items,
+            )
         user = self._user_factor(userid, user_items, recalculate_user)
 
         # calculate the top N items, removing the users own liked items from
         # the results
-        liked = set()
-        if filter_already_liked_items:
-            liked.update(user_items[userid].indices)
+        count = N
         if filter_items:
-            liked.update(filter_items)
-        count = N + len(liked)
+            count += len(filter_items)
+            filter_items = np.array(filter_items)
 
-        query = numpy.append(user, 0)
-        ids, dist = self.recommend_index.get_nns_by_vector(
+        if filter_already_liked_items:
+            user_likes = user_items[userid].indices
+            filter_items = (
+                np.append(filter_items, user_likes) if filter_items is not None else user_likes
+            )
+            count += len(user_likes)
+
+        query = np.append(user, 0)
+        ids, scores = self.recommend_index.get_nns_by_vector(
             query, count, include_distances=True, search_k=self.search_k
         )
+        ids, scores = np.array(ids), np.array(scores)
+
+        if filter_items is not None:
+            ids, scores = _filter_items_from_results(userid, ids, scores, filter_items, N)
 
         # convert the distances from euclidean to cosine distance,
         # and then rescale the cosine distance to go back to inner product
-        scaling = self.max_norm * numpy.linalg.norm(query)
-        dist = scaling * (1 - (numpy.array(dist) ** 2) / 2)
-        return list(itertools.islice((rec for rec in zip(ids, dist) if rec[0] not in liked), N))
+        scaling = self.max_norm * np.linalg.norm(query)
+        scores = scaling * (1 - (scores ** 2) / 2)
+        return ids, scores
 
 
 class FaissAlternatingLeastSquares(AlternatingLeastSquares):
@@ -412,7 +525,7 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
 
             # likewise build up cosine index for similar_items, using an inner product
             # index on normalized vectors`
-            norms = numpy.linalg.norm(item_factors, axis=1)
+            norms = np.linalg.norm(item_factors, axis=1)
             norms[norms == 0] = 1e-10
 
             normalized = (item_factors.T / norms).T.astype("float32")
@@ -430,16 +543,43 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
             index.nprobe = self.nprobe
             self.similar_items_index = index
 
-    def similar_items(self, itemid, N=10):
-        if not self.approximate_similar_items or (self.use_gpu and N >= 1024):
-            return super().similar_items(itemid, N)
+    def similar_items(
+        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+    ):
+        if items is not None and self.approximate_similar_items:
+            raise NotImplementedError("using an items filter isn't supported with ANN lookup")
 
-        factors = self.item_factors[itemid]
-        factors /= numpy.linalg.norm(factors)
-        (dist,), (ids,) = self.similar_items_index.search(
-            factors.reshape(1, -1).astype("float32"), N
-        )
-        return zip(ids, dist)
+        count = N
+        if filter_items is not None:
+            count += len(filter_items)
+
+        if not self.approximate_similar_items or (self.use_gpu and count >= 1024):
+            return super().similar_items(
+                itemid,
+                N,
+                react_users=react_users,
+                recalculate_item=recalculate_item,
+                filter_items=filter_items,
+                items=items,
+            )
+
+        factors = self._item_factor(itemid, react_users, recalculate_item)
+
+        if np.isscalar(itemid):
+            factors /= np.linalg.norm(factors)
+            factors = factors.reshape(1, -1)
+        else:
+            factors /= np.linalg.norm(factors, axis=1)[:, None]
+
+        scores, ids = self.similar_items_index.search(factors.astype("float32"), count)
+
+        if np.isscalar(itemid):
+            ids, scores = ids[0], scores[0]
+
+        if filter_items is not None:
+            ids, scores = _filter_items_from_results(itemid, ids, scores, filter_items, N)
+
+        return ids, scores
 
     def recommend(
         self,
@@ -449,26 +589,51 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
         filter_already_liked_items=True,
         filter_items=None,
         recalculate_user=False,
+        items=None,
     ):
+        if items and self.approximate_recommend:
+            raise NotImplementedError("using a 'items' list with ANN search isn't supported")
+
         if not self.approximate_recommend:
             return super().recommend(
                 userid,
                 user_items,
                 N=N,
+                filter_already_liked_items=filter_already_liked_items,
                 filter_items=filter_items,
                 recalculate_user=recalculate_user,
+                items=items,
+            )
+
+        # batch computation is tricky with filter_already_liked_items (requires querying a
+        # different number of rows per user). Instead just fallback to a faiss query per user
+        if filter_already_liked_items and not np.isscalar(userid):
+            return _batch_call(
+                self.recommend,
+                userid,
+                user_items=user_items,
+                N=N,
+                filter_already_liked_items=filter_already_liked_items,
+                filter_items=filter_items,
+                recalculate_user=recalculate_user,
+                items=items,
             )
 
         user = self._user_factor(userid, user_items, recalculate_user)
 
         # calculate the top N items, removing the users own liked items from
         # the results
-        liked = set()
-        if filter_already_liked_items:
-            liked.update(user_items[userid].indices)
+        count = N
         if filter_items:
-            liked.update(filter_items)
-        count = N + len(liked)
+            count += len(filter_items)
+            filter_items = np.array(filter_items)
+
+        if filter_already_liked_items:
+            user_likes = user_items[userid].indices
+            filter_items = (
+                np.append(filter_items, user_likes) if filter_items is not None else user_likes
+            )
+            count += len(user_likes)
 
         # the GPU variant of faiss doesn't support returning more than 1024 results.
         # fall back to the exact match when this happens
@@ -481,11 +646,33 @@ class FaissAlternatingLeastSquares(AlternatingLeastSquares):
                 recalculate_user=recalculate_user,
             )
 
-        # faiss expects multiple queries - convert query to a matrix
-        # and results back to single vectors
-        query = user.reshape(1, -1).astype("float32")
-        (dist,), (ids,) = self.recommend_index.search(query, count)
+        if np.isscalar(userid):
+            query = user.reshape(1, -1).astype("float32")
+        else:
+            query = user.astype("float32")
 
-        # convert the distances from euclidean to cosine distance,
-        # and then rescale the cosine distance to go back to inner product
-        return list(itertools.islice((rec for rec in zip(ids, dist) if rec[0] not in liked), N))
+        scores, ids = self.recommend_index.search(query, count)
+
+        if np.isscalar(userid):
+            ids, scores = ids[0], scores[0]
+
+        if filter_items is not None:
+            ids, scores = _filter_items_from_results(userid, ids, scores, filter_items, N)
+
+        return ids, scores
+
+
+def _filter_items_from_results(queryid, ids, scores, filter_items, N):
+    if np.isscalar(queryid):
+        mask = np.in1d(ids, filter_items, invert=True)
+        ids, scores = ids[mask][:N], scores[mask][:N]
+    else:
+        rows = len(queryid)
+        filtered_scores = np.zeros((rows, N), dtype=scores.dtype)
+        filtered_ids = np.zeros((rows, N), dtype=ids.dtype)
+        for row in range(rows):
+            mask = np.in1d(ids[row], filter_items, invert=True)
+            filtered_ids[row] = ids[row][mask][:N]
+            filtered_scores[row] = scores[row][mask][:N]
+        ids, scores = filtered_ids, filtered_scores
+    return ids, scores

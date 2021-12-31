@@ -13,46 +13,66 @@ from .recommender_base_test import RecommenderBaseTestMixin, get_checker_board
 
 # don't require annoy/faiss/nmslib to be installed
 try:
-    import annoy  # noqa
+    import annoy  # noqa pylint: disable=unused-import
 
     class AnnoyALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
-            return AnnoyAlternatingLeastSquares(factors=2, regularization=0, random_state=23)
+            return AnnoyAlternatingLeastSquares(factors=32, regularization=0, random_state=23)
 
         def test_pickle(self):
             # pickle isn't supported on annoy indices
             pass
 
+        def test_rank_items(self):
+            pass
+
+        def test_rank_items_batch(self):
+            pass
+
+
 except ImportError:
     pass
 
 try:
-    import nmslib  # noqa
+    import nmslib  # noqa pylint: disable=unused-import
 
     class NMSLibALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
             return NMSLibAlternatingLeastSquares(
-                factors=2, regularization=0, index_params={"post": 2}, random_state=23
+                factors=32, regularization=0, index_params={"post": 2}, random_state=23
             )
 
         def test_pickle(self):
             # pickle isn't supported on nmslib indices
             pass
 
+        def test_rank_items(self):
+            pass
+
+        def test_rank_items_batch(self):
+            pass
+
+
 except ImportError:
     pass
 
 try:
-    import faiss  # noqa
+    import faiss  # noqa pylint: disable=unused-import
 
     class FaissALSTest(unittest.TestCase, RecommenderBaseTestMixin):
         def _get_model(self):
             return FaissAlternatingLeastSquares(
-                nlist=1, nprobe=1, factors=2, regularization=0, use_gpu=False, random_state=23
+                nlist=1, nprobe=1, factors=32, regularization=0, use_gpu=False, random_state=23
             )
 
         def test_pickle(self):
             # pickle isn't supported on faiss indices
+            pass
+
+        def test_rank_items(self):
+            pass
+
+        def test_rank_items_batch(self):
             pass
 
     if HAS_CUDA:
@@ -77,7 +97,7 @@ try:
                 # this causes the test_similar_items call to fail if we set regularization to 0
                 self.__regularization = 1.0
                 try:
-                    super(FaissALSGPUTest, self).test_similar_items()
+                    super().test_similar_items()
                 finally:
                     self.__regularization = 0.0
 
@@ -97,6 +117,13 @@ try:
             def test_pickle(self):
                 # pickle isn't supported on faiss indices
                 pass
+
+            def test_rank_items(self):
+                pass
+
+            def test_rank_items_batch(self):
+                pass
+
 
 except ImportError:
     pass
