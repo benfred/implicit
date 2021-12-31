@@ -4,6 +4,7 @@ from scipy.sparse import coo_matrix, csr_matrix
 
 from ._nearest_neighbours import NearestNeighboursScorer, all_pairs_knn
 from .recommender_base import RecommenderBase
+from .utils import _batch_call
 
 
 class ItemItemRecommender(RecommenderBase):
@@ -45,7 +46,7 @@ class ItemItemRecommender(RecommenderBase):
     ):
         """returns the best N recommendations for a user given its id"""
         if not np.isscalar(userid):
-            return _batch(
+            return _batch_call(
                 self.recommend,
                 userid,
                 user_items=user_items,
@@ -106,9 +107,10 @@ class ItemItemRecommender(RecommenderBase):
         if recalculate_item:
             raise NotImplementedError("Recalculate_item isn't implemented")
 
-        print("N", N)
         if not np.isscalar(itemid):
-            return _batch(self.similar_items, itemid, N=N, filter_items=filter_items, items=items)
+            return _batch_call(
+                self.similar_items, itemid, N=N, filter_items=filter_items, items=items
+            )
 
         if filter_items is not None and items is not None:
             raise ValueError("Can't specify both filter_items and items")
@@ -174,14 +176,14 @@ class CosineRecommender(ItemItemRecommender):
 
     def fit(self, counts, show_progress=True):
         # cosine distance is just the dot-product of a normalized matrix
-        ItemItemRecommender.fit(self, normalize(counts), show_progress)
+        ItemItemRecommender.fit(self, normalize(counts.T).T, show_progress)
 
 
 class TFIDFRecommender(ItemItemRecommender):
     """An Item-Item Recommender on TF-IDF distances between items"""
 
     def fit(self, counts, show_progress=True):
-        weighted = normalize(tfidf_weight(counts))
+        weighted = normalize(tfidf_weight(counts.T)).T
         ItemItemRecommender.fit(self, weighted, show_progress)
 
 
@@ -194,7 +196,7 @@ class BM25Recommender(ItemItemRecommender):
         self.B = B
 
     def fit(self, counts, show_progress=True):
-        weighted = bm25_weight(counts, self.K1, self.B)
+        weighted = bm25_weight(counts.T, self.K1, self.B).T
         ItemItemRecommender.fit(self, weighted, show_progress)
 
 
@@ -235,27 +237,3 @@ def bm25_weight(X, K1=100, B=0.8):
     # weight matrix rows by bm25
     X.data = X.data * (K1 + 1.0) / (K1 * length_norm[X.row] + X.data) * idf[X.col]
     return X
-
-
-def _batch(func, ids, *args, N=10, **kwargs):
-    # we're running in batch mode, just loop over each item and call the scalar version of the
-    # function
-    output_ids = np.zeros((len(ids), N), dtype=np.int32)
-    output_scores = np.zeros((len(ids), N), dtype=np.float32)
-
-    for i, idx in enumerate(ids):
-        batch_ids, batch_scores = func(idx, *args, N=N, **kwargs)
-
-        # pad out to N items if we're returned fewer
-        missing_items = N - len(batch_ids)
-        print("i", i, "idx", idx, " missing ", missing_items)
-        if missing_items > 0:
-            batch_ids = np.append(batch_ids, np.full(missing_items, -1))
-            batch_scores = np.append(
-                batch_scores, np.full(missing_items, -np.finfo(np.float32).max)
-            )
-
-        output_ids[i] = batch_ids[:N]
-        output_scores[i] = batch_scores[:N]
-
-    return output_ids, output_scores

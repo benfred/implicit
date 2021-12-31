@@ -63,7 +63,7 @@ class RecommenderBaseTestMixin:
         model = self._get_model()
         model.fit(user_items, show_progress=False)
 
-        ids, _ = model.recommend(np.arange(50), user_items, N=1)
+        ids, scores = model.recommend(np.arange(50), user_items, N=1)
         for userid in range(50):
             assert len(ids[userid]) == 1
 
@@ -71,6 +71,11 @@ class RecommenderBaseTestMixin:
             # its the one withheld item for the user that is liked by
             # all the other similar users
             assert ids[userid][0] == userid
+
+            # make sure the batch recommend results match those for a single user
+            ids_user, scores_user = model.recommend(userid, user_items, N=1)
+            assert np.allclose(ids_user, ids[userid])
+            assert np.allclose(scores_user, scores[userid])
 
         userids = np.array([2, 3, 4])
         ids, _ = model.recommend(userids, user_items, N=1)
@@ -82,6 +87,18 @@ class RecommenderBaseTestMixin:
         ids, _ = model.recommend(userids, user_items, N=1, filter_items=[0])
         for i, _ in enumerate(userids):
             assert 0 not in ids[i]
+
+        # also make sure the results when filter_already_liked_items=False match in batch vs
+        # scalar mode
+        ids, scores = model.recommend(
+            np.arange(50), user_items, N=5, filter_already_liked_items=False
+        )
+        for userid in range(50):
+            ids_user, scores_user = model.recommend(
+                userid, user_items, N=5, filter_already_liked_items=False
+            )
+            assert np.allclose(scores_user, scores[userid])
+            assert np.allclose(ids_user, ids[userid])
 
     def test_recalculate_user(self):
         item_users = get_checker_board(50)
@@ -228,10 +245,14 @@ class RecommenderBaseTestMixin:
             for r in ids[itemid]:
                 self.assertTrue(r % 5 != 0)
 
-        selected = np.arange(10)
-        ids, _ = model.similar_items(itemids, N=10, items=selected)
-        for itemid in itemids:
-            self.assertEqual(set(ids[itemid]), set(selected))
+        try:
+            selected = np.arange(10)
+            ids, _ = model.similar_items(itemids, N=10, items=selected)
+            for itemid in itemids:
+                self.assertEqual(set(ids[itemid]), set(selected))
+        except NotImplementedError:
+            # some models don't support a 'items' filter on the similar_items call
+            pass
 
     def test_zero_length_row(self):
         # get a matrix where a row/column is 0
