@@ -29,7 +29,6 @@ try:
         def test_rank_items_batch(self):
             pass
 
-
 except ImportError:
     pass
 
@@ -51,7 +50,6 @@ try:
 
         def test_rank_items_batch(self):
             pass
-
 
 except ImportError:
     pass
@@ -123,7 +121,6 @@ try:
 
             def test_rank_items_batch(self):
                 pass
-
 
 except ImportError:
     pass
