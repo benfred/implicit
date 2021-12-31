@@ -80,7 +80,7 @@ class NMSLibAlternatingLeastSquares(AlternatingLeastSquares):
         **kwargs
     ):
         if index_params is None:
-            index_params = {"M": 32, "post": 0, "efConstruction": 400}
+            index_params = {"M": 16, "post": 0, "efConstruction": 400}
         if query_params is None:
             query_params = {"ef": 90}
 
