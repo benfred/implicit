@@ -6,8 +6,8 @@ import logging
 import multiprocessing
 import time
 
-from tqdm.auto import tqdm
 from cython.parallel import parallel, prange, threadid
+from tqdm.auto import tqdm
 
 from libc.math cimport exp, sqrt
 from libc.stdlib cimport free, malloc
@@ -94,6 +94,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
     user_factors : ndarray
         Array of latent factors for each user in the training set
     """
+
     def __init__(self, factors=30, learning_rate=1.00, regularization=0.6, dtype=np.float32,
                  iterations=30, neg_prop=30, num_threads=0,
                  random_state=None):
