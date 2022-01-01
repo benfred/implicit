@@ -6,7 +6,7 @@ import logging
 import multiprocessing
 import time
 
-import tqdm
+from tqdm.auto import tqdm
 from cython.parallel import parallel, prange, threadid
 
 from libc.math cimport exp, sqrt
@@ -176,7 +176,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
 
         log.debug("Running %i LMF training epochs", self.iterations)
-        with tqdm.tqdm(total=self.iterations, disable=not show_progress) as progress:
+        with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
                 # user update
                 lmf_update(rng, user_vec_deriv_sum,

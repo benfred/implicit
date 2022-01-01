@@ -52,7 +52,7 @@ def define_extensions():
             extra_compile_args=compile_args,
             extra_link_args=link_args,
         )
-        for name in ["_nearest_neighbours", "lmf", "evaluation"]
+        for name in ["_nearest_neighbours", "evaluation"]
     ]
     modules.extend(
         [
@@ -63,7 +63,7 @@ def define_extensions():
                 extra_compile_args=compile_args,
                 extra_link_args=link_args,
             )
-            for name in ["_als", "bpr"]
+            for name in ["_als", "bpr", "lmf"]
         ]
     )
     modules.append(
