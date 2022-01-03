@@ -150,6 +150,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self._item_norms = self._user_norms = None
         self._YtY = None
         self._XtX = None
+        loss = None
 
         solver = self.solver
 
@@ -174,7 +175,6 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                 )
                 progress.update(1)
 
-                loss = None
                 if self.calculate_training_loss:
                     loss = _als.calculate_loss(
                         Cui,

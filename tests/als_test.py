@@ -26,6 +26,14 @@ if HAS_CUDA:
             )
 
 
+@pytest.mark.parametrize("use_gpu", [True, False] if HAS_CUDA else [False])
+def test_zero_iterations_with_loss(use_gpu):
+    model = AlternatingLeastSquares(
+        factors=128, use_gpu=use_gpu, iterations=0, calculate_training_loss=True
+    )
+    model.fit(csr_matrix(np.ones((10, 10))))
+
+
 @pytest.mark.parametrize("use_native", [True, False])
 def test_cg_nan(use_native):
     # test issue with CG code that was causing NaN values in output:

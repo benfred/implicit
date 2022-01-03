@@ -133,6 +133,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Cui = implicit.gpu.CSRMatrix(Cui)
         X = self.user_factors
         Y = self.item_factors
+        loss = None
 
         solver = implicit.gpu.LeastSquaresSolver(self.factors)
         log.debug("Running %i ALS iterations", self.iterations)
@@ -143,7 +144,6 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                 solver.least_squares(Ciu, Y, X, self.regularization, self.cg_steps)
                 progress.update(1)
 
-                loss = None
                 if self.calculate_training_loss:
                     loss = solver.calculate_loss(Cui, X, Y, self.regularization)
                     progress.set_postfix({"loss": loss})
