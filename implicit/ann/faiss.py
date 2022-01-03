@@ -3,6 +3,7 @@ import warnings
 
 import faiss
 import numpy as np
+from scipy.sparse import csr_matrix
 
 import implicit.gpu
 from implicit.recommender_base import RecommenderBase
@@ -186,6 +187,11 @@ class FaissModel(RecommenderBase):
         recalculate_user=False,
         items=None,
     ):
+        if (filter_already_liked_items or recalculate_user) and not isinstance(
+            user_items, csr_matrix
+        ):
+            raise ValueError("user_items needs to be a CSR sparse matrix")
+
         if items is not None and self.approximate_recommend:
             raise NotImplementedError("using a 'items' list with ANN search isn't supported")
 

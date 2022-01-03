@@ -345,6 +345,18 @@ class RecommenderBaseTestMixin:
         pickled = pickle.dumps(model)
         pickle.loads(pickled)
 
+    def test_invalid_user_items(self):
+
+        user_items = get_checker_board(50)
+        model = self._get_model()
+        model.fit(user_items, show_progress=False)
+
+        with self.assertRaises(ValueError):
+            model.recommend(0, user_items=user_items.tocsc())
+
+        with self.assertRaises(ValueError):
+            model.recommend(0, user_items=user_items.tocoo())
+
     def get_checker_board(self, X):
         """Returns a 'checkerboard' matrix: where every even userid has liked
         every even itemid and every odd userid has liked every odd itemid.
