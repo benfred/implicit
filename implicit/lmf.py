@@ -55,14 +55,13 @@ def LogisticMatrixFactorization(
     """
     if use_gpu:
         raise NotImplementedError
-    else:
-        return implicit.cpu.lmf.LogisticMatrixFactorization(
-            factors,
-            learning_rate,
-            regularization,
-            dtype=dtype,
-            iterations=iterations,
-            neg_prop=neg_prop,
-            num_threads=num_threads,
-            random_state=random_state,
-        )
+    return implicit.cpu.lmf.LogisticMatrixFactorization(
+        factors,
+        learning_rate,
+        regularization,
+        dtype=dtype,
+        iterations=iterations,
+        neg_prop=neg_prop,
+        num_threads=num_threads,
+        random_state=random_state,
+    )
