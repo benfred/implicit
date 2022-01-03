@@ -57,6 +57,11 @@ class ItemItemRecommender(RecommenderBase):
                 items=items,
             )
 
+        if (filter_already_liked_items or recalculate_user) and not isinstance(
+            user_items, csr_matrix
+        ):
+            raise ValueError("user_items needs to be a CSR sparse matrix")
+
         if userid >= user_items.shape[0]:
             raise ValueError("userid is out of bounds of the user_items matrix")
 
