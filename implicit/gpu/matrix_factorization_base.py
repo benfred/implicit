@@ -1,6 +1,7 @@
 import time
 
 import numpy as np
+from scipy.sparse import csr_matrix
 
 import implicit.gpu
 
@@ -40,6 +41,11 @@ class MatrixFactorizationBase(RecommenderBase):
         recalculate_user=False,
         items=None,
     ):
+        if (filter_already_liked_items or recalculate_user) and not isinstance(
+            user_items, csr_matrix
+        ):
+            raise ValueError("user_items needs to be a CSR sparse matrix")
+
         if recalculate_user:
             raise NotImplementedError("recalculate_user isn't support on GPU yet")
 

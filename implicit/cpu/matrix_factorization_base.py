@@ -2,7 +2,7 @@
 import warnings
 
 import numpy as np
-from scipy.sparse import lil_matrix
+from scipy.sparse import csr_matrix, lil_matrix
 
 from ..recommender_base import ModelFitError, RecommenderBase
 from .topk import topk
@@ -37,6 +37,11 @@ class MatrixFactorizationBase(RecommenderBase):
         recalculate_user=False,
         items=None,
     ):
+        if (filter_already_liked_items or recalculate_user) and not isinstance(
+            user_items, csr_matrix
+        ):
+            raise ValueError("user_items needs to be a CSR sparse matrix")
+
         user = self._user_factor(userid, user_items, recalculate_user)
 
         item_factors = self.item_factors

@@ -45,6 +45,6 @@ disable=fixme,
     consider-using-f-string,
 
 [SIMILARITIES]
-min-similarity-lines=50
+min-similarity-lines=64
 ignore-docstrings=yes
 ignore-imports=yes
