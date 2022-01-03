@@ -42,6 +42,7 @@ disable=fixme,
     arguments-renamed,
     import-self,
     protected-access,
+    consider-using-f-string,
 
 [SIMILARITIES]
 min-similarity-lines=64
