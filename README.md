@@ -53,12 +53,11 @@ import implicit
 # initialize a model
 model = implicit.als.AlternatingLeastSquares(factors=50)
 
-# train the model on a sparse matrix of item/user/confidence weights
-model.fit(item_user_data)
+# train the model on a sparse matrix of user/item/confidence weights
+model.fit(user_item_data)
 
 # recommend items for a user
-user_items = item_user_data.T.tocsr()
-recommendations = model.recommend(userid, user_items)
+recommendations = model.recommend(userid, user_item_data)
 
 # find related items
 related = model.similar_items(itemid)
@@ -88,9 +87,8 @@ There are also several other blog posts about using Implicit to build recommenda
 
 #### Requirements
 
-This library requires SciPy version 0.16 or later. Running on OSX requires an OpenMP compiler,
-which can be installed with homebrew: ```brew install gcc```. Running on Windows requires Python
-3.5+.
+This library requires SciPy version 0.16 or later and Python version 3.6 or later.
+Running on OSX requires an OpenMP compiler, which can be installed with homebrew: ```brew install gcc```.
 
 GPU Support requires at least version 11 of the [NVidia CUDA Toolkit](https://developer.nvidia.com/cuda-downloads). The build will use the ```nvcc``` compiler
 that is found on the path, but this can be overridden by setting the CUDAHOME environment variable

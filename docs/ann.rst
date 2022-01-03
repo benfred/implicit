@@ -13,20 +13,20 @@ See `this post comparing the different ANN libraries
 <http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/>`_ for
 more details.
 
-NMSLibAlternatingLeastSquares
------------------------------
-.. autoclass:: implicit.approximate_als.NMSLibAlternatingLeastSquares
+NMSLibModel
+-----------
+.. autoclass:: implicit.ann.nmslib.NMSLibModel
    :members:
    :show-inheritance:
 
-AnnoyAlternatingLeastSquares
-----------------------------
-.. autoclass:: implicit.approximate_als.AnnoyAlternatingLeastSquares
+AnnoyModel
+----------
+.. autoclass:: implicit.ann.annoy.AnnoyModel
    :members:
    :show-inheritance:
 
-FaissAlternatingLeastSquares
------------------------------
-.. autoclass:: implicit.approximate_als.FaissAlternatingLeastSquares
+FaissModel
+----------
+.. autoclass:: implicit.ann.faiss.FaissModel
    :members:
    :show-inheritance:
