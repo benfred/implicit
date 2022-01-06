@@ -92,7 +92,7 @@ def define_extensions():
                 # extra_compile_args=compile_args,
                 extra_link_args=link_args,
                 library_dirs=library_dirs,
-                libraries=["cudart", "cublas", "curand"],
+                libraries=["cudart", "cublas", "curand", "faiss"],
                 include_dirs=include_dirs,
             )
         )
