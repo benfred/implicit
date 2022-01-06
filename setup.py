@@ -68,17 +68,30 @@ def define_extensions():
     )
 
     if CUDA:
+        faiss_path = os.path.join("thirdparty", "faiss")
         conda_prefix = os.getenv("CONDA_PREFIX")
-        include_dirs = [CUDA["include"], "."]
+        include_dirs = [faiss_path, CUDA["include"], "."]
         library_dirs = [CUDA["lib64"]]
+        include_dirs.append(faiss_path)
         if conda_prefix:
             include_dirs.append(os.path.join(conda_prefix, "include"))
             library_dirs.append(os.path.join(conda_prefix, "lib"))
 
+        block_select_dir = os.path.join(faiss_path, "faiss", "gpu", "utils", "blockselect")
+        faiss_paths = [
+            os.path.join(block_select_dir, p)
+            for p in os.listdir(block_select_dir)
+            if p.endswith(".cu")
+        ]
+        faiss_paths.append(os.path.join(faiss_path, "faiss", "gpu", "utils", "BlockSelectFloat.cu"))
+        faiss_paths.append(os.path.join(faiss_path, "faiss", "gpu", "GpuResources.cpp"))
+        faiss_paths.append(os.path.join(faiss_path, "faiss", "gpu", "utils", "DeviceUtils.cu"))
+
         modules.append(
             Extension(
                 "implicit.gpu._cuda",
-                [
+                faiss_paths
+                + [
                     os.path.join("implicit", "gpu", "_cuda" + src_ext),
                     os.path.join("implicit", "gpu", "als.cu"),
                     os.path.join("implicit", "gpu", "bpr.cu"),
@@ -92,7 +105,7 @@ def define_extensions():
                 # extra_compile_args=compile_args,
                 extra_link_args=link_args,
                 library_dirs=library_dirs,
-                libraries=["cudart", "cublas", "curand", "faiss"],
+                libraries=["cudart", "cublas", "curand"],
                 include_dirs=include_dirs,
             )
         )
