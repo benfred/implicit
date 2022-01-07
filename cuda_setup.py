@@ -59,16 +59,29 @@ def locate_cuda():
         "lib64": os.path.join(home, "lib64"),
     }
 
-    post_args = [
+    arch_flags = [
         "-arch=sm_60",
+        "-gencode=arch=compute_37,code=sm_37",
+        "-gencode=arch=compute_50,code=sm_50",
+        "-gencode=arch=compute_52,code=sm_52",
         "-gencode=arch=compute_60,code=sm_60",
         "-gencode=arch=compute_61,code=sm_61",
         "-gencode=arch=compute_70,code=sm_70",
-        "-gencode=arch=compute_70,code=compute_70",
+        "-gencode=arch=compute_75,code=sm_75",
+        "-gencode=arch=compute_80,code=sm_80",
+        "-gencode=arch=compute_86,code=sm_86",
+        "-gencode=arch=compute_86,code=compute_86",
+    ]
+
+    # hack to speed up cuda compilation on my devbox
+    if os.getenv("IMPLICIT_CUDA_ARCH") == "sm86":
+        arch_flags = ["-arch=sm_86", "-gencode=arch=compute_86,code=sm_86"]
+
+    post_args = [
         "--ptxas-options=-v",
         "--extended-lambda",
         "-O2",
-    ]
+    ] + arch_flags
 
     if sys.platform == "win32":
         cudaconfig["lib64"] = os.path.join(home, "lib", "x64")
@@ -92,14 +105,8 @@ class _UnixCCompiler(unixccompiler.UnixCCompiler):
     src_extensions.append(".cu")
 
     def _compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts):
-        # For sources other than CUDA C ones, just call the super class method.
-        if os.path.splitext(src)[1] != ".cu":
-            return unixccompiler.UnixCCompiler._compile(
-                self, obj, src, ext, cc_args, extra_postargs, pp_opts
-            )
-
         # For CUDA C source files, compile them with NVCC.
-        _compiler_so = self.compiler_so
+        _compiler_so = self.compiler_so  # pylint: disable=access-member-before-definition
         try:
             nvcc_path = CUDA["nvcc"]
             post_args = CUDA["post_args"]
@@ -110,7 +117,7 @@ class _UnixCCompiler(unixccompiler.UnixCCompiler):
                 self, obj, src, ext, cc_args, post_args, pp_opts
             )
         finally:
-            self.compiler_so = _compiler_so
+            self.compiler_so = _compiler_so  # pylint: disable=attribute-defined-outside-init
 
 
 class _MSVCCompiler(msvccompiler.MSVCCompiler):
@@ -119,7 +126,7 @@ class _MSVCCompiler(msvccompiler.MSVCCompiler):
     src_extensions = list(unixccompiler.UnixCCompiler.src_extensions)
     src_extensions.extend(_cu_extensions)
 
-    def _compile_cu(
+    def compile(
         self,
         sources,
         output_dir=None,
@@ -151,25 +158,6 @@ class _MSVCCompiler(msvccompiler.MSVCCompiler):
 
         return objects
 
-    def compile(self, sources, **kwargs):
-        # Split CUDA C sources and others.
-        cu_sources = []
-        other_sources = []
-        for source in sources:
-            if os.path.splitext(source)[1] == ".cu":
-                cu_sources.append(source)
-            else:
-                other_sources.append(source)
-
-        # Compile source files other than CUDA C ones.
-        other_objects = msvccompiler.MSVCCompiler.compile(self, other_sources, **kwargs)
-
-        # Compile CUDA C sources.
-        cu_objects = self._compile_cu(cu_sources, **kwargs)
-
-        # Return compiled object filenames.
-        return other_objects + cu_objects
-
 
 class cuda_build_ext(setuptools_build_ext):
     """Custom `build_ext` command to include CUDA C source files."""
@@ -182,7 +170,7 @@ class cuda_build_ext(setuptools_build_ext):
                     try:
                         return func(*args, **kwargs)
                     except errors.DistutilsPlatformError:
-                        if not sys.platform == "win32":
+                        if sys.platform != "win32":
                             CCompiler = _UnixCCompiler
                         else:
                             CCompiler = _MSVCCompiler
@@ -193,7 +181,7 @@ class cuda_build_ext(setuptools_build_ext):
             ccompiler.new_compiler = wrap_new_compiler(ccompiler.new_compiler)
             # Intentionally causes DistutilsPlatformError in
             # ccompiler.new_compiler() function to hook.
-            self.compiler = "nvidia"
+            self.compiler = "nvidia"  # pylint: disable=attribute-defined-outside-init
 
         setuptools_build_ext.run(self)
 

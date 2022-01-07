@@ -29,7 +29,7 @@ class MatrixFactorizationBase(RecommenderBase):
         self._user_norms = None
         self._user_norms_host = None
         self._item_norms_host = None
-        self._knn = implicit.gpu.KnnQuery()
+        self._knn = None
 
     def recommend(
         self,
@@ -80,7 +80,7 @@ class MatrixFactorizationBase(RecommenderBase):
                 query_filter = None
 
         # calculate the top N items, removing the users own liked items from the results
-        ids, scores = self._knn.topk(
+        ids, scores = self.knn.topk(
             item_factors,
             self.user_factors[userid],
             N,
@@ -112,6 +112,12 @@ class MatrixFactorizationBase(RecommenderBase):
             self._item_norms_host = self._item_norms.to_numpy().reshape(self._item_norms.shape[1])
         return self._item_norms
 
+    @property
+    def knn(self):
+        if self._knn is None:
+            self._knn = implicit.gpu.KnnQuery()
+        return self._knn
+
     def similar_users(self, userid, N=10, filter_users=None, users=None):
         norms = self.user_norms
         user_factors = self.user_factors
@@ -132,7 +138,7 @@ class MatrixFactorizationBase(RecommenderBase):
         if filter_users is not None:
             filter_users = implicit.gpu.IntVector(np.array(filter_users, dtype="int32"))
 
-        ids, scores = self._knn.topk(
+        ids, scores = self.knn.topk(
             user_factors, self.user_factors[userid], N, norms, item_filter=filter_users
         )
 
@@ -174,7 +180,7 @@ class MatrixFactorizationBase(RecommenderBase):
         if filter_items is not None:
             filter_items = implicit.gpu.IntVector(np.array(filter_items, dtype="int32"))
 
-        ids, scores = self._knn.topk(
+        ids, scores = self.knn.topk(
             item_factors, self.item_factors[itemid], N, norms, item_filter=filter_items
         )
 
