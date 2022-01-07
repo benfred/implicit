@@ -49,6 +49,7 @@ class MatrixFactorizationBase(RecommenderBase):
         # if we have an item list to restrict down to, we need to filter the item_factors
         # and filter_query_items
         if items is not None:
+            N = min(N, len(items))
             if filter_items:
                 raise ValueError("Can't set both items and filter_items in recommend call")
 
@@ -249,7 +250,7 @@ def _filter_items_from_sparse_matrix(items, query_items):
     positions = np.searchsorted(items, filter_query_items.col)
     positions = np.clip(positions, 0, len(items) - 1)
 
-    filter_query_items.col = positions
     filter_query_items.data[items[positions] != filter_query_items.col] = 0
+    filter_query_items.col = positions
     filter_query_items.eliminate_zeros()
     return filter_query_items.tocsr()

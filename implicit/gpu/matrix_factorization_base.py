@@ -51,6 +51,7 @@ class MatrixFactorizationBase(RecommenderBase):
 
         item_factors = self.item_factors
         if items is not None:
+            N = min(N, len(items))
             if filter_items:
                 raise ValueError("Can't set both items and filter_items in recommend call")
 
