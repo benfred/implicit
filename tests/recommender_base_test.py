@@ -296,16 +296,30 @@ class RecommenderBaseTestMixin:
         model = self._get_model()
         model.fit(item_users, show_progress=False)
 
+        try:
+            selected_items = np.array([1, 2, 3, 4, 5, 6])
+            ids, _ = model.recommend(0, user_items, items=selected_items, N=20)
+
+            self.assertEqual(len(ids), len(selected_items))
+
+            # ranked list should have same items
+            self.assertEqual(set(ids), set(selected_items))
+
+            if not isinstance(model, ItemItemRecommender):
+                # items 2,4,6 are in the 'filter_alread_liked_items' set
+                # and should be in the last 3 positions (except with itemitemrecommenders
+                # where its a little more complicated since the sparse results)
+                self.assertEqual(set(ids[3:]), set([2, 4, 6]))
+
+        except NotImplementedError:
+            return
+
         for userid in range(50):
             selected_items = random.sample(range(50), 10)
 
-            try:
-                ids, _ = model.recommend(
-                    userid, user_items, items=selected_items, filter_already_liked_items=False
-                )
-            except NotImplementedError:
-                return
-
+            ids, _ = model.recommend(
+                userid, user_items, items=selected_items, filter_already_liked_items=False
+            )
             # ranked list should have same items
             self.assertEqual(set(ids), set(selected_items))
 
