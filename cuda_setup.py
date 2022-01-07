@@ -59,16 +59,29 @@ def locate_cuda():
         "lib64": os.path.join(home, "lib64"),
     }
 
-    post_args = [
+    arch_flags = [
         "-arch=sm_60",
+        "-gencode=arch=compute_37,code=sm_37",
+        "-gencode=arch=compute_50,code=sm_50",
+        "-gencode=arch=compute_52,code=sm_52",
         "-gencode=arch=compute_60,code=sm_60",
         "-gencode=arch=compute_61,code=sm_61",
         "-gencode=arch=compute_70,code=sm_70",
-        "-gencode=arch=compute_70,code=compute_70",
+        "-gencode=arch=compute_75,code=sm_75",
+        "-gencode=arch=compute_80,code=sm_80",
+        "-gencode=arch=compute_86,code=sm_86",
+        "-gencode=arch=compute_86,code=compute_86",
+    ]
+
+    # hack to speed up cuda compilation on my devbox
+    if os.getenv("IMPLICIT_CUDA_ARCH") == "sm86":
+        arch_flags = ["-arch=sm_86", "-gencode=arch=compute_86,code=sm_86"]
+
+    post_args = [
         "--ptxas-options=-v",
         "--extended-lambda",
         "-O2",
-    ]
+    ] + arch_flags
 
     if sys.platform == "win32":
         cudaconfig["lib64"] = os.path.join(home, "lib", "x64")
