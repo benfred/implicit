@@ -23,6 +23,13 @@ namespace implicit { namespace gpu {
 namespace {
     const static int TILE_GROUPS = 32;
     const static int MAX_TILE_ROWS = 32;
+
+    // faiss seems to have issues when distances contain -FLT_MAX, and can return a '-1' in the
+    // indices returned, instead of an actual valid row number. When we filter, instead of
+    // setting to -FLT_MAX, set to the next smallest valid float32 value.
+    const static float _FLT_MAX = FLT_MAX;
+    const static uint32_t UINT_FILTER_DISTANCE = (*reinterpret_cast<const uint32_t*>(&_FLT_MAX)) - 1;
+    const static float FLT_FILTER_DISTANCE = - *reinterpret_cast<const float*>(&UINT_FILTER_DISTANCE);
 }
 
 bool is_host_memory(void * address) {
@@ -193,11 +200,12 @@ void KnnQuery::topk(const Matrix & items, const Matrix & query, int k,
             int * items = item_filter->data;
             int items_size = item_filter->size;
             int cols = temp_distances.cols;
+            float filter_distance = FLT_FILTER_DISTANCE;
             thrust::for_each(count, count + items_size * temp_distances.rows,
                [=] __device__(size_t i) {
                   int col = items[i % items_size];
                   int row = i / items_size;
-                  data[row * cols + col] = -FLT_MAX;
+                  data[row * cols + col] = filter_distance;
             });
         }
 
@@ -207,10 +215,11 @@ void KnnQuery::topk(const Matrix & items, const Matrix & query, int k,
             int * col = query_filter->col;
             float * data = temp_distances.data;
             int items = temp_distances.cols;
+            float filter_distance = FLT_FILTER_DISTANCE;
             thrust::for_each(count, count + query_filter->nonzeros,
                 [=] __device__(int i) {
                     if ((row[i] >= start) && (row[i] < end)) {
-                        data[(row[i] -start) * items + col[i]] = -FLT_MAX;
+                        data[(row[i] - start) * items + col[i]] = filter_distance;
                     }
             });
         }
