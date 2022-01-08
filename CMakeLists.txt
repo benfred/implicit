@@ -25,5 +25,5 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 endif()
 
 include_directories(.)
-
+set (CMAKE_CXX_STANDARD 11)
 add_subdirectory(implicit)
