@@ -48,6 +48,7 @@ jobs:
       run: |
         pylint implicit
     - name: Build
+      run: |
         pip install -e .
     - name: Run unittests
       run: |
