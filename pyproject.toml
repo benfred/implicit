@@ -1,2 +1,13 @@
 [tool.black]
 line-length = 100
+
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel",
+    "scikit-build>=0.12",
+    "cmake>=3.18",
+    "Cython>=0.24",
+    "scipy>=0.16"
+]
+build-backend = "setuptools.build_meta"
