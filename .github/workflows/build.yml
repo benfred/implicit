@@ -49,7 +49,7 @@ jobs:
         pylint implicit
     - name: Build
       run: |
-        python setup.py develop
+        pip install -e .
     - name: Run unittests
       run: |
         python -m pytest tests

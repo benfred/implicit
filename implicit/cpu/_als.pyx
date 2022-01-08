@@ -114,7 +114,7 @@ def _least_squares(integral[:] indptr, integral[:] indices, float[:] data,
                         axpy(&factors, &temp, &Y[i, 0], &one, A + j * factors, &one)
 
                 err = 0
-                posv("U", &factors, &one, A, &factors, b, &factors, &err)
+                posv(b"U", &factors, &one, A, &factors, b, &factors, &err)
 
                 if not err:
                     memcpy(&X[u, 0], b, sizeof(floating) * factors)
@@ -173,7 +173,7 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
 
                 # calculate residual r = (YtCuPu - (YtCuY.dot(Xu)
                 temp = -1.0
-                symv("U", &N, &temp, &YtY[0, 0], &N, x, &one, &zero, r, &one)
+                symv(b"U", &N, &temp, &YtY[0, 0], &N, x, &one, &zero, r, &one)
 
                 for index in range(indptr[u], indptr[u + 1]):
                     i = indices[index]
@@ -197,7 +197,7 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
                 for it in range(cg_steps):
                     # calculate Ap = YtCuYp - without actually calculating YtCuY
                     temp = 1.0
-                    symv("U", &N, &temp, &YtY[0, 0], &N, p, &one, &zero, Ap, &one)
+                    symv(b"U", &N, &temp, &YtY[0, 0], &N, p, &one, &zero, Ap, &one)
 
                     for index in range(indptr[u], indptr[u + 1]):
                         i = indices[index]
@@ -264,7 +264,7 @@ def _calculate_loss(Cui, integral[:] indptr, integral[:] indices, float[:] data,
             for u in prange(users, schedule='guided'):
                 # calculates (A.dot(Xu) - 2 * b).dot(Xu), without calculating A
                 temp = 1.0
-                symv("U", &N, &temp, &YtY[0, 0], &N, &X[u, 0], &one, &zero, r, &one)
+                symv(b"U", &N, &temp, &YtY[0, 0], &N, &X[u, 0], &one, &zero, r, &one)
 
                 for index in range(indptr[u], indptr[u + 1]):
                     i = indices[index]

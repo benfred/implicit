@@ -23,7 +23,7 @@ def topk(items, query, int k, item_norms=None, filter_query_items=None, filter_i
     # TODO: figure out appropriate batch size from available memory
     cdef int batch_size = 100 # TODO
 
-    cdef int batches = (query_rows / batch_size)
+    cdef int batches = (query_rows // batch_size)
     if query_rows % batch_size:
         batches += 1
 
