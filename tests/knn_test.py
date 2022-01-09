@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import unittest
 
 import numpy as np
@@ -49,7 +47,7 @@ def test_all_pairs_knn():
     for rowid in range(counts.shape[1]):
         # make sure values match
         for colid, data in zip(knn[rowid].indices, knn[rowid].data):
-            pytest.approx(all_neighbours[rowid, colid]) == data
+            assert pytest.approx(all_neighbours[rowid, colid]) == data
 
         # make sure top K selected
         row = all_neighbours[rowid]

@@ -301,19 +301,6 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         return self._XtX
 
 
-def alternating_least_squares(Ciu, factors, **kwargs):
-    """factorizes the matrix Cui using an implicit alternating least squares
-    algorithm. Note: this method is deprecated, consider moving to the
-    AlternatingLeastSquares class instead
-
-    """
-    log.warning("This method is deprecated. Please use the AlternatingLeastSquares class instead")
-
-    model = AlternatingLeastSquares(factors=factors, **kwargs)
-    model.fit(Ciu)
-    return model.item_factors, model.user_factors
-
-
 def least_squares(Cui, X, Y, regularization, num_threads=0):
     """For each user in Cui, calculate factors Xu for them
     using least squares on Y.

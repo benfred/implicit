@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import numpy as np
 import pytest
 from scipy.sparse import csr_matrix, random
@@ -21,8 +19,8 @@ def _get_matrix():
 def test_train_test_split():
     seed = np.random.randint(1000)
     mat = _get_sample_matrix()
-    train, test = train_test_split(mat, 0.8, seed)
-    train2, test2 = train_test_split(mat, 0.8, seed)
+    train, _ = train_test_split(mat, 0.8, seed)
+    train2, _ = train_test_split(mat, 0.8, seed)
     assert np.all(train.todense() == train2.todense())
 
 

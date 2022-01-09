@@ -1,7 +1,4 @@
 """ test script to verify the CG method works, and time it versus cholesky """
-
-from __future__ import print_function
-
 import argparse
 import json
 import logging
