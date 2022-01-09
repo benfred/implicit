@@ -5,24 +5,22 @@
 // Forward ref: don't require the whole cublas definition here
 struct cublasContext;
 
-namespace implicit { namespace gpu {
+namespace implicit {
+namespace gpu {
 
 struct LeastSquaresSolver {
-    explicit LeastSquaresSolver(int factors);
-    ~LeastSquaresSolver();
+  explicit LeastSquaresSolver(int factors);
+  ~LeastSquaresSolver();
 
-    void least_squares(const CSRMatrix & Cui,
-                       Matrix * X, const Matrix & Y,
-                       float regularization,
-                       int cg_steps) const;
+  void least_squares(const CSRMatrix &Cui, Matrix *X, const Matrix &Y,
+                     float regularization, int cg_steps) const;
 
-    float calculate_loss(const CSRMatrix & Cui,
-                         const Matrix & X,
-                         const Matrix & Y,
-                         float regularization);
+  float calculate_loss(const CSRMatrix &Cui, const Matrix &X, const Matrix &Y,
+                       float regularization);
 
-    Matrix YtY;
-    cublasContext * blas_handle;
+  Matrix YtY;
+  cublasContext *blas_handle;
 };
-}}  // namespace implicit::gpu
-#endif  // IMPLICIT_GPU_ALS_H_
+} // namespace gpu
+} // namespace implicit
+#endif // IMPLICIT_GPU_ALS_H_

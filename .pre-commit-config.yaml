@@ -20,3 +20,12 @@ repos:
         rev: v2.1.0
         hooks:
         - id: codespell
+      - repo: local
+        hooks:
+        - id: clang-format
+          name: clang-format
+          description: Format files with ClangFormat.
+          entry: clang-format --dry-run --Werror
+          language: system 
+          files: \.(cu|cuh|h|cpp)$
+

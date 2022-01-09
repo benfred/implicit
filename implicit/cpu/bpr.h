@@ -17,5 +17,5 @@ inline int get_thread_num() { return omp_get_thread_num(); }
 #else
 inline int get_thread_num() { return 0; }
 #endif
-}  // namespace implicit
-#endif  // IMPLICIT_CPU_BPR_H_
+} // namespace implicit
+#endif // IMPLICIT_CPU_BPR_H_
