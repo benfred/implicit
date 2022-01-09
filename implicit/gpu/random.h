@@ -4,19 +4,21 @@
 
 #include "implicit/gpu/matrix.h"
 
-namespace implicit { namespace gpu {
+namespace implicit {
+namespace gpu {
 
 struct RandomState {
-    RandomState(long seed);
-    ~RandomState();
+  RandomState(long seed);
+  ~RandomState();
 
-    Matrix uniform(int rows, int cols, float low=0.0, float high=1.0);
-    Matrix randn(int rows, int cols, float mean=0, float stddev=1);
+  Matrix uniform(int rows, int cols, float low = 0.0, float high = 1.0);
+  Matrix randn(int rows, int cols, float mean = 0, float stddev = 1);
 
-    RandomState(const RandomState&) = delete;
-    RandomState& operator=(const RandomState&) = delete;
+  RandomState(const RandomState &) = delete;
+  RandomState &operator=(const RandomState &) = delete;
 
-    curandGenerator_t rng;
+  curandGenerator_t rng;
 };
-}}  // namespace implicit/gpu
-#endif  // IMPLICIT_GPU_RANDOM_H_
+} // namespace gpu
+} // namespace implicit
+#endif // IMPLICIT_GPU_RANDOM_H_
