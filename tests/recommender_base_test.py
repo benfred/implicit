@@ -1,7 +1,4 @@
 """ Common test functions for all recommendation models """
-
-from __future__ import print_function
-
 import pickle
 import random
 

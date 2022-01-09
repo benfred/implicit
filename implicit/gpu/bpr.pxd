@@ -4,7 +4,7 @@ from libcpp.utility cimport pair
 from .matrix cimport Matrix, Vector
 
 
-cdef extern from "bpr.h" namespace "implicit::gpu" nogil:
+cdef extern from "implicit/gpu/bpr.h" namespace "implicit::gpu" nogil:
     cdef pair[int, int] bpr_update(const Vector[int] & userids,
                                    const Vector[int] & itemids,
                                    const Vector[int] & indptr,

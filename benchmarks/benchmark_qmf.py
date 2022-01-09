@@ -9,8 +9,6 @@ on the last.fm 360k dataset, this is the output:
     Implicit finished in 24.046602964401245
     Implicit is 11.615990580808532 times faster
 """
-from __future__ import print_function
-
 import argparse
 import logging
 import time

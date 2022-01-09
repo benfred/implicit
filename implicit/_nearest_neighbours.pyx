@@ -16,7 +16,7 @@ from libcpp.vector cimport vector
 from tqdm.auto import tqdm
 
 
-cdef extern from "nearest_neighbours.h" namespace "implicit" nogil:
+cdef extern from "implicit/nearest_neighbours.h" namespace "implicit" nogil:
     cdef cppclass TopK[Index, Value]:
         TopK(size_t K)
         vector[pair[Value, Index]] results

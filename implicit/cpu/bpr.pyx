@@ -27,7 +27,7 @@ log = logging.getLogger("implicit")
 
 # thin wrapper around omp_get_thread_num (since referencing directly will cause OSX
 # build to fail)
-cdef extern from "bpr.h" namespace "implicit" nogil:
+cdef extern from "implicit/cpu/bpr.h" namespace "implicit" nogil:
     cdef int get_thread_num()
 
 

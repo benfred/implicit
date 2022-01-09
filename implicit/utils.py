@@ -1,5 +1,5 @@
-import logging
 import os
+import warnings
 
 import numpy as np
 
@@ -23,12 +23,12 @@ def check_blas_config():
     _checked_blas_config = True
 
     if np.__config__.get_info("openblas_info") and os.environ.get("OPENBLAS_NUM_THREADS") != "1":
-        logging.warning(
+        warnings.warn(
             "OpenBLAS detected. Its highly recommend to set the environment variable "
             "'export OPENBLAS_NUM_THREADS=1' to disable its internal multithreading"
         )
     if np.__config__.get_info("blas_mkl_info") and os.environ.get("MKL_NUM_THREADS") != "1":
-        logging.warning(
+        warnings.warn(
             "Intel MKL BLAS detected. Its highly recommend to set the environment "
             "variable 'export MKL_NUM_THREADS=1' to disable its internal "
             "multithreading"

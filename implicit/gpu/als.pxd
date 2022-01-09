@@ -1,7 +1,7 @@
 from .matrix cimport CSRMatrix, Matrix
 
 
-cdef extern from "als.h" namespace "implicit::gpu" nogil:
+cdef extern from "implicit/gpu/als.h" namespace "implicit::gpu" nogil:
     cdef cppclass LeastSquaresSolver:
         LeastSquaresSolver(int factors) except +
         void least_squares(const CSRMatrix & Cui, Matrix * X,

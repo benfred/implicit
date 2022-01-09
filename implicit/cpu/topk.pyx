@@ -6,7 +6,7 @@ from cython cimport floating, integral
 from cython.parallel import parallel, prange
 
 
-cdef extern from "select.h" namespace "implicit" nogil:
+cdef extern from "implicit/cpu/select.h" namespace "implicit" nogil:
     cdef void select[T](const T * batch,
                         int batch_rows, int batch_columns, int k,
                         int * ids, T * distances) nogil except *

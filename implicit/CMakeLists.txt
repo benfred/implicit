@@ -1,5 +1,3 @@
-include_directories(.)
-
 add_cython_target(_nearest_neighbours CXX)
 add_library(_nearest_neighbours MODULE ${_nearest_neighbours})
 python_extension_module(_nearest_neighbours)
@@ -17,3 +15,6 @@ endif()
 
 add_subdirectory(cpu)
 add_subdirectory(gpu)
+
+FILE(GLOB python_files *.py)
+install(FILES ${python_files} DESTINATION implicit)

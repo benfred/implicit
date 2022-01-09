@@ -1,7 +1,5 @@
 # Compile spark with native blas support:
 # https://github.com/Mega-DatA-Lab/SpectralLDA-Spark/wiki/Compile-Spark-with-Native-BLAS-LAPACK-Support
-from __future__ import print_function
-
 import argparse
 import json
 import time

@@ -1,6 +1,3 @@
-# TODO: use fully qualified include directories
-include_directories(.)
-
 add_cython_target(_cuda CXX)
 
 find_package(CUDAToolkit)
@@ -37,4 +34,5 @@ if(CUDAToolkit_FOUND)
     install(TARGETS _cuda LIBRARY DESTINATION implicit/gpu)
 endif()
 
-# TODO: warn if cuda not found
+FILE(GLOB gpu_python_files *.py)
+install(FILES ${gpu_python_files} DESTINATION implicit/gpu)

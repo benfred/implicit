@@ -1,6 +1,3 @@
-# TODO: use fully qualified include directories
-include_directories(.)
-
 add_cython_target(_als CXX)
 add_library(_als MODULE ${_als})
 python_extension_module(_als)
@@ -27,3 +24,6 @@ if(OpenMP_CXX_FOUND)
     target_link_libraries(topk OpenMP::OpenMP_CXX)
     target_link_libraries(lmf OpenMP::OpenMP_CXX)
 endif()
+
+FILE(GLOB cpu_python_files *.py)
+install(FILES ${cpu_python_files} DESTINATION implicit/cpu)

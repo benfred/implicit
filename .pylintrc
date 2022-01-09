@@ -2,7 +2,7 @@
 
 ignore-patterns=setup.py
 
-extension-pkg-whitelist=implicit.cpu._als,implicit._nearest_neighbours,implicit.gpu._cuda,implicit.cpu.bpr,implicit.cpu.topk,numpy.random.mtrand,nmslib,faiss
+extension-pkg-whitelist=implicit.cpu._als,implicit.cpu.lmf,implicit._nearest_neighbours,implicit.gpu._cuda,implicit.cpu.bpr,implicit.cpu.topk,numpy.random.mtrand,nmslib,faiss
 
 [MESSAGES CONTROL]
 disable=fixme,
@@ -40,9 +40,7 @@ disable=fixme,
     no-member,
     no-name-in-module,
     arguments-renamed,
-    import-self,
     protected-access,
-    consider-using-f-string,
 
 [SIMILARITIES]
 min-similarity-lines=64
