@@ -8,10 +8,11 @@
 
 namespace implicit {
 namespace gpu {
-// TODO: this class doesn't seem to offer much on top of devicebuffer itself
 template <typename T>
 Vector<T>::Vector(int size, const T *host_data)
-    : size(size), storage(new DeviceBuffer<T>(size)), data(storage->get()) {
+    : size(size),
+      storage(new rmm::device_uvector<T>(size, rmm::cuda_stream_view())),
+      data(storage->data()) {
   if (host_data) {
     CHECK_CUDA(
         cudaMemcpy(data, host_data, size * sizeof(T), cudaMemcpyHostToDevice));
@@ -58,16 +59,18 @@ void copy_rowids(const float *input, const int *rowids, int rows, int cols,
 
 Matrix::Matrix(const Matrix &other, const Vector<int> &rowids)
     : rows(rowids.size), cols(other.cols) {
-  storage.reset(new DeviceBuffer<float>(rows * cols));
-  data = storage->get();
+  storage.reset(
+      new rmm::device_uvector<float>(rows * cols, rmm::cuda_stream_view()));
+  data = storage->data();
   copy_rowids(other.data, rowids.data, rows, cols, data);
 }
 
 Matrix::Matrix(int rows, int cols, float *host_data, bool allocate)
     : rows(rows), cols(cols) {
   if (allocate) {
-    storage.reset(new DeviceBuffer<float>(rows * cols));
-    data = storage->get();
+    storage.reset(
+        new rmm::device_uvector<float>(rows * cols, rmm::cuda_stream_view()));
+    data = storage->data();
     if (host_data) {
       CHECK_CUDA(cudaMemcpy(data, host_data, rows * cols * sizeof(float),
                             cudaMemcpyHostToDevice));
