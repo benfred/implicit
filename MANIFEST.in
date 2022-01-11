@@ -1,14 +1,6 @@
-recursive-include implicit *.h *.cu *.cuh *.pyx *.py *.cpp *.pxd
+recursive-include implicit *.h *.cu *.cuh *.pyx *.py *.pxd *.txt
 include README.md
+include CMakeLists.txt
 include requirements.txt
 include LICENSE
 include tox.ini
-
-recursive-include thirdparty/faiss/faiss/gpu/utils/ *.cu *.cuh *.h
-include thirdparty/faiss/faiss/gpu/GpuResources.cpp
-include thirdparty/faiss/faiss/gpu/GpuResources.h
-include thirdparty/faiss/faiss/gpu/GpuFaissAssert.h
-include thirdparty/faiss/faiss/impl/FaissAssert.h
-include thirdparty/faiss/faiss/impl/FaissException.h
-include thirdparty/faiss/faiss/impl/platform_macros.h
-include thirdparty/faiss/faiss/MetricType.h

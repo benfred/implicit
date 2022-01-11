@@ -2,16 +2,34 @@ add_cython_target(_cuda CXX)
 
 find_package(CUDAToolkit)
 
+
 if(CUDAToolkit_FOUND)
     enable_language(CUDA)
     
-    include_directories(../../thirdparty/faiss)
+    # use rapids-cmake to install dependencies
+    file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-22.02/RAPIDS.cmake
+        ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
+    include(${CMAKE_BINARY_DIR}/RAPIDS.cmake)
+    include(rapids-cmake)
+    include(rapids-cpm)
+    include(rapids-cuda)
+    include(rapids-export)
+    include(rapids-find)
+    rapids_cpm_init()
+    rapids_cmake_build_type(Release)
 
-    FILE(GLOB faiss_block_select ../../thirdparty/faiss/faiss/gpu/utils/blockselect/*.cu)
+    # get faiss from git
+    rapids_cpm_find(FAISS 1.7.2
+        CPM_ARGS
+          GIT_REPOSITORY  https://github.com/facebookresearch/faiss.git
+          VERSION         1.7.2
+          DOWNLOAD_ONLY   YES
+    )
+    FILE(GLOB FAISS_BLOCK_SELECT ${FAISS_SOURCE_DIR}/faiss/gpu/utils/blockselect/*.cu)
+    include_directories(${FAISS_SOURCE_DIR})
 
-    # TODO: faiss targets?
-    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda -Wno-deprecated-gpu-targets")
-        
+    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda -Wno-deprecated-gpu-targets -Xfatbin=-compress-all")
+
     add_library(_cuda MODULE ${_cuda}
         als.cu
         bpr.cu
@@ -19,13 +37,14 @@ if(CUDAToolkit_FOUND)
         device_buffer.cu
         random.cu
         knn.cu
-        ${faiss_block_select}
-        ../../thirdparty/faiss/faiss/gpu/utils/BlockSelectFloat.cu
-        ../../thirdparty/faiss/faiss/gpu/utils/DeviceUtils.cu
-        ../../thirdparty/faiss/faiss/gpu/GpuResources.cpp
+        # we need a limited subset of faiss for the blockselect code. rather than compile all of
+        # faiss, just include the minimal subset here
+        ${FAISS_BLOCK_SELECT}
+        ${FAISS_SOURCE_DIR}/faiss/gpu/utils/BlockSelectFloat.cu
+        ${FAISS_SOURCE_DIR}/faiss/gpu/utils/DeviceUtils.cu
+        ${FAISS_SOURCE_DIR}/faiss/gpu/GpuResources.cpp
     )
-    
-    # TODO: add cudart/cublas/curand variables
+
     python_extension_module(_cuda)
 
     set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "37;50;70;60;80;86")
