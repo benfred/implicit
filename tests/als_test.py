@@ -2,12 +2,14 @@ import unittest
 
 import numpy as np
 import pytest
-from scipy.sparse import csr_matrix, random
+from scipy.sparse import coo_matrix, csr_matrix, random
 
 from implicit.als import AlternatingLeastSquares
 from implicit.gpu import HAS_CUDA
 
 from .recommender_base_test import RecommenderBaseTestMixin
+
+# pylint: disable=consider-using-f-string
 
 
 class ALSTest(unittest.TestCase, RecommenderBaseTestMixin):
@@ -211,3 +213,20 @@ def test_explain():
     assert pytest.approx(score, abs=1e-4) == top_score_explained
     assert scores[:2] == top_scores
     assert items[:2] == top_items
+
+
+@pytest.mark.parametrize("use_gpu", [True, False] if HAS_CUDA else [False])
+def test_small_nan(use_gpu):
+    # test out case where number of factors is larger than number of users:
+    # https://github.com/benfred/implicit/issues/377
+    user_item_matrix = coo_matrix((np.ones(10), (np.arange(10), np.arange(10)))).tocsr()
+    als = AlternatingLeastSquares(factors=15, use_gpu=use_gpu)
+    als.fit(user_item_matrix)
+
+    ids, scores = als.recommend(0, user_item_matrix, 10, filter_already_liked_items=False)
+
+    # shouldn't have any NaN values in the resulting dataset
+    assert not np.isnan(scores).any()
+
+    # first item recommended should be the liked item in the training set
+    assert ids[0] == 0
