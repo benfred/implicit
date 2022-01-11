@@ -5,7 +5,7 @@ find_package(CUDAToolkit)
 
 if(CUDAToolkit_FOUND)
     enable_language(CUDA)
-    
+
     # use rapids-cmake to install dependencies
     file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-22.02/RAPIDS.cmake
         ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
@@ -17,6 +17,10 @@ if(CUDAToolkit_FOUND)
     include(rapids-find)
     rapids_cpm_init()
     rapids_cmake_build_type(Release)
+
+    # get rmm
+    include(${rapids-cmake-dir}/cpm/rmm.cmake)
+    rapids_cpm_rmm(BUILD_EXPORT_SET implicit-exports INSTALL_EXPORT_SET implicit-exports)
 
     # get faiss from git
     rapids_cpm_find(FAISS 1.7.2
@@ -34,7 +38,6 @@ if(CUDAToolkit_FOUND)
         als.cu
         bpr.cu
         matrix.cu
-        device_buffer.cu
         random.cu
         knn.cu
         # we need a limited subset of faiss for the blockselect code. rather than compile all of
@@ -47,8 +50,13 @@ if(CUDAToolkit_FOUND)
 
     python_extension_module(_cuda)
 
-    set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "37;50;70;60;80;86")
-    target_link_libraries(_cuda CUDA::cublas CUDA::curand)
+    if(DEFINED ENV{IMPLICIT_CUDA_ARCH})
+        message("using cuda arch $ENV{IMPLICIT_CUDA_ARCH}")
+        set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES $ENV{IMPLICIT_CUDA_ARCH})
+    else()
+        set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "37;50;70;60;80;86")
+    endif()
+    target_link_libraries(_cuda CUDA::cublas CUDA::curand rmm::rmm)
 
     install(TARGETS _cuda LIBRARY DESTINATION implicit/gpu)
 endif()

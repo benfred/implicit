@@ -2,7 +2,7 @@
 #define IMPLICIT_GPU_MATRIX_H_
 #include <memory>
 
-#include "implicit/gpu/device_buffer.h"
+#include <rmm/device_uvector.hpp>
 
 namespace implicit {
 namespace gpu {
@@ -11,7 +11,7 @@ template <typename T> struct Vector {
   Vector(int size, const T *data = NULL);
   void to_host(T *output) const;
 
-  std::shared_ptr<DeviceBuffer<T>> storage;
+  std::shared_ptr<rmm::device_uvector<T>> storage;
   int size;
   T *data;
 };
@@ -41,7 +41,8 @@ struct Matrix {
 
   int rows, cols;
   float *data;
-  std::shared_ptr<DeviceBuffer<float>> storage;
+
+  std::shared_ptr<rmm::device_uvector<float>> storage;
 };
 
 Matrix calculate_norms(const Matrix &input);
