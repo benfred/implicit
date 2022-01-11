@@ -28,7 +28,7 @@ if(CUDAToolkit_FOUND)
     FILE(GLOB FAISS_BLOCK_SELECT ${FAISS_SOURCE_DIR}/faiss/gpu/utils/blockselect/*.cu)
     include_directories(${FAISS_SOURCE_DIR})
 
-    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda -Wno-deprecated-gpu-targets")
+    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda -Wno-deprecated-gpu-targets -Xfatbin=-compress-all")
 
     add_library(_cuda MODULE ${_cuda}
         als.cu
