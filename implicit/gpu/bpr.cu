@@ -1,8 +1,9 @@
+#include <math.h>
+#include <stdio.h>
+
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 #include <curand.h>
-#include <math.h>
-#include <stdio.h>
 
 #include "implicit/gpu/als.h"
 #include "implicit/gpu/utils.cuh"

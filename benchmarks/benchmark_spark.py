@@ -52,7 +52,7 @@ def benchmark_spark(ratings, factors, iterations=5):
             als.fit(ratings)
             elapsed = time.time() - start
             times[rank] = elapsed / iterations
-            print("spark. factors=%i took %.3f" % (rank, elapsed / iterations))
+            print("spark. factors={rank} took {elapsed / iterations:.3f}")
     finally:
         spark.stop()
 
@@ -71,13 +71,13 @@ def benchmark_implicit(ratings, factors, iterations=5, use_gpu=False):
         elapsed = time.time() - start
         # take average time over iterations to be consistent with spark timings
         times[rank] = elapsed / iterations
-        print("implicit. factors=%i took %.3f" % (rank, elapsed / iterations))
+        print("implicit. factors={rank} took {elapsed / iterations:.3f}")
     return times
 
 
 def generate_graph(times, factors, filename="spark_speed.png"):
     seaborn.set()
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     for key in times:
         current = [times[key][f] for f in factors]
         ax.plot(factors, current, marker="o", markersize=6)
@@ -88,7 +88,7 @@ def generate_graph(times, factors, filename="spark_speed.png"):
     plt.savefig(filename, bbox_inches="tight", dpi=300)
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(
         description="Benchmark Spark against implicit",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -115,4 +115,9 @@ if __name__ == "__main__":
     print(times)
     generate_graph(times, factors, filename=args.output + ".png")
 
-    json.dump(times, open(args.output + ".json", "w"))
+    with open(args.output + ".json", "w", encoding="utf8") as o:
+        json.dump(times, o)
+
+
+if __name__ == "__main__":
+    main()

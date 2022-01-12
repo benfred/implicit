@@ -98,7 +98,7 @@ This library has been tested with Python 3.6, 3.7, 3.8 and 3.9 on Ubuntu, OSX an
 
 #### Benchmarks
 
-Simple benchmarks comparing the ALS fitting time versus [Spark and QMF can be found here](https://github.com/benfred/implicit/tree/master/benchmarks).
+Simple benchmarks comparing the ALS fitting time versus [Spark can be found here](https://github.com/benfred/implicit/tree/master/benchmarks).
 
 #### Optimal Configuration
 
