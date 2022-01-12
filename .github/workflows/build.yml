@@ -40,7 +40,7 @@ jobs:
         black --check .
     - name: Lint with clang-format
       run: |
-        apt install clang-format
+        sudo apt install clang-format
         find implicit | grep -E '\.(cu|cuh|h|cpp)$' | xargs clang-format --dry-run --Werror
       if: runner.os == 'Linux'
     - name: Lint with isort
