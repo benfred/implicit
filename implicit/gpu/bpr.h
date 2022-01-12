@@ -1,7 +1,8 @@
 #ifndef IMPLICIT_GPU_BPR_H_
 #define IMPLICIT_GPU_BPR_H_
-#include "implicit/gpu/matrix.h"
 #include <utility>
+
+#include "implicit/gpu/matrix.h"
 
 namespace implicit {
 namespace gpu {

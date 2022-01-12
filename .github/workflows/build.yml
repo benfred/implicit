@@ -38,6 +38,11 @@ jobs:
     - name: Lint with black
       run: |
         black --check .
+    - name: Lint with clang-format
+      run: |
+        apt install clang-format
+        find implicit | grep -E '\.(cu|cuh|h|cpp)$' | xargs clang-format --dry-run --Werror
+      if: runner.os == 'Linux'
     - name: Lint with isort
       run: |
         isort -c .
@@ -46,7 +51,7 @@ jobs:
         codespell
     - name: Lint with pylint
       run: |
-        pylint implicit
+        pylint implicit tests benchmarks examples
     - name: Build
       run: |
         pip install -e .

@@ -9,14 +9,8 @@ import scipy.io
 import seaborn
 
 from implicit.als import AlternatingLeastSquares
+from implicit.gpu import HAS_CUDA
 from implicit.nearest_neighbours import bm25_weight
-
-try:
-    import implicit.gpu  # noqa
-
-    has_cuda = True
-except ImportError:
-    has_cuda = False
 
 
 def benchmark_accuracy(plays):
@@ -24,27 +18,26 @@ def benchmark_accuracy(plays):
 
     def store_loss(name):
         def inner(iteration, elapsed, loss):
-            print("model %s iteration %i loss %.5f" % (name, iteration, loss))
+            print(f"model {name} iteration {iteration} loss {loss:.5f}")
             output[name].append(loss)
 
         return inner
 
     for steps in [2, 3, 4]:
         model = AlternatingLeastSquares(
-            factors=100,
-            use_native=True,
-            use_cg=True,
+            factors=128,
+            use_gpu=False,
             regularization=0,
             iterations=25,
             calculate_training_loss=True,
         )
         model.cg_steps = steps
-        model.fit_callback = store_loss("cg%i" % steps)
+        model.fit_callback = store_loss(f"cg{steps}")
         model.fit(plays)
 
-    if has_cuda:
+    if HAS_CUDA:
         model = AlternatingLeastSquares(
-            factors=100,
+            factors=128,
             use_native=True,
             use_gpu=True,
             regularization=0,
@@ -56,9 +49,10 @@ def benchmark_accuracy(plays):
         model.fit(plays)
 
     model = AlternatingLeastSquares(
-        factors=100,
+        factors=128,
         use_native=True,
         use_cg=False,
+        use_gpu=False,
         regularization=0,
         iterations=25,
         calculate_training_loss=True,
@@ -86,20 +80,26 @@ def benchmark_times(plays, iterations=3):
                 factors=factors,
                 use_native=True,
                 use_cg=True,
+                use_gpu=False,
                 regularization=0,
                 iterations=iterations,
             )
-            model.fit_callback = store_time(model, "cg%i" % steps)
+            model.fit_callback = store_time(model, f"cg{steps}")
             model.cg_steps = steps
             model.fit(plays)
 
         model = AlternatingLeastSquares(
-            factors=factors, use_native=True, use_cg=False, regularization=0, iterations=iterations
+            factors=factors,
+            use_native=True,
+            use_cg=False,
+            regularization=0,
+            iterations=iterations,
+            use_gpu=False,
         )
         model.fit_callback = store_time(model, "cholesky")
         model.fit(plays)
 
-        if has_cuda:
+        if HAS_CUDA:
             model = AlternatingLeastSquares(
                 factors=factors,
                 use_native=True,
@@ -138,7 +138,6 @@ COLOURS = {
 def generate_speed_graph(
     data,
     filename="als_speed.png",
-    keys=["gpu", "cg2", "cg3", "cholesky"],
     labels=None,
     colours=None,
 ):
@@ -146,10 +145,10 @@ def generate_speed_graph(
     colours = colours or {}
 
     seaborn.set()
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     factors = data["factors"]
-    for key in keys:
+    for key in data.keys():
         ax.plot(
             factors, data[key], color=colours.get(key, COLOURS.get(key)), marker="o", markersize=6
         )
@@ -161,13 +160,13 @@ def generate_speed_graph(
     plt.savefig(filename, bbox_inches="tight", dpi=300)
 
 
-def generate_loss_graph(data, filename="als_speed.png", keys=["gpu", "cg2", "cg3", "cholesky"]):
+def generate_loss_graph(data, filename="als_speed.png"):
     seaborn.set()
 
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     iterations = range(1, len(data["cholesky"]) + 1)
-    for key in keys:
+    for key in data.keys():
         ax.plot(iterations, data[key], color=COLOURS[key], marker="o", markersize=6)
         ax.text(iterations[-1] + 1, data[key][-1], LABELS[key], fontsize=10)
 
@@ -176,7 +175,7 @@ def generate_loss_graph(data, filename="als_speed.png", keys=["gpu", "cg2", "cg3
     plt.savefig(filename, bbox_inches="tight", dpi=300)
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(
         description="Benchmark CG version against Cholesky",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -204,12 +203,18 @@ if __name__ == "__main__":
 
         if args.loss:
             acc = benchmark_accuracy(plays)
-            json.dump(acc, open("als_accuracy.json", "w"))
+            with open("als_accuracy.json", "w", encoding="utf8") as o:
+                json.dump(acc, o)
             if args.graph:
                 generate_loss_graph(acc, "als_accuracy.png")
 
         if args.speed:
             speed = benchmark_times(plays)
-            json.dump(speed, open("als_speed.json", "w"))
+            with open("als_speed.json", "w", encoding="utf8") as o:
+                json.dump(speed, o)
             if args.graph:
                 generate_speed_graph(speed, "als_speed.png")
+
+
+if __name__ == "__main__":
+    main()

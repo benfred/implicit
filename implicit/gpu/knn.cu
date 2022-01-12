@@ -1,24 +1,21 @@
-#include <cublas_v2.h>
-#include <cuda_runtime.h>
 #include <vector>
 
+#include <cub/device/device_radix_sort.cuh>
+#include <cub/device/device_segmented_radix_sort.cuh>
+#include <cublas_v2.h>
+#include <cuda_runtime.h>
+#include <faiss/gpu/utils/BlockSelectKernel.cuh>
+#include <faiss/gpu/utils/DeviceTensor.cuh>
+#include <rmm/cuda_stream_view.hpp>
+#include <rmm/mr/device/cuda_memory_resource.hpp>
+#include <rmm/mr/device/device_memory_resource.hpp>
+#include <rmm/mr/device/pool_memory_resource.hpp>
 #include <thrust/device_ptr.h>
 #include <thrust/functional.h>
 #include <thrust/iterator/constant_iterator.h>
 #include <thrust/iterator/counting_iterator.h>
 #include <thrust/iterator/transform_iterator.h>
 #include <thrust/transform.h>
-
-#include <cub/device/device_radix_sort.cuh>
-#include <cub/device/device_segmented_radix_sort.cuh>
-
-#include <faiss/gpu/utils/BlockSelectKernel.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-
-#include <rmm/cuda_stream_view.hpp>
-#include <rmm/mr/device/cuda_memory_resource.hpp>
-#include <rmm/mr/device/device_memory_resource.hpp>
-#include <rmm/mr/device/pool_memory_resource.hpp>
 
 #include "implicit/gpu/knn.h"
 #include "implicit/gpu/utils.cuh"

@@ -45,14 +45,14 @@ MODELS = {
 
 
 def get_model(model_name):
-    print("getting model %s" % model_name)
+    print(f"getting model {model_name}")
     model_class = MODELS.get(model_name)
     if not model_class:
-        raise ValueError("Unknown Model '%s'" % model_name)
+        raise ValueError(f"Unknown Model '{model_name}'")
 
     # some default params
     if model_name.endswith("als"):
-        params = {"factors": 64, "dtype": np.float32}
+        params = {"factors": 128, "dtype": np.float32}
     elif model_name == "bm25":
         params = {"K1": 100, "B": 0.5}
     elif model_name == "bpr":
@@ -68,7 +68,7 @@ def get_model(model_name):
 def calculate_similar_artists(output_filename, model_name="als"):
     """generates a list of similar artists in lastfm by utilizing the 'similar_items'
     api of the models"""
-    artists, users, plays = get_lastfm()
+    artists, _, plays = get_lastfm()
 
     # create a model from the input data
     model = get_model(model_name)
@@ -110,7 +110,7 @@ def calculate_similar_artists(output_filename, model_name="als"):
                 for i, artistid in enumerate(batch):
                     artist = artists[artistid]
                     for other, score in zip(ids[i], scores[i]):
-                        o.write("%s\t%s\t%s\n" % (artist, artists[other], score))
+                        o.write(f"{artist}\t{artists[other]}\t{score}\n")
                 progress.update(batch_size)
 
     logging.debug("generated similar artists in %0.2fs", time.time() - start)
@@ -155,7 +155,7 @@ def calculate_recommendations(output_filename, model_name="als"):
                 for i, userid in enumerate(batch):
                     username = users[userid]
                     for other, score in zip(ids[i], scores[i]):
-                        o.write("%s\t%s\t%s\n" % (username, artists[other], score))
+                        o.write(f"{username}\t{artists[other]}\t{score}\n")
                 progress.update(batch_size)
     logging.debug("generated recommendations in %0.2fs", time.time() - start)
 
@@ -178,7 +178,7 @@ if __name__ == "__main__":
         type=str,
         default="als",
         dest="model",
-        help="model to calculate (%s)" % "/".join(MODELS.keys()),
+        help=f"model to calculate ({'/'.join(MODELS.keys())})",
     )
     parser.add_argument(
         "--recommend",

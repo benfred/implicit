@@ -71,7 +71,7 @@ def calculate_similar_movies(output_filename, model_name="als", min_rating=4.0, 
         model = BM25Recommender(B=0.2)
 
     else:
-        raise NotImplementedError("TODO: model %s" % model_name)
+        raise NotImplementedError(f"model {model_name} isn't implemented for this example")
 
     user_ratings = ratings.T.tocsr()
 
@@ -94,7 +94,7 @@ def calculate_similar_movies(output_filename, model_name="als", min_rating=4.0, 
                 if ratings.indptr[movieid] != ratings.indptr[movieid + 1]:
                     title = titles[movieid]
                     for other, score in zip(*model.similar_items(movieid, 11)):
-                        o.write("%s\t%s\t%s\n" % (title, titles[other], score))
+                        o.write(f"{title}\t{titles[other]}\t{score}\n")
                 progress.update(1)
 
 
