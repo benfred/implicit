@@ -82,7 +82,7 @@ def _least_squares(YtY, integral[:] indptr, integral[:] indices, float[:] data,
         A = <floating *> malloc(sizeof(floating) * factors * factors)
         b = <floating *> malloc(sizeof(floating) * factors)
         try:
-            for u in prange(users, schedule='guided'):
+            for u in prange(users, schedule='dynamic', chunksize=8):
                 # if we have no items for this user, skip and set to zero
                 if indptr[u] == indptr[u+1]:
                     memset(&X[u, 0], 0, sizeof(floating) * factors)
@@ -161,7 +161,7 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
         p = <floating *> malloc(sizeof(floating) * N)
         r = <floating *> malloc(sizeof(floating) * N)
         try:
-            for u in prange(users, schedule='guided'):
+            for u in prange(users, schedule='dynamic', chunksize=8):
                 # start from previous iteration
                 x = &X[u, 0]
 
@@ -260,7 +260,7 @@ def _calculate_loss(Cui, integral[:] indptr, integral[:] indices, float[:] data,
     with nogil, parallel(num_threads=num_threads):
         r = <floating *> malloc(sizeof(floating) * N)
         try:
-            for u in prange(users, schedule='guided'):
+            for u in prange(users, schedule='dynamic', chunksize=8):
                 # calculates (A.dot(Xu) - 2 * b).dot(Xu), without calculating A
                 temp = 1.0
                 symv(b"U", &N, &temp, &YtY[0, 0], &N, &X[u, 0], &one, &zero, r, &one)
@@ -284,7 +284,7 @@ def _calculate_loss(Cui, integral[:] indptr, integral[:] indices, float[:] data,
                 loss += dot(&N, r, &one, &X[u, 0], &one)
                 user_norm += dot(&N, &X[u, 0], &one, &X[u, 0], &one)
 
-            for i in prange(items, schedule='guided'):
+            for u in prange(users, schedule='dynamic', chunksize=8):
                 item_norm += dot(&N, &Y[i, 0], &one, &Y[i, 0], &one)
 
         finally:
