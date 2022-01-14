@@ -49,7 +49,7 @@ def calculate_similar_movies(output_filename, model_name="als", min_rating=4.0, 
 
     # generate a recommender model based off the input params
     if model_name == "als":
-        model = AlternatingLeastSquares(use_gpu=False)
+        model = AlternatingLeastSquares()
 
         # lets weight these models by bm25weight.
         log.debug("weighting matrix by bm25_weight")
