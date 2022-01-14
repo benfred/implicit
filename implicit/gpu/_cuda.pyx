@@ -17,6 +17,7 @@ from .matrix cimport Matrix as CppMatrix
 from .matrix cimport Vector as CppVector
 from .matrix cimport calculate_norms as cpp_calculate_norms
 from .random cimport RandomState as CppRandomState
+from .utils cimport get_device_count as cpp_get_device_count
 
 
 cdef class RandomState(object):
@@ -231,6 +232,10 @@ def calculate_norms(Matrix items):
     ret = Matrix(None)
     ret.c_matrix = new CppMatrix(cpp_calculate_norms(dereference(items.c_matrix)))
     return ret
+
+
+def get_device_count():
+    return cpp_get_device_count()
 
 
 def bpr_update(IntVector userids, IntVector itemids, IntVector indptr,

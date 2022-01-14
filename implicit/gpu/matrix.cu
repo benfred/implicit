@@ -3,8 +3,9 @@
 #include <thrust/iterator/counting_iterator.h>
 #include <thrust/transform.h>
 
+#include "implicit/gpu/dot.cuh"
 #include "implicit/gpu/matrix.h"
-#include "implicit/gpu/utils.cuh"
+#include "implicit/gpu/utils.h"
 
 namespace implicit {
 namespace gpu {
