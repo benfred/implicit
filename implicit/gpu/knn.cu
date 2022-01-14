@@ -18,7 +18,7 @@
 #include <thrust/transform.h>
 
 #include "implicit/gpu/knn.h"
-#include "implicit/gpu/utils.cuh"
+#include "implicit/gpu/utils.h"
 
 namespace implicit {
 namespace gpu {

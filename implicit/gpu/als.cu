@@ -5,7 +5,8 @@
 #include <cuda_runtime.h>
 
 #include "implicit/gpu/als.h"
-#include "implicit/gpu/utils.cuh"
+#include "implicit/gpu/dot.cuh"
+#include "implicit/gpu/utils.h"
 
 namespace implicit {
 namespace gpu {
