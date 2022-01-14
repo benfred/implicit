@@ -126,11 +126,11 @@ class RecommenderBaseTestMixin:
             # TODO: if we set regularization for the model to be sufficiently high, the
             # scores from recalculate_user are slightly different. Investigate
             # (could be difference between CG and cholesky optimizers?)
-            self.assertAlmostEqual(scores[0], scores_from_liked[0], places=4)
+            self.assertAlmostEqual(scores[0], scores_from_liked[0], places=3)
 
             # we should also get the same from the batch recommend call already done
             self.assertEqual(batch_ids[userid][0], ids_from_liked[0])
-            self.assertAlmostEqual(batch_scores[userid][0], scores_from_liked[0], places=4)
+            self.assertAlmostEqual(batch_scores[userid][0], scores_from_liked[0], places=3)
 
     def test_evaluation(self):
         item_users = get_checker_board(50)
@@ -205,11 +205,23 @@ class RecommenderBaseTestMixin:
 
     def test_similar_items(self):
         model = self._get_model()
-        model.fit(get_checker_board(256), show_progress=False)
+        user_items = get_checker_board(256)
+        item_users = user_items.T.tocsr()
+        model.fit(user_items, show_progress=False)
+
         for itemid in range(50):
-            ids, _ = model.similar_items(itemid, N=10)
+            ids, scores = model.similar_items(itemid, N=10)
             for r in ids:
                 self.assertEqual(r % 2, itemid % 2)
+
+            try:
+                recalculated_ids, recalculated_scores = model.similar_items(
+                    itemid, N=10, react_users=item_users
+                )
+                assert np.allclose(ids, recalculated_ids)
+                assert np.allclose(scores, recalculated_scores)
+            except NotImplementedError:
+                continue
 
     def test_similar_items_batch(self):
         model = self._get_model()

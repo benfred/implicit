@@ -67,6 +67,11 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.random_state = random_state
         self.cg_steps = 3
 
+        # cached access to properties
+        self._solver = None
+        self._YtY = None
+        self._XtX = None
+
     def fit(self, user_items, show_progress=True):
         """Factorizes the user_items matrix.
 
@@ -135,17 +140,22 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Y = self.item_factors
         loss = None
 
-        solver = implicit.gpu.LeastSquaresSolver(self.factors)
+        self._YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors)
+        self._XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors)
+
         log.debug("Running %i ALS iterations", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for iteration in range(self.iterations):
                 s = time.time()
-                solver.least_squares(Cui, X, Y, self.regularization, self.cg_steps)
-                solver.least_squares(Ciu, Y, X, self.regularization, self.cg_steps)
+                self.solver.calculate_yty(Y, self._YtY, self.regularization)
+                self.solver.least_squares(Cui, X, self._YtY, Y, self.cg_steps)
+
+                self.solver.calculate_yty(X, self._XtX, self.regularization)
+                self.solver.least_squares(Ciu, Y, self._XtX, X, self.cg_steps)
                 progress.update(1)
 
                 if self.calculate_training_loss:
-                    loss = solver.calculate_loss(Cui, X, Y, self.regularization)
+                    loss = self.solver.calculate_loss(Cui, X, Y, self.regularization)
                     progress.set_postfix({"loss": loss})
 
                     if not show_progress:
@@ -156,3 +166,48 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)
+
+    def recalculate_user(self, userid, user_items):
+        users = 1 if np.isscalar(userid) else len(userid)
+        random_state = check_random_state(self.random_state)
+        user_factors = random_state.uniform(
+            users, self.factors, low=-0.5 / self.factors, high=0.5 / self.factors
+        )
+        Cui = implicit.gpu.CSRMatrix(user_items[userid])
+
+        self.solver.least_squares(
+            Cui, user_factors, self.YtY, self.item_factors, cg_steps=self.factors
+        )
+        return user_factors[0] if np.isscalar(userid) else user_factors
+
+    def recalculate_item(self, itemid, react_users):
+        items = 1 if np.isscalar(itemid) else len(itemid)
+        random_state = check_random_state(self.random_state)
+        item_factors = random_state.uniform(
+            items, self.factors, low=-0.5 / self.factors, high=0.5 / self.factors
+        )
+        Ciu = implicit.gpu.CSRMatrix(react_users[itemid])
+        self.solver.least_squares(
+            Ciu, item_factors, self.XtX, self.user_factors, cg_steps=self.factors
+        )
+        return item_factors[0] if np.isscalar(itemid) else item_factors
+
+    @property
+    def solver(self):
+        if self._solver is None:
+            self._solver = implicit.gpu.LeastSquaresSolver()
+        return self._solver
+
+    @property
+    def YtY(self):
+        if self._YtY is None:
+            self._YtY = implicit.gpu.Matrix(self.factors, self.factors)
+            self.solver.calculate_yty(self.item_factors, self._YtY, self.regularization)
+        return self._YtY
+
+    @property
+    def XtX(self):
+        if self._XtX is None:
+            self._XtX = implicit.gpu.Matrix(self.factors, self.factors)
+            self.solver.calculate_yty(self.user_factors, self._XtX, self.regularization)
+        return self._XtX

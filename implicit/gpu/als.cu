@@ -107,13 +107,32 @@ __global__ void l2_regularize_kernel(int factors, float regularization,
   YtY[threadIdx.x * factors + threadIdx.x] += regularization;
 }
 
-LeastSquaresSolver::LeastSquaresSolver(int factors)
-    : YtY(factors, factors, NULL) {
+LeastSquaresSolver::LeastSquaresSolver() {
   CHECK_CUBLAS(cublasCreate(&blas_handle));
 }
 
+void LeastSquaresSolver::calculate_yty(const Matrix &Y, Matrix *YtY,
+                                       float regularization) {
+  if (YtY->cols != Y.cols)
+    throw invalid_argument("YtY and Y should have the same number of columns");
+
+  // calculate YtY: note this expects col-major (and we have row-major
+  // basically) so that we're inverting the CUBLAS_OP_T/CU_BLAS_OP_N ordering to
+  // overcome this (like calculate YYt instead of YtY)
+  int factors = Y.cols, item_count = Y.rows;
+  float alpha = 1.0, beta = 0.;
+  CHECK_CUBLAS(cublasSgemm(blas_handle, CUBLAS_OP_N, CUBLAS_OP_T, factors,
+                           factors, item_count, &alpha, Y.data, factors, Y.data,
+                           factors, &beta, YtY->data, factors));
+  CHECK_CUDA(cudaDeviceSynchronize());
+
+  // regularize the matrix
+  l2_regularize_kernel<<<1, factors>>>(factors, regularization, YtY->data);
+  CHECK_CUDA(cudaDeviceSynchronize());
+}
+
 void LeastSquaresSolver::least_squares(const CSRMatrix &Cui, Matrix *X,
-                                       const Matrix &Y, float regularization,
+                                       const Matrix &YtY, const Matrix &Y,
                                        int cg_steps) const {
   int item_count = Y.rows, user_count = X->rows, factors = X->cols;
   if (X->cols != Y.cols)
@@ -124,19 +143,6 @@ void LeastSquaresSolver::least_squares(const CSRMatrix &Cui, Matrix *X,
     throw invalid_argument("Dimensionality mismatch between Cui and X");
   if (Cui.cols != Y.rows)
     throw invalid_argument("Dimensionality mismatch between Cui and Y");
-
-  // calculate YtY: note this expects col-major (and we have row-major
-  // basically) so that we're inverting the CUBLAS_OP_T/CU_BLAS_OP_N ordering to
-  // overcome this (like calculate YYt instead of YtY)
-  float alpha = 1.0, beta = 0.;
-  CHECK_CUBLAS(cublasSgemm(blas_handle, CUBLAS_OP_N, CUBLAS_OP_T, factors,
-                           factors, item_count, &alpha, Y.data, factors, Y.data,
-                           factors, &beta, YtY.data, factors));
-  CHECK_CUDA(cudaDeviceSynchronize());
-
-  // regularize the matrix
-  l2_regularize_kernel<<<1, factors>>>(factors, regularization, YtY.data);
-  CHECK_CUDA(cudaDeviceSynchronize());
 
   // TODO: multi-gpu support
   int devId;
@@ -214,6 +220,9 @@ float LeastSquaresSolver::calculate_loss(const CSRMatrix &Cui, const Matrix &X,
                                          const Matrix &Y,
                                          float regularization) {
   int item_count = Y.rows, factors = Y.cols, user_count = X.rows;
+
+  Matrix YtY(factors, factors, NULL);
+  calculate_yty(Y, &YtY, regularization);
 
   float alpha = 1.0, beta = 0.;
   CHECK_CUBLAS(cublasSgemm(blas_handle, CUBLAS_OP_N, CUBLAS_OP_T, factors,

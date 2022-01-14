@@ -101,6 +101,12 @@ cdef class Matrix(object):
             c_X = X
             self.c_matrix = new CppMatrix(X.shape[0], X.shape[1], &c_X[0, 0], True)
 
+    @classmethod
+    def zeros(cls, rows, cols):
+        ret = Matrix(None)
+        ret.c_matrix = new CppMatrix(rows, cols, NULL, True)
+        return ret
+
     @property
     def shape(self):
         return self.c_matrix.rows, self.c_matrix.cols
@@ -198,19 +204,24 @@ cdef class COOMatrix(object):
 cdef class LeastSquaresSolver(object):
     cdef CppLeastSquaresSolver * c_solver
 
-    def __cinit__(self, int factors):
-        self.c_solver = new CppLeastSquaresSolver(factors)
+    def __cinit__(self):
+        self.c_solver = new CppLeastSquaresSolver()
 
-    def least_squares(self, CSRMatrix cui, Matrix X, Matrix Y,
-                      float regularization, int cg_steps):
-        self.c_solver.least_squares(dereference(cui.c_matrix), X.c_matrix, dereference(Y.c_matrix),
-                                    regularization, cg_steps)
+    def least_squares(self, CSRMatrix cui, Matrix X, Matrix YtY, Matrix Y, int cg_steps):
+        self.c_solver.least_squares(dereference(cui.c_matrix), X.c_matrix,
+                                    dereference(YtY.c_matrix), dereference(Y.c_matrix),
+                                    cg_steps)
 
     def calculate_loss(self, CSRMatrix cui, Matrix X, Matrix Y,
                        float regularization):
         return self.c_solver.calculate_loss(dereference(cui.c_matrix), dereference(X.c_matrix),
-
                                             dereference(Y.c_matrix), regularization)
+
+    def calculate_yty(self, Matrix Y, Matrix YtY, float regularization):
+        if YtY is None:
+            YtY = Matrix(None)
+
+        self.c_solver.calculate_yty(dereference(Y.c_matrix), YtY.c_matrix, regularization)
 
     def __dealloc__(self):
         del self.c_solver
