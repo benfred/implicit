@@ -52,7 +52,7 @@ def get_model(model_name):
 
     # some default params
     if model_name.endswith("als"):
-        params = {"factors": 64, "dtype": np.float32}
+        params = {"factors": 128, "dtype": np.float32}
     elif model_name == "bm25":
         params = {"K1": 100, "B": 0.5}
     elif model_name == "bpr":
@@ -106,9 +106,7 @@ def calculate_similar_artists(output_filename, model_name="als"):
             batch_size = 1000
             for startidx in range(0, len(to_generate), batch_size):
                 batch = to_generate[startidx : startidx + batch_size]
-                ids, scores = model.similar_items(
-                    batch, 11, react_users=plays, recalculate_item=True
-                )
+                ids, scores = model.similar_items(batch, 11)
                 for i, artistid in enumerate(batch):
                     artist = artists[artistid]
                     for other, score in zip(ids[i], scores[i]):
@@ -153,9 +151,7 @@ def calculate_recommendations(output_filename, model_name="als"):
             to_generate = np.arange(len(users))
             for startidx in range(0, len(to_generate), batch_size):
                 batch = to_generate[startidx : startidx + batch_size]
-                ids, scores = model.recommend(
-                    batch, user_plays, filter_already_liked_items=True, recalculate_user=True
-                )
+                ids, scores = model.recommend(batch, user_plays, filter_already_liked_items=True)
                 for i, userid in enumerate(batch):
                     username = users[userid]
                     for other, score in zip(ids[i], scores[i]):
