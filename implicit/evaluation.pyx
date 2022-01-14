@@ -427,7 +427,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
         ids = <int * > malloc(sizeof(int) * K)
         likes = new unordered_set[int]()
         try:
-            for u in prange(users, schedule='guided'):
+            for u in prange(users, schedule='dynamic', chunksize=8):
                 # if we don't have any test items, skip this user
                 if test_indptr[u] == test_indptr[u+1]:
                     with gil:

@@ -129,7 +129,7 @@ def all_pairs_knn(users, unsigned int K=100, int num_threads=0, show_progress=Tr
         topk = new TopK[int, double](K)
 
         try:
-            for i in prange(item_count, schedule='guided'):
+            for i in prange(item_count, schedule='dynamic', chunksize=8):
                 for index1 in range(item_indptr[i], item_indptr[i+1]):
                     u = item_indices[index1]
                     w1 = item_data[index1]
