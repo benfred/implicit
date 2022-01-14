@@ -42,7 +42,7 @@ cdef class RandomState(object):
 cdef class KnnQuery(object):
     cdef CppKnnQuery * c_knn
 
-    def __cinit__(self, size_t max_temp_memory=500_000_000):
+    def __cinit__(self, size_t max_temp_memory=0):
         self.c_knn = new CppKnnQuery(max_temp_memory)
 
     def __dealloc__(self):

@@ -199,8 +199,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     def recalculate_user(self, userid, user_items):
         # we're using the cholesky solver here on purpose, since for a full recompute
         users = 1 if np.isscalar(userid) else len(userid)
-        random_state = check_random_state(self.random_state)
-        user_factors = random_state.rand(users, self.factors).astype(self.dtype) * 0.01
+        user_factors = np.zeros((users, self.factors), dtype=self.dtype)
         Cui = user_items[userid]
         _als._least_squares(
             self.YtY,
@@ -216,10 +215,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
     def recalculate_item(self, itemid, react_users):
         items = 1 if np.isscalar(itemid) else len(itemid)
-        random_state = check_random_state(self.random_state)
-        item_factors = random_state.rand(items, self.factors).astype(self.dtype) * 0.01
+        item_factors = np.zeros((items, self.factors), dtype=self.dtype)
         Ciu = react_users[itemid]
-
         _als._least_squares(
             self.XtX,
             Ciu.indptr,

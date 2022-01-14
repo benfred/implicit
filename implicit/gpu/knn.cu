@@ -278,10 +278,8 @@ void KnnQuery::argpartition(const Matrix &items, int k, int *indices,
     int cols_tile = cols / TILE_GROUPS;
 
     rmm::cuda_stream_view stream;
-    rmm::device_uvector<int> temp_indices(items.rows * items.cols, stream,
-                                          mr.get());
-    rmm::device_uvector<float> temp_distances(items.rows * items.cols, stream,
-                                              mr.get());
+    rmm::device_uvector<int> temp_indices(rows_tile * k, stream, mr.get());
+    rmm::device_uvector<float> temp_distances(rows_tile * k, stream, mr.get());
 
     faiss::gpu::DeviceTensor<float, 2, true> items_tensor(
         const_cast<float *>(items.data), {rows_tile, cols_tile});
