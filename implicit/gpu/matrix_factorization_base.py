@@ -47,7 +47,9 @@ class MatrixFactorizationBase(RecommenderBase):
             raise ValueError("user_items needs to be a CSR sparse matrix")
 
         if recalculate_user:
-            raise NotImplementedError("recalculate_user isn't support on GPU yet")
+            user_factors = self.recalculate_user(userid, user_items)
+        else:
+            user_factors = self.user_factors[userid]
 
         item_factors = self.item_factors
         if items is not None:
@@ -82,7 +84,7 @@ class MatrixFactorizationBase(RecommenderBase):
         # calculate the top N items, removing the users own liked items from the results
         ids, scores = self.knn.topk(
             item_factors,
-            self.user_factors[userid],
+            user_factors,
             N,
             query_filter=query_filter,
             item_filter=filter_items,
@@ -158,9 +160,6 @@ class MatrixFactorizationBase(RecommenderBase):
     def similar_items(
         self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
     ):
-        if recalculate_item:
-            raise NotImplementedError("recalculate_item isn't support on GPU yet")
-
         item_factors = self.item_factors
         norms = self.item_norms
         if items is not None:
@@ -177,12 +176,15 @@ class MatrixFactorizationBase(RecommenderBase):
             if items.max() >= self.item_factors.shape[0] or items.min() < 0:
                 raise IndexError("Some itemids are not in the model")
 
+        if recalculate_item:
+            query_factors = self.recalculate_item(itemid, react_users)
+        else:
+            query_factors = self.item_factors[itemid]
+
         if filter_items is not None:
             filter_items = implicit.gpu.IntVector(np.array(filter_items, dtype="int32"))
 
-        ids, scores = self.knn.topk(
-            item_factors, self.item_factors[itemid], N, norms, item_filter=filter_items
-        )
+        ids, scores = self.knn.topk(item_factors, query_factors, N, norms, item_filter=filter_items)
 
         if items is not None:
             ids = items[ids]
@@ -196,6 +198,12 @@ class MatrixFactorizationBase(RecommenderBase):
         return ids, scores
 
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
+
+    def recalculate_user(self, userid, user_items):
+        raise NotImplementedError("recalculate_user is not supported with this model")
+
+    def recalculate_item(self, itemid, react_users):
+        raise NotImplementedError("recalculate_item is not supported with this model")
 
     def __getstate__(self):
         return {

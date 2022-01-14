@@ -197,24 +197,40 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self._check_fit_errors()
 
     def recalculate_user(self, userid, user_items):
-        return user_factor(
-            self.item_factors,
+        # we're using the cholesky solver here on purpose, since for a full recompute
+        users = 1 if np.isscalar(userid) else len(userid)
+        random_state = check_random_state(self.random_state)
+        user_factors = random_state.rand(users, self.factors).astype(self.dtype) * 0.01
+        Cui = user_items[userid]
+        _als._least_squares(
             self.YtY,
-            user_items.tocsr(),
-            userid,
+            Cui.indptr,
+            Cui.indices,
+            Cui.data.astype("float32"),
+            user_factors,
+            self.item_factors,
             self.regularization,
-            self.factors,
+            num_threads=self.num_threads,
         )
+        return user_factors[0] if np.isscalar(userid) else user_factors
 
     def recalculate_item(self, itemid, react_users):
-        return item_factor(
-            self.user_factors,
+        items = 1 if np.isscalar(itemid) else len(itemid)
+        random_state = check_random_state(self.random_state)
+        item_factors = random_state.rand(items, self.factors).astype(self.dtype) * 0.01
+        Ciu = react_users[itemid]
+
+        _als._least_squares(
             self.XtX,
-            react_users.tocsr(),
-            itemid,
+            Ciu.indptr,
+            Ciu.indices,
+            Ciu.data.astype("float32"),
+            item_factors,
+            self.user_factors,
             self.regularization,
-            self.factors,
+            num_threads=self.num_threads,
         )
+        return item_factors[0] if np.isscalar(itemid) else item_factors
 
     def explain(self, userid, user_items, itemid, user_weights=None, N=10):
         """Provides explanations for why the item is liked by the user.

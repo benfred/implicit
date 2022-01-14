@@ -56,12 +56,13 @@ cdef inline void gesv(int * n, int * nrhs, floating * a, int * lda, int * piv, f
 
 
 def least_squares(Cui, X, Y, regularization, num_threads=0):
-    _least_squares(Cui.indptr, Cui.indices, Cui.data.astype('float32'),
+    YtY = np.dot(np.transpose(Y), Y)
+    _least_squares(YtY, Cui.indptr, Cui.indices, Cui.data.astype('float32'),
                    X, Y, regularization, num_threads)
 
 
 @cython.boundscheck(False)
-def _least_squares(integral[:] indptr, integral[:] indices, float[:] data,
+def _least_squares(YtY, integral[:] indptr, integral[:] indices, float[:] data,
                    floating[:, :] X, floating[:, :] Y, double regularization,
                    int num_threads=0):
     dtype = np.float64 if floating is double else np.float32
@@ -69,8 +70,6 @@ def _least_squares(integral[:] indptr, integral[:] indices, float[:] data,
     cdef integral users = X.shape[0], u, i, j, index
     cdef int one = 1, factors = X.shape[1], err
     cdef floating confidence, temp
-
-    YtY = np.dot(np.transpose(Y), Y)
 
     cdef floating[:, :] initialA = YtY + regularization * np.eye(factors, dtype=dtype)
     cdef floating[:] initialB = np.zeros(factors, dtype=dtype)
