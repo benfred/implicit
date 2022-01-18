@@ -4,6 +4,8 @@ from numpy.testing import assert_allclose, assert_array_equal
 
 import implicit
 
+from .recommender_base_test import get_checker_board
+
 
 @pytest.mark.skipif(not implicit.gpu.HAS_CUDA, reason="needs cuda build")
 @pytest.mark.parametrize("k", [4, 16, 64, 128, 1000])
@@ -61,3 +63,19 @@ def test_calculate_norms():
     )
     np_norms = np.linalg.norm(items, axis=1)
     assert_allclose(norms, np_norms)
+
+
+@pytest.mark.skipif(not implicit.gpu.HAS_CUDA, reason="needs cuda build")
+@pytest.mark.parametrize(
+    "model_class", [implicit.als.AlternatingLeastSquares, implicit.bpr.BayesianPersonalizedRanking]
+)
+@pytest.mark.parametrize("from_gpu", [True, False])
+def test_cpu_gpu_conversion(model_class, from_gpu):
+    print("model_class!", model_class, from_gpu)
+    model = model_class(use_gpu=from_gpu, factors=32)
+    user_plays = get_checker_board(50)
+    model.fit(user_plays)
+    converted = model.to_cpu() if from_gpu else model.to_gpu()
+    assert_allclose(
+        model.recommend(0, user_plays), converted.recommend(0, user_plays), rtol=1e-3, atol=1e-3
+    )

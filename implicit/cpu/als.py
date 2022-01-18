@@ -313,6 +313,20 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self._XtX = X.T.dot(X)
         return self._XtX
 
+    def to_gpu(self):
+        """Converts this model to an equivalent version running on the gpu"""
+        import implicit.gpu.als
+
+        ret = implicit.gpu.als.AlternatingLeastSquares(
+            factors=self.factors,
+            regularization=self.regularization,
+            iterations=self.iterations,
+            calculate_training_loss=self.calculate_training_loss,
+        )
+        ret.user_factors = implicit.gpu.Matrix(self.user_factors)
+        ret.item_factors = implicit.gpu.Matrix(self.item_factors)
+        return ret
+
 
 def least_squares(Cui, X, Y, regularization, num_threads=0):
     """For each user in Cui, calculate factors Xu for them
