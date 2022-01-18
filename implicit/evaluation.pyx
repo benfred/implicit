@@ -3,13 +3,10 @@
 
 import cython
 import numpy as np
-from cython.parallel import parallel, prange
 from scipy.sparse import coo_matrix, csr_matrix
 from tqdm.auto import tqdm
 
 from libc.math cimport fmin
-from libc.stdlib cimport free, malloc
-from libc.string cimport memset
 from libcpp.unordered_set cimport unordered_set
 
 from .utils import check_random_state
@@ -403,7 +400,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
         test_user_items = test_user_items.tocsr()
 
     cdef int users = test_user_items.shape[0], items = test_user_items.shape[1]
-    cdef int u, i
+    cdef int u, i, batch_idx
     # precision
     cdef double relevant = 0, pr_div = 0, total = 0
     # map
@@ -418,34 +415,31 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
     cdef int[:] test_indptr = test_user_items.indptr
     cdef int[:] test_indices = test_user_items.indices
 
-    cdef int * ids
-    cdef unordered_set[int] * likes
+    cdef int[:, :] ids
+    cdef int[:] batch
+
+    cdef unordered_set[int] likes
 
     progress = tqdm(total=users, disable=not show_progress)
 
-    with nogil, parallel(num_threads=num_threads):
-        ids = <int * > malloc(sizeof(int) * K)
-        likes = new unordered_set[int]()
-        try:
-            for u in prange(users, schedule='dynamic', chunksize=8):
-                # if we don't have any test items, skip this user
-                if test_indptr[u] == test_indptr[u+1]:
-                    with gil:
-                        progress.update(1)
-                    continue
-                memset(ids, -1, sizeof(int) * K)
+    batch_size = 1000
+    start_idx = 0
+    to_generate = np.arange(users, dtype="int32")
 
-                with gil:
-                    recs, _ = model.recommend(u, train_user_items, N=K)
-                    for i in range(len(recs)):
-                        ids[i] = recs[i]
-                    progress.update(1)
+    while start_idx < users:
+        batch = to_generate[start_idx: start_idx + batch_size]
+        ids, _ = model.recommend(batch, train_user_items, N=K)
+        start_idx += batch_size
 
-                # mostly we're going to be blocked on the gil here,
-                # so try to do actual scoring without it
+        with nogil:
+            for batch_idx in range(len(batch)):
+                u = batch[batch_idx]
                 likes.clear()
                 for i in range(test_indptr[u], test_indptr[u+1]):
                     likes.insert(test_indices[i])
+
+                if likes.size() == 0:
+                    continue
 
                 pr_div += fmin(K, likes.size())
                 ap = 0
@@ -457,7 +451,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                 num_neg_items = items - num_pos_items
 
                 for i in range(K):
-                    if likes.find(ids[i]) != likes.end():
+                    if likes.find(ids[batch_idx, i]) != likes.end():
                         relevant += 1
                         hit += 1
                         ap += hit / (i + 1)
@@ -469,9 +463,8 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                 mean_ap += ap / fmin(K, likes.size())
                 mean_auc += auc / (num_pos_items * num_neg_items)
                 total += 1
-        finally:
-            free(ids)
-            del likes
+
+        progress.update(len(batch))
 
     progress.close()
     return {
