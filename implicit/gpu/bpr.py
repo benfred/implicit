@@ -149,3 +149,16 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                             "skipped": f"{100.0 * skipped / total:0.2f}%",
                         }
                     )
+
+    def to_cpu(self):
+        """Converts this model to an equivalent version running on the cpu"""
+        ret = implicit.cpu.bpr.BayesianPersonalizedRanking(
+            factors=self.factors,
+            learning_rate=self.learning_rate,
+            regularization=self.regularization,
+            iterations=self.iterations,
+            verify_negative_samples=self.verify_negative_samples,
+        )
+        ret.user_factors = self.user_factors.to_numpy()
+        ret.item_factors = self.item_factors.to_numpy()
+        return ret

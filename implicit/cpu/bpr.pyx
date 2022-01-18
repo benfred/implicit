@@ -201,6 +201,21 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 
         self._check_fit_errors()
 
+    def to_gpu(self):
+        """Converts this model to an equivalent version running on the gpu"""
+        import implicit.gpu.bpr
+
+        ret = implicit.gpu.bpr.BayesianPersonalizedRanking(
+            factors=self.factors,
+            learning_rate=self.learning_rate,
+            regularization=self.regularization,
+            iterations=self.iterations,
+            verify_negative_samples=self.verify_negative_samples,
+        )
+        ret.user_factors = implicit.gpu.Matrix(self.user_factors)
+        ret.item_factors = implicit.gpu.Matrix(self.item_factors)
+        return ret
+
 
 @cython.cdivision(True)
 @cython.boundscheck(False)

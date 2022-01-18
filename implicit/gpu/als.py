@@ -205,3 +205,15 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self._XtX = implicit.gpu.Matrix(self.factors, self.factors)
             self.solver.calculate_yty(self.user_factors, self._XtX, self.regularization)
         return self._XtX
+
+    def to_cpu(self):
+        """Converts this model to an equivalent version running on the CPU"""
+        ret = implicit.cpu.als.AlternatingLeastSquares(
+            factors=self.factors,
+            regularization=self.regularization,
+            iterations=self.iterations,
+            calculate_training_loss=self.calculate_training_loss,
+        )
+        ret.user_factors = self.user_factors.to_numpy()
+        ret.item_factors = self.item_factors.to_numpy()
+        return ret
