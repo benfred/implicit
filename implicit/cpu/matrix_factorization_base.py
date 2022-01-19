@@ -127,15 +127,15 @@ class MatrixFactorizationBase(RecommenderBase):
             return self.recalculate_user(userid, user_items)
         return self.user_factors[userid]
 
-    def _item_factor(self, itemid, react_users, recalculate_item=False):
+    def _item_factor(self, itemid, item_users, recalculate_item=False):
         if recalculate_item:
-            return self.recalculate_item(itemid, react_users)
+            return self.recalculate_item(itemid, item_users)
         return self.item_factors[itemid]
 
     def recalculate_user(self, userid, user_items):
         raise NotImplementedError("recalculate_user is not supported with this model")
 
-    def recalculate_item(self, itemid, react_users):
+    def recalculate_item(self, itemid, item_users):
         raise NotImplementedError("recalculate_item is not supported with this model")
 
     def similar_users(self, userid, N=10, filter_users=None, users=None):
@@ -168,9 +168,9 @@ class MatrixFactorizationBase(RecommenderBase):
     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
 
     def similar_items(
-        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+        self, itemid, N=10, recalculate_item=False, item_users=None, filter_items=None, items=None
     ):
-        factor = self._item_factor(itemid, react_users, recalculate_item)
+        factor = self._item_factor(itemid, item_users, recalculate_item)
         factors = self.item_factors
         norms = self.item_norms
 

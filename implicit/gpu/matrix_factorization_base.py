@@ -158,7 +158,7 @@ class MatrixFactorizationBase(RecommenderBase):
     similar_users.__doc__ = RecommenderBase.similar_users.__doc__
 
     def similar_items(
-        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+        self, itemid, N=10, recalculate_item=False, item_users=None, filter_items=None, items=None
     ):
         item_factors = self.item_factors
         norms = self.item_norms
@@ -177,7 +177,7 @@ class MatrixFactorizationBase(RecommenderBase):
                 raise IndexError("Some itemids are not in the model")
 
         if recalculate_item:
-            query_factors = self.recalculate_item(itemid, react_users)
+            query_factors = self.recalculate_item(itemid, item_users)
         else:
             query_factors = self.item_factors[itemid]
 
@@ -202,7 +202,7 @@ class MatrixFactorizationBase(RecommenderBase):
     def recalculate_user(self, userid, user_items):
         raise NotImplementedError("recalculate_user is not supported with this model")
 
-    def recalculate_item(self, itemid, react_users):
+    def recalculate_item(self, itemid, item_users):
         raise NotImplementedError("recalculate_item is not supported with this model")
 
     def __getstate__(self):

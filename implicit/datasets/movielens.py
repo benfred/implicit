@@ -42,7 +42,7 @@ def get_movielens(variant="20m"):
     with h5py.File(path, "r") as f:
         m = f.get("movie_user_ratings")
         plays = csr_matrix((m.get("data"), m.get("indices"), m.get("indptr")))
-        return np.array(f["movie"]), plays
+        return np.array(f["movie"].asstr()[:]), plays
 
 
 def generate_dataset(path, variant="20m", outputpath="."):

@@ -98,7 +98,7 @@ class RecommenderBase:
 
     @abstractmethod
     def similar_items(
-        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+        self, itemid, N=10, recalculate_item=False, item_users=None, filter_items=None, items=None
     ):
         """
         Calculates a list of similar items
@@ -109,12 +109,13 @@ class RecommenderBase:
             The item id or an array of item ids to retrieve similar items for
         N : int, optional
             The number of similar items to return
-        react_users : csr_matrix, optional
-            A sparse matrix of shape (number_items, number_users). This lets us look
-            up the reacted users and their weights for the item.
         recalculate_item : bool, optional
             When true, don't rely on stored item state and instead recalculate from the
-            passed in react_users
+            passed in item_users
+        item_users : csr_matrix, optional
+            A sparse matrix of shape (number_items, number_users). This lets us look
+            up the users for each item. This is only needs to be set when setting
+            recalculate_item=True
         filter_items: array_like, optional
             An array of item ids to filter out from the results being returned
         items: array_like, optional
