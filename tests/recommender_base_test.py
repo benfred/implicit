@@ -216,7 +216,7 @@ class RecommenderBaseTestMixin:
 
             try:
                 recalculated_ids, recalculated_scores = model.similar_items(
-                    itemid, N=10, react_users=item_users
+                    itemid, N=10, item_users=item_users
                 )
                 assert np.allclose(ids, recalculated_ids)
                 assert np.allclose(scores, recalculated_scores)
@@ -243,7 +243,7 @@ class RecommenderBaseTestMixin:
         check_results(ids)
         try:
             ids, _ = model.similar_items(
-                itemids, N=10, recalculate_item=True, react_users=user_items.T.tocsr()
+                itemids, N=10, recalculate_item=True, item_users=user_items.T.tocsr()
             )
             check_results(ids)
         except NotImplementedError:

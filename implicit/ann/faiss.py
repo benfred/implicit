@@ -130,7 +130,7 @@ class FaissModel(RecommenderBase):
             self.similar_items_index = index
 
     def similar_items(
-        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+        self, itemid, N=10, recalculate_item=False, item_users=None, filter_items=None, items=None
     ):
         if items is not None and self.approximate_similar_items:
             raise NotImplementedError("using an items filter isn't supported with ANN lookup")
@@ -143,8 +143,8 @@ class FaissModel(RecommenderBase):
             return self.model.similar_items(
                 itemid,
                 N,
-                react_users=react_users,
                 recalculate_item=recalculate_item,
+                item_users=item_users,
                 filter_items=filter_items,
                 items=items,
             )
@@ -152,7 +152,7 @@ class FaissModel(RecommenderBase):
         # support recalculate_item if possible. TODO: refactor this
         if hasattr(self.model, "_item_factor"):
             factors = self.model._item_factor(
-                itemid, react_users, recalculate_item
+                itemid, item_users, recalculate_item
             )  # pylint: disable=protected-access
         elif recalculate_item:
             raise NotImplementedError(f"recalculate_item isn't supported with {self.model}")

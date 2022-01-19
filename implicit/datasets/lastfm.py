@@ -28,7 +28,7 @@ def get_lastfm():
     with h5py.File(filename, "r") as f:
         m = f.get("artist_user_plays")
         plays = csr_matrix((m.get("data"), m.get("indices"), m.get("indptr")))
-        return np.array(f["artist"]), np.array(f["user"]), plays
+        return np.array(f["artist"].asstr()[:]), np.array(f["user"].asstr()[:]), plays
 
 
 def generate_dataset(filename, outputfilename):
@@ -74,7 +74,7 @@ def _hfd5_from_dataframe(data, outputfilename):
     plays = coo_matrix(
         (
             data["plays"].astype(np.float32),
-            (data["artist"].cat.codes.copy(), data["user"].cat.codes.copy()),
+            (data["user"].cat.codes.copy(), data["artist"].cat.codes.copy()),
         )
     ).tocsr()
 

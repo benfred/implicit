@@ -213,10 +213,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         )
         return user_factors[0] if np.isscalar(userid) else user_factors
 
-    def recalculate_item(self, itemid, react_users):
+    def recalculate_item(self, itemid, item_users):
         items = 1 if np.isscalar(itemid) else len(itemid)
         item_factors = np.zeros((items, self.factors), dtype=self.dtype)
-        Ciu = react_users[itemid]
+        Ciu = item_users[itemid]
         _als._least_squares(
             self.XtX,
             Ciu.indptr,

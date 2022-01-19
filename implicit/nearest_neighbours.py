@@ -106,7 +106,7 @@ class ItemItemRecommender(RecommenderBase):
         raise NotImplementedError("similar_users isn't implemented for item-item recommenders")
 
     def similar_items(
-        self, itemid, N=10, react_users=None, recalculate_item=False, filter_items=None, items=None
+        self, itemid, N=10, recalculate_item=False, item_users=None, filter_items=None, items=None
     ):
         """Returns a list of the most similar other items"""
         if recalculate_item:
