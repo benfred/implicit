@@ -4,6 +4,8 @@
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 #include <curand.h>
+#include <thrust/binary_search.h>
+#include <thrust/execution_policy.h>
 
 #include "implicit/gpu/als.h"
 #include "implicit/gpu/dot.cuh"
@@ -11,28 +13,6 @@
 
 namespace implicit {
 namespace gpu {
-
-// TODO: we could use an n-ary search here instead, but
-// that will only be faster when the number of likes for a user is
-// much greater than the number of threads (factors) we are using.
-// Since most users on most datasets have relatively few likes, I'm
-// using a simple linear scan here instea
-__inline__ __device__ bool linear_search(int *start, int *end, int target) {
-  __shared__ bool ret;
-
-  if (threadIdx.x == 0)
-    ret = false;
-  __syncthreads();
-
-  int size = end - start;
-  for (int i = threadIdx.x; i < size; i += blockDim.x) {
-    if (start[i] == target) {
-      ret = true;
-    }
-  }
-  __syncthreads();
-  return ret;
-}
 
 __global__ void bpr_update_kernel(int samples, unsigned int *random_likes,
                                   unsigned int *random_dislikes, int *itemids,
@@ -53,8 +33,8 @@ __global__ void bpr_update_kernel(int samples, unsigned int *random_likes,
         dislikedid = itemids[disliked_index];
 
     if (verify_negative_samples &&
-        linear_search(&itemids[indptr[userid]], &itemids[indptr[userid + 1]],
-                      dislikedid)) {
+        thrust::binary_search(thrust::seq, &itemids[indptr[userid]],
+                              &itemids[indptr[userid + 1]], dislikedid)) {
       skipped += 1;
       continue;
     }
