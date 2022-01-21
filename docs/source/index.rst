@@ -7,9 +7,6 @@
 Implicit
 ====================================
 
-Fast Python Collaborative Filtering for Implicit Datasets.
-
-
 Fast Python Collaborative Filtering for Implicit Datasets
 
 This project provides fast Python implementations of several different popular recommendation algorithms for
