@@ -8,21 +8,23 @@ class ModelFitError(Exception):
 
 
 class RecommenderBase:
-    """Defines the interface that all recommendations models here expose"""
+    """Defines a common interface for all recommendation models"""
 
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def fit(self, user_items):
+    def fit(self, user_items, show_process=True):
         """
         Trains the model on a sparse matrix of item/user/weight
 
         Parameters
         ----------
         user_items : csr_matrix
-            A matrix of shape (number_of_users, number_of_items). The nonzero
+            A sparse CSR matrix of shape (number_of_users, number_of_items). The nonzero
             entries in this matrix are the items that are liked by each user.
             The values are how confident you are that the item is liked by the user.
+        show_progress : bool, optional
+            Whether to show a progress bar during fitting
         """
 
     @abstractmethod
@@ -37,9 +39,26 @@ class RecommenderBase:
         items=None,
     ):
         """
-        Recommends items for a user
+        Recommends items for users.
 
-        Calculates the N best recommendations for a user, and returns a list of itemids, score.
+        This method allows you to calculate the top N recommendations for a user or
+        batch of users. Passing an array of userids instead of a single userid will
+        tend to be more efficient, and allows multi-thread processing on the CPU.
+
+        This method has options for filtering out items from the results. You can both
+        filter out items that have already been liked by the user with the
+        filter_already_liked_items parameter, as well as pass in filter_items to filter
+        out other items for all users in the batch. By default all items in the training
+        dataset are scored, but by setting the 'items' parameter you can restrict down to
+        a subset.
+
+        Example usage::
+
+            # calculate the top recommendations for a single user
+            ids, scores = model.recommend(0, user_items)
+
+            # calculate the top recommendations for a batch of users
+            ids, scores = model.recommend(np.arange(10), user_items)
 
         Parameters
         ----------
@@ -49,17 +68,17 @@ class RecommenderBase:
             A sparse matrix of shape (number_users, number_items). This lets us look
             up the liked items and their weights for the user. This is used to filter out
             items that have already been liked from the output, and to also potentially
-            calculate the best items for this user.
+            recalculate the user representation.
         N : int, optional
             The number of results to return
         filter_already_liked_items: bool, optional
             When true, don't return items present in the training set that were rated
             by the specified user.
-        filter_items : sequence of ints, optional
+        filter_items : array_like, optional
             List of extra item ids to filter out from the output
         recalculate_user : bool, optional
-            When true, don't rely on stored user state and instead recalculate from the
-            passed in user_items
+            When true, don't rely on stored user embeddings and instead recalculate from the
+            passed in user_items. This option isn't supported by all models.
         items: array_like, optional
             Array of extra item ids. When set this will only rank the items in this array instead
             of ranking every item the model was fit for. This parameter cannot be used with
@@ -129,11 +148,6 @@ class RecommenderBase:
         """
 
     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
-        """
-        Rank given items for a user and returns sorted item list.
-
-        Deprecated. Use recommend with the 'items' parameter instead
-        """
         warnings.warn(
             "rank_items is deprecated. Use recommend with the 'items' parameter instead",
             DeprecationWarning,

@@ -1,6 +1,7 @@
 LogisticMatrixFactorization
 ===========================
 
-.. autoclass:: implicit.lmf.LogisticMatrixFactorization
+.. autoclass:: implicit.cpu.lmf.LogisticMatrixFactorization
    :members:
    :inherited-members:
+   :show-inheritance:

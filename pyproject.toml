@@ -5,7 +5,10 @@ line-length = 100
 requires = [
     "setuptools>=42",
     "wheel",
-    "scikit-build>=0.12",
+    # scikit-build 0.12 doesn't support Cython docstrings, get the latest code
+    # until a new release is pushed
+    # https://github.com/scikit-build/scikit-build/issues/518
+    "scikit-build@git+https://github.com/scikit-build/scikit-build.git",
     "cmake>=3.18",
     "Cython>=0.24",
     "scipy>=0.16"

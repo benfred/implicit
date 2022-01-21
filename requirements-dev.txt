@@ -1,0 +1,10 @@
+-r requirements.txt
+
+git+https:///github.com/scikit-build/scikit-build.git
+pytes
+black
+flake8
+isort
+codespell
+
+
