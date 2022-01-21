@@ -44,7 +44,6 @@ class ItemItemRecommender(RecommenderBase):
         recalculate_user=False,
         items=None,
     ):
-        """returns the best N recommendations for a user given its id"""
         if not np.isscalar(userid):
             return _batch_call(
                 self.recommend,
@@ -108,7 +107,6 @@ class ItemItemRecommender(RecommenderBase):
     def similar_items(
         self, itemid, N=10, recalculate_item=False, item_users=None, filter_items=None, items=None
     ):
-        """Returns a list of the most similar other items"""
         if recalculate_item:
             raise NotImplementedError("Recalculate_item isn't implemented")
 

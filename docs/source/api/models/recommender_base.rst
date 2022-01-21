@@ -3,4 +3,5 @@ RecommenderBase
 
 .. autoclass:: implicit.recommender_base.RecommenderBase
    :members:
-   :undoc-members:
+   :no-undoc-members:
+   :exclude-members: rank_items
