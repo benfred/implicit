@@ -421,13 +421,17 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
 
     cdef unordered_set[int] likes
 
-    progress = tqdm(total=users, disable=not show_progress)
 
     batch_size = 1000
     start_idx = 0
-    to_generate = np.arange(users, dtype="int32")
 
-    while start_idx < users:
+    # get an array of userids that have at least one item in the test set
+    to_generate = np.arange(users, dtype="int32")
+    to_generate = to_generate[np.ediff1d(test_user_items.indptr) > 0]
+
+    progress = tqdm(total=len(to_generate), disable=not show_progress)
+
+    while start_idx < len(to_generate):
         batch = to_generate[start_idx: start_idx + batch_size]
         ids, _ = model.recommend(batch, train_user_items, N=K)
         start_idx += batch_size
@@ -438,9 +442,6 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                 likes.clear()
                 for i in range(test_indptr[u], test_indptr[u+1]):
                     likes.insert(test_indices[i])
-
-                if likes.size() == 0:
-                    continue
 
                 pr_div += fmin(K, likes.size())
                 ap = 0
