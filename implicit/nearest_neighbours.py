@@ -44,7 +44,13 @@ class ItemItemRecommender(RecommenderBase):
         recalculate_user=False,
         items=None,
     ):
+        if not isinstance(user_items, csr_matrix):
+            raise ValueError("user_items needs to be a CSR sparse matrix")
+
         if not np.isscalar(userid):
+            if user_items.shape[0] != len(userid):
+                raise ValueError("user_items must contain 1 row for every user in userids")
+
             return _batch_call(
                 self.recommend,
                 userid,
@@ -55,14 +61,6 @@ class ItemItemRecommender(RecommenderBase):
                 recalculate_user=recalculate_user,
                 items=items,
             )
-
-        if (filter_already_liked_items or recalculate_user) and not isinstance(
-            user_items, csr_matrix
-        ):
-            raise ValueError("user_items needs to be a CSR sparse matrix")
-
-        if userid >= user_items.shape[0]:
-            raise ValueError("userid is out of bounds of the user_items matrix")
 
         if filter_items is not None and items is not None:
             raise ValueError("Can't specify both filter_items and items")

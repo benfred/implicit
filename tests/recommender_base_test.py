@@ -35,7 +35,7 @@ class RecommenderBaseTestMixin:
         model.fit(item_users, show_progress=False)
 
         for userid in range(50):
-            ids, _ = model.recommend(userid, user_items, N=1)
+            ids, _ = model.recommend(userid, user_items[userid], N=1)
             self.assertEqual(len(ids), 1)
 
             # the top item recommended should be the same as the userid:
@@ -46,12 +46,12 @@ class RecommenderBaseTestMixin:
         # try asking for more items than possible,
         # should return only the available items
         # https://github.com/benfred/implicit/issues/22
-        ids, _ = model.recommend(0, user_items, N=10000)
+        ids, _ = model.recommend(0, user_items[0], N=10000)
         self.assertTrue(len(ids))
 
         # filter recommended items using an additional filter list
         # https://github.com/benfred/implicit/issues/26
-        ids, _ = model.recommend(0, user_items, N=1, filter_items=[0])
+        ids, _ = model.recommend(0, user_items[0], N=1, filter_items=[0])
         self.assertTrue(0 not in set(ids))
 
     def test_recommend_batch(self):
@@ -60,8 +60,9 @@ class RecommenderBaseTestMixin:
         model = self._get_model()
         model.fit(user_items, show_progress=False)
 
-        ids, scores = model.recommend(np.arange(50), user_items, N=1)
-        for userid in range(50):
+        userids = np.arange(50)
+        ids, scores = model.recommend(userids, user_items[userids], N=1)
+        for userid in userids:
             assert len(ids[userid]) == 1
 
             # the top item recommended should be the same as the userid:
@@ -70,29 +71,30 @@ class RecommenderBaseTestMixin:
             assert ids[userid][0] == userid
 
             # make sure the batch recommend results match those for a single user
-            ids_user, scores_user = model.recommend(userid, user_items, N=1)
+            ids_user, scores_user = model.recommend(userid, user_items[userid], N=1)
             assert np.allclose(ids_user, ids[userid])
             assert np.allclose(scores_user, scores[userid])
 
         userids = np.array([2, 3, 4])
-        ids, _ = model.recommend(userids, user_items, N=1)
+        ids, _ = model.recommend(userids, user_items[userids], N=1)
 
         for i, userid in enumerate(userids):
             assert ids[i][0] == userid
 
         # filter recommended items using an additional filter list
-        ids, _ = model.recommend(userids, user_items, N=1, filter_items=[0])
+        ids, _ = model.recommend(userids, user_items[userids], N=1, filter_items=[0])
         for i, _ in enumerate(userids):
             assert 0 not in ids[i]
 
         # also make sure the results when filter_already_liked_items=False match in batch vs
         # scalar mode
+        userids = np.arange(50)
         ids, scores = model.recommend(
-            np.arange(50), user_items, N=5, filter_already_liked_items=False
+            userids, user_items[userids], N=5, filter_already_liked_items=False
         )
         for userid in range(50):
             ids_user, scores_user = model.recommend(
-                userid, user_items, N=5, filter_already_liked_items=False
+                userid, user_items[userid], N=5, filter_already_liked_items=False
             )
             assert np.allclose(scores_user, scores[userid])
             assert np.allclose(ids_user, ids[userid])
@@ -105,15 +107,16 @@ class RecommenderBaseTestMixin:
         model.fit(item_users, show_progress=False)
 
         try:
+            userids = np.arange(50)
             batch_ids, batch_scores = model.recommend(
-                np.arange(50), user_items, N=1, recalculate_user=True
+                userids, user_items[userids], N=1, recalculate_user=True
             )
         except NotImplementedError:
             # some models don't support recalculating user on the fly, and that's ok
             return
 
         for userid in range(item_users.shape[1]):
-            ids, scores = model.recommend(userid, user_items, N=1)
+            ids, scores = model.recommend(userid, user_items[userid], N=1)
             self.assertEqual(len(ids), 1)
             user_vector = user_items[userid]
 
@@ -216,7 +219,7 @@ class RecommenderBaseTestMixin:
 
             try:
                 recalculated_ids, recalculated_scores = model.similar_items(
-                    itemid, N=10, item_users=item_users
+                    itemid, N=10, item_users=item_users[itemid]
                 )
                 assert np.allclose(ids, recalculated_ids)
                 assert np.allclose(scores, recalculated_scores)
@@ -243,7 +246,7 @@ class RecommenderBaseTestMixin:
         check_results(ids)
         try:
             ids, _ = model.similar_items(
-                itemids, N=10, recalculate_item=True, item_users=user_items.T.tocsr()
+                itemids, N=10, recalculate_item=True, item_users=user_items.T.tocsr()[itemids]
             )
             check_results(ids)
         except NotImplementedError:
@@ -307,7 +310,7 @@ class RecommenderBaseTestMixin:
 
         try:
             selected_items = np.array([1, 2, 3, 4, 5, 6])
-            ids, _ = model.recommend(0, user_items, items=selected_items, N=20)
+            ids, _ = model.recommend(0, user_items[0], items=selected_items, N=20)
 
             self.assertEqual(len(ids), len(selected_items))
 
@@ -327,7 +330,7 @@ class RecommenderBaseTestMixin:
             selected_items = random.sample(range(50), 10)
 
             ids, _ = model.recommend(
-                userid, user_items, items=selected_items, filter_already_liked_items=False
+                userid, user_items[userid], items=selected_items, filter_already_liked_items=False
             )
             # ranked list should have same items
             self.assertEqual(set(ids), set(selected_items))
@@ -338,10 +341,10 @@ class RecommenderBaseTestMixin:
             # rank_items should raise IndexError if selected items contains wrong itemids
             with self.assertRaises(IndexError):
                 wrong_item_list = selected_items + wrong_neg_items
-                model.recommend(userid, user_items, items=wrong_item_list)
+                model.recommend(userid, user_items[userid], items=wrong_item_list)
             with self.assertRaises(IndexError):
                 wrong_item_list = selected_items + wrong_pos_items
-                model.recommend(userid, user_items, items=wrong_item_list)
+                model.recommend(userid, user_items[userid], items=wrong_item_list)
 
     def test_rank_items_batch(self):
         item_users = get_checker_board(50)

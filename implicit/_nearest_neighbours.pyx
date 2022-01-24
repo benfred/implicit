@@ -61,7 +61,7 @@ cdef class NearestNeighboursScorer(object):
         try:
             with self.lock:
                 with nogil:
-                    for index1 in range(user_indptr[u], user_indptr[u+1]):
+                    for index1 in range(user_indptr[0], user_indptr[1]):
                         i = user_indices[index1]
                         weight = user_data[index1]
 
@@ -71,7 +71,7 @@ cdef class NearestNeighboursScorer(object):
 
                     if remove_own_likes:
                         # set the score to 0 for things already liked
-                        for index1 in range(user_indptr[u], user_indptr[u+1]):
+                        for index1 in range(user_indptr[0], user_indptr[1]):
                             i = user_indices[index1]
                             self.neighbours.sums[i] = 0
 

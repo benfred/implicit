@@ -81,8 +81,18 @@ def _batch_call(func, ids, *args, N=10, **kwargs):
     output_ids = np.zeros((len(ids), N), dtype=np.int32)
     output_scores = np.zeros((len(ids), N), dtype=np.float32)
 
+    user_items = kwargs.pop("user_items") if "user_items" in kwargs else None
+    item_users = kwargs.pop("item_users") if "item_users" in kwargs else None
+
+    # pylint: disable=unsubscriptable-object
     for i, idx in enumerate(ids):
-        batch_ids, batch_scores = func(idx, *args, N=N, **kwargs)
+        current_kwargs = kwargs
+        if user_items is not None:
+            current_kwargs = dict(user_items=user_items[i], **kwargs)
+        elif item_users is not None:
+            current_kwargs = dict(item_users=item_users[i], **kwargs)
+
+        batch_ids, batch_scores = func(idx, *args, N=N, **current_kwargs)
 
         # pad out to N items if we're returned fewer
         missing_items = N - len(batch_ids)
