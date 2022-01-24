@@ -210,7 +210,7 @@ class AnnoyModel(RecommenderBase):
             filter_items = np.array(filter_items)
 
         if filter_already_liked_items:
-            user_likes = user_items[userid].indices
+            user_likes = user_items[0].indices
             filter_items = (
                 np.append(filter_items, user_likes) if filter_items is not None else user_likes
             )

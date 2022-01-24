@@ -37,7 +37,7 @@ Basic Usage
     model.fit(user_item_data)
 
     # recommend items for a user
-    recommendations = model.recommend(userid, user_item_data)
+    recommendations = model.recommend(userid, user_item_data[userid])
 
     # find related items
     related = model.similar_items(itemid)

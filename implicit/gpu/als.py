@@ -170,7 +170,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     def recalculate_user(self, userid, user_items):
         users = 1 if np.isscalar(userid) else len(userid)
         user_factors = implicit.gpu.Matrix.zeros(users, self.factors)
-        Cui = implicit.gpu.CSRMatrix(user_items[userid])
+        Cui = implicit.gpu.CSRMatrix(user_items)
 
         self.solver.least_squares(
             Cui, user_factors, self.YtY, self.item_factors, cg_steps=self.factors
@@ -180,7 +180,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     def recalculate_item(self, itemid, item_users):
         items = 1 if np.isscalar(itemid) else len(itemid)
         item_factors = implicit.gpu.Matrix.zeros(items, self.factors)
-        Ciu = implicit.gpu.CSRMatrix(item_users[itemid])
+        Ciu = implicit.gpu.CSRMatrix(item_users)
         self.solver.least_squares(
             Ciu, item_factors, self.XtX, self.user_factors, cg_steps=self.factors
         )

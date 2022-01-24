@@ -182,9 +182,9 @@ def test_explain():
     # TODO: this doesn't quite work with N=10 (because we returns items that should have been
     # filtered with large negative score?) also seems like the dtype is different between
     # recalculate and not
-    ids, scores = model.recommend(userid, user_items, N=3)
+    ids, scores = model.recommend(userid, user_items[userid], N=3)
     recalculated_ids, recalculated_scores = model.recommend(
-        userid, user_items, N=3, recalculate_user=True
+        userid, user_items[userid], N=3, recalculate_user=True
     )
     for item1, score1, item2, score2 in zip(ids, scores, recalculated_ids, recalculated_scores):
         assert item1 == item2

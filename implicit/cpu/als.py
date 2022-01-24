@@ -197,15 +197,32 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self._check_fit_errors()
 
     def recalculate_user(self, userid, user_items):
+        """Recalculates factors for a batch of users
+
+        This method recalculates factors for a batch of users and returns
+        the factors without storing on the object.
+
+        Parameters
+        ----------
+        userid : Union[array_like, int]
+            The userid or array of userids to recalculate
+        user_items : csr_matrix
+            Sparse matrix of (users, items) that contain the users that liked
+            each item.
+        """
+
         # we're using the cholesky solver here on purpose, since for a full recompute
         users = 1 if np.isscalar(userid) else len(userid)
+
+        if user_items.shape[0] != users:
+            raise ValueError("user_items should have one row for every item in user")
+
         user_factors = np.zeros((users, self.factors), dtype=self.dtype)
-        Cui = user_items[userid]
         _als._least_squares(
             self.YtY,
-            Cui.indptr,
-            Cui.indices,
-            Cui.data.astype("float32"),
+            user_items.indptr,
+            user_items.indices,
+            user_items.data.astype("float32"),
             user_factors,
             self.item_factors,
             self.regularization,
@@ -214,14 +231,26 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         return user_factors[0] if np.isscalar(userid) else user_factors
 
     def recalculate_item(self, itemid, item_users):
+        """Recalculates factors for a batch of items
+
+        This recalculates factors for a batch of items, returns the newly
+        calculated values without storing.
+
+        Parameters
+        ----------
+        itemid : Union[array_like, int]
+            The itemid or array of itemids to recalculate
+        item_users : csr_matrix
+            Sparse matrix of (items, users) that contain the users that liked
+            each item
+        """
         items = 1 if np.isscalar(itemid) else len(itemid)
         item_factors = np.zeros((items, self.factors), dtype=self.dtype)
-        Ciu = item_users[itemid]
         _als._least_squares(
             self.XtX,
-            Ciu.indptr,
-            Ciu.indices,
-            Ciu.data.astype("float32"),
+            item_users.indptr,
+            item_users.indices,
+            item_users.data.astype("float32"),
             item_factors,
             self.user_factors,
             self.regularization,
@@ -233,7 +262,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         """Provides explanations for why the item is liked by the user.
 
         Parameters
-        ---------
+        ----------
         userid : int
             The userid to explain recommendations for
         user_items : csr_matrix

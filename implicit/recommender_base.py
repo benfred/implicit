@@ -55,20 +55,23 @@ class RecommenderBase:
         Example usage::
 
             # calculate the top recommendations for a single user
-            ids, scores = model.recommend(0, user_items)
+            ids, scores = model.recommend(0, user_items[0])
 
             # calculate the top recommendations for a batch of users
-            ids, scores = model.recommend(np.arange(10), user_items)
+            userids = np.arange(10)
+            ids, scores = model.recommend(userids, user_items[userids])
 
         Parameters
         ----------
         userid : Union[int, array_like]
             The userid or array of userids to calculate recommendations for
         user_items : csr_matrix
-            A sparse matrix of shape (number_users, number_items). This lets us look
+            A sparse matrix of shape (users, number_items). This lets us look
             up the liked items and their weights for the user. This is used to filter out
             items that have already been liked from the output, and to also potentially
-            recalculate the user representation.
+            recalculate the user representation. Each row in this sparse matrix corresponds
+            to a row in the userid parameter: that is the first row in this matrix contains
+            the liked items for the first user in the userid array.
         N : int, optional
             The number of results to return
         filter_already_liked_items: bool, optional
@@ -132,9 +135,11 @@ class RecommenderBase:
             When true, don't rely on stored item state and instead recalculate from the
             passed in item_users
         item_users : csr_matrix, optional
-            A sparse matrix of shape (number_items, number_users). This lets us look
+            A sparse matrix of shape (itemid, number_users). This lets us look
             up the users for each item. This is only needs to be set when setting
-            recalculate_item=True
+            recalculate_item=True. This should have the same number of rows as
+            the itemid parameter, with the first row of the sparse matrix corresponding
+            to the first item in the itemid array.
         filter_items: array_like, optional
             An array of item ids to filter out from the results being returned
         items: array_like, optional

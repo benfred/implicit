@@ -37,10 +37,12 @@ class MatrixFactorizationBase(RecommenderBase):
         recalculate_user=False,
         items=None,
     ):
-        if (filter_already_liked_items or recalculate_user) and not isinstance(
-            user_items, csr_matrix
-        ):
-            raise ValueError("user_items needs to be a CSR sparse matrix")
+        if filter_already_liked_items or recalculate_user:
+            if not isinstance(user_items, csr_matrix):
+                raise ValueError("user_items needs to be a CSR sparse matrix")
+            user_count = 1 if np.isscalar(userid) else len(userid)
+            if user_items.shape[0] != user_count:
+                raise ValueError("user_items must contain 1 row for every user in userids")
 
         user = self._user_factor(userid, user_items, recalculate_user)
 
@@ -64,7 +66,7 @@ class MatrixFactorizationBase(RecommenderBase):
         # get a CSR matrix of items to filter per-user
         filter_query_items = None
         if filter_already_liked_items:
-            filter_query_items = user_items[userid]
+            filter_query_items = user_items
 
             # if we've been given a list of explicit itemids to rank, we need to filter down
             if items is not None:
