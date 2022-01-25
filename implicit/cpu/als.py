@@ -200,7 +200,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         """Recalculates factors for a batch of users
 
         This method recalculates factors for a batch of users and returns
-        the factors without storing on the object.
+        the factors without storing on the object. For updating the model
+        using 'partial_fit_users'
 
         Parameters
         ----------
@@ -257,6 +258,73 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             num_threads=self.num_threads,
         )
         return item_factors[0] if np.isscalar(itemid) else item_factors
+
+    def partial_fit_users(self, userids, user_items):
+        """Incrementally updates user factors
+
+        This method updates factors for users specified by userids, given a
+        sparse matrix of items that they have interacted with before. This
+        allows you to retrain only parts of the model with new data, and
+        avoid a full retraining when new users appear - or the liked
+        items for an existing user change.
+
+        Parameters
+        ----------
+        userids : array_like
+            An array of userids to calculate new factors for
+        user_items : csr_matrix
+            Sparse matrix containing the liked items for each user. Each row in this
+            matrix corresponds to a row in userids.
+        """
+        if len(userids) != user_items.shape[0]:
+            raise ValueError("user_items must contain 1 row for every user in userids")
+
+        # recalculate factors for each user in the input
+        user_factors = self.recalculate_user(userids, user_items)
+
+        # ensure that we have enough storage for any new users
+        users, factors = self.user_factors.shape
+        max_userid = max(userids)
+        if max_userid >= users:
+            self.user_factors = np.concatenate(
+                [self.user_factors, np.zeros((max_userid - users + 1, factors), dtype=self.dtype)]
+            )
+
+        # update the stored factors with the newly calculated values
+        self.user_factors[userids] = user_factors
+
+    def partial_fit_items(self, itemids, item_users):
+        """Incrementally updates item factors
+
+        This method updates factors for items specified by itemids, given a
+        sparse matrix of users that have interacted with them. This
+        allows you to retrain only parts of the model with new data, and
+        avoid a full retraining when new users appear - or the liked
+        users for an existing item change.
+
+        Parameters
+        ----------
+        itemids : array_like
+            An array of itemids to calculate new factors for
+        item_users : csr_matrix
+            Sparse matrix containing the liked users for each item in itemids
+        """
+        if len(itemids) != item_users.shape[0]:
+            raise ValueError("item_users must contain 1 row for every user in itemids")
+
+        # recalculate factors for each item in the input
+        item_factors = self.recalculate_item(itemids, item_users)
+
+        # ensure that we have enough storage for any new items
+        items, factors = self.item_factors.shape
+        max_itemid = max(itemids)
+        if max_itemid > items:
+            self.item_factors = np.concatenate(
+                [self.item_factors, np.zeros((max_itemid - items + 1, factors), dtype=self.dtype)]
+            )
+
+        # update the stored factors with the newly calculated values
+        self.item_factors[itemids] = item_factors
 
     def explain(self, userid, user_items, itemid, user_weights=None, N=10):
         """Provides explanations for why the item is liked by the user.

@@ -81,6 +81,51 @@ Matrix::Matrix(int rows, int cols, float *host_data, bool allocate)
   }
 }
 
+void Matrix::resize(int rows, int cols) {
+  if (cols != this->cols) {
+    throw std::logic_error(
+        "changing number of columns in Matrix::resize is not implemented yet");
+  }
+  if (rows < this->rows) {
+    throw std::logic_error(
+        "reducing number of rows in Matrix::resize is not implemented yet");
+  }
+  auto new_storage =
+      new rmm::device_uvector<float>(rows * cols, rmm::cuda_stream_view());
+  CHECK_CUDA(cudaMemcpy(new_storage->data(), data,
+                        this->rows * this->cols * sizeof(float),
+                        cudaMemcpyDeviceToDevice));
+  int extra_rows = rows - this->rows;
+  CHECK_CUDA(cudaMemset(new_storage->data() + this->rows * this->cols, 0,
+                        extra_rows * cols * sizeof(float)));
+  storage.reset(new_storage);
+  data = storage->data();
+  this->rows = rows;
+  this->cols = cols;
+}
+
+void Matrix::assign_rows(const Vector<int> &rowids, const Matrix &other) {
+  if (other.cols != cols) {
+    throw std::invalid_argument(
+        "column dimensionality mismatch in Matrix::assign_rows");
+  }
+
+  auto count = thrust::make_counting_iterator<int>(0);
+  int other_cols = other.cols, other_rows = other.rows;
+
+  int *rowids_data = rowids.data;
+  float *other_data = other.data;
+  float *self_data = data;
+
+  thrust::for_each(count, count + (other_rows * other_cols),
+                   [=] __device__(int i) {
+                     int col = i % other_cols;
+                     int row = rowids_data[i / other_cols];
+                     int idx = col + row * other_cols;
+                     self_data[idx] = other_data[i];
+                   });
+}
+
 __global__ void calculate_norms_kernel(const float *input, int rows, int cols,
                                        float *output) {
   static __shared__ float shared[32];
