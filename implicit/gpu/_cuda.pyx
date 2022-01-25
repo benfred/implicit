@@ -74,8 +74,9 @@ cdef class KnnQuery(object):
         x = indices
         y = distances
 
-        self.c_knn.topk(dereference(items.c_matrix), dereference(queries), k,
-                        &x[0, 0], &y[0, 0], c_item_norms, c_query_filter, c_item_filter)
+        with nogil:
+            self.c_knn.topk(dereference(items.c_matrix), dereference(queries), k,
+                            &x[0, 0], &y[0, 0], c_item_norms, c_query_filter, c_item_filter)
 
         return indices, distances
 
@@ -217,20 +218,22 @@ cdef class LeastSquaresSolver(object):
         self.c_solver = new CppLeastSquaresSolver()
 
     def least_squares(self, CSRMatrix cui, Matrix X, Matrix YtY, Matrix Y, int cg_steps):
-        self.c_solver.least_squares(dereference(cui.c_matrix), X.c_matrix,
-                                    dereference(YtY.c_matrix), dereference(Y.c_matrix),
-                                    cg_steps)
-
+        with nogil:
+            self.c_solver.least_squares(dereference(cui.c_matrix), X.c_matrix,
+                                        dereference(YtY.c_matrix), dereference(Y.c_matrix),
+                                        cg_steps)
     def calculate_loss(self, CSRMatrix cui, Matrix X, Matrix Y,
                        float regularization):
-        return self.c_solver.calculate_loss(dereference(cui.c_matrix), dereference(X.c_matrix),
-                                            dereference(Y.c_matrix), regularization)
+        cdef float loss
+        with nogil:
+            loss = self.c_solver.calculate_loss(dereference(cui.c_matrix), dereference(X.c_matrix),
+                                                dereference(Y.c_matrix), regularization)
+        return loss
+
 
     def calculate_yty(self, Matrix Y, Matrix YtY, float regularization):
-        if YtY is None:
-            YtY = Matrix(None)
-
-        self.c_solver.calculate_yty(dereference(Y.c_matrix), YtY.c_matrix, regularization)
+        with nogil:
+            self.c_solver.calculate_yty(dereference(Y.c_matrix), YtY.c_matrix, regularization)
 
     def __dealloc__(self):
         del self.c_solver
@@ -249,9 +252,10 @@ def get_device_count():
 def bpr_update(IntVector userids, IntVector itemids, IntVector indptr,
                Matrix X, Matrix Y,
                float learning_rate, float regularization, long seed, bool verify_negative):
-    ret = cpp_bpr_update(dereference(userids.c_vector),
-                         dereference(itemids.c_vector),
-                         dereference(indptr.c_vector),
-                         X.c_matrix, Y.c_matrix,
-                         learning_rate, regularization, seed, verify_negative)
+    with nogil:
+        ret = cpp_bpr_update(dereference(userids.c_vector),
+                             dereference(itemids.c_vector),
+                             dereference(indptr.c_vector),
+                             X.c_matrix, Y.c_matrix,
+                             learning_rate, regularization, seed, verify_negative)
     return ret.first, ret.second
