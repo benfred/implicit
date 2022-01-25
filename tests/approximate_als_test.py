@@ -124,7 +124,7 @@ try:
                 recs = model.similar_items(0, N=1050)
                 self.assertEqual(recs[0][0], 0)
 
-                recs = model.recommend(0, plays.T.tocsr(), N=1050)
+                recs = model.recommend(0, plays.T.tocsr()[0], N=1050)
                 self.assertEqual(recs[0][0], 0)
 
             def test_pickle(self):

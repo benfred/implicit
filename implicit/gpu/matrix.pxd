@@ -23,6 +23,8 @@ cdef extern from "implicit/gpu/matrix.h" namespace "implicit::gpu" nogil:
         Matrix(const Matrix & other, const Vector[int] & rowids) except +
         Matrix(Matrix && other) except +
         void to_host(float * output) except +
+        void resize(int rows, int cols) except +
+        void assign_rows(const Vector[int] & rowids, const Matrix & other) except +
         int rows, cols
         float * data
 

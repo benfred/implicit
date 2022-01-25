@@ -186,6 +186,69 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         )
         return item_factors[0] if np.isscalar(itemid) else item_factors
 
+    def partial_fit_users(self, userids, user_items):
+        """Incrementally updates user factors
+
+        This method updates factors for users specified by userids, given a
+        sparse matrix of items that they have interacted with before. This
+        allows you to retrain only parts of the model with new data, and
+        avoid a full retraining when new users appear - or the liked
+        items for an existing user change.
+
+        Parameters
+        ----------
+        userids : array_like
+            An array of userids to calculate new factors for
+        user_items : csr_matrix
+            Sparse matrix containing the liked items for each user
+        """
+        if len(userids) != user_items.shape[0]:
+            raise ValueError("user_items must contain 1 row for every user in userids")
+
+        # recalculate factors for each user in the input
+        user_factors = self.recalculate_user(userids, user_items)
+
+        # ensure that we have enough storage for any new users
+        users, factors = self.user_factors.shape
+        max_userid = max(userids)
+        if max_userid >= users:
+            # TODO: grow exponentially ?
+            self.user_factors.resize(max_userid + 1, factors)
+
+        self.user_factors.assign_rows(userids, user_factors)
+
+    def partial_fit_items(self, itemids, item_users):
+        """Incrementally updates item factors
+
+        This method updates factors for items specified by itemids, given a
+        sparse matrix of users that have interacted with them. This
+        allows you to retrain only parts of the model with new data, and
+        avoid a full retraining when new users appear - or the liked
+        users for an existing item change.
+
+        Parameters
+        ----------
+        itemids : array_like
+            An array of itemids to calculate new factors for
+        item_users : csr_matrix
+            Sparse matrix containing the liked users for each item in itemids
+        """
+        if len(itemids) != item_users.shape[0]:
+            raise ValueError("item_users must contain 1 row for every user in itemids")
+
+        # recalculate factors for each item in the input
+        item_factors = self.recalculate_item(itemids, item_users)
+
+        # ensure that we have enough storage for any new items
+        items, factors = self.item_factors.shape
+        max_itemid = max(itemids)
+        if max_itemid > items:
+            # TODO: grow exponentially ?
+            self.item_factors.resize(max_itemid + 1, factors)
+
+        # update the stored factors with the newly calculated values
+        self.item_factors.assign_rows(itemids, item_factors)
+
     @property
     def solver(self):
         if self._solver is None:

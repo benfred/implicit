@@ -7,7 +7,7 @@ from scipy.sparse import coo_matrix, csr_matrix, random
 from implicit.als import AlternatingLeastSquares
 from implicit.gpu import HAS_CUDA
 
-from .recommender_base_test import RecommenderBaseTestMixin
+from .recommender_base_test import RecommenderBaseTestMixin, get_checker_board
 
 # pylint: disable=consider-using-f-string
 
@@ -230,3 +230,29 @@ def test_small_nan(use_gpu):
 
     # first item recommended should be the liked item in the training set
     assert ids[0] == 0
+
+
+@pytest.mark.parametrize("use_gpu", [True, False] if HAS_CUDA else [False])
+def test_incremental_retrain(use_gpu):
+    likes = get_checker_board(50)
+
+    model = AlternatingLeastSquares(factors=2, regularization=0, use_gpu=use_gpu, random_state=23)
+    model.fit(likes, show_progress=False)
+
+    ids, _ = model.recommend(0, likes[0])
+    assert ids[0] == 0
+
+    # refit the model for user 0, make them like the same thing as user 1
+    model.partial_fit_users([0], likes[1])
+    ids, _ = model.recommend(0, likes[1])
+    assert ids[0] == 1
+
+    # add a new user at position 100, make sure we can also use that for recommendations
+    model.partial_fit_users([100], likes[1])
+    ids, _ = model.recommend(100, likes[1])
+    assert ids[0] == 1
+
+    # add a new item at position 100, make sure it gets recommended for user right away
+    model.partial_fit_items([100], likes[1])
+    ids, _ = model.recommend(1, likes[1], N=2)
+    assert set(ids) == {1, 100}

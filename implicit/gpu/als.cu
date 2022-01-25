@@ -140,10 +140,10 @@ void LeastSquaresSolver::least_squares(const CSRMatrix &Cui, Matrix *X,
     throw invalid_argument("X and Y should have the same number of columns");
   if (X->cols != YtY.cols)
     throw invalid_argument("Columns of X don't match number of factors");
-  if (Cui.rows != X->rows)
-    throw invalid_argument("Dimensionality mismatch between Cui and X");
-  if (Cui.cols != Y.rows)
-    throw invalid_argument("Dimensionality mismatch between Cui and Y");
+  if (Cui.rows > X->rows)
+    throw invalid_argument("Dimensionality mismatch between rows of Cui and X");
+  if (Cui.cols > Y.rows)
+    throw invalid_argument("Dimensionality mismatch between cols of Cui and Y");
 
   // TODO: multi-gpu support
   int devId;

@@ -148,6 +148,14 @@ cdef class Matrix(object):
 
         return ret
 
+    def assign_rows(self, rowids, Matrix other):
+        cdef IntVector rows
+        rows = IntVector(np.array(rowids).astype("int32"))
+        self.c_matrix.assign_rows(dereference(rows.c_vector), dereference(other.c_matrix))
+
+    def resize(self, int rows, int cols):
+        self.c_matrix.resize(rows, cols)
+
     def to_numpy(self):
         ret = np.zeros((self.c_matrix.rows, self.c_matrix.cols), dtype="float32")
         cdef float[:, :] temp = ret

@@ -34,6 +34,9 @@ struct Matrix {
   // select a bunch of rows from this matrix. this creates a copy
   Matrix(const Matrix &other, const Vector<int> &rowids);
 
+  void resize(int rows, int cols);
+  void assign_rows(const Vector<int> &rowids, const Matrix &other);
+
   Matrix() : rows(0), cols(0), data(NULL) {}
 
   // Copy the Matrix to host memory.
