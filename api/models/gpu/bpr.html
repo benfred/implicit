@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BayesianPersonalizedRanking &mdash; Implicit 0.4.8 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="MatrixFactorizationBase" href="matrix_factorization_base.html" />
+    <link rel="prev" title="AlternatingLeastSquares" href="als.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Implicit
+          </a>
+              <div class="version">
+                0.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_lastfm.html"> Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html"> API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Models</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../recommender_base.html"> RecommenderBase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu/index.html"> CPU Models</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html"> GPU Models</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="als.html"> AlternatingLeastSquares</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"> BayesianPersonalizedRanking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="matrix_factorization_base.html"> MatrixFactorizationBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ann.html">Approximate Nearest Neighbours</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../resources.html"> Resources</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Implicit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">API Reference</a> &raquo;</li>
+          <li><a href="../index.html">Recommendation Models</a> &raquo;</li>
+          <li><a href="index.html">GPU Models</a> &raquo;</li>
+      <li>BayesianPersonalizedRanking</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/models/gpu/bpr.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="bayesianpersonalizedranking">
+<h1>BayesianPersonalizedRanking<a class="headerlink" href="#bayesianpersonalizedranking" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="implicit.gpu.bpr.BayesianPersonalizedRanking">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">implicit.gpu.bpr.</span></span><span class="sig-name descname"><span class="pre">BayesianPersonalizedRanking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">factors=100</span></em>, <em class="sig-param"><span class="pre">learning_rate=0.01</span></em>, <em class="sig-param"><span class="pre">regularization=0.01</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></em>, <em class="sig-param"><span class="pre">iterations=100</span></em>, <em class="sig-param"><span class="pre">verify_negative_samples=True</span></em>, <em class="sig-param"><span class="pre">random_state=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.gpu.bpr.BayesianPersonalizedRanking" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="matrix_factorization_base.html#implicit.gpu.matrix_factorization_base.MatrixFactorizationBase" title="implicit.gpu.matrix_factorization_base.MatrixFactorizationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.gpu.matrix_factorization_base.MatrixFactorizationBase</span></code></a></p>
+<p>Bayesian Personalized Ranking</p>
+<p>A recommender model that learns  a matrix factorization embedding based off minimizing the
+pairwise ranking loss described in the paper <a class="reference external" href="https://arxiv.org/pdf/1205.2618.pdf">BPR: Bayesian Personalized Ranking from Implicit
+Feedback</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>factors</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of latent factors to compute</p></li>
+<li><p><strong>learning_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – The learning rate to apply for SGD updates during training</p></li>
+<li><p><strong>regularization</strong> (<em>float</em><em>, </em><em>optional</em>) – The regularization factor to use</p></li>
+<li><p><strong>iterations</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of training epochs to use when fitting the data</p></li>
+<li><p><strong>verify_negative_samples</strong> (<em>bool</em><em>, </em><em>optional</em>) – When sampling negative items, check if the randomly picked negative item has actually
+been liked by the user. This check increases the time needed to train but usually leads
+to better predictions.</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>RandomState</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – The random state for seeding the initial item and user factors.
+Default is None.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="implicit.gpu.bpr.BayesianPersonalizedRanking.item_factors">
+<span class="sig-name descname"><span class="pre">item_factors</span></span><a class="headerlink" href="#implicit.gpu.bpr.BayesianPersonalizedRanking.item_factors" title="Permalink to this definition"></a></dt>
+<dd><p>Array of latent factors for each item in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="implicit.gpu.bpr.BayesianPersonalizedRanking.user_factors">
+<span class="sig-name descname"><span class="pre">user_factors</span></span><a class="headerlink" href="#implicit.gpu.bpr.BayesianPersonalizedRanking.user_factors" title="Permalink to this definition"></a></dt>
+<dd><p>Array of latent factors for each user in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="implicit.gpu.bpr.BayesianPersonalizedRanking.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.gpu.bpr.BayesianPersonalizedRanking.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Factorizes the user_items matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_items</strong> (<em>csr_matrix</em>) – Matrix of confidences for the liked items. This matrix should be a csr_matrix where
+the rows of the matrix are the user, and the columns are the items liked by that user.
+BPR ignores the weight value of the matrix right now - it treats non zero entries
+as a binary signal that the user liked the item.</p></li>
+<li><p><strong>show_progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="implicit.gpu.bpr.BayesianPersonalizedRanking.recommend">
+<span class="sig-name descname"><span class="pre">recommend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_already_liked_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalculate_user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.gpu.bpr.BayesianPersonalizedRanking.recommend" title="Permalink to this definition"></a></dt>
+<dd><p>Recommends items for users.</p>
+<p>This method allows you to calculate the top N recommendations for a user or
+batch of users. Passing an array of userids instead of a single userid will
+tend to be more efficient, and allows multi-thread processing on the CPU.</p>
+<p>This method has options for filtering out items from the results. You can both
+filter out items that have already been liked by the user with the
+filter_already_liked_items parameter, as well as pass in filter_items to filter
+out other items for all users in the batch. By default all items in the training
+dataset are scored, but by setting the ‘items’ parameter you can restrict down to
+a subset.</p>
+<p>Example usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate the top recommendations for a single user</span>
+<span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">user_items</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># calculate the top recommendations for a batch of users</span>
+<span class="n">userids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">userids</span><span class="p">,</span> <span class="n">user_items</span><span class="p">[</span><span class="n">userids</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>userid</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>array_like</em><em>]</em>) – The userid or array of userids to calculate recommendations for</p></li>
+<li><p><strong>user_items</strong> (<em>csr_matrix</em>) – A sparse matrix of shape (users, number_items). This lets us look
+up the liked items and their weights for the user. This is used to filter out
+items that have already been liked from the output, and to also potentially
+recalculate the user representation. Each row in this sparse matrix corresponds
+to a row in the userid parameter: that is the first row in this matrix contains
+the liked items for the first user in the userid array.</p></li>
+<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of results to return</p></li>
+<li><p><strong>filter_already_liked_items</strong> (<em>bool</em><em>, </em><em>optional</em>) – When true, don’t return items present in the training set that were rated
+by the specified user.</p></li>
+<li><p><strong>filter_items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – List of extra item ids to filter out from the output</p></li>
+<li><p><strong>recalculate_user</strong> (<em>bool</em><em>, </em><em>optional</em>) – When true, don’t rely on stored user embeddings and instead recalculate from the
+passed in user_items. This option isn’t supported by all models.</p></li>
+<li><p><strong>items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Array of extra item ids. When set this will only rank the items in this array instead
+of ranking every item the model was fit for. This parameter cannot be used with
+filter_items</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of (itemids, scores) arrays. When calculating for a single user these array will
+be 1-dimensional with N items. When passed an array of userids, these will be
+2-dimensional arrays with a row for each user.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="implicit.gpu.bpr.BayesianPersonalizedRanking.similar_items">
+<span class="sig-name descname"><span class="pre">similar_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">itemid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalculate_item</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.gpu.bpr.BayesianPersonalizedRanking.similar_items" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates a list of similar items</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>itemid</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>array_like</em><em>]</em>) – The item id or an array of item ids to retrieve similar items for</p></li>
+<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of similar items to return</p></li>
+<li><p><strong>recalculate_item</strong> (<em>bool</em><em>, </em><em>optional</em>) – When true, don’t rely on stored item state and instead recalculate from the
+passed in item_users</p></li>
+<li><p><strong>item_users</strong> (<em>csr_matrix</em><em>, </em><em>optional</em>) – A sparse matrix of shape (itemid, number_users). This lets us look
+up the users for each item. This is only needs to be set when setting
+recalculate_item=True. This should have the same number of rows as
+the itemid parameter, with the first row of the sparse matrix corresponding
+to the first item in the itemid array.</p></li>
+<li><p><strong>filter_items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of item ids to filter out from the results being returned</p></li>
+<li><p><strong>items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of item ids to include in the output. If not set all items in the training
+set will be included. Cannot be used with the filter_items options</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of (itemids, scores) arrays</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="implicit.gpu.bpr.BayesianPersonalizedRanking.similar_users">
+<span class="sig-name descname"><span class="pre">similar_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.gpu.bpr.BayesianPersonalizedRanking.similar_users" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the most similar users for a userid or array of userids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>userid</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>array_like</em><em>]</em>) – The userid or an array of userids to retrieve similar users for.</p></li>
+<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of similar users to return</p></li>
+<li><p><strong>filter_users</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of user ids to filter out from the results being returned</p></li>
+<li><p><strong>users</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of user ids to include in the output. If not set all users in the training
+set will be included. Cannot be used with the filter_users options</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of (userids, scores) arrays</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="implicit.gpu.bpr.BayesianPersonalizedRanking.to_cpu">
+<span class="sig-name descname"><span class="pre">to_cpu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#implicit.gpu.bpr.BayesianPersonalizedRanking.to_cpu" title="Permalink to this definition"></a></dt>
+<dd><p>Converts this model to an equivalent version running on the cpu</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="als.html" class="btn btn-neutral float-left" title="AlternatingLeastSquares" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="matrix_factorization_base.html" class="btn btn-neutral float-right" title="MatrixFactorizationBase" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2022, Ben Frederickson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

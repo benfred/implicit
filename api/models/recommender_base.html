@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RecommenderBase &mdash; Implicit 0.4.8 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="CPU Models" href="cpu/index.html" />
+    <link rel="prev" title="Recommendation Models" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Implicit
+          </a>
+              <div class="version">
+                0.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_lastfm.html"> Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html"> API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Models</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#"> RecommenderBase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpu/index.html"> CPU Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpu/index.html"> GPU Models</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ann.html">Approximate Nearest Neighbours</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources.html"> Resources</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Implicit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">API Reference</a> &raquo;</li>
+          <li><a href="index.html">Recommendation Models</a> &raquo;</li>
+      <li>RecommenderBase</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/models/recommender_base.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="recommenderbase">
+<h1>RecommenderBase<a class="headerlink" href="#recommenderbase" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="implicit.recommender_base.RecommenderBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">implicit.recommender_base.</span></span><span class="sig-name descname"><span class="pre">RecommenderBase</span></span><a class="headerlink" href="#implicit.recommender_base.RecommenderBase" title="Permalink to this definition"></a></dt>
+<dd><p>Defines a common interface for all recommendation models</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="implicit.recommender_base.RecommenderBase.fit">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_process</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.recommender_base.RecommenderBase.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Trains the model on a sparse matrix of item/user/weight</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_items</strong> (<em>csr_matrix</em>) – A sparse CSR matrix of shape (number_of_users, number_of_items). The nonzero
+entries in this matrix are the items that are liked by each user.
+The values are how confident you are that the item is liked by the user.</p></li>
+<li><p><strong>show_progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show a progress bar during fitting</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="implicit.recommender_base.RecommenderBase.recommend">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">recommend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_already_liked_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalculate_user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.recommender_base.RecommenderBase.recommend" title="Permalink to this definition"></a></dt>
+<dd><p>Recommends items for users.</p>
+<p>This method allows you to calculate the top N recommendations for a user or
+batch of users. Passing an array of userids instead of a single userid will
+tend to be more efficient, and allows multi-thread processing on the CPU.</p>
+<p>This method has options for filtering out items from the results. You can both
+filter out items that have already been liked by the user with the
+filter_already_liked_items parameter, as well as pass in filter_items to filter
+out other items for all users in the batch. By default all items in the training
+dataset are scored, but by setting the ‘items’ parameter you can restrict down to
+a subset.</p>
+<p>Example usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate the top recommendations for a single user</span>
+<span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">user_items</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># calculate the top recommendations for a batch of users</span>
+<span class="n">userids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">userids</span><span class="p">,</span> <span class="n">user_items</span><span class="p">[</span><span class="n">userids</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>userid</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>array_like</em><em>]</em>) – The userid or array of userids to calculate recommendations for</p></li>
+<li><p><strong>user_items</strong> (<em>csr_matrix</em>) – A sparse matrix of shape (users, number_items). This lets us look
+up the liked items and their weights for the user. This is used to filter out
+items that have already been liked from the output, and to also potentially
+recalculate the user representation. Each row in this sparse matrix corresponds
+to a row in the userid parameter: that is the first row in this matrix contains
+the liked items for the first user in the userid array.</p></li>
+<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of results to return</p></li>
+<li><p><strong>filter_already_liked_items</strong> (<em>bool</em><em>, </em><em>optional</em>) – When true, don’t return items present in the training set that were rated
+by the specified user.</p></li>
+<li><p><strong>filter_items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – List of extra item ids to filter out from the output</p></li>
+<li><p><strong>recalculate_user</strong> (<em>bool</em><em>, </em><em>optional</em>) – When true, don’t rely on stored user embeddings and instead recalculate from the
+passed in user_items. This option isn’t supported by all models.</p></li>
+<li><p><strong>items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Array of extra item ids. When set this will only rank the items in this array instead
+of ranking every item the model was fit for. This parameter cannot be used with
+filter_items</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of (itemids, scores) arrays. When calculating for a single user these array will
+be 1-dimensional with N items. When passed an array of userids, these will be
+2-dimensional arrays with a row for each user.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="implicit.recommender_base.RecommenderBase.similar_items">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">similar_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">itemid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalculate_item</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.recommender_base.RecommenderBase.similar_items" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates a list of similar items</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>itemid</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>array_like</em><em>]</em>) – The item id or an array of item ids to retrieve similar items for</p></li>
+<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of similar items to return</p></li>
+<li><p><strong>recalculate_item</strong> (<em>bool</em><em>, </em><em>optional</em>) – When true, don’t rely on stored item state and instead recalculate from the
+passed in item_users</p></li>
+<li><p><strong>item_users</strong> (<em>csr_matrix</em><em>, </em><em>optional</em>) – A sparse matrix of shape (itemid, number_users). This lets us look
+up the users for each item. This is only needs to be set when setting
+recalculate_item=True. This should have the same number of rows as
+the itemid parameter, with the first row of the sparse matrix corresponding
+to the first item in the itemid array.</p></li>
+<li><p><strong>filter_items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of item ids to filter out from the results being returned</p></li>
+<li><p><strong>items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of item ids to include in the output. If not set all items in the training
+set will be included. Cannot be used with the filter_items options</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of (itemids, scores) arrays</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="implicit.recommender_base.RecommenderBase.similar_users">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">similar_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.recommender_base.RecommenderBase.similar_users" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the most similar users for a userid or array of userids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>userid</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>array_like</em><em>]</em>) – The userid or an array of userids to retrieve similar users for.</p></li>
+<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of similar users to return</p></li>
+<li><p><strong>filter_users</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of user ids to filter out from the results being returned</p></li>
+<li><p><strong>users</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of user ids to include in the output. If not set all users in the training
+set will be included. Cannot be used with the filter_users options</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of (userids, scores) arrays</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Recommendation Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cpu/index.html" class="btn btn-neutral float-right" title="CPU Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2022, Ben Frederickson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Implicit &mdash; Implicit 0.4.8 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> Implicit
+          </a>
+              <div class="version">
+                0.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_lastfm.html"> Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html"> API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html"> Resources</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Implicit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li>Implicit</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="implicit">
+<h1>Implicit<a class="headerlink" href="#implicit" title="Permalink to this headline"></a></h1>
+<p>Fast Python Collaborative Filtering for Implicit Datasets</p>
+<p>This project provides fast Python implementations of several different popular recommendation algorithms for
+implicit feedback datasets:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Alternating Least Squares as described in the papers <a class="reference external" href="http://yifanhu.net/PUB/cf.pdf">Collaborative Filtering for Implicit Feedback Datasets</a> and in <a class="reference external" href="https://pdfs.semanticscholar.org/bfdf/7af6cf7fd7bb5e6b6db5bbd91be11597eaf0.pdf">Applications of the Conjugate Gradient Method for Implicit Feedback Collaborative Filtering</a>.</p></li>
+<li><p><a class="reference external" href="https://arxiv.org/pdf/1205.2618.pdf">Bayesian Personalized Ranking</a></p></li>
+<li><p><a class="reference external" href="https://web.stanford.edu/~rezab/nips2014workshop/submits/logmat.pdf">Logistic Matrix Factorization</a></p></li>
+<li><p>Item-Item Nearest Neighbour models, using Cosine, TFIDF or BM25 as a distance metric</p></li>
+</ul>
+</div></blockquote>
+<p>All models have multi-threaded training routines, using Cython and OpenMP to fit the models in
+parallel among all available CPU cores.  In addition, the ALS and BPR models both have custom CUDA
+kernels - enabling fitting on compatible GPU’s. This library also supports using approximate nearest neighbours libraries such as <a class="reference external" href="https://github.com/spotify/annoy">Annoy</a>, <a class="reference external" href="https://github.com/searchivarius/nmslib">NMSLIB</a>
+and <a class="reference external" href="https://github.com/facebookresearch/faiss">Faiss</a> for <a class="reference external" href="http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/">speeding up making recommendations</a>.</p>
+<section id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">implicit</span>
+
+<span class="c1"># initialize a model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">implicit</span><span class="o">.</span><span class="n">als</span><span class="o">.</span><span class="n">AlternatingLeastSquares</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+
+<span class="c1"># train the model on a sparse matrix of item/user/confidence weights</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">user_item_data</span><span class="p">)</span>
+
+<span class="c1"># recommend items for a user</span>
+<span class="n">recommendations</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">userid</span><span class="p">,</span> <span class="n">user_item_data</span><span class="p">[</span><span class="n">userid</span><span class="p">])</span>
+
+<span class="c1"># find related items</span>
+<span class="n">related</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">similar_items</span><span class="p">(</span><span class="n">itemid</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_lastfm.html"> Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_lastfm.html#Getting-the-Dataset">Getting the Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_lastfm.html#Training-a-Model">Training a Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_lastfm.html#Making-Recommendations">Making Recommendations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_lastfm.html#Recommending-similar-items">Recommending similar items</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_lastfm.html#Making-batch-recommendations">Making batch recommendations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html"> API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/models/index.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/evaluation.html">Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ann.html">Approximate Nearest Neighbours</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html"> Resources</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="resources.html#articles-about-implicit">Articles about Implicit</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2022, Ben Frederickson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

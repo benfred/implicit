@@ -1,0 +1,495 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "341158a9-edf4-488e-ae11-22114df42f3d",
+   "metadata": {
+    "tags": []
+   },
+   "source": [
+    "# Tutorial - Recommending Music with the last.fm 360K dataset."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "369a7190-0d1d-47ff-9a54-b297c770c417",
+   "metadata": {},
+   "source": [
+    "This tutorial shows the major functionality of the [implicit](https://github.com/benfred/implicit) library by building a music recommender system using the the [last.fm 360K dataset](http://ocelma.net/MusicRecommendationDataset/lastfm-360K.html)."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9b1ff9f0-71cc-420c-8f18-034f24f1164b",
+   "metadata": {},
+   "source": [
+    "### Getting the Dataset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "73d1ac7e-858d-4046-a8ce-327045d8edf0",
+   "metadata": {},
+   "source": [
+    "Implicit includes code to access several different popular recommender datasets in the  ```implicit.datasets``` module. The following code will both download the lastfm dataset locally, as well as load it up into memory:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "1934d72e-88de-4906-bf75-74dfb5255f42",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from implicit.datasets.lastfm import get_lastfm\n",
+    "\n",
+    "artists, users, artist_user_plays = get_lastfm()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "fdbffd74-14fa-4678-befd-21029776cdf3",
+   "metadata": {},
+   "source": [
+    "`artist_user_plays` is a scipy sparse matrix, with the each row corresponding to a different musician and each column corresponding to a different user. The non-zero entries in the `artist_user_plays` matrix contains the number of times that the user has played that artist. The `artists` and `users` variables are arrays of string labels for each row and column in the `artist_user_plays` matrix. \n",
+    "\n",
+    "The implicit library is solely focused on implicit feedback recommenders systems - where we are given positive examples of what the user has interacted with, but aren't given the corresponding negative examples of what users aren't interested in. For this example we're shown the number of times that the user has played an artist in the dataset and can infer that a high play count indicates that the user likes an artist. However we can't infer that just because the user hasn't played an band before that means the user doesn't like the band."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6bc39fae-8d78-4e21-9754-08394b5819e1",
+   "metadata": {
+    "tags": []
+   },
+   "source": [
+    "### Training a Model"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ba930088-8ba5-4899-9457-322b24152ff1",
+   "metadata": {},
+   "source": [
+    "Implicit provides implementations of several different algorithms for implicit feedback recommender systems. For this example we'll be looking at the `AlternatingLeastSquares` model thats based off the paper  [Collaborative Filtering for Implicit Feedback Datasets](http://yifanhu.net/PUB/cf.pdf). This model aims to learn a binary target of whether each user has interacted with each item - but weights each binary interaction by a confidence value of how confident we are in this user/item interaction. The implementation in implicit uses the values of a sparse matrix to represent the confidences, with the non zero entries representing whether or not the user has interacted with the item.\n",
+    "\n",
+    "The first step in using this model is going to be transforming the raw play counts from the original dataset into values that can be used as confidences. We want to give repeated plays more confidence in the model, but have this effect taper off as the number of repeated plays increases to reduce the impact a single superfan has on the model. Likewise we want to direct some of the confidence weight away from popular items. To do this we'll use a [bm25](https://en.wikipedia.org/wiki/Okapi_BM25) weighting scheme inspired from classic information retrieval:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "1ee95a00-867d-42b1-8f3b-3a3c552e32fc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from implicit.nearest_neighbours import bm25_weight\n",
+    "\n",
+    "# weight the matrix, both to reduce impact of users that have played the same artist thousands of times\n",
+    "# and to reduce the weight given to popular items\n",
+    "artist_user_plays = bm25_weight(artist_user_plays, K1=100, B=0.8)\n",
+    "\n",
+    "# get the transpose since the most of the functions in implicit expect (user, item) sparse matrices instead of (item, user)\n",
+    "user_plays = artist_user_plays.T.tocsr()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "569b2c60-211a-45a2-bc35-74f4ec1ad9ea",
+   "metadata": {},
+   "source": [
+    "Once we have a weighted confidence matrix, we can use that to train an ALS model using implicit:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "56c85d21-55e7-4f4d-9ba2-1d09679e50ae",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "application/vnd.jupyter.widget-view+json": {
+       "model_id": "8d2412cc106d438d8f9caa31c3aabfd9",
+       "version_major": 2,
+       "version_minor": 0
+      },
+      "text/plain": [
+       "  0%|          | 0/15 [00:00<?, ?it/s]"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "from implicit.als import AlternatingLeastSquares\n",
+    "\n",
+    "model = AlternatingLeastSquares(factors=64, regularization=0.05)\n",
+    "model.fit(2 * user_plays)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bc743508-67ef-47e9-90a8-4c156e50ff4d",
+   "metadata": {},
+   "source": [
+    "Fitting the model will happen on any compatible Nvidia GPU, or using all the available cores on your CPU if you don't have a GPU enabled. You can force the operation by setting the `use_gpu` flag on the constructor of the `AlternatingLeastSquares` model."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "0e2b0bfa-d57b-44cb-9488-5f00af9ca40b",
+   "metadata": {},
+   "source": [
+    "### Making Recommendations"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "807e0cef-ddf2-4f11-bca5-aa6f206949ae",
+   "metadata": {},
+   "source": [
+    "After training the model, you can make recommendations for either a single user or a batch of users with the `.recommend` function on the model:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "2d167de7-2793-443d-9878-a240d1460bde",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Get recommendations for the a single user\n",
+    "userid = 12345\n",
+    "ids, scores = model.recommend(userid, user_plays[userid], N=10, filter_already_liked_items=False)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b2e8610e-3196-432e-9f45-d7308e03a7ed",
+   "metadata": {},
+   "source": [
+    "The `.recommend` call will compute the `N` best recommendations for each user in the input, and return the itemids in the `ids` array as well as the computed scores in the `scores` array. We can see what the musicians are recommended for each user by looking up the ids in the `artists` array:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "d0b27554-ce0a-4739-adfa-8b1e2c4f1aeb",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>artist</th>\n",
+       "      <th>score</th>\n",
+       "      <th>already_liked</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>spiritual front</td>\n",
+       "      <td>1.043553</td>\n",
+       "      <td>False</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>mortiis</td>\n",
+       "      <td>1.039887</td>\n",
+       "      <td>True</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>puissance</td>\n",
+       "      <td>1.034851</td>\n",
+       "      <td>True</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>rome</td>\n",
+       "      <td>1.018903</td>\n",
+       "      <td>True</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>laibach</td>\n",
+       "      <td>1.014141</td>\n",
+       "      <td>False</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>von thronstahl</td>\n",
+       "      <td>1.001462</td>\n",
+       "      <td>True</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>karjalan sissit</td>\n",
+       "      <td>0.997699</td>\n",
+       "      <td>False</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>d-a-d</td>\n",
+       "      <td>0.997444</td>\n",
+       "      <td>True</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>of the wand and the moon</td>\n",
+       "      <td>0.982854</td>\n",
+       "      <td>False</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9</th>\n",
+       "      <td>ordo rosarius equilibrio</td>\n",
+       "      <td>0.981463</td>\n",
+       "      <td>False</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                     artist     score  already_liked\n",
+       "0           spiritual front  1.043553          False\n",
+       "1                   mortiis  1.039887           True\n",
+       "2                 puissance  1.034851           True\n",
+       "3                      rome  1.018903           True\n",
+       "4                   laibach  1.014141          False\n",
+       "5            von thronstahl  1.001462           True\n",
+       "6           karjalan sissit  0.997699          False\n",
+       "7                     d-a-d  0.997444           True\n",
+       "8  of the wand and the moon  0.982854          False\n",
+       "9  ordo rosarius equilibrio  0.981463          False"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Use pandas to display the output in a table, pandas isn't a dependency of implicit otherwise\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "pd.DataFrame({\"artist\": artists[ids], \"score\": scores, \"already_liked\": np.in1d(ids, user_plays[userid].indices)})"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f9bceb44-5bd2-4d35-ba9a-bab244a1bedd",
+   "metadata": {},
+   "source": [
+    "The `already_liked` column there shows if the user has interacted with the item already, and in this result most of the items being returned have already been interacted with by the user. We can remove these items from the result set with the `filter_already_liked_items` parameter - setting to `True` will remove all of these items from the results. The `user_plays[userid]` parameter is used to look up what items each user has interacted with, and can just be set to None if you aren't filtering the users own likes or recalculating the user representation on the fly.\n",
+    "\n",
+    "There are also more filtering options present in the `filter_items` parameter and `items` parameter, as well as options for recalculating the user representation on the fly with the `recalculate_user` parameter. See the API reference for more details."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "11bfb804-bc05-4cf5-b463-5be7b39b534f",
+   "metadata": {},
+   "source": [
+    "### Recommending similar items\n",
+    "\n",
+    "Each model in implicit also has the ability to show related items through the `similar_items` method. For instance to get the related items for the Beatles:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "dba78592-9f70-447c-a3a8-786c2f51e67e",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>artist</th>\n",
+       "      <th>score</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>the beatles</td>\n",
+       "      <td>1.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>john lennon</td>\n",
+       "      <td>0.910701</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>the who</td>\n",
+       "      <td>0.881478</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>the beach boys</td>\n",
+       "      <td>0.879407</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>the rolling stones</td>\n",
+       "      <td>0.872416</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>bob dylan</td>\n",
+       "      <td>0.864542</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>the kinks</td>\n",
+       "      <td>0.853343</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>simon &amp; garfunkel</td>\n",
+       "      <td>0.841522</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>paul mccartney</td>\n",
+       "      <td>0.837189</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9</th>\n",
+       "      <td>led zeppelin</td>\n",
+       "      <td>0.822245</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "               artist     score\n",
+       "0         the beatles  1.000000\n",
+       "1         john lennon  0.910701\n",
+       "2             the who  0.881478\n",
+       "3      the beach boys  0.879407\n",
+       "4  the rolling stones  0.872416\n",
+       "5           bob dylan  0.864542\n",
+       "6           the kinks  0.853343\n",
+       "7   simon & garfunkel  0.841522\n",
+       "8      paul mccartney  0.837189\n",
+       "9        led zeppelin  0.822245"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# get related items for the beatles (itemid = 25512)\n",
+    "ids, scores= model.similar_items(252512)\n",
+    "\n",
+    "# display the results using pandas for nicer formatting\n",
+    "pd.DataFrame({\"artist\": artists[ids], \"score\": scores})"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a1d4727c-ba8d-4f37-9aee-61446d4ef440",
+   "metadata": {},
+   "source": [
+    "### Making batch recommendations\n",
+    "\n",
+    "The `.recommend`, `.similar_items` and `.similar_users` calls all have the ability to generate batches of recommendations - in addition to just calculating a single user or item.  Passing an array of userids or itemids to these methods will trigger the batch methods, and return a 2D array of ids and scores - with each row in the output matrices corresponding to value in the input. This will tend to be quite a bit more efficient calling the method repeatedly, as implicit will use multiple threads on the CPU and achieve better device utilization on the GPU with larger batches. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "10924205-8df4-41e2-ac06-1f064d915442",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(array([[     0, 231950, 244102, ..., 235229,  93736, 239701],\n",
+       "        [     1,  47583,   4886, ...,  29886,  42363,  65364],\n",
+       "        [ 61526,      2, 284991, ..., 163163, 206967, 194070],\n",
+       "        ...,\n",
+       "        [   997,  22405, 199849, ...,  58060,  46003, 121721],\n",
+       "        [   998, 116773,  65002, ..., 252533,    955,  52036],\n",
+       "        [   999, 267992, 151651, ..., 208593, 124258, 253194]], dtype=int32),\n",
+       " (1000, 10))"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Make recommendations for the\n",
+    "userids = np.arange(1000)\n",
+    "ids, scores = model.similar_items(itemids)\n",
+    "ids, ids.shape"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

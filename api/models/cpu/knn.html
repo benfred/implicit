@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nearest Neighbour Models &mdash; Implicit 0.4.8 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="MatrixFactorizationBase" href="matrix_factorization_base.html" />
+    <link rel="prev" title="LogisticMatrixFactorization" href="lmf.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Implicit
+          </a>
+              <div class="version">
+                0.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html"> Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_lastfm.html"> Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html"> API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Models</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../recommender_base.html"> RecommenderBase</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html"> CPU Models</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="als.html"> AlternatingLeastSquares</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bpr.html"> BayesianPersonalizedRanking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lmf.html"> LogisticMatrixFactorization</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"> Nearest Neighbours Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="matrix_factorization_base.html"> MatrixFactorizationBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../gpu/index.html"> GPU Models</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ann.html">Approximate Nearest Neighbours</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../resources.html"> Resources</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Implicit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">API Reference</a> &raquo;</li>
+          <li><a href="../index.html">Recommendation Models</a> &raquo;</li>
+          <li><a href="index.html">CPU Models</a> &raquo;</li>
+      <li>Nearest Neighbour Models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/models/cpu/knn.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="nearest-neighbour-models">
+<h1>Nearest Neighbour Models<a class="headerlink" href="#nearest-neighbour-models" title="Permalink to this headline"></a></h1>
+<p>Implicit contains several item-item nearest neighbour models. See
+<a href="#id1"><span class="problematic" id="id2">`this post`&lt;https://www.benfrederickson.com/distance-metrics/&gt;`_</span></a> for more information.</p>
+<section id="cosinerecommender">
+<h2>CosineRecommender<a class="headerlink" href="#cosinerecommender" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="implicit.nearest_neighbours.ItemItemRecommender">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></span><span class="sig-name descname"><span class="pre">ItemItemRecommender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.nearest_neighbours.ItemItemRecommender" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../recommender_base.html#implicit.recommender_base.RecommenderBase" title="implicit.recommender_base.RecommenderBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.recommender_base.RecommenderBase</span></code></a></p>
+<p>Base class for Item-Item Nearest Neighbour recommender models
+here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>K</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of neighbours to include when calculating the item-item
+similarity matrix</p></li>
+<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of threads to use for fitting the model. Specifying 0
+means to default to the number of cores on the machine.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="tfidfrecommender">
+<h2>TFIDFRecommender<a class="headerlink" href="#tfidfrecommender" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="implicit.nearest_neighbours.TFIDFRecommender">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></span><span class="sig-name descname"><span class="pre">TFIDFRecommender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.nearest_neighbours.TFIDFRecommender" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id0" title="implicit.nearest_neighbours.ItemItemRecommender"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.nearest_neighbours.ItemItemRecommender</span></code></a></p>
+<p>An Item-Item Recommender on TF-IDF distances between items</p>
+</dd></dl>
+
+</section>
+<section id="bm25recommender">
+<h2>BM25Recommender<a class="headerlink" href="#bm25recommender" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="implicit.nearest_neighbours.BM25Recommender">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></span><span class="sig-name descname"><span class="pre">BM25Recommender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.nearest_neighbours.BM25Recommender" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#id0" title="implicit.nearest_neighbours.ItemItemRecommender"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.nearest_neighbours.ItemItemRecommender</span></code></a></p>
+<p>An Item-Item Recommender on BM25 distance between items</p>
+</dd></dl>
+
+</section>
+<section id="itemitemrecommender">
+<h2>ItemItemRecommender<a class="headerlink" href="#itemitemrecommender" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></span><span class="sig-name descname"><span class="pre">ItemItemRecommender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../recommender_base.html#implicit.recommender_base.RecommenderBase" title="implicit.recommender_base.RecommenderBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.recommender_base.RecommenderBase</span></code></a></p>
+<p>Base class for Item-Item Nearest Neighbour recommender models
+here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>K</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of neighbours to include when calculating the item-item
+similarity matrix</p></li>
+<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of threads to use for fitting the model. Specifying 0
+means to default to the number of cores on the machine.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lmf.html" class="btn btn-neutral float-left" title="LogisticMatrixFactorization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="matrix_factorization_base.html" class="btn btn-neutral float-right" title="MatrixFactorizationBase" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2022, Ben Frederickson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
