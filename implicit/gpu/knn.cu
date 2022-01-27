@@ -146,8 +146,9 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
 
   // We need 6 copies of the matrix for argsort code - and then some
   // extra memory per SM as well.
-  size_t batch_size = (available_temp_memory /
-                       (sizeof(float) * static_cast<size_t>(items.rows)));
+  size_t batch_size =
+      (available_temp_memory /
+       (sizeof(float) * static_cast<size_t>(temp_distances_cols)));
   if (k >= GPU_MAX_SELECTION_K) {
     batch_size *= 0.15;
   }
