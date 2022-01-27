@@ -52,7 +52,7 @@ def benchmark_spark(ratings, factors, iterations=5):
             als.fit(ratings)
             elapsed = time.time() - start
             times[rank] = elapsed / iterations
-            print("spark. factors={rank} took {elapsed / iterations:.3f}")
+            print(f"spark. factors={rank} took {elapsed / iterations:.3f}")
     finally:
         spark.stop()
 
@@ -71,7 +71,7 @@ def benchmark_implicit(ratings, factors, iterations=5, use_gpu=False):
         elapsed = time.time() - start
         # take average time over iterations to be consistent with spark timings
         times[rank] = elapsed / iterations
-        print("implicit. factors={rank} took {elapsed / iterations:.3f}")
+        print(f"implicit. factors={rank} took {elapsed / iterations:.3f}")
     return times
 
 
@@ -99,11 +99,8 @@ def main():
     )
     parser.add_argument("--output", type=str, required=True, help="output file location")
     args = parser.parse_args()
-    if not (args.speed or args.loss):
-        print("must specify at least one of --speed or --loss")
-        parser.print_help()
 
-    m = scipy.io.mmread(args.inputfile)
+    m = scipy.io.mmread(args.input)
 
     times = {}
     factors = list(range(64, 257, 64))
