@@ -48,6 +48,7 @@ Basic Usage
    :caption: Contents:
 
     Installation <installation>
+    Tutorial <tutorial_lastfm>
     API Reference <api/index>
     Resources <resources>
 
