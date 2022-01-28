@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial - Recommending Music with the last.fm 360K dataset. &mdash; Implicit 0.4.8 documentation</title>
+  <title>Tutorial - Recommending Music with the last.fm 360K dataset. &mdash; Implicit 0.5.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
             <a href="index.html" class="icon icon-home"> Implicit
           </a>
               <div class="version">
-                0.4
+                0.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -375,7 +375,7 @@ before that means the user doesn’t like the band.</p>
 </section>
 <section id="Training-a-Model">
 <h2>Training a Model<a class="headerlink" href="#Training-a-Model" title="Permalink to this headline"></a></h2>
-<p>Implicit provides implementations of several different algorithms for implicit feedback recommender systems. For this example we’ll be looking at the <code class="docutils literal notranslate"><span class="pre">AlternatingLeastSquares</span></code> model thats based off the paper <a class="reference external" href="http://yifanhu.net/PUB/cf.pdf">Collaborative Filtering for Implicit Feedback Datasets</a>. This model aims to learn a binary target of whether each user has interacted with each item - but weights each binary interaction by a confidence value of how confident we are in this user/item
+<p>Implicit provides implementations of several different algorithms for implicit feedback recommender systems. For this example we’ll be looking at the <code class="docutils literal notranslate"><span class="pre">AlternatingLeastSquares</span></code> model that’s based off the paper <a class="reference external" href="http://yifanhu.net/PUB/cf.pdf">Collaborative Filtering for Implicit Feedback Datasets</a>. This model aims to learn a binary target of whether each user has interacted with each item - but weights each binary interaction by a confidence value of how confident we are in this user/item
 interaction. The implementation in implicit uses the values of a sparse matrix to represent the confidences, with the non zero entries representing whether or not the user has interacted with the item.</p>
 <p>The first step in using this model is going to be transforming the raw play counts from the original dataset into values that can be used as confidences. We want to give repeated plays more confidence in the model, but have this effect taper off as the number of repeated plays increases to reduce the impact a single superfan has on the model. Likewise we want to direct some of the confidence weight away from popular items. To do this we’ll use a
 <a class="reference external" href="https://en.wikipedia.org/wiki/Okapi_BM25">bm25</a> weighting scheme inspired from classic information retrieval:</p>
@@ -412,7 +412,7 @@ interaction. The implementation in implicit uses the values of a sparse matrix t
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8d2412cc106d438d8f9caa31c3aabfd9", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7d824141fc3b4bf096687375b99223e8", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>Fitting the model will happen on any compatible Nvidia GPU, or using all the available cores on your CPU if you don’t have a GPU enabled. You can force the operation by setting the <code class="docutils literal notranslate"><span class="pre">use_gpu</span></code> flag on the constructor of the <code class="docutils literal notranslate"><span class="pre">AlternatingLeastSquares</span></code> model.</p>
 </section>
@@ -474,63 +474,63 @@ interaction. The implementation in implicit uses the values of a sparse matrix t
   <tbody>
     <tr>
       <th>0</th>
-      <td>spiritual front</td>
-      <td>1.043553</td>
-      <td>False</td>
+      <td>mortiis</td>
+      <td>1.056453</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>mortiis</td>
-      <td>1.039887</td>
+      <td>puissance</td>
+      <td>1.036747</td>
       <td>True</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>puissance</td>
-      <td>1.034851</td>
+      <td>rome</td>
+      <td>1.006126</td>
       <td>True</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>rome</td>
-      <td>1.018903</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>4</th>
       <td>laibach</td>
-      <td>1.014141</td>
+      <td>1.003616</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>5</th>
-      <td>von thronstahl</td>
-      <td>1.001462</td>
+      <th>4</th>
+      <td>the coffinshakers</td>
+      <td>1.000682</td>
       <td>True</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>spiritual front</td>
+      <td>0.980971</td>
+      <td>False</td>
     </tr>
     <tr>
       <th>6</th>
       <td>karjalan sissit</td>
-      <td>0.997699</td>
+      <td>0.974622</td>
       <td>False</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>d-a-d</td>
-      <td>0.997444</td>
+      <td>von thronstahl</td>
+      <td>0.974596</td>
       <td>True</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>of the wand and the moon</td>
-      <td>0.982854</td>
+      <td>ordo rosarius equilibrio</td>
+      <td>0.956722</td>
       <td>False</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>ordo rosarius equilibrio</td>
-      <td>0.981463</td>
-      <td>False</td>
+      <td>type o negative</td>
+      <td>0.954947</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>
@@ -592,47 +592,47 @@ filtering the users own likes or recalculating the user representation on the fl
     <tr>
       <th>1</th>
       <td>john lennon</td>
-      <td>0.910701</td>
+      <td>0.902621</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>the who</td>
-      <td>0.881478</td>
+      <td>the beach boys</td>
+      <td>0.875299</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>the beach boys</td>
-      <td>0.879407</td>
+      <td>the who</td>
+      <td>0.874556</td>
     </tr>
     <tr>
       <th>4</th>
       <td>the rolling stones</td>
-      <td>0.872416</td>
+      <td>0.871904</td>
     </tr>
     <tr>
       <th>5</th>
       <td>bob dylan</td>
-      <td>0.864542</td>
+      <td>0.861967</td>
     </tr>
     <tr>
       <th>6</th>
       <td>the kinks</td>
-      <td>0.853343</td>
+      <td>0.846969</td>
     </tr>
     <tr>
       <th>7</th>
       <td>simon &amp; garfunkel</td>
-      <td>0.841522</td>
+      <td>0.840297</td>
     </tr>
     <tr>
       <th>8</th>
       <td>paul mccartney</td>
-      <td>0.837189</td>
+      <td>0.829233</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>led zeppelin</td>
-      <td>0.822245</td>
+      <td>david bowie</td>
+      <td>0.818386</td>
     </tr>
   </tbody>
 </table>
@@ -648,9 +648,9 @@ threads on the CPU and achieve better device utilization on the GPU with larger 
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Make recommendations for the</span>
+<span></span><span class="c1"># Make recommendations for the first 1000 users in the dataset</span>
 <span class="n">userids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">similar_items</span><span class="p">(</span><span class="n">itemids</span><span class="p">)</span>
+<span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">userids</span><span class="p">,</span> <span class="n">user_plays</span><span class="p">[</span><span class="n">userids</span><span class="p">])</span>
 <span class="n">ids</span><span class="p">,</span> <span class="n">ids</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 </div>
@@ -661,13 +661,13 @@ threads on the CPU and achieve better device utilization on the GPU with larger 
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(array([[     0, 231950, 244102, ..., 235229,  93736, 239701],
-        [     1,  47583,   4886, ...,  29886,  42363,  65364],
-        [ 61526,      2, 284991, ..., 163163, 206967, 194070],
+(array([[161850, 107119, 150177, ..., 249560, 136336,  76757],
+        [128505, 189597,  71465, ..., 111764, 255779,  71225],
+        [186835, 167270, 142885, ..., 113686, 241312, 120981],
         ...,
-        [   997,  22405, 199849, ...,  58060,  46003, 121721],
-        [   998, 116773,  65002, ..., 252533,    955,  52036],
-        [   999, 267992, 151651, ..., 208593, 124258, 253194]], dtype=int32),
+        [ 83885, 265625, 279139, ..., 202346,  43598, 264562],
+        [109930,   1560,  97970, ..., 116857, 236697,  33602],
+        [ 21090, 276679, 197984, ..., 272293, 185495,  22505]], dtype=int32),
  (1000, 10))
 </pre></div></div>
 </div>
