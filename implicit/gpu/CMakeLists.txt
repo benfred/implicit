@@ -1,10 +1,10 @@
 if (UNIX)
 find_package(CUDAToolkit)
 
-if (CUDAToolkit_FOUND AND ${CUDAToolkit_VERSION} VERSION_LESS "11.0.0")
+if(CUDAToolkit_FOUND)
+if (${CUDAToolkit_VERSION} VERSION_LESS "11.0.0")
     message("implicit requires CUDA 11.0 or greater for GPU acceleration - found CUDA ${CUDAToolkit_VERSION}")
-
-elseif(CUDAToolkit_FOUND)
+else()
     enable_language(CUDA)
     add_cython_target(_cuda CXX)
 
@@ -61,6 +61,7 @@ elseif(CUDAToolkit_FOUND)
     target_link_libraries(_cuda CUDA::cublas CUDA::curand rmm::rmm)
 
     install(TARGETS _cuda LIBRARY DESTINATION implicit/gpu)
+endif()
 endif()
 endif()
 
