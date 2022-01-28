@@ -1,3 +1,33 @@
+## v0.5.0
+
+### Breaking API Changes
+
+The API for implicit has substantially changed in v0.5.0 - and any code written for the previous
+API will need to be rewritten:
+
+* Change model.fit to take a user_items sparse matrix [#484](https://github.com/benfred/implicit/pull/484)
+* Return numpy arrays from recommend methods [#482](https://github.com/benfred/implicit/pull/482)
+* Don't require empty rows in user_items and item_users parameters [#526](https://github.com/benfred/implicit/pull/526)
+* Unify API for rank_items/recommend/recommend_all [#489](https://github.com/benfred/implicit/issues/489)
+
+### Performance Improvements
+
+* Speedup evaluation by using batch recommend functions [#520](https://github.com/benfred/implicit/pull/520)
+* Use FAISS for GPU inference [#506](https://github.com/benfred/implicit/pull/506)
+* Multithreaded speedups for CPU models [#517](https://github.com/benfred/implicit/pull/517)
+* Use thrust::binary_search to verify negative samples on GPU [#524](https://github.com/benfred/implicit/pull/524)
+* Release GIL on GPU calls [#528](https://github.com/benfred/implicit/pull/528)
+
+### New Features
+
+* Add incremental retraining support for ALS models [#527](https://github.com/benfred/implicit/pull/527)
+* Add filtering for similar_items and similar_users [#488](https://github.com/benfred/implicit/issues/488)
+* Add support for recalculate_users/items on the GPU [#515](https://github.com/benfred/implicit/pull/515)
+* Add methods for converting MF models to/from gpu [#521](https://github.com/benfred/implicit/pull/521)
+* Add a tutorial notebook for the lastfm example [#529](https://github.com/benfred/implicit/pull/529)
+* Approximate nearest neighbour for BPR/LMF and GPU models [#487](https://github.com/benfred/implicit/issues/487)
+* Dynamically detect CUDA availability [#174](https://github.com/benfred/implicit/issues/174)
+
 ## v0.4.5
 
 * GPU Inference [#406](https://github.com/benfred/implicit/pull/406)

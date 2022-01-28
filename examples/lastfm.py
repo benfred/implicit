@@ -151,7 +151,9 @@ def calculate_recommendations(output_filename, model_name="als"):
             to_generate = np.arange(len(users))
             for startidx in range(0, len(to_generate), batch_size):
                 batch = to_generate[startidx : startidx + batch_size]
-                ids, scores = model.recommend(batch, user_plays, filter_already_liked_items=True)
+                ids, scores = model.recommend(
+                    batch, user_plays[batch], filter_already_liked_items=True
+                )
                 for i, userid in enumerate(batch):
                     username = users[userid]
                     for other, score in zip(ids[i], scores[i]):

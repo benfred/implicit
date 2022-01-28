@@ -1,10 +1,12 @@
-add_cython_target(_cuda CXX)
-
+if (UNIX)
 find_package(CUDAToolkit)
 
-
 if(CUDAToolkit_FOUND)
+if (${CUDAToolkit_VERSION} VERSION_LESS "11.0.0")
+    message("implicit requires CUDA 11.0 or greater for GPU acceleration - found CUDA ${CUDAToolkit_VERSION}")
+else()
     enable_language(CUDA)
+    add_cython_target(_cuda CXX)
 
     # use rapids-cmake to install dependencies
     file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-22.02/RAPIDS.cmake
@@ -59,6 +61,8 @@ if(CUDAToolkit_FOUND)
     target_link_libraries(_cuda CUDA::cublas CUDA::curand rmm::rmm)
 
     install(TARGETS _cuda LIBRARY DESTINATION implicit/gpu)
+endif()
+endif()
 endif()
 
 FILE(GLOB gpu_python_files *.py)
