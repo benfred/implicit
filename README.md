@@ -1,7 +1,10 @@
 Implicit
 =======
 
-[![Build Status](https://github.com/benfred/implicit/workflows/Build/badge.svg)](https://github.com/benfred/implicit/actions?query=workflow%3ABuild+branch%3Amaster)
+[![Build
+Status](https://github.com/benfred/implicit/workflows/Build/badge.svg)](https://github.com/benfred/implicit/actions?query=workflow%3ABuild+branch%3Amain)
+[![Documentation](https://img.shields.io/badge/documentation-blue.svg)](https://benfred.github.io/implicit/)
+
 
 Fast Python Collaborative Filtering for Implicit Datasets.
 
