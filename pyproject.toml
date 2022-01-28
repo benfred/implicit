@@ -9,7 +9,6 @@ requires = [
     # until a new release is pushed
     # https://github.com/scikit-build/scikit-build/issues/518
     "scikit-build@git+https://github.com/scikit-build/scikit-build.git",
-    "cmake>=3.18",
     "Cython>=0.24",
     "scipy>=0.16"
 ]

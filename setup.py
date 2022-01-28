@@ -1,13 +1,24 @@
 import io
 import os.path
 
+from packaging.version import LegacyVersion
 from setuptools import find_packages
 from skbuild import setup
+from skbuild.cmaker import get_cmake_version
+from skbuild.exceptions import SKBuildError
 
 try:
     import numpy.distutils  # noqa
 except ImportError:
     pass
+
+# Add CMake as a build requirement if cmake is not installed or is too low a version
+setup_requires = []
+try:
+    if LegacyVersion(get_cmake_version()) < LegacyVersion("3.5"):
+        setup_requires.append("cmake")
+except SKBuildError:
+    setup_requires.append("cmake")
 
 
 def read(file_name):
@@ -44,4 +55,6 @@ setup(
     ),
     packages=find_packages(),
     install_requires=["numpy", "scipy>=0.16", "tqdm>=4.27"],
+    setup_requires=setup_requires,
+    test_requires=["pytest"],
 )

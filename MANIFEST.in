@@ -2,5 +2,8 @@ recursive-include implicit *.h *.cu *.cuh *.pyx *.py *.pxd *.txt
 include README.md
 include CMakeLists.txt
 include requirements.txt
+include requirements-dev.txt
 include LICENSE
 include tox.ini
+include pyproject.toml
+include setup.cfg
