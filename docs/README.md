@@ -1,2 +1,2 @@
-Compiled [documentation can be found on readthedocs](http://implicit.readthedocs.io/).
+Compiled [documentation can be found here](https://benfred.github.io/implicit/).
 

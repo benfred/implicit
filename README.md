@@ -66,7 +66,7 @@ related = model.similar_items(itemid)
 The examples folder has a program showing how to use this to [compute similar artists on the
 last.fm dataset](https://github.com/benfred/implicit/blob/master/examples/lastfm.py).
 
-For more information see the [documentation](http://implicit.readthedocs.io/).
+For more information see the [documentation](https://benfred.github.io/implicit/).
 
 #### Articles about Implicit
 
