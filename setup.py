@@ -30,7 +30,7 @@ def read(file_name):
 
 setup(
     name="implicit",
-    version="0.5.1",
+    version="0.5.2",
     description="Collaborative Filtering for Implicit Feedback Datasets",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
