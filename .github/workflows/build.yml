@@ -6,16 +6,37 @@ name: Build
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  build-wheels:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.3.1
+
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: wheels
+          path: wheelhouse
+
+  test:
+    needs: [build-wheels]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9, 3.10]
         os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+      with:
+        name: wheels
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -52,9 +73,9 @@ jobs:
     - name: Lint with pylint
       run: |
         pylint implicit tests benchmarks examples
-    - name: Build
+    - name: Install wheel
       run: |
-        pip install -e .
+        pip install --force-reinstall --no-index --find-links . implicit
     - name: Run unittests
       run: |
         python -m pytest tests

@@ -1,4 +1,5 @@
 [tool.black]
+
 line-length = 100
 
 [build-system]
@@ -13,3 +14,20 @@ requires = [
     "scipy>=0.16"
 ]
 build-backend = "setuptools.build_meta"
+
+[tool.cibuildwheel]
+# skip testing in the cibuildwheel phase, will install the wheels later
+# and verify
+test-command = ""
+skip = ["pp*", "*musl*",  "*-manylinux_i686"]
+
+[[tool.cibuildwheel.overrides]]
+select = "*-manylinux_x86_64*"
+before-all = "ci/install_cuda.sh"
+
+# auditwheel includes cuda libraries, just skip it
+[tool.cibuildwheel.linux]
+repair-wheel-command = ""
+
+[tool.cibuildwheel.linux.environment]
+CUDACXX = "/usr/local/cuda/bin/nvcc"
