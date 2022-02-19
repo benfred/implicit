@@ -1,10 +1,9 @@
 -r requirements.txt
 
 git+https:///github.com/scikit-build/scikit-build.git
-pytes
-black
+pytest
+black==21.12b0
 flake8
 isort
 codespell
-
-
+pylint

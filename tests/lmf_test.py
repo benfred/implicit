@@ -1,8 +1,8 @@
 import unittest
 
-from implicit.lmf import LogisticMatrixFactorization
+from recommender_base_test import RecommenderBaseTestMixin
 
-from .recommender_base_test import RecommenderBaseTestMixin
+from implicit.lmf import LogisticMatrixFactorization
 
 
 class LMFTest(unittest.TestCase, RecommenderBaseTestMixin):

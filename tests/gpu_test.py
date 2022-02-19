@@ -1,10 +1,9 @@
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
+from recommender_base_test import get_checker_board
 
 import implicit
-
-from .recommender_base_test import get_checker_board
 
 
 @pytest.mark.skipif(not implicit.gpu.HAS_CUDA, reason="needs cuda build")

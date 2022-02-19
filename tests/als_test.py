@@ -2,12 +2,11 @@ import unittest
 
 import numpy as np
 import pytest
+from recommender_base_test import RecommenderBaseTestMixin, get_checker_board
 from scipy.sparse import coo_matrix, csr_matrix, random
 
 from implicit.als import AlternatingLeastSquares
 from implicit.gpu import HAS_CUDA
-
-from .recommender_base_test import RecommenderBaseTestMixin, get_checker_board
 
 # pylint: disable=consider-using-f-string
 

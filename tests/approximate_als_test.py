@@ -1,13 +1,13 @@
 import unittest
 
+from recommender_base_test import RecommenderBaseTestMixin, get_checker_board
+
 from implicit.approximate_als import (
     AnnoyAlternatingLeastSquares,
     FaissAlternatingLeastSquares,
     NMSLibAlternatingLeastSquares,
 )
 from implicit.gpu import HAS_CUDA
-
-from .recommender_base_test import RecommenderBaseTestMixin, get_checker_board
 
 # don't require annoy/faiss/nmslib to be installed
 try:
