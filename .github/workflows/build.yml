@@ -13,7 +13,48 @@ on:
     branches: [ main ]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 isort cpplint black pytest codespell h5py pylint
+        pip install -r requirements.txt
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=11 --max-line-length=127 --statistics
+        flake8 --filename='*.pyx,*.px*' --ignore E901,E225,E226,E227,E402,E999
+    - name: Lint with black
+      run: |
+        black --check .
+    - name: Lint with clang-format
+      run: |
+        sudo apt install clang-format
+        find implicit | grep -E '\.(cu|cuh|h|cpp)$' | xargs clang-format --dry-run --Werror
+      if: runner.os == 'Linux'
+    - name: Lint with isort
+      run: |
+        isort -c .
+    - name: Lint with codespell
+      run: |
+        codespell
+    - name: Lint with pylint
+      run: |
+        pylint implicit tests benchmarks examples
+
   build-wheels:
+    needs: [lint]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -54,35 +95,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 isort cpplint black pytest codespell h5py pylint
+        pip install pytest h5py
         pip install -r requirements.txt
     - name: Install ANN Libraries
       run: pip install annoy nmslib 
       if: runner.os == 'Linux'
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=11 --max-line-length=127 --statistics
-        flake8 --filename='*.pyx,*.px*' --ignore E901,E225,E226,E227,E402,E999
-    - name: Lint with black
-      run: |
-        black --check .
-    - name: Lint with clang-format
-      run: |
-        sudo apt install clang-format
-        find implicit | grep -E '\.(cu|cuh|h|cpp)$' | xargs clang-format --dry-run --Werror
-      if: runner.os == 'Linux'
-    - name: Lint with isort
-      run: |
-        isort -c .
-    - name: Lint with codespell
-      run: |
-        codespell
-    - name: Lint with pylint
-      run: |
-        pylint implicit tests benchmarks examples
     - name: Install wheel
       run: |
         pip install --force-reinstall --no-index --find-links . implicit
