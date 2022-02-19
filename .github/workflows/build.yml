@@ -104,7 +104,8 @@ jobs:
         pip install --force-reinstall --no-deps --no-index --find-links . implicit
     - name: Run unittests
       run: |
-        python -m pytest tests
+        cd tests
+        python -m pytest .
 
   release:
     name: Release
