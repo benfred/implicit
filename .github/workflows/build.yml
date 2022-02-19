@@ -68,6 +68,11 @@ jobs:
         env:
           CIBW_BUILD: cp${{matrix.python-version}}-*
 
+      - name: Rename Wheels
+        run: |
+          python ci/rename_wheels.py
+        if: runner.os == 'Linux'
+
       - name: Upload Binaries
         uses: actions/upload-artifact@v2
         with:
@@ -99,7 +104,7 @@ jobs:
         pip install pytest h5py
         pip install -r implicit_source/requirements.txt
     - name: Install ANN Libraries
-      run: pip install annoy nmslib 
+      run: pip install annoy nmslib
       if: runner.os == 'Linux'
     - name: Install wheel
       run: |
