@@ -19,7 +19,7 @@ build-backend = "setuptools.build_meta"
 # skip testing in the cibuildwheel phase, will install the wheels later
 # and verify
 test-command = ""
-skip = ["pp*", "*musl*",  "*-manylinux_i686"]
+skip = ["pp*", "*musl*",  "*-manylinux_i686", "*win32"]
 
 [[tool.cibuildwheel.overrides]]
 select = "*-manylinux_x86_64*"

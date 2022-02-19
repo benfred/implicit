@@ -11,12 +11,15 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
+        python-version: [36, 37, 38, 39, 310]
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.3.1
+        env:
+          CIBW_BUILD: cp-${{matrix.python-version}}-*
 
       - name: Upload Binaries
         uses: actions/upload-artifact@v2
