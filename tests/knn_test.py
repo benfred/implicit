@@ -2,11 +2,10 @@ import unittest
 
 import numpy as np
 import pytest
+from recommender_base_test import RecommenderBaseTestMixin
 from scipy.sparse import csr_matrix
 
 import implicit
-
-from .recommender_base_test import RecommenderBaseTestMixin
 
 
 class BM25Test(unittest.TestCase, RecommenderBaseTestMixin):

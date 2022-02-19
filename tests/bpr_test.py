@@ -1,11 +1,10 @@
 import unittest
 
+from recommender_base_test import RecommenderBaseTestMixin
 from scipy.sparse import csr_matrix
 
 from implicit.bpr import BayesianPersonalizedRanking
 from implicit.gpu import HAS_CUDA
-
-from .recommender_base_test import RecommenderBaseTestMixin
 
 
 class BPRTest(unittest.TestCase, RecommenderBaseTestMixin):
