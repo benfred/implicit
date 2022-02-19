@@ -84,6 +84,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        path: implicit_source
     - uses: actions/download-artifact@v2
       with:
         name: wheels
@@ -104,8 +106,7 @@ jobs:
         pip install --force-reinstall --no-deps --no-index --find-links . implicit
     - name: Run unittests
       run: |
-        cd tests
-        python -m pytest .
+        python -m pytest implicit_source/tests
 
   release:
     name: Release
