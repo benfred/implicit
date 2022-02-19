@@ -6,5 +6,4 @@ black==21.12b0
 flake8
 isort
 codespell
-
-
+pylint
