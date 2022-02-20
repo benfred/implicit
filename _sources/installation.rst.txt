@@ -1,7 +1,16 @@
 Installation
 ============
 
-There are binary packages on conda-forge for Linux, Windows and OSX. These can be installed with:
+Implicit can be installed from pypi with:
+
+.. code-block:: bash
+
+    pip install implicit
+
+Installing with pip will use prebuilt binary wheels on x86_64 Linux, Windows
+and OSX. The wheels includes GPU support on Linux.
+
+There are also binary packages on conda-forge for Linux, Windows and OSX. These can be installed with:
 
 .. code-block:: bash
 
@@ -15,18 +24,7 @@ There are also GPU enabled packages on conda-forge for x86_64 Linux systems usin
     conda install -c conda-forge implicit implicit-proc=*=gpu
 
 
-There is also an sdist package on PyPi. This package can be installed with:
-
-.. code-block:: bash
-
-    pip install implicit
-
-Note that installing with pip requires a C++ compiler to be installed on your system, since this
-method will build implicit from source.
-
-
 Requirements
 ------------
 
-This library requires SciPy version 0.16 or later. Running on OSX requires an OpenMP compiler,
-which can be installed with homebrew: ``brew install gcc``.
+This library requires SciPy version 0.16 or later.

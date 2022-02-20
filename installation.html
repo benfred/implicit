@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; Implicit 0.5.0 documentation</title>
+  <title>Installation &mdash; Implicit 0.5.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -102,7 +102,13 @@
 </style>
 <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
-<p>There are binary packages on conda-forge for Linux, Windows and OSX. These can be installed with:</p>
+<p>Implicit can be installed from pypi with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install implicit
+</pre></div>
+</div>
+<p>Installing with pip will use prebuilt binary wheels on x86_64 Linux, Windows
+and OSX. The wheels includes GPU support on Linux.</p>
+<p>There are also binary packages on conda-forge for Linux, Windows and OSX. These can be installed with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c conda-forge implicit
 </pre></div>
 </div>
@@ -111,16 +117,9 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c conda-forge implicit implicit-proc<span class="o">=</span>*<span class="o">=</span>gpu
 </pre></div>
 </div>
-<p>There is also an sdist package on PyPi. This package can be installed with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install implicit
-</pre></div>
-</div>
-<p>Note that installing with pip requires a C++ compiler to be installed on your system, since this
-method will build implicit from source.</p>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"></a></h2>
-<p>This library requires SciPy version 0.16 or later. Running on OSX requires an OpenMP compiler,
-which can be installed with homebrew: <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">gcc</span></code>.</p>
+<p>This library requires SciPy version 0.16 or later.</p>
 </section>
 </section>
 
