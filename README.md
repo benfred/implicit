@@ -27,26 +27,25 @@ and [Faiss](https://github.com/facebookresearch/faiss) can also be used by Impli
 making recommendations](https://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/).
 
 #### Installation
-There are binary packages on conda-forge for Linux, Windows and OSX. These can be installed with:
 
-```
-conda install -c conda-forge implicit
-```
-
-There are also GPU enabled packages on conda-forge for x86_64 Linux systems using either CUDA
-11.0, 11.1 or 11.2. The GPU packages can be installed with:
-
-```
-conda install -c conda-forge implicit implicit-proc=*=gpu
-```
-There is also an sdist package on PyPi. This package can be installed with:
+Implicit can be installed from pypi with:
 
 ```
 pip install implicit
 ```
 
-Note that installing with pip requires a C++ compiler to be installed on your system, since this
-method will build implicit from source.
+Installing with pip will use prebuilt binary wheels on x86_64 Linux, Windows
+and OSX. These wheels include GPU support on Linux.
+
+Implicit can also be installed with conda:
+
+```
+# CPU only package
+conda install -c conda-forge implicit
+
+# CPU+GPU package
+conda install -c conda-forge implicit implicit-proc=*=gpu
+```
 
 #### Basic Usage
 
@@ -91,13 +90,10 @@ There are also several other blog posts about using Implicit to build recommenda
 #### Requirements
 
 This library requires SciPy version 0.16 or later and Python version 3.6 or later.
-Running on OSX requires an OpenMP compiler, which can be installed with homebrew: ```brew install gcc```.
 
-GPU Support requires at least version 11 of the [NVidia CUDA Toolkit](https://developer.nvidia.com/cuda-downloads). The build will use the ```nvcc``` compiler
-that is found on the path, but this can be overridden by setting the CUDAHOME environment variable
-to point to your cuda installation.
+GPU Support requires at least version 11 of the [NVidia CUDA Toolkit](https://developer.nvidia.com/cuda-downloads).
 
-This library has been tested with Python 3.6, 3.7, 3.8 and 3.9 on Ubuntu, OSX and Windows.
+This library has been tested with Python 3.6, 3.7, 3.8, 3.9 and 3.10 on Ubuntu, OSX and Windows.
 
 #### Benchmarks
 
