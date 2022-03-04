@@ -2,6 +2,8 @@
 #define IMPLICIT_GPU_MATRIX_H_
 #include <memory>
 
+#include <cuda_fp16.h>
+
 #include <rmm/device_uvector.hpp>
 
 namespace implicit {
@@ -21,7 +23,8 @@ struct Matrix {
   // device (if allocate=True and data != null). If allocate=false, this assumes
   // the data is preallocated on the gpu (cupy etc) and doesn't allocate any new
   // storage
-  Matrix(int rows, int cols, float *data = NULL, bool allocate = true);
+  Matrix(int rows, int cols, void *data = NULL, bool allocate = true,
+         size_t itemsize = 4);
 
   // Create a new Matrix by slicing a single row from an existing one. The
   // underlying storage buffer is shared in this case.
@@ -37,18 +40,55 @@ struct Matrix {
   void resize(int rows, int cols);
   void assign_rows(const Vector<int> &rowids, const Matrix &other);
 
-  Matrix() : rows(0), cols(0), data(NULL) {}
+  Matrix astype(size_t itemsize) const;
+
+  Matrix() : rows(0), cols(0), data(NULL), itemsize(4) {}
 
   // Copy the Matrix to host memory.
-  void to_host(float *output) const;
+  void to_host(void *output) const;
+
+  // Calculates norms for each row in the matrix
+  Matrix calculate_norms() const;
 
   int rows, cols;
-  float *data;
+  void *data;
+  size_t itemsize;
 
-  std::shared_ptr<rmm::device_uvector<float>> storage;
+  operator const float *() const {
+    if (itemsize != 4) {
+      throw std::runtime_error("can't cast Matrix to const float*");
+    }
+    return reinterpret_cast<const float *>(data);
+  }
+
+  operator float *() {
+    if (itemsize != 4) {
+      throw std::runtime_error("can't cast Matrix to float*");
+    }
+    return reinterpret_cast<float *>(data);
+  }
+
+  operator const half *() const {
+    if (itemsize != 2) {
+      throw std::runtime_error("can't cast Matrix to const half*");
+    }
+    return reinterpret_cast<const half *>(data);
+  }
+
+  operator half *() {
+    if (itemsize != 2) {
+      throw std::runtime_error("can't cast Matrix to half*");
+    }
+    return reinterpret_cast<half *>(data);
+  }
+
+  void *at(size_t element) const {
+    char *x = reinterpret_cast<char *>(data);
+    return x + itemsize * element;
+  }
+
+  std::shared_ptr<rmm::device_buffer> storage;
 };
-
-Matrix calculate_norms(const Matrix &input);
 
 struct CSRMatrix {
   CSRMatrix(int rows, int cols, int nonzeros, const int *indptr,

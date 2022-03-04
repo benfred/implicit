@@ -69,6 +69,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.random_state = random_state
         self.cg_steps = 3
 
+        self._itemsize = 4
+
         # cached access to properties
         self._solver = None
         self._YtY = None
@@ -121,10 +123,13 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self.user_factors = random_state.uniform(
                 users, self.factors, low=-0.5 / self.factors, high=0.5 / self.factors
             )
+            self.user_factors = self.user_factors.astype(self._itemsize)
+
         if self.item_factors is None:
             self.item_factors = random_state.uniform(
                 items, self.factors, low=-0.5 / self.factors, high=0.5 / self.factors
             )
+            self.item_factors = self.item_factors.astype(self._itemsize)
 
         log.debug("Initialized factors in %s", time.time() - s)
 
@@ -137,22 +142,24 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Y = self.item_factors
         loss = None
 
-        self._YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors)
-        self._XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors)
+        self._YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors).astype(self._itemsize)
+        self._XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors).astype(self._itemsize)
+
+        solver = self.solver
 
         log.debug("Running %i ALS iterations", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for iteration in range(self.iterations):
                 s = time.time()
-                self.solver.calculate_yty(Y, self._YtY, self.regularization)
-                self.solver.least_squares(Cui, X, self._YtY, Y, self.cg_steps)
+                solver.calculate_yty(Y, self._YtY, self.regularization)
+                solver.least_squares(Cui, X, self._YtY, Y, self.cg_steps)
 
-                self.solver.calculate_yty(X, self._XtX, self.regularization)
-                self.solver.least_squares(Ciu, Y, self._XtX, X, self.cg_steps)
+                solver.calculate_yty(X, self._XtX, self.regularization)
+                solver.least_squares(Ciu, Y, self._XtX, X, self.cg_steps)
                 progress.update(1)
 
                 if self.calculate_training_loss:
-                    loss = self.solver.calculate_loss(Cui, X, Y, self.regularization)
+                    loss = solver.calculate_loss(Cui, X, Y, self.regularization)
                     progress.set_postfix({"loss": loss})
 
                     if not show_progress:
@@ -169,7 +176,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             user_items = self.alpha * user_items
 
         users = 1 if np.isscalar(userid) else len(userid)
-        user_factors = implicit.gpu.Matrix.zeros(users, self.factors)
+        user_factors = implicit.gpu.Matrix.zeros(users, self.factors).astype(self._itemsize)
         Cui = implicit.gpu.CSRMatrix(user_items)
 
         self.solver.least_squares(
@@ -182,7 +189,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             item_users = self.alpha * item_users
 
         items = 1 if np.isscalar(itemid) else len(itemid)
-        item_factors = implicit.gpu.Matrix.zeros(items, self.factors)
+        item_factors = implicit.gpu.Matrix.zeros(items, self.factors).astype(self._itemsize)
         Ciu = implicit.gpu.CSRMatrix(item_users)
         self.solver.least_squares(
             Ciu, item_factors, self.XtX, self.user_factors, cg_steps=self.factors

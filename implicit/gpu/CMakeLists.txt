@@ -53,6 +53,9 @@ else()
         ${FAISS_SOURCE_DIR}/faiss/gpu/utils/BlockSelectFloat.cu
         ${FAISS_SOURCE_DIR}/faiss/gpu/utils/DeviceUtils.cu
         ${FAISS_SOURCE_DIR}/faiss/gpu/GpuResources.cpp
+
+        # Faiss seemed to remove their half support blockselect code in https://github.com/facebookresearch/faiss/pull/1817/files
+        faiss_block_select_half.cu
     )
 
     python_extension_module(_cuda)

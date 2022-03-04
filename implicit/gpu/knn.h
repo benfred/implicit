@@ -17,13 +17,22 @@ public:
   cublasContext *blas_handle;
 
   void topk(const Matrix &items, const Matrix &query, int k, int *indices,
-            float *distances, float *item_norms = NULL,
+            void *distances, Matrix *item_norms = NULL,
             const COOMatrix *query_filter = NULL,
             Vector<int> *item_filter = NULL);
 
-  void argpartition(const Matrix &items, int k, int *indices, float *distances,
+  template <typename T>
+  void argpartition(const Matrix &items, int k, int *indices, T *distances,
                     bool allow_tiling);
-  void argsort(const Matrix &items, int *indices, float *distances);
+
+  template <typename T>
+  void argsort(const Matrix &items, int *indices, T *distances);
+
+  template <typename T>
+  void topk_impl(const Matrix &items, const Matrix &query, int k, int *indices,
+                 T *distances, Matrix *item_norms = NULL,
+                 const COOMatrix *query_filter = NULL,
+                 Vector<int> *item_filter = NULL);
 
 protected:
   std::unique_ptr<rmm::mr::device_memory_resource> mr;

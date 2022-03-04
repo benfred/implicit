@@ -116,11 +116,10 @@ std::pair<int, int> bpr_update(const Vector<int> &userids,
   int thread_count = factors;
   int shared_memory_size = sizeof(float) * (factors);
 
-  // TODO: get rows passed in here
   bpr_update_kernel<<<block_count, thread_count, shared_memory_size>>>(
       nonzeros, random_likes, random_dislikes, itemids.data, userids.data,
-      indptr.data, factors, X->data, Y->data, learning_rate, reg,
-      verify_negative_samples, stats);
+      indptr.data, factors, *X, *Y, learning_rate, reg, verify_negative_samples,
+      stats);
 
   CHECK_CUDA(cudaDeviceSynchronize());
 
