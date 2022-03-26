@@ -5,8 +5,8 @@ import random
 import tempfile
 
 import numpy as np
-from scipy.sparse import csr_matrix
 from numpy.testing import assert_array_equal
+from scipy.sparse import csr_matrix
 
 from implicit.evaluation import precision_at_k
 from implicit.nearest_neighbours import ItemItemRecommender

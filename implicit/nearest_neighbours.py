@@ -163,7 +163,9 @@ class ItemItemRecommender(RecommenderBase):
             file = file + ".npz"
 
         with np.load(file, allow_pickle=False) as data:
-            similarity = csr_matrix((data["data"], data["indices"], data["indptr"]), shape=data["shape"])
+            similarity = csr_matrix(
+                (data["data"], data["indices"], data["indptr"]), shape=data["shape"]
+            )
 
             ret = cls()
             ret.similarity = similarity
