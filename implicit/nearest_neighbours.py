@@ -152,24 +152,26 @@ class ItemItemRecommender(RecommenderBase):
         else:
             self.scorer = None
 
-    def save(self, filename):
+    def save(self, file):
         m = self.similarity
-        np.savez(filename, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape, K=self.K)
+        np.savez(file, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape, K=self.K)
 
     @classmethod
-    def load(cls, filename):
+    def load(cls, file):
         # numpy.save automatically appends a npz suffic, numpy.load doesn't apparently
-        if not filename.endswith(".npz"):
-            filename = filename + ".npz"
+        if isinstance(file, str) and not file.endswith(".npz"):
+            file = file + ".npz"
 
-        m = np.load(filename)
-        similarity = csr_matrix((m["data"], m["indices"], m["indptr"]), shape=m["shape"])
+        with np.load(file, allow_pickle=False) as data:
+            similarity = csr_matrix(
+                (data["data"], data["indices"], data["indptr"]), shape=data["shape"]
+            )
 
-        ret = cls()
-        ret.similarity = similarity
-        ret.scorer = NearestNeighboursScorer(similarity)
-        ret.K = m["K"]
-        return ret
+            ret = cls()
+            ret.similarity = similarity
+            ret.scorer = NearestNeighboursScorer(similarity)
+            ret.K = data["K"]
+            return ret
 
 
 class CosineRecommender(ItemItemRecommender):

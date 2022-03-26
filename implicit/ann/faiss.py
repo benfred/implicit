@@ -280,3 +280,10 @@ class FaissModel(RecommenderBase):
             "similar_users isn't implemented with Faiss yet. (note: you can call "
             " self.model.similar_models to get the same functionality on the inner model class)"
         )
+
+    def save(self, file):
+        raise NotImplementedError(".save isn't implemented for Faiss yet")
+
+    @classmethod
+    def load(cls, file):
+        raise NotImplementedError(".load isn't implemented for Faiss yet")

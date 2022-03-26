@@ -117,7 +117,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.regularization = regularization
-        self.dtype = dtype
+        self.dtype = np.dtype(dtype)
         self.num_threads = num_threads
         self.verify_negative_samples = verify_negative_samples
         self.random_state = random_state
@@ -204,7 +204,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 
         self._check_fit_errors()
 
-    def to_gpu(self):
+    def to_gpu(self) -> "implicit.gpu.bpr.BayesianPersonalizedRanking":
         """Converts this model to an equivalent version running on the gpu"""
         import implicit.gpu.bpr
 
@@ -218,6 +218,33 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         ret.user_factors = implicit.gpu.Matrix(self.user_factors)
         ret.item_factors = implicit.gpu.Matrix(self.item_factors)
         return ret
+
+    def save(self, file):
+        np.savez(
+            file,
+            user_factors=self.user_factors,
+            item_factors=self.item_factors,
+            regularization=self.regularization,
+            factors=self.factors,
+            learning_rate=self.learning_rate,
+            verify_negative_samples=self.verify_negative_samples,
+            num_threads=self.num_threads,
+            iterations=self.iterations,
+            dtype=self.dtype.name,
+        )
+
+    @classmethod
+    def load(cls, file):
+        if isinstance(file, str) and not file.endswith(".npz"):
+            file = file + ".npz"
+        with np.load(file, allow_pickle=False) as data:
+            ret = cls()
+            for k, v in data.items():
+                if k == "dtype":
+                    ret.dtype = np.dtype(str(v))
+                else:
+                    setattr(ret, k, v)
+            return ret
 
 
 @cython.cdivision(True)

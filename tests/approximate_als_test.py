@@ -23,6 +23,9 @@ try:
             # pickle isn't supported on annoy indices
             pass
 
+        def test_serialization(self):
+            pass
+
     if HAS_CUDA:
 
         class AnnoyALSGPUTest(unittest.TestCase, RecommenderBaseTestMixin):
@@ -33,6 +36,9 @@ try:
 
             def test_pickle(self):
                 # pickle isn't supported on annoy indices
+                pass
+
+            def test_serialization(self):
                 pass
 
 except ImportError:
@@ -55,6 +61,9 @@ try:
             # pickle isn't supported on nmslib indices
             pass
 
+        def test_serialization(self):
+            pass
+
     if HAS_CUDA:
         # nmslib doesn't support querying on the gpu, but we should be able to still use a GPU als
         # model with the nmslib index
@@ -70,6 +79,9 @@ try:
 
             def test_pickle(self):
                 # pickle isn't supported on nmslib indices
+                pass
+
+            def test_serialization(self):
                 pass
 
 except ImportError:
@@ -88,6 +100,9 @@ try:
             # pickle isn't supported on faiss indices
             pass
 
+        def test_serialization(self):
+            pass
+
     if HAS_CUDA:
 
         class FaissALSGPUTest(unittest.TestCase, RecommenderBaseTestMixin):
@@ -102,17 +117,6 @@ try:
                     use_gpu=True,
                     random_state=23,
                 )
-
-            def test_similar_items(self):
-                # For the GPU version, we currently have to have factors be a multiple of 32
-                # (limitation that I think is caused by how we are currently calculating the
-                # dot product in CUDA, TODO: eventually should fix that code).
-                # this causes the test_similar_items call to fail if we set regularization to 0
-                self.__regularization = 1.0
-                try:
-                    super().test_similar_items()
-                finally:
-                    self.__regularization = 0.0
 
             def test_large_recommend(self):
                 # the GPU version of FAISS can't return more than 1K result (and will assert/exit)
@@ -129,6 +133,9 @@ try:
 
             def test_pickle(self):
                 # pickle isn't supported on faiss indices
+                pass
+
+            def test_serialization(self):
                 pass
 
 except ImportError:

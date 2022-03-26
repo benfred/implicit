@@ -107,7 +107,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.regularization = regularization
-        self.dtype = dtype
+        self.dtype = np.dtype(dtype)
         self.num_threads = num_threads
         self.neg_prop = neg_prop
         self.random_state = random_state
@@ -197,6 +197,33 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
                 progress.update(1)
 
         self._check_fit_errors()
+
+    def save(self, file):
+        np.savez(
+            file,
+            user_factors=self.user_factors,
+            item_factors=self.item_factors,
+            regularization=self.regularization,
+            factors=self.factors,
+            learning_rate=self.learning_rate,
+            neg_prop=self.neg_prop,
+            num_threads=self.num_threads,
+            iterations=self.iterations,
+            dtype=self.dtype.name,
+        )
+
+    @classmethod
+    def load(cls, file):
+        if isinstance(file, str) and not file.endswith(".npz"):
+            file = file + ".npz"
+        with np.load(file, allow_pickle=False) as data:
+            ret = cls()
+            for k, v in data.items():
+                if k == "dtype":
+                    ret.dtype = np.dtype(str(v))
+                else:
+                    setattr(ret, k, v)
+            return ret
 
 
 @cython.cdivision(True)
