@@ -269,7 +269,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self.solver.calculate_yty(self.user_factors, self._XtX, self.regularization)
         return self._XtX
 
-    def to_cpu(self):
+    def to_cpu(self) -> implicit.cpu.als.AlternatingLeastSquares:
         """Converts this model to an equivalent version running on the CPU"""
         ret = implicit.cpu.als.AlternatingLeastSquares(
             factors=self.factors,
@@ -277,6 +277,6 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             iterations=self.iterations,
             calculate_training_loss=self.calculate_training_loss,
         )
-        ret.user_factors = self.user_factors.to_numpy()
-        ret.item_factors = self.item_factors.to_numpy()
+        ret.user_factors = self.user_factors.to_numpy() if self.user_factors is not None else None
+        ret.item_factors = self.item_factors.to_numpy() if self.item_factors is not None else None
         return ret

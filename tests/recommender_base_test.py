@@ -1,9 +1,12 @@
 """ Common test functions for all recommendation models """
+import os
 import pickle
 import random
+import tempfile
 
 import numpy as np
 from scipy.sparse import csr_matrix
+from numpy.testing import assert_array_equal
 
 from implicit.evaluation import precision_at_k
 from implicit.nearest_neighbours import ItemItemRecommender
@@ -383,12 +386,25 @@ class RecommenderBaseTestMixin:
         with self.assertRaises(ValueError):
             model.recommend(0, user_items=user_items.tocoo())
 
-    def get_checker_board(self, X):
-        """Returns a 'checkerboard' matrix: where every even userid has liked
-        every even itemid and every odd userid has liked every odd itemid.
-        The diagonal is withheld for testing recommend methods"""
-        ret = np.zeros((X, X))
-        for i in range(X):
-            for j in range(i % 2, X, 2):
-                ret[i, j] = 1.0
-        return csr_matrix(ret - np.eye(X))
+    def test_serialization(self):
+        likes = get_checker_board(50)
+
+        model = self._get_model()
+        model.fit(likes, show_progress=False)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filename = os.path.join(tmpdir, "model.npz")
+            model.save(filename)
+            reloaded = model.load(filename)
+
+            assert_array_equal(model.similar_items(1)[0], reloaded.similar_items(1)[0])
+            assert_array_equal(model.similar_items(1)[1], reloaded.similar_items(1)[1])
+
+        # also make  sure we can save/load with file objects instead of filenames
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with open(os.path.join(tmpdir, "model.npz"), "wb+") as f:
+                model.save(f)
+                f.seek(0)
+                reloaded = model.load(f)
+                assert_array_equal(model.similar_items(1)[0], reloaded.similar_items(1)[0])
+                assert_array_equal(model.similar_items(1)[1], reloaded.similar_items(1)[1])

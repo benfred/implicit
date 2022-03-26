@@ -44,7 +44,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
         to the number of cores on the machine.
-    random_state : int, RandomState or None, optional
+    random_state : int, numpy.random.RandomState or None, optional
         The random state for seeding the initial item and user factors.
         Default is None.
 
@@ -76,7 +76,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.regularization = regularization
 
         # options on how to fit the model
-        self.dtype = dtype
+        self.dtype = np.dtype(dtype)
         self.use_native = use_native
         self.use_cg = use_cg
         self.iterations = iterations
@@ -423,6 +423,35 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         ret.user_factors = implicit.gpu.Matrix(self.user_factors)
         ret.item_factors = implicit.gpu.Matrix(self.item_factors)
         return ret
+
+    def save(self, file):
+        np.savez(
+            file,
+            user_factors=self.user_factors,
+            item_factors=self.item_factors,
+            regularization=self.regularization,
+            factors=self.factors,
+            num_threads=self.num_threads,
+            iterations=self.iterations,
+            use_native=self.use_native,
+            use_cg=self.use_cg,
+            cg_steps=self.cg_steps,
+            calculate_training_loss=self.calculate_training_loss,
+            dtype=self.dtype.name,
+        )
+
+    @classmethod
+    def load(cls, file):
+        if isinstance(file, str) and not file.endswith(".npz"):
+            file = file + ".npz"
+        with np.load(file, allow_pickle=False) as data:
+            ret = cls()
+            for k, v in data.items():
+                if k == "dtype":
+                    ret.dtype = np.dtype(str(v))
+                else:
+                    setattr(ret, k, v)
+            return ret
 
 
 def least_squares(Cui, X, Y, regularization, num_threads=0):

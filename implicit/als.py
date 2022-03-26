@@ -49,7 +49,7 @@ def AlternatingLeastSquares(
         The number of threads to use for fitting the model. This only
         applies for the native extensions. Specifying 0 means to default
         to the number of cores on the machine.
-    random_state : int, RandomState or None, optional
+    random_state : int, np.random.RandomState or None, optional
         The random state for seeding the initial item and user factors.
         Default is None.
     """

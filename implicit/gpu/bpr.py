@@ -150,7 +150,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                         }
                     )
 
-    def to_cpu(self):
+    def to_cpu(self) -> implicit.cpu.bpr.BayesianPersonalizedRanking:
         """Converts this model to an equivalent version running on the cpu"""
         ret = implicit.cpu.bpr.BayesianPersonalizedRanking(
             factors=self.factors,
@@ -159,6 +159,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             iterations=self.iterations,
             verify_negative_samples=self.verify_negative_samples,
         )
-        ret.user_factors = self.user_factors.to_numpy()
-        ret.item_factors = self.item_factors.to_numpy()
+        ret.user_factors = self.user_factors.to_numpy() if self.user_factors is not None else None
+        ret.item_factors = self.item_factors.to_numpy() if self.item_factors is not None else None
         return ret

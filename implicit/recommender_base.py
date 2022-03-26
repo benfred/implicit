@@ -1,4 +1,5 @@
 """ Base class for recommendation algorithms in this package """
+import io
 import warnings
 from abc import ABCMeta, abstractmethod
 
@@ -7,10 +8,8 @@ class ModelFitError(Exception):
     pass
 
 
-class RecommenderBase:
+class RecommenderBase(metaclass=ABCMeta):
     """Defines a common interface for all recommendation models"""
-
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def fit(self, user_items, show_process=True):
@@ -150,6 +149,42 @@ class RecommenderBase:
         -------
         tuple
             Tuple of (itemids, scores) arrays
+        """
+
+    @abstractmethod
+    def save(self, file):
+        """Saves the model to a file, using the numpy `.npz` format
+
+        Parameters
+        ----------
+        file : str or io.IOBase
+            Either the filename or an open file-like object to save the model to
+
+        See Also
+        --------
+        load
+        numpy.savez
+        """
+
+    @classmethod
+    @abstractmethod
+    def load(cls, file) -> "RecommenderBase":
+        """Loads the model from a file
+
+        Parameters
+        ----------
+        file : str or io.IOBase
+            Either the filename or an open file-like object to load the model from
+
+        Returns
+        -------
+        RecommenderBase
+            The model loaded up from disk
+
+        See Also
+        --------
+        save
+        numpy.load
         """
 
     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):

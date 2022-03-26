@@ -239,3 +239,10 @@ class NMSLibModel(RecommenderBase):
             "similar_users isn't implemented with NMSLib yet. (note: you can call "
             " self.model.similar_models to get the same functionality on the inner model class)"
         )
+
+    def save(self, file):
+        raise NotImplementedError(".save isn't implemented for NMSLib yet")
+
+    @classmethod
+    def load(self, file):
+        raise NotImplementedError(".load isn't implemented for NMSLib yet")

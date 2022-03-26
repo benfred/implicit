@@ -207,6 +207,13 @@ class MatrixFactorizationBase(RecommenderBase):
     def recalculate_item(self, itemid, item_users):
         raise NotImplementedError("recalculate_item is not supported with this model")
 
+    @classmethod
+    def load(cls, file):
+        return cls().to_cpu().load(file).to_gpu()
+
+    def save(self, file):
+        self.to_cpu().save(file)
+
     def __getstate__(self):
         return {
             "item_factors": self.item_factors.to_numpy() if self.item_factors else None,
