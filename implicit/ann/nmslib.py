@@ -244,5 +244,5 @@ class NMSLibModel(RecommenderBase):
         raise NotImplementedError(".save isn't implemented for NMSLib yet")
 
     @classmethod
-    def load(self, file):
+    def load(cls, file):
         raise NotImplementedError(".load isn't implemented for NMSLib yet")

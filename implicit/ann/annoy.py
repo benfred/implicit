@@ -241,5 +241,5 @@ class AnnoyModel(RecommenderBase):
         raise NotImplementedError(".save isn't implemented for Annoy yet")
 
     @classmethod
-    def load(self, file):
+    def load(cls, file):
         raise NotImplementedError(".load isn't implemented for Annoy yet")

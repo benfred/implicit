@@ -285,5 +285,5 @@ class FaissModel(RecommenderBase):
         raise NotImplementedError(".save isn't implemented for Faiss yet")
 
     @classmethod
-    def load(self, file):
+    def load(cls, file):
         raise NotImplementedError(".load isn't implemented for Faiss yet")
