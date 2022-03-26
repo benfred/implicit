@@ -1,5 +1,4 @@
 """ Base class for recommendation algorithms in this package """
-import io
 import warnings
 from abc import ABCMeta, abstractmethod
 
