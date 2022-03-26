@@ -247,8 +247,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             return ret
 
 
-
-
 @cython.cdivision(True)
 @cython.boundscheck(False)
 def bpr_update(RNGVector rng,
