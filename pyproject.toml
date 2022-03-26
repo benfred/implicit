@@ -28,3 +28,9 @@ repair-wheel-command = ""
 
 [tool.cibuildwheel.linux.environment]
 CUDACXX = "/usr/local/cuda/bin/nvcc"
+
+# Build `universal2` and `arm64` wheels on an Intel runner.
+# Note that the `arm64` wheel and the `arm64` part of the `universal2`
+# wheel cannot be tested in this configuration.
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "universal2", "arm64"]
