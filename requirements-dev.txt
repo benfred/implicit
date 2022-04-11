@@ -2,7 +2,7 @@
 
 scikit-build>=0.13.1
 pytest
-black==21.12b0
+black==22.3.0
 flake8
 isort
 codespell
