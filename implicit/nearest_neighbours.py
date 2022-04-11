@@ -220,7 +220,7 @@ def normalize(X):
     """equivalent to scipy.preprocessing.normalize on sparse matrices
     , but lets avoid another dependency just for a small utility function"""
     X = coo_matrix(X)
-    X.data = X.data / sqrt(bincount(X.row, X.data ** 2))[X.row]
+    X.data = X.data / sqrt(bincount(X.row, X.data**2))[X.row]
     return X
 
 
