@@ -4,6 +4,11 @@ find_package(CUDAToolkit)
 if(CUDAToolkit_FOUND)
 if (${CUDAToolkit_VERSION} VERSION_LESS "11.0.0")
     message("implicit requires CUDA 11.0 or greater for GPU acceleration - found CUDA ${CUDAToolkit_VERSION}")
+
+elseif(DEFINED ENV{IMPLICIT_DISABLE_CUDA})
+    # disable building the CUDA extension if the IMPLICIT_DISABLE_CUDA environment variable is set
+    message("Disabling building the GPU extension since IMPLICIT_DISABLE_CUDA env var is set")
+
 else()
     enable_language(CUDA)
     add_cython_target(_cuda CXX)
