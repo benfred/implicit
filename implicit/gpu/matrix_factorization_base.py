@@ -239,7 +239,7 @@ def check_random_state(random_state):
     """
     if isinstance(random_state, np.random.RandomState):
         # we need to convert from numpy random state our internal random state
-        return implicit.gpu.RandomState(random_state.randint(2 ** 31))
+        return implicit.gpu.RandomState(random_state.randint(2**31))
 
     # otherwise try to initialize a new one, and let it fail through
     # on the numpy side if it doesn't work

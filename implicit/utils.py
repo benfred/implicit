@@ -71,7 +71,7 @@ def augment_inner_product_matrix(factors):
 
     # add an extra dimension so that the norm of each row is the same
     # (max_norm)
-    extra_dimension = np.sqrt(max_norm ** 2 - norms ** 2)
+    extra_dimension = np.sqrt(max_norm**2 - norms**2)
     return max_norm, np.append(factors, extra_dimension.reshape(norms.shape[0], 1), axis=1)
 
 

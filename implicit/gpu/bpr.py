@@ -137,7 +137,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                     Y,
                     self.learning_rate,
                     self.regularization,
-                    rs.randint(2 ** 31),
+                    rs.randint(2**31),
                     self.verify_negative_samples,
                 )
                 progress.update(1)

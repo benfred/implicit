@@ -146,7 +146,7 @@ class AnnoyModel(RecommenderBase):
         if filter_items is not None:
             ids, scores = _filter_items_from_results(itemid, ids, scores, filter_items, N)
 
-        return ids, 1 - (scores ** 2) / 2
+        return ids, 1 - (scores**2) / 2
 
     def recommend(
         self,
@@ -228,7 +228,7 @@ class AnnoyModel(RecommenderBase):
         # convert the distances from euclidean to cosine distance,
         # and then rescale the cosine distance to go back to inner product
         scaling = self.max_norm * np.linalg.norm(query)
-        scores = scaling * (1 - (scores ** 2) / 2)
+        scores = scaling * (1 - (scores**2) / 2)
         return ids, scores
 
     def similar_users(self, userid, N=10, filter_users=None, users=None):
