@@ -83,9 +83,8 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         The proportion of negative samples. i.e.) "neg_prop = 30" means if user have seen 5 items,
         then 5 * 30 = 150 negative samples are used for training.
     num_threads : int, optional
-        The number of threads to use for fitting the model. This only
-        applies for the native extensions. Specifying 0 means to default
-        to the number of cores on the machine.
+        The number of threads to use for fitting the model and batch recommendation calls.
+        Specifying 0 means to default to the number of cores on the machine.
     random_state : int, RandomState or None, optional
         The random state for seeding the initial item and user factors.
         Default is None.
@@ -101,14 +100,13 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
     def __init__(self, factors=30, learning_rate=1.00, regularization=0.6, dtype=np.float32,
                  iterations=30, neg_prop=30, num_threads=0,
                  random_state=None):
-        super(LogisticMatrixFactorization, self).__init__()
+        super(LogisticMatrixFactorization, self).__init__(num_threads=num_threads)
 
         self.factors = factors
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.regularization = regularization
         self.dtype = np.dtype(dtype)
-        self.num_threads = num_threads
         self.neg_prop = neg_prop
         self.random_state = random_state
 
