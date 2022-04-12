@@ -41,9 +41,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     calculate_training_loss : bool, optional
         Whether to log out the training loss at each iteration
     num_threads : int, optional
-        The number of threads to use for fitting the model. This only
-        applies for the native extensions. Specifying 0 means to default
-        to the number of cores on the machine.
+        The number of threads to use for fitting the model and batch recommend calls.
+        Specifying 0 means to default to the number of cores on the machine.
     random_state : int, numpy.random.RandomState or None, optional
         The random state for seeding the initial item and user factors.
         Default is None.
@@ -68,8 +67,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         num_threads=0,
         random_state=None,
     ):
-
-        super().__init__()
+        super().__init__(num_threads=num_threads)
 
         # parameters on how to factorize
         self.factors = factors
@@ -81,7 +79,6 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.use_cg = use_cg
         self.iterations = iterations
         self.calculate_training_loss = calculate_training_loss
-        self.num_threads = num_threads
         self.fit_callback = None
         self.cg_steps = 3
         self.random_state = random_state

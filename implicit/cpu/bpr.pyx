@@ -94,9 +94,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         been liked by the user. This check increases the time needed to train but usually leads
         to better predictions.
     num_threads : int, optional
-        The number of threads to use for fitting the model. This only
-        applies for the native extensions. Specifying 0 means to default
-        to the number of cores on the machine.
+        The number of threads to use for fitting the model and batch recommend calls.
+        Specifying 0 means to default to the number of cores on the machine.
     random_state : int, RandomState or None, optional
         The random state for seeding the initial item and user factors.
         Default is None.
@@ -111,14 +110,13 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
     def __init__(self, factors=100, learning_rate=0.01, regularization=0.01, dtype=np.float32,
                  iterations=100, num_threads=0,
                  verify_negative_samples=True, random_state=None):
-        super(BayesianPersonalizedRanking, self).__init__()
+        super(BayesianPersonalizedRanking, self).__init__(num_threads=num_threads)
 
         self.factors = factors
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.regularization = regularization
         self.dtype = np.dtype(dtype)
-        self.num_threads = num_threads
         self.verify_negative_samples = verify_negative_samples
         self.random_state = random_state
 

@@ -17,15 +17,19 @@ class MatrixFactorizationBase(RecommenderBase):
         Array of latent factors for each item in the training set
     user_factors : ndarray
         Array of latent factors for each user in the training set
+    num_threads : int
+        The number of threads to use for batch recommendation calls and fitting the
+        model. Setting to 0 will use all CPU cores on the machine
     """
 
-    def __init__(self):
+    def __init__(self, num_threads=0):
         # learned parameters
         self.item_factors = None
         self.user_factors = None
 
         # cache of user, item norms (useful for calculating similar items)
         self._user_norms, self._item_norms = None, None
+        self.num_threads = num_threads
 
     def recommend(
         self,
@@ -78,6 +82,7 @@ class MatrixFactorizationBase(RecommenderBase):
             N,
             filter_query_items=filter_query_items,
             filter_items=filter_items,
+            num_threads=self.num_threads,
         )
 
         if np.isscalar(userid):
@@ -209,7 +214,14 @@ class MatrixFactorizationBase(RecommenderBase):
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
 
     def _get_similarity_score(self, factor, norm, factors, norms, N, filter_items=None):
-        ids, scores = topk(factors, factor, N, item_norms=norms, filter_items=filter_items)
+        ids, scores = topk(
+            factors,
+            factor,
+            N,
+            item_norms=norms,
+            filter_items=filter_items,
+            num_threads=self.num_threads,
+        )
         if np.isscalar(norm):
             ids, scores = ids[0], scores[0]
             scores /= norm
