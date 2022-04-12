@@ -242,7 +242,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # ensure that we have enough storage for any new items
         items, factors = self.item_factors.shape
         max_itemid = max(itemids)
-        if max_itemid > items:
+        if max_itemid >= items:
             # TODO: grow exponentially ?
             self.item_factors.resize(max_itemid + 1, factors)
 

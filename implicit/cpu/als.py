@@ -315,7 +315,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # ensure that we have enough storage for any new items
         items, factors = self.item_factors.shape
         max_itemid = max(itemids)
-        if max_itemid > items:
+        if max_itemid >= items:
             self.item_factors = np.concatenate(
                 [self.item_factors, np.zeros((max_itemid - items + 1, factors), dtype=self.dtype)]
             )

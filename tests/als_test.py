@@ -255,3 +255,9 @@ def test_incremental_retrain(use_gpu):
     model.partial_fit_items([100], likes[1])
     ids, _ = model.recommend(1, likes[1], N=2)
     assert set(ids) == {1, 100}
+
+    # check to make sure we can index only a single extra item/user
+    model.partial_fit_users([101], likes[1])
+    model.partial_fit_items([101], likes[1])
+    ids, _ = model.recommend(101, likes[1], N=3)
+    assert set(ids) == {1, 100, 101}
