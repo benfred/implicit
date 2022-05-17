@@ -4,7 +4,7 @@ at http://www.benfrederickson.com/matrix-factorization/
 
 This code will automically download a HDF5 version of the dataset from
 GitHub when it is first run. The original dataset can also be found at
-http://www.dtic.upf.edu/~ocelma/MusicRecommendationDataset/lastfm-360K.html.
+http://ocelma.net/MusicRecommendationDataset/lastfm-360K.html
 """
 import argparse
 import codecs
