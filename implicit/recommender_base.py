@@ -2,6 +2,8 @@
 import warnings
 from abc import ABCMeta, abstractmethod
 
+import numpy as np
+
 
 class ModelFitError(Exception):
     pass
@@ -166,13 +168,12 @@ class RecommenderBase(metaclass=ABCMeta):
         """
 
     @classmethod
-    @abstractmethod
-    def load(cls, file) -> "RecommenderBase":
+    def load(cls, fileobj_or_path) -> "RecommenderBase":
         """Loads the model from a file
 
         Parameters
         ----------
-        file : str or io.IOBase
+        fileobj_or_path : str or io.IOBase
             Either the filename or an open file-like object to load the model from
 
         Returns
@@ -185,6 +186,17 @@ class RecommenderBase(metaclass=ABCMeta):
         save
         numpy.load
         """
+        if isinstance(fileobj_or_path, str) and not fileobj_or_path.endswith(".npz"):
+            fileobj_or_path = fileobj_or_path + ".npz"
+        with np.load(fileobj_or_path, allow_pickle=False) as data:
+            ret = cls()
+            for k, v in data.items():
+                if k == "dtype":
+                    v = np.dtype(str(v))
+                elif v.shape == ():
+                    v = v.item()
+                setattr(ret, k, v)
+            return ret
 
     def rank_items(self, userid, user_items, selected_items, recalculate_user=False):
         warnings.warn(

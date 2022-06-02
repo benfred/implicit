@@ -196,9 +196,8 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
         self._check_fit_errors()
 
-    def save(self, file):
-        np.savez(
-            file,
+    def save(self, fileobj_or_path):
+        args = dict(
             user_factors=self.user_factors,
             item_factors=self.item_factors,
             regularization=self.regularization,
@@ -208,20 +207,12 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
             num_threads=self.num_threads,
             iterations=self.iterations,
             dtype=self.dtype.name,
-        )
+            random_state=self.random_state)
 
-    @classmethod
-    def load(cls, file):
-        if isinstance(file, str) and not file.endswith(".npz"):
-            file = file + ".npz"
-        with np.load(file, allow_pickle=False) as data:
-            ret = cls()
-            for k, v in data.items():
-                if k == "dtype":
-                    ret.dtype = np.dtype(str(v))
-                else:
-                    setattr(ret, k, v)
-            return ret
+        # filter out 'None' valued args, since we can't go np.load on
+        # them without using pickle
+        args = {k:v for k,v in args.items() if v is not None}
+        np.savez(fileobj_or_path, **args)
 
 
 @cython.cdivision(True)

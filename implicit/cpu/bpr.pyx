@@ -212,15 +212,17 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             regularization=self.regularization,
             iterations=self.iterations,
             verify_negative_samples=self.verify_negative_samples,
+            random_state=self.random_state,
         )
-        ret.user_factors = implicit.gpu.Matrix(self.user_factors)
-        ret.item_factors = implicit.gpu.Matrix(self.item_factors)
+
+        if self.user_factors is not None:
+            ret.user_factors = implicit.gpu.Matrix(self.user_factors)
+        if self.item_factors is not None:
+            ret.item_factors = implicit.gpu.Matrix(self.item_factors)
         return ret
 
-    def save(self, file):
-        np.savez(
-            file,
-            user_factors=self.user_factors,
+    def save(self, fileobj_or_path):
+        args = dict(user_factors=self.user_factors,
             item_factors=self.item_factors,
             regularization=self.regularization,
             factors=self.factors,
@@ -229,20 +231,13 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             num_threads=self.num_threads,
             iterations=self.iterations,
             dtype=self.dtype.name,
+            random_state=self.random_state
         )
 
-    @classmethod
-    def load(cls, file):
-        if isinstance(file, str) and not file.endswith(".npz"):
-            file = file + ".npz"
-        with np.load(file, allow_pickle=False) as data:
-            ret = cls()
-            for k, v in data.items():
-                if k == "dtype":
-                    ret.dtype = np.dtype(str(v))
-                else:
-                    setattr(ret, k, v)
-            return ret
+        # filter out 'None' valued args, since we can't go np.load on
+        # them without using pickle
+        args = {k:v for k,v in args.items() if v is not None}
+        np.savez(fileobj_or_path, **args)
 
 
 @cython.cdivision(True)
