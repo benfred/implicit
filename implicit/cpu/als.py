@@ -9,7 +9,7 @@ import scipy
 import scipy.sparse
 from tqdm.auto import tqdm
 
-from ..utils import check_blas_config, check_random_state, nonzeros
+from ..utils import check_blas_config, check_csr, check_random_state, nonzeros
 from . import _als
 from .matrix_factorization_base import MatrixFactorizationBase
 
@@ -118,13 +118,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # initialize the random state
         random_state = check_random_state(self.random_state)
 
-        Cui = user_items
-        if not isinstance(Cui, scipy.sparse.csr_matrix):
-            s = time.time()
-            log.debug("Converting input to CSR format")
-            Cui = Cui.tocsr()
-            log.debug("Converted input to CSR in %.3fs", time.time() - s)
-
+        Cui = check_csr(user_items)
         if Cui.dtype != np.float32:
             Cui = Cui.astype(np.float32)
 

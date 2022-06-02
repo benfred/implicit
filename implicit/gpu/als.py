@@ -2,13 +2,11 @@ import logging
 import time
 
 import numpy as np
-import scipy
-import scipy.sparse
 from tqdm.auto import tqdm
 
 import implicit.gpu
-
-from .matrix_factorization_base import MatrixFactorizationBase, check_random_state
+from implicit.gpu.matrix_factorization_base import MatrixFactorizationBase, check_random_state
+from implicit.utils import check_csr
 
 log = logging.getLogger("implicit")
 
@@ -101,12 +99,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         random_state = check_random_state(self.random_state)
 
         # TODO: allow passing in cupy arrays on gpu
-        Cui = user_items
-        if not isinstance(Cui, scipy.sparse.csr_matrix):
-            s = time.time()
-            log.debug("Converting input to CSR format")
-            Cui = Cui.tocsr()
-            log.debug("Converted input to CSR in %.3fs", time.time() - s)
+        Cui = check_csr(user_items)
 
         if Cui.dtype != np.float32:
             Cui = Cui.astype(np.float32)

@@ -23,7 +23,7 @@ import scipy.sparse
 
 from libcpp.vector cimport vector
 
-from ..utils import check_random_state
+from ..utils import check_csr, check_random_state
 from .matrix_factorization_base import MatrixFactorizationBase
 
 log = logging.getLogger("implicit")
@@ -141,6 +141,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         if user_items.dtype != np.float32:
             user_items = user_items.astype(np.float32)
 
+        user_items = check_csr(user_items)
         users, items = user_items.shape
 
         # We need efficient user lookup for case of removing own likes
