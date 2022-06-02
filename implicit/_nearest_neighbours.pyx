@@ -1,11 +1,11 @@
-import cython
-
-from cython cimport floating, integral
-
 import threading
+import time
+import warnings
 
+import cython
 import numpy as np
 import scipy.sparse
+from cython cimport floating, integral
 from cython.operator import dereference
 from cython.parallel import parallel, prange
 
@@ -14,6 +14,8 @@ from libcpp.utility cimport pair
 from libcpp.vector cimport vector
 
 from tqdm.auto import tqdm
+
+from implicit.utils import check_csr
 
 
 cdef extern from "implicit/nearest_neighbours.h" namespace "implicit" nogil:
@@ -100,7 +102,7 @@ cdef class NearestNeighboursScorer(object):
 def all_pairs_knn(users, unsigned int K=100, int num_threads=0, show_progress=True):
     """ Returns the top K nearest neighbours for each row in the matrix.
     """
-    users = users.tocsr()
+    users = check_csr(users)
     items = users.T.tocsr()
 
     cdef int item_count = items.shape[0]

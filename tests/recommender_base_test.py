@@ -5,11 +5,13 @@ import random
 import tempfile
 
 import numpy as np
+import pytest
 from numpy.testing import assert_array_equal
 from scipy.sparse import csr_matrix
 
 from implicit.evaluation import precision_at_k
 from implicit.nearest_neighbours import ItemItemRecommender
+from implicit.utils import ParameterWarning
 
 
 def get_checker_board(X):
@@ -294,6 +296,19 @@ class RecommenderBaseTestMixin:
         for itemid in range(40):
             ids, _ = model.similar_items(itemid, 10)
             self.assertTrue(42 not in ids)
+
+    def test_fit_non_csr_matrix(self):
+        # models should be able to fit user_items that are passed as a COO or LiL matrix
+        # but should warn on input
+        user_items = get_checker_board(50)
+        model = self._get_model()
+
+        with pytest.warns(ParameterWarning):
+            model.fit(user_items.tocoo(), show_progress=False)
+
+        model = self._get_model()
+        with pytest.warns(ParameterWarning):
+            model.fit(user_items.tolil(), show_progress=False)
 
     def test_dtype(self):
         # models should be able to accept input of either float32 or float64

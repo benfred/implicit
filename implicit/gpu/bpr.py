@@ -5,7 +5,7 @@ from tqdm.auto import tqdm
 
 import implicit.gpu
 
-from ..utils import check_random_state
+from ..utils import check_csr, check_random_state
 from .matrix_factorization_base import MatrixFactorizationBase
 
 log = logging.getLogger("implicit")
@@ -79,6 +79,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             Whether to show a progress bar
         """
         rs = check_random_state(self.random_state)
+        user_items = check_csr(user_items)
 
         # for now, all we handle is float 32 values
         if user_items.dtype != np.float32:
