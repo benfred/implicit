@@ -25,7 +25,7 @@ import scipy.sparse
 
 from libcpp.vector cimport vector
 
-from ..utils import check_random_state
+from ..utils import check_csr, check_random_state
 from .matrix_factorization_base import MatrixFactorizationBase
 
 log = logging.getLogger("implicit")
@@ -134,7 +134,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
         users, items = user_items.shape
 
-        user_items = user_items.tocsr()
+        user_items = check_csr(user_items)
         item_users = user_items.T.tocsr()
 
         if not item_users.has_sorted_indices:

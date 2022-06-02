@@ -1,7 +1,9 @@
 import os
+import time
 import warnings
 
 import numpy as np
+import scipy.sparse
 
 
 def nonzeros(m, row):
@@ -122,3 +124,20 @@ def _filter_items_from_results(queryid, ids, scores, filter_items, N):
             filtered_scores[row] = scores[row][mask][:N]
         ids, scores = filtered_ids, filtered_scores
     return ids, scores
+
+
+class ParameterWarning(Warning):
+    pass
+
+
+def check_csr(user_items):
+    if not isinstance(user_items, scipy.sparse.csr_matrix):
+        class_name = user_items.__class__.__name__
+        start = time.time()
+        user_items = user_items.tocsr()
+        warnings.warn(
+            f"Method expects CSR input, and was passed {class_name} instead. "
+            f"Converting to CSR took {time.time() - start} seconds",
+            ParameterWarning,
+        )
+    return user_items
