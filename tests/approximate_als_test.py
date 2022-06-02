@@ -26,6 +26,9 @@ try:
         def test_serialization(self):
             pass
 
+        def test_serialization_without_fit(self):
+            pass
+
     if HAS_CUDA:
 
         class AnnoyALSGPUTest(unittest.TestCase, RecommenderBaseTestMixin):
@@ -39,6 +42,9 @@ try:
                 pass
 
             def test_serialization(self):
+                pass
+
+            def test_serialization_without_fit(self):
                 pass
 
 except ImportError:
@@ -64,6 +70,9 @@ try:
         def test_serialization(self):
             pass
 
+        def test_serialization_without_fit(self):
+            pass
+
     if HAS_CUDA:
         # nmslib doesn't support querying on the gpu, but we should be able to still use a GPU als
         # model with the nmslib index
@@ -84,6 +93,9 @@ try:
             def test_serialization(self):
                 pass
 
+            def test_serialization_without_fit(self):
+                pass
+
 except ImportError:
     pass
 
@@ -101,6 +113,9 @@ try:
             pass
 
         def test_serialization(self):
+            pass
+
+        def test_serialization_without_fit(self):
             pass
 
     if HAS_CUDA:
@@ -136,6 +151,9 @@ try:
                 pass
 
             def test_serialization(self):
+                pass
+
+            def test_serialization_without_fit(self):
                 pass
 
 except ImportError:
