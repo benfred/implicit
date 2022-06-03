@@ -159,6 +159,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             regularization=self.regularization,
             iterations=self.iterations,
             verify_negative_samples=self.verify_negative_samples,
+            random_state=self.random_state,
         )
         ret.user_factors = self.user_factors.to_numpy() if self.user_factors is not None else None
         ret.item_factors = self.item_factors.to_numpy() if self.item_factors is not None else None

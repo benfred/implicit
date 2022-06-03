@@ -152,24 +152,27 @@ class ItemItemRecommender(RecommenderBase):
         else:
             self.scorer = None
 
-    def save(self, file):
+    def save(self, fileobj_or_path):
+        args = dict(K=self.K)
         m = self.similarity
-        np.savez(file, data=m.data, indptr=m.indptr, indices=m.indices, shape=m.shape, K=self.K)
+        if m is not None:
+            args.update(dict(shape=m.shape, data=m.data, indptr=m.indptr, indices=m.indices))
+        np.savez(fileobj_or_path, **args)
 
     @classmethod
-    def load(cls, file):
+    def load(cls, fileobj_or_path):
         # numpy.save automatically appends a npz suffic, numpy.load doesn't apparently
-        if isinstance(file, str) and not file.endswith(".npz"):
-            file = file + ".npz"
+        if isinstance(fileobj_or_path, str) and not fileobj_or_path.endswith(".npz"):
+            fileobj_or_path = fileobj_or_path + ".npz"
 
-        with np.load(file, allow_pickle=False) as data:
-            similarity = csr_matrix(
-                (data["data"], data["indices"], data["indptr"]), shape=data["shape"]
-            )
-
+        with np.load(fileobj_or_path, allow_pickle=False) as data:
             ret = cls()
-            ret.similarity = similarity
-            ret.scorer = NearestNeighboursScorer(similarity)
+            if data.get("data") is not None:
+                similarity = csr_matrix(
+                    (data["data"], data["indices"], data["indptr"]), shape=data["shape"]
+                )
+                ret.similarity = similarity
+                ret.scorer = NearestNeighboursScorer(similarity)
             ret.K = data["K"]
             return ret
 

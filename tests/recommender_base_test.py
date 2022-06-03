@@ -423,3 +423,11 @@ class RecommenderBaseTestMixin:
                 reloaded = model.load(f)
                 assert_array_equal(model.similar_items(1)[0], reloaded.similar_items(1)[0])
                 assert_array_equal(model.similar_items(1)[1], reloaded.similar_items(1)[1])
+
+    def test_serialization_without_fit(self):
+        model = self._get_model()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filename = os.path.join(tmpdir, "model.npz")
+            model.save(filename)
+            reloaded = model.load(filename)
+            assert model.__dict__ == reloaded.__dict__
