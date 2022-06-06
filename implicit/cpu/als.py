@@ -128,7 +128,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         # Give the positive examples more weight if asked for
         if self.alpha != 1.0:
-            Cui *= self.alpha
+            Cui = self.alpha * Cui
 
         s = time.time()
         Ciu = Cui.T.tocsr()
@@ -360,9 +360,13 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             A factorized representation of the user. Passing this in to
             future 'explain' calls will lead to noticeable speedups
         """
+
+        user_items = check_csr(user_items)
+        if self.alpha != 1.0:
+            user_items = self.alpha * user_items
+
         # user_weights = Cholesky decomposition of Wu^-1
         # from section 5 of the paper CF for Implicit Feedback Datasets
-        user_items = user_items.tocsr()
         if user_weights is None:
             A, _ = user_linear_equation(
                 self.item_factors, self.YtY, user_items, userid, self.regularization, self.factors
