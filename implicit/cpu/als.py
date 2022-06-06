@@ -30,6 +30,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         The number of latent factors to compute
     regularization : float, optional
         The regularization factor to use
+    alpha : float, optional
+        The weight to give to positive examples.
     dtype : data-type, optional
         Specifies whether to generate 64 bit or 32 bit floating point factors
     use_native : bool, optional
@@ -59,6 +61,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self,
         factors=100,
         regularization=0.01,
+        alpha=1.0,
         dtype=np.float32,
         use_native=True,
         use_cg=True,
@@ -72,6 +75,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # parameters on how to factorize
         self.factors = factors
         self.regularization = regularization
+        self.alpha = alpha
 
         # options on how to fit the model
         self.dtype = np.dtype(dtype)
@@ -121,6 +125,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Cui = check_csr(user_items)
         if Cui.dtype != np.float32:
             Cui = Cui.astype(np.float32)
+
+        # Give the positive examples more weight if asked for
+        if self.alpha != 1.0:
+            Cui *= self.alpha
 
         s = time.time()
         Ciu = Cui.T.tocsr()
@@ -408,6 +416,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         ret = implicit.gpu.als.AlternatingLeastSquares(
             factors=self.factors,
             regularization=self.regularization,
+            alpha=self.alpha,
             iterations=self.iterations,
             calculate_training_loss=self.calculate_training_loss,
             random_state=self.random_state,
@@ -432,6 +441,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             calculate_training_loss=self.calculate_training_loss,
             dtype=self.dtype.name,
             random_state=self.random_state,
+            alpha=self.alpha,
         )
         # filter out 'None' valued args, since we can't go np.load on
         # them without using pickle
