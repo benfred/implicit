@@ -165,6 +165,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             log.info("Final training loss %.4f", loss)
 
     def recalculate_user(self, userid, user_items):
+        if self.alpha != 1.0:
+            user_items = self.alpha * user_items
+
         users = 1 if np.isscalar(userid) else len(userid)
         user_factors = implicit.gpu.Matrix.zeros(users, self.factors)
         Cui = implicit.gpu.CSRMatrix(user_items)
@@ -175,6 +178,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         return user_factors[0] if np.isscalar(userid) else user_factors
 
     def recalculate_item(self, itemid, item_users):
+        if self.alpha != 1.0:
+            item_users = self.alpha * item_users
+
         items = 1 if np.isscalar(itemid) else len(itemid)
         item_factors = implicit.gpu.Matrix.zeros(items, self.factors)
         Ciu = implicit.gpu.CSRMatrix(item_users)

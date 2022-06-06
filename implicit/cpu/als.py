@@ -217,6 +217,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         if user_items.shape[0] != users:
             raise ValueError("user_items should have one row for every item in user")
 
+        if self.alpha != 1.0:
+            user_items = self.alpha * user_items
+
         user_factors = np.zeros((users, self.factors), dtype=self.dtype)
         _als._least_squares(
             self.YtY,
@@ -244,6 +247,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             Sparse matrix of (items, users) that contain the users that liked
             each item
         """
+
+        if self.alpha != 1.0:
+            item_users = self.alpha * item_users
+
         items = 1 if np.isscalar(itemid) else len(itemid)
         item_factors = np.zeros((items, self.factors), dtype=self.dtype)
         _als._least_squares(
