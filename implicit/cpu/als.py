@@ -30,6 +30,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         The number of latent factors to compute
     regularization : float, optional
         The regularization factor to use
+    alpha : float, optional
+        The weight to give to positive examples.
     dtype : data-type, optional
         Specifies whether to generate 64 bit or 32 bit floating point factors
     use_native : bool, optional
@@ -59,6 +61,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self,
         factors=100,
         regularization=0.01,
+        alpha=1.0,
         dtype=np.float32,
         use_native=True,
         use_cg=True,
@@ -72,6 +75,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # parameters on how to factorize
         self.factors = factors
         self.regularization = regularization
+        self.alpha = alpha
 
         # options on how to fit the model
         self.dtype = np.dtype(dtype)
@@ -121,6 +125,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Cui = check_csr(user_items)
         if Cui.dtype != np.float32:
             Cui = Cui.astype(np.float32)
+
+        # Give the positive examples more weight if asked for
+        if self.alpha != 1.0:
+            Cui = self.alpha * Cui
 
         s = time.time()
         Ciu = Cui.T.tocsr()
@@ -209,6 +217,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         if user_items.shape[0] != users:
             raise ValueError("user_items should have one row for every item in user")
 
+        if self.alpha != 1.0:
+            user_items = self.alpha * user_items
+
         user_factors = np.zeros((users, self.factors), dtype=self.dtype)
         _als._least_squares(
             self.YtY,
@@ -236,6 +247,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             Sparse matrix of (items, users) that contain the users that liked
             each item
         """
+
+        if self.alpha != 1.0:
+            item_users = self.alpha * item_users
+
         items = 1 if np.isscalar(itemid) else len(itemid)
         item_factors = np.zeros((items, self.factors), dtype=self.dtype)
         _als._least_squares(
@@ -345,9 +360,13 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             A factorized representation of the user. Passing this in to
             future 'explain' calls will lead to noticeable speedups
         """
+
+        user_items = check_csr(user_items)
+        if self.alpha != 1.0:
+            user_items = self.alpha * user_items
+
         # user_weights = Cholesky decomposition of Wu^-1
         # from section 5 of the paper CF for Implicit Feedback Datasets
-        user_items = user_items.tocsr()
         if user_weights is None:
             A, _ = user_linear_equation(
                 self.item_factors, self.YtY, user_items, userid, self.regularization, self.factors
@@ -408,6 +427,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         ret = implicit.gpu.als.AlternatingLeastSquares(
             factors=self.factors,
             regularization=self.regularization,
+            alpha=self.alpha,
             iterations=self.iterations,
             calculate_training_loss=self.calculate_training_loss,
             random_state=self.random_state,
@@ -432,6 +452,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             calculate_training_loss=self.calculate_training_loss,
             dtype=self.dtype.name,
             random_state=self.random_state,
+            alpha=self.alpha,
         )
         # filter out 'None' valued args, since we can't go np.load on
         # them without using pickle

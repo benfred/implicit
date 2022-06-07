@@ -7,6 +7,7 @@ import implicit.gpu.als
 def AlternatingLeastSquares(
     factors=100,
     regularization=0.01,
+    alpha=1.0,
     dtype=np.float32,
     use_native=True,
     use_cg=True,
@@ -33,6 +34,8 @@ def AlternatingLeastSquares(
         The number of latent factors to compute
     regularization : float, optional
         The regularization factor to use
+    alpha : float, optional
+        The weight to give to positive examples.
     dtype : data-type, optional
         Specifies whether to generate 64 bit or 32 bit floating point factors
     use_native : bool, optional
@@ -57,6 +60,7 @@ def AlternatingLeastSquares(
         return implicit.gpu.als.AlternatingLeastSquares(
             factors,
             regularization,
+            alpha,
             iterations=iterations,
             calculate_training_loss=calculate_training_loss,
             random_state=random_state,
@@ -64,6 +68,7 @@ def AlternatingLeastSquares(
     return implicit.cpu.als.AlternatingLeastSquares(
         factors,
         regularization,
+        alpha,
         dtype,
         use_native,
         use_cg,
