@@ -25,6 +25,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         The number of latent factors to compute
     regularization : float, optional
         The regularization factor to use
+    alpha : float, optional
+        The weight to give to positive examples.
     iterations : int, optional
         The number of ALS iterations to use when fitting data
     calculate_training_loss : bool, optional
@@ -45,6 +47,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self,
         factors=64,
         regularization=0.01,
+        alpha=1.0,
         iterations=15,
         calculate_training_loss=False,
         random_state=None,
@@ -57,6 +60,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         # parameters on how to factorize
         self.factors = factors
         self.regularization = regularization
+        self.alpha = alpha
 
         # options on how to fit the model
         self.iterations = iterations
@@ -161,6 +165,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             log.info("Final training loss %.4f", loss)
 
     def recalculate_user(self, userid, user_items):
+        if self.alpha != 1.0:
+            user_items = self.alpha * user_items
+
         users = 1 if np.isscalar(userid) else len(userid)
         user_factors = implicit.gpu.Matrix.zeros(users, self.factors)
         Cui = implicit.gpu.CSRMatrix(user_items)
@@ -171,6 +178,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         return user_factors[0] if np.isscalar(userid) else user_factors
 
     def recalculate_item(self, itemid, item_users):
+        if self.alpha != 1.0:
+            item_users = self.alpha * item_users
+
         items = 1 if np.isscalar(itemid) else len(itemid)
         item_factors = implicit.gpu.Matrix.zeros(items, self.factors)
         Ciu = implicit.gpu.CSRMatrix(item_users)
@@ -267,6 +277,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         ret = implicit.cpu.als.AlternatingLeastSquares(
             factors=self.factors,
             regularization=self.regularization,
+            alpha=self.alpha,
             iterations=self.iterations,
             calculate_training_loss=self.calculate_training_loss,
             random_state=self.random_state,

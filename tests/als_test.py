@@ -121,18 +121,18 @@ def test_factorize(use_native, use_gpu, use_cg, dtype):
         ],
         dtype=np.float64,
     )
-    user_items = counts * 2
 
     model = AlternatingLeastSquares(
         factors=6,
         regularization=0,
+        alpha=2.0,
         dtype=dtype,
         use_native=use_native,
         use_cg=use_cg,
         use_gpu=use_gpu,
         random_state=42,
     )
-    model.fit(user_items, show_progress=False)
+    model.fit(counts, show_progress=False)
     rows, cols = model.user_factors, model.item_factors
 
     if use_gpu:
@@ -161,12 +161,12 @@ def test_explain():
         ],
         dtype=np.float32,
     )
-    item_users = counts * 2
-    user_items = item_users.T.tocsr()
+    user_items = counts.T.tocsr()
 
     model = AlternatingLeastSquares(
         factors=4,
         regularization=20,
+        alpha=2.0,
         use_native=False,
         use_cg=False,
         use_gpu=False,
