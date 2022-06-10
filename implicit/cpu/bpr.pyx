@@ -145,7 +145,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         users, items = user_items.shape
 
         # We need efficient user lookup for case of removing own likes
-        if not user_items.has_sorted_indices:
+        if self.verify_negative_samples and not user_items.has_sorted_indices:
             user_items.sort_indices()
 
         # this basically calculates the 'row' attribute of a COO matrix
