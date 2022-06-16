@@ -160,7 +160,7 @@ def generate_speed_graph(
     plt.savefig(filename, bbox_inches="tight", dpi=300)
 
 
-def generate_loss_graph(data, filename="als_speed.png"):
+def generate_loss_graph(data, filename="als_loss.png"):
     seaborn.set()
 
     _, ax = plt.subplots()
