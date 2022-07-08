@@ -122,7 +122,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, user_items, show_progress=True):
+    def fit(self, user_items, show_progress=True, callback=None):
         """ Factorizes the user_items matrix
 
         Parameters
@@ -196,10 +196,13 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                                               self.verify_negative_samples)
                 progress.update(1)
                 total = len(user_items.data)
+                eval_metrics = {}
+                if callback is not None:
+                    eval_metrics = callback(epoch)
                 if total != 0 and total != skipped:
-                    progress.set_postfix(
+                    progress.set_postfix(dict(
                         {"train_auc": "%.2f%%" % (100.0 * correct / (total - skipped)),
-                         "skipped": "%.2f%%" % (100.0 * skipped / total)})
+                         "skipped": "%.2f%%" % (100.0 * skipped / total)}, **eval_metrics))
 
         self._check_fit_errors()
 
