@@ -65,7 +65,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.verify_negative_samples = verify_negative_samples
         self.random_state = random_state
 
-    def fit(self, user_items, show_progress=True):
+    def fit(self, user_items, show_progress=True, fit_callback=None):
         """Factorizes the user_items matrix
 
         Parameters
@@ -77,6 +77,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             as a binary signal that the user liked the item.
         show_progress : bool, optional
             Whether to show a progress bar
+        fit_callback: Callable[[MatrixFactorizationBase, int], dict], optional
+            Callable function with extra information returned and displayed in progress
         """
         rs = check_random_state(self.random_state)
         user_items = check_csr(user_items)
@@ -143,12 +145,18 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 )
                 progress.update(1)
                 total = len(user_items.data)
+                eval_metrics = {}
+                if fit_callback is not None:
+                    eval_metrics = fit_callback(self, _epoch)
                 if total and total != skipped:
                     progress.set_postfix(
-                        {
-                            "train_auc": f"{100.0 * correct / (total - skipped):0.2f}%",
-                            "skipped": f"{100.0 * skipped / total:0.2f}%",
-                        }
+                        dict(
+                            {
+                                "train_auc": f"{100.0 * correct / (total - skipped):0.2f}%",
+                                "skipped": f"{100.0 * skipped / total:0.2f}%",
+                            },
+                            **eval_metrics,
+                        )
                     )
 
     def to_cpu(self) -> implicit.cpu.bpr.BayesianPersonalizedRanking:

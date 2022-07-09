@@ -134,6 +134,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             as a binary signal that the user liked the item.
         show_progress : bool, optional
             Whether to show a progress bar
+        fit_callback: Callable[[MatrixFactorizationBase, int], dict], optional
+            Callable function with extra information returned and displayed in progress
         """
         rs = check_random_state(self.random_state)
 
