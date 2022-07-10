@@ -119,10 +119,11 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.dtype = np.dtype(dtype)
         self.verify_negative_samples = verify_negative_samples
         self.random_state = random_state
+        self.fit_callback = None
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, user_items, show_progress=True, fit_callback=None):
+    def fit(self, user_items, show_progress=True):
         """ Factorizes the user_items matrix
 
         Parameters
@@ -134,8 +135,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             as a binary signal that the user liked the item.
         show_progress : bool, optional
             Whether to show a progress bar
-        fit_callback: Callable[[MatrixFactorizationBase, int], dict], optional
-            Callable function with extra information returned and displayed in progress
         """
         rs = check_random_state(self.random_state)
 
@@ -192,19 +191,20 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
+                s = time.time()
                 correct, skipped = bpr_update(rng, userids, user_items.indices, user_items.indptr,
                                               self.user_factors, self.item_factors,
                                               self.learning_rate, self.regularization, num_threads,
                                               self.verify_negative_samples)
                 progress.update(1)
                 total = len(user_items.data)
-                eval_metrics = {}
-                if fit_callback is not None:
-                    eval_metrics = fit_callback(self, epoch)
                 if total != 0 and total != skipped:
                     progress.set_postfix(dict(
                         {"train_auc": "%.2f%%" % (100.0 * correct / (total - skipped)),
                          "skipped": "%.2f%%" % (100.0 * skipped / total)}, **eval_metrics))
+
+                if self.fit_callback:
+                    self.fit_callback(_epoch, time.time() - s, correct, skipped)
 
         self._check_fit_errors()
 

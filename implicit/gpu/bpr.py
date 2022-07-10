@@ -1,4 +1,5 @@
 import logging
+import time
 
 import numpy as np
 from tqdm.auto import tqdm
@@ -64,8 +65,9 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         self.regularization = regularization
         self.verify_negative_samples = verify_negative_samples
         self.random_state = random_state
+        self.fit_callback = None
 
-    def fit(self, user_items, show_progress=True, fit_callback=None):
+    def fit(self, user_items, show_progress=True):
         """Factorizes the user_items matrix
 
         Parameters
@@ -77,8 +79,6 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             as a binary signal that the user liked the item.
         show_progress : bool, optional
             Whether to show a progress bar
-        fit_callback: Callable[[MatrixFactorizationBase, int], dict], optional
-            Callable function with extra information returned and displayed in progress
         """
         rs = check_random_state(self.random_state)
         user_items = check_csr(user_items)
@@ -132,6 +132,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for _epoch in range(self.iterations):
+                s = time.time()
                 correct, skipped = implicit.gpu.bpr_update(
                     userids,
                     itemids,
@@ -145,19 +146,15 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 )
                 progress.update(1)
                 total = len(user_items.data)
-                eval_metrics = {}
-                if fit_callback is not None:
-                    eval_metrics = fit_callback(self, _epoch)
                 if total and total != skipped:
                     progress.set_postfix(
-                        dict(
-                            {
-                                "train_auc": f"{100.0 * correct / (total - skipped):0.2f}%",
-                                "skipped": f"{100.0 * skipped / total:0.2f}%",
-                            },
-                            **eval_metrics,
-                        )
+                        {
+                            "train_auc": f"{100.0 * correct / (total - skipped):0.2f}%",
+                            "skipped": f"{100.0 * skipped / total:0.2f}%",
+                        },
                     )
+                if self.fit_callback:
+                    self.fit_callback(_epoch, time.time() - s, correct, skipped)
 
     def to_cpu(self) -> implicit.cpu.bpr.BayesianPersonalizedRanking:
         """Converts this model to an equivalent version running on the cpu"""
