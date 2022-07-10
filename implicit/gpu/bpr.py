@@ -151,7 +151,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                         {
                             "train_auc": f"{100.0 * correct / (total - skipped):0.2f}%",
                             "skipped": f"{100.0 * skipped / total:0.2f}%",
-                        },
+                        }
                     )
                 if self.fit_callback:
                     self.fit_callback(_epoch, time.time() - s, correct, skipped)
