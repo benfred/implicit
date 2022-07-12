@@ -141,3 +141,9 @@ def check_csr(user_items):
             ParameterWarning,
         )
     return user_items
+
+
+def check_float_dtype(user_items):
+    if not np.issubdtype(user_items.dtype, np.float32):
+        return user_items.astype(np.float32)
+    return user_items

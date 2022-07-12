@@ -4,7 +4,7 @@ from scipy.sparse import coo_matrix, csr_matrix
 
 from ._nearest_neighbours import NearestNeighboursScorer, all_pairs_knn
 from .recommender_base import RecommenderBase
-from .utils import _batch_call
+from .utils import _batch_call, check_csr, check_float_dtype
 
 
 class ItemItemRecommender(RecommenderBase):
@@ -29,6 +29,9 @@ class ItemItemRecommender(RecommenderBase):
 
     def fit(self, weighted, show_progress=True):
         """Computes and stores the similarity matrix"""
+        weighted = check_csr(weighted)
+        weighted = check_float_dtype(weighted)
+
         self.similarity = all_pairs_knn(
             weighted, self.K, show_progress=show_progress, num_threads=self.num_threads
         ).tocsr()
@@ -44,6 +47,7 @@ class ItemItemRecommender(RecommenderBase):
         recalculate_user=False,
         items=None,
     ):
+        user_items = check_float_dtype(user_items)
         if not isinstance(user_items, csr_matrix):
             raise ValueError("user_items needs to be a CSR sparse matrix")
 

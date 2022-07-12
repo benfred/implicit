@@ -33,33 +33,34 @@ cdef extern from "implicit/nearest_neighbours.h" namespace "implicit" nogil:
 cdef class NearestNeighboursScorer(object):
     """ Class to return the top K items from multipying a users likes
     by a precomputed sparse similarity matrix. """
-    cdef SparseMatrixMultiplier[int, double] * neighbours
+    cdef SparseMatrixMultiplier[int, float] * neighbours
 
     cdef int[:] similarity_indptr
     cdef int[:] similarity_indices
-    cdef double[:] similarity_data
+    cdef float[:] similarity_data
 
     cdef object lock
 
     def __cinit__(self, similarity):
-        self.neighbours = new SparseMatrixMultiplier[int, double](similarity.shape[0])
+        self.neighbours = new SparseMatrixMultiplier[int, float](similarity.shape[0])
         self.similarity_indptr = similarity.indptr
         self.similarity_indices = similarity.indices
-        self.similarity_data = similarity.data.astype(np.float64)
+        self.similarity_data = similarity.data.astype(np.float32)
         self.lock = threading.RLock()
 
     @cython.boundscheck(False)
     def recommend(self, int u, int[:] user_indptr, int[:] user_indices, floating[:] user_data,
                   int K=10, bool remove_own_likes=True):
         cdef int index1, index2, i, count
-        cdef double weight
-        cdef double temp
-        cdef pair[double, int] result
+        cdef float weight
+        cdef float temp
+        cdef pair[float, int] result
 
         cdef int[:] indices
-        cdef double[:] data
+        cdef float[:] data
 
-        cdef TopK[int, double] * topK = new TopK[int, double](K)
+        cdef TopK[int, float] * topK = new TopK[int, float](K)
+
         try:
             with self.lock:
                 with nogil:
@@ -69,7 +70,7 @@ cdef class NearestNeighboursScorer(object):
 
                         for index2 in range(self.similarity_indptr[i], self.similarity_indptr[i+1]):
                             self.neighbours.add(self.similarity_indices[index2],
-                                                self.similarity_data[index2] * weight)
+                                                float(self.similarity_data[index2] * weight))
 
                     if remove_own_likes:
                         # set the score to 0 for things already liked
@@ -81,7 +82,7 @@ cdef class NearestNeighboursScorer(object):
 
             count = topK.results.size()
             indices = ret_indices = np.zeros(count, dtype=np.int32)
-            data = ret_data = np.zeros(count)
+            data = ret_data = np.zeros(count, dtype=np.float32)
 
             with nogil:
                 i = 0
@@ -90,7 +91,6 @@ cdef class NearestNeighboursScorer(object):
                     data[i] = result.first
                     i += 1
             return ret_indices, ret_data
-
         finally:
             del topK
 
@@ -102,33 +102,31 @@ cdef class NearestNeighboursScorer(object):
 def all_pairs_knn(users, unsigned int K=100, int num_threads=0, show_progress=True):
     """ Returns the top K nearest neighbours for each row in the matrix.
     """
-    users = check_csr(users)
     items = users.T.tocsr()
-
     cdef int item_count = items.shape[0]
     cdef int i, u, index1, index2, j
-    cdef double w1, w2
+    cdef float w1, w2
 
     cdef int[:] item_indptr = items.indptr, item_indices = items.indices
-    cdef double[:] item_data = items.data
+    cdef float[:] item_data = items.data
 
     cdef int[:] user_indptr = users.indptr, user_indices = users.indices
-    cdef double[:] user_data = users.data
+    cdef float[:] user_data = users.data
 
-    cdef SparseMatrixMultiplier[int, double] * neighbours
-    cdef TopK[int, double] * topk
-    cdef pair[double, int] result
+    cdef SparseMatrixMultiplier[int, float] * neighbours
+    cdef TopK[int, float] * topk
+    cdef pair[float, int] result
 
     # holds triples of output
-    cdef double[:] values = np.zeros(item_count * K)
+    cdef float[:] values = np.zeros(item_count * K, dtype=np.float32)
     cdef long[:] rows = np.zeros(item_count * K, dtype=int)
     cdef long[:] cols = np.zeros(item_count * K, dtype=int)
 
     progress = tqdm(total=item_count, disable=not show_progress)
     with nogil, parallel(num_threads=num_threads):
         # allocate memory per thread
-        neighbours = new SparseMatrixMultiplier[int, double](item_count)
-        topk = new TopK[int, double](K)
+        neighbours = new SparseMatrixMultiplier[int, float](item_count)
+        topk = new TopK[int, float](K)
 
         try:
             for i in prange(item_count, schedule='dynamic', chunksize=8):
