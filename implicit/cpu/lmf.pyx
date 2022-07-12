@@ -182,6 +182,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         log.debug("Running %i LMF training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
+                s = time.time()
                 # user update
                 lmf_update(rng, user_vec_deriv_sum,
                            self.user_factors, self.item_factors,
