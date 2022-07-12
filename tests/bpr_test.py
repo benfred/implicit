@@ -65,7 +65,6 @@ def test_fit_callback():
     model = BayesianPersonalizedRanking(iterations=5, use_gpu=False)
 
     fit_callback = FitCallback()
-    model.fit_callback = fit_callback.get_callback()
-    model.fit(csr_matrix(raw), show_progress=False)
+    model.fit(csr_matrix(raw), show_progress=False, fit_callback=fit_callback.get_callback())
 
     assert fit_callback.get_num_called() == model.iterations
