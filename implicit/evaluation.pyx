@@ -459,16 +459,16 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                     if likes.find(ids[batch_idx, i]) != likes.end():
                         relevant += 1
                         hit += 1
-                        ap += hit / (i + 1)
+                        ap += hit / (i + 1.0)
                         ndcg += cg[i] / idcg
                         if hit == 1:
-                            mrr += 1 / (i + 1)
+                            mrr += 1 / (i + 1.0)
                     else:
                         miss += 1
                         auc += hit
-                auc += ((hit + num_pos_items) / 2.0) * (num_neg_items - miss)
+                auc += ((hit + num_pos_items) * (num_neg_items - miss)) / 2.0
                 mean_ap += ap / (1e-7 + likes.size())
-                mean_auc += auc / (num_pos_items * num_neg_items)
+                mean_auc += auc / (1e-7 + num_pos_items * num_neg_items)
         progress.update(len(batch))
 
     progress.close()
