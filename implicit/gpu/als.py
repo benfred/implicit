@@ -261,14 +261,14 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     @property
     def YtY(self):
         if self._YtY is None:
-            self._YtY = implicit.gpu.Matrix(self.factors, self.factors)
+            self._YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors)
             self.solver.calculate_yty(self.item_factors, self._YtY, self.regularization)
         return self._YtY
 
     @property
     def XtX(self):
         if self._XtX is None:
-            self._XtX = implicit.gpu.Matrix(self.factors, self.factors)
+            self._XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors)
             self.solver.calculate_yty(self.user_factors, self._XtX, self.regularization)
         return self._XtX
 
