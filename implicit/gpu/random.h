@@ -11,8 +11,8 @@ struct RandomState {
   RandomState(long seed);
   ~RandomState();
 
-  Matrix uniform(int rows, int cols, float low = 0.0, float high = 1.0);
-  Matrix randn(int rows, int cols, float mean = 0, float stddev = 1);
+  Matrix uniform(size_t rows, size_t cols, float low = 0.0, float high = 1.0);
+  Matrix randn(size_t rows, size_t cols, float mean = 0, float stddev = 1);
 
   RandomState(const RandomState &) = delete;
   RandomState &operator=(const RandomState &) = delete;
