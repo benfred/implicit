@@ -54,7 +54,7 @@ cdef class KnnQuery(object):
         cdef CppMatrix * queries = m.c_matrix
         cdef CppCOOMatrix * c_query_filter = NULL
         cdef CppVector[int] * c_item_filter = NULL
-        cdef int rows = queries.rows
+        cdef size_t rows = queries.rows
         cdef int[:, :] x
         cdef float[:, :] y
 
@@ -154,7 +154,7 @@ cdef class Matrix(object):
         rows = IntVector(np.array(rowids).astype("int32"))
         self.c_matrix.assign_rows(dereference(rows.c_vector), dereference(other.c_matrix))
 
-    def resize(self, int rows, int cols):
+    def resize(self, size_t rows, size_t cols):
         self.c_matrix.resize(rows, cols)
 
     def to_numpy(self):
