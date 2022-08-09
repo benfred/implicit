@@ -153,7 +153,7 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
     batch_size *= 0.15;
   }
 
-  batch_size = std::min(batch_size, static_cast<size_t>(query.rows));
+  batch_size = std::min(batch_size, query.rows);
   batch_size = std::max(batch_size, static_cast<size_t>(1));
 
   rmm::device_uvector<float> temp_mem(batch_size * temp_distances_cols, stream,
@@ -170,7 +170,7 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
   }
 
   for (int start = 0; start < query.rows; start += batch_size) {
-    auto end = std::min(query.rows, start + static_cast<int>(batch_size));
+    auto end = std::min(query.rows, start + batch_size);
 
     Matrix batch(query, start, end);
     temp_distances.rows = batch.rows;
@@ -249,7 +249,7 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
 
 void KnnQuery::argpartition(const Matrix &items, int k, int *indices,
                             float *distances, bool allow_tiling) {
-  k = std::min(k, items.cols);
+  k = std::min(k, static_cast<int>(items.cols));
 
   if (k >= GPU_MAX_SELECTION_K) {
     rmm::cuda_stream_view stream;

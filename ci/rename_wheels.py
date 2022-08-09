@@ -5,7 +5,7 @@ import shutil
 
 if __name__ == "__main__":
     # auditwheel will try to vendor cublas/cudart/curand etc - which makes the
-    # packagae unacceptably large. instead of running auditwheel lets just rename
+    # package unacceptably large. instead of running auditwheel lets just rename
     # to be manylinux
     wheelhouse = os.path.join(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "wheelhouse"
