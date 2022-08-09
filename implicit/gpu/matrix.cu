@@ -10,7 +10,7 @@
 namespace implicit {
 namespace gpu {
 template <typename T>
-Vector<T>::Vector(int size, const T *host_data)
+Vector<T>::Vector(size_t size, const T *host_data)
     : size(size),
       storage(new rmm::device_uvector<T>(size, rmm::cuda_stream_view())),
       data(storage->data()) {
@@ -28,7 +28,7 @@ template struct Vector<char>;
 template struct Vector<int>;
 template struct Vector<float>;
 
-Matrix::Matrix(const Matrix &other, int rowid)
+Matrix::Matrix(const Matrix &other, size_t rowid)
     : rows(1), cols(other.cols), data(other.data + rowid * other.cols),
       storage(other.storage) {
   if (rowid >= other.rows) {
@@ -36,7 +36,7 @@ Matrix::Matrix(const Matrix &other, int rowid)
   }
 }
 
-Matrix::Matrix(const Matrix &other, int start_rowid, int end_rowid)
+Matrix::Matrix(const Matrix &other, size_t start_rowid, size_t end_rowid)
     : rows(end_rowid - start_rowid), cols(other.cols),
       data(other.data + start_rowid * other.cols), storage(other.storage) {
   if (end_rowid < start_rowid) {
@@ -47,13 +47,13 @@ Matrix::Matrix(const Matrix &other, int start_rowid, int end_rowid)
   }
 }
 
-void copy_rowids(const float *input, const int *rowids, int rows, int cols,
-                 float *output) {
+void copy_rowids(const float *input, const int *rowids, size_t rows,
+                 size_t cols, float *output) {
   // copy rows over
-  auto count = thrust::make_counting_iterator<int>(0);
-  thrust::for_each(count, count + (rows * cols), [=] __device__(int i) {
-    int col = i % cols;
-    int row = rowids[i / cols];
+  auto count = thrust::make_counting_iterator<size_t>(0);
+  thrust::for_each(count, count + (rows * cols), [=] __device__(size_t i) {
+    size_t col = i % cols;
+    size_t row = rowids[i / cols];
     output[i] = input[col + row * cols];
   });
 }
@@ -66,7 +66,7 @@ Matrix::Matrix(const Matrix &other, const Vector<int> &rowids)
   copy_rowids(other.data, rowids.data, rows, cols, data);
 }
 
-Matrix::Matrix(int rows, int cols, float *host_data, bool allocate)
+Matrix::Matrix(size_t rows, size_t cols, float *host_data, bool allocate)
     : rows(rows), cols(cols) {
   if (allocate) {
     storage.reset(
@@ -81,7 +81,7 @@ Matrix::Matrix(int rows, int cols, float *host_data, bool allocate)
   }
 }
 
-void Matrix::resize(int rows, int cols) {
+void Matrix::resize(size_t rows, size_t cols) {
   if (cols != this->cols) {
     throw std::logic_error(
         "changing number of columns in Matrix::resize is not implemented yet");
@@ -95,7 +95,7 @@ void Matrix::resize(int rows, int cols) {
   CHECK_CUDA(cudaMemcpy(new_storage->data(), data,
                         this->rows * this->cols * sizeof(float),
                         cudaMemcpyDeviceToDevice));
-  int extra_rows = rows - this->rows;
+  size_t extra_rows = rows - this->rows;
   CHECK_CUDA(cudaMemset(new_storage->data() + this->rows * this->cols, 0,
                         extra_rows * cols * sizeof(float)));
   storage.reset(new_storage);
@@ -110,24 +110,24 @@ void Matrix::assign_rows(const Vector<int> &rowids, const Matrix &other) {
         "column dimensionality mismatch in Matrix::assign_rows");
   }
 
-  auto count = thrust::make_counting_iterator<int>(0);
-  int other_cols = other.cols, other_rows = other.rows;
+  auto count = thrust::make_counting_iterator<size_t>(0);
+  size_t other_cols = other.cols, other_rows = other.rows;
 
   int *rowids_data = rowids.data;
   float *other_data = other.data;
   float *self_data = data;
 
   thrust::for_each(count, count + (other_rows * other_cols),
-                   [=] __device__(int i) {
-                     int col = i % other_cols;
-                     int row = rowids_data[i / other_cols];
-                     int idx = col + row * other_cols;
+                   [=] __device__(size_t i) {
+                     size_t col = i % other_cols;
+                     size_t row = rowids_data[i / other_cols];
+                     size_t idx = col + row * other_cols;
                      self_data[idx] = other_data[i];
                    });
 }
 
-__global__ void calculate_norms_kernel(const float *input, int rows, int cols,
-                                       float *output) {
+__global__ void calculate_norms_kernel(const float *input, size_t rows,
+                                       size_t cols, float *output) {
   static __shared__ float shared[32];
   for (int i = blockIdx.x; i < rows; i += gridDim.x) {
     float value = input[i * cols + threadIdx.x];
