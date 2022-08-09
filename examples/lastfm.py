@@ -2,7 +2,7 @@
 from the last.fm dataset. More details can be found
 at http://www.benfrederickson.com/matrix-factorization/
 
-This code will automically download a HDF5 version of the dataset from
+This code will automatically download a HDF5 version of the dataset from
 GitHub when it is first run. The original dataset can also be found at
 http://ocelma.net/MusicRecommendationDataset/lastfm-360K.html
 """

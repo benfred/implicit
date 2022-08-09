@@ -11,21 +11,21 @@ cdef extern from "implicit/gpu/matrix.h" namespace "implicit::gpu" nogil:
                   const int * row, const int * col, const float * data) except +
 
     cdef cppclass Vector[T]:
-        Vector(int size, T * data) except +
+        Vector(size_t size, T * data) except +
         void to_host(T * output) except +
         T * data
-        int size
+        size_t size
 
     cdef cppclass Matrix:
-        Matrix(int rows, int cols, float * data, bool host) except +
-        Matrix(const Matrix & other, int rowid) except +
-        Matrix(const Matrix & other, int start, int end) except +
+        Matrix(size_t rows, size_t cols, float * data, bool host) except +
+        Matrix(const Matrix & other, size_t rowid) except +
+        Matrix(const Matrix & other, size_t start, size_t end) except +
         Matrix(const Matrix & other, const Vector[int] & rowids) except +
         Matrix(Matrix && other) except +
         void to_host(float * output) except +
-        void resize(int rows, int cols) except +
+        void resize(size_t rows, size_t cols) except +
         void assign_rows(const Vector[int] & rowids, const Matrix & other) except +
-        int rows, cols
+        size_t rows, cols
         float * data
 
     Matrix calculate_norms(const Matrix & items) except +

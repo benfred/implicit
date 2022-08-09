@@ -13,8 +13,8 @@ namespace gpu {
 
 using std::invalid_argument;
 
-__global__ void least_squares_cg_kernel(int factors, int user_count,
-                                        int item_count, float *X,
+__global__ void least_squares_cg_kernel(int factors, size_t user_count,
+                                        size_t item_count, float *X,
                                         const float *Y, const float *YtY,
                                         const int *indptr, const int *indices,
                                         const float *data, int cg_steps) {
@@ -94,7 +94,7 @@ __global__ void least_squares_cg_kernel(int factors, int user_count,
     // complain and don't let it perpetuate
     if (isnan(rsold)) {
       if (threadIdx.x == 0) {
-        printf("Warning NaN Detected in row %d of %d\n", u, user_count);
+        printf("Warning NaN Detected in row %i of %lu\n", u, user_count);
       }
       x[threadIdx.x] = 0;
     } else {
@@ -103,7 +103,7 @@ __global__ void least_squares_cg_kernel(int factors, int user_count,
   }
 }
 
-__global__ void l2_regularize_kernel(int factors, float regularization,
+__global__ void l2_regularize_kernel(size_t factors, float regularization,
                                      float *YtY) {
   YtY[threadIdx.x * factors + threadIdx.x] += regularization;
 }
@@ -120,7 +120,7 @@ void LeastSquaresSolver::calculate_yty(const Matrix &Y, Matrix *YtY,
   // calculate YtY: note this expects col-major (and we have row-major
   // basically) so that we're inverting the CUBLAS_OP_T/CU_BLAS_OP_N ordering to
   // overcome this (like calculate YYt instead of YtY)
-  int factors = Y.cols, item_count = Y.rows;
+  size_t factors = Y.cols, item_count = Y.rows;
   float alpha = 1.0, beta = 0.;
   CHECK_CUBLAS(cublasSgemm(blas_handle, CUBLAS_OP_N, CUBLAS_OP_T, factors,
                            factors, item_count, &alpha, Y.data, factors, Y.data,
@@ -164,8 +164,8 @@ void LeastSquaresSolver::least_squares(const CSRMatrix &Cui, Matrix *X,
   CHECK_CUDA(cudaDeviceSynchronize());
 }
 
-__global__ void calculate_loss_kernel(int factors, int user_count,
-                                      int item_count, const float *X,
+__global__ void calculate_loss_kernel(int factors, size_t user_count,
+                                      size_t item_count, const float *X,
                                       const float *Y, const float *YtY,
                                       const int *indptr, const int *indices,
                                       const float *data, float regularization,
@@ -220,7 +220,7 @@ __global__ void calculate_loss_kernel(int factors, int user_count,
 float LeastSquaresSolver::calculate_loss(const CSRMatrix &Cui, const Matrix &X,
                                          const Matrix &Y,
                                          float regularization) {
-  int item_count = Y.rows, factors = Y.cols, user_count = X.rows;
+  size_t item_count = Y.rows, factors = Y.cols, user_count = X.rows;
 
   Matrix YtY(factors, factors, NULL);
   calculate_yty(Y, &YtY, regularization);
