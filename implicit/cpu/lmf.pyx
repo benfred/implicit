@@ -112,7 +112,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, user_items, show_progress=True):
+    def fit(self, user_items, show_progress=True, fit_callback=None):
         """ Factorizes the user_items matrix
 
         Parameters
@@ -125,6 +125,8 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
             as a binary signal that the user liked the item.
         show_progress : bool, optional
             Whether to show a progress bar
+        fit_callback: Callable, optional
+            Callable function on each epoch with such arguments as epoch, elapsed time and progress
         """
         rs = check_random_state(self.random_state)
 
@@ -180,6 +182,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         log.debug("Running %i LMF training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
+                s = time.time()
                 # user update
                 lmf_update(rng, user_vec_deriv_sum,
                            self.user_factors, self.item_factors,
@@ -193,6 +196,8 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
                            self.learning_rate, self.regularization, self.neg_prop, num_threads)
                 self.item_factors[:, -1] = 1.0
                 progress.update(1)
+                if fit_callback:
+                    fit_callback(epoch, time.time() - s)
 
         self._check_fit_errors()
 
