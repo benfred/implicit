@@ -169,17 +169,23 @@ CSRMatrix::CSRMatrix(int rows, int cols, int nonzeros, const int *indptr_,
                      const int *indices_, const float *data_)
     : rows(rows), cols(cols), nonzeros(nonzeros) {
 
-  CHECK_CUDA(cudaMalloc(&indptr, (rows + 1) * sizeof(int)));
+  CHECK_CUDA(cudaMallocManaged(&indptr, (rows + 1) * sizeof(int)));
   CHECK_CUDA(cudaMemcpy(indptr, indptr_, (rows + 1) * sizeof(int),
                         cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMemAdvise(indptr, (rows + 1) * sizeof(int),
+                           cudaMemAdviseSetReadMostly, 0));
 
-  CHECK_CUDA(cudaMalloc(&indices, nonzeros * sizeof(int)));
+  CHECK_CUDA(cudaMallocManaged(&indices, nonzeros * sizeof(int)));
   CHECK_CUDA(cudaMemcpy(indices, indices_, nonzeros * sizeof(int),
                         cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMemAdvise(indices, nonzeros * sizeof(int),
+                           cudaMemAdviseSetReadMostly, 0));
 
-  CHECK_CUDA(cudaMalloc(&data, nonzeros * sizeof(float)));
-  CHECK_CUDA(
-      cudaMemcpy(data, data_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMallocManaged(&data, nonzeros * sizeof(float)));
+  CHECK_CUDA(cudaMemcpy(data, data_, nonzeros * sizeof(float),
+                        cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMemAdvise(data, nonzeros * sizeof(float),
+                           cudaMemAdviseSetReadMostly, 0));
 }
 
 CSRMatrix::~CSRMatrix() {
@@ -192,15 +198,15 @@ COOMatrix::COOMatrix(int rows, int cols, int nonzeros, const int *row_,
                      const int *col_, const float *data_)
     : rows(rows), cols(cols), nonzeros(nonzeros) {
 
-  CHECK_CUDA(cudaMalloc(&row, nonzeros * sizeof(int)));
+  CHECK_CUDA(cudaMallocManaged(&row, nonzeros * sizeof(int)));
   CHECK_CUDA(
       cudaMemcpy(row, row_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
 
-  CHECK_CUDA(cudaMalloc(&col, nonzeros * sizeof(int)));
+  CHECK_CUDA(cudaMallocManaged(&col, nonzeros * sizeof(int)));
   CHECK_CUDA(
       cudaMemcpy(col, col_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
 
-  CHECK_CUDA(cudaMalloc(&data, nonzeros * sizeof(float)));
+  CHECK_CUDA(cudaMallocManaged(&data, nonzeros * sizeof(float)));
   CHECK_CUDA(
       cudaMemcpy(data, data_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
 }
