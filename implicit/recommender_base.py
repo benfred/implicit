@@ -15,7 +15,7 @@ class RecommenderBase(metaclass=ABCMeta):
     @abstractmethod
     def fit(self, user_items, show_progress=True, fit_callback=None):
         """
-        Trains the model on a sparse matrix of item/user/weight
+        Trains the model on a sparse matrix of user/item/weight
 
         Parameters
         ----------
