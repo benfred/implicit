@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Implicit &mdash; Implicit 0.5.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Implicit &mdash; Implicit 0.6.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -30,7 +27,7 @@
             <a href="#" class="icon icon-home"> Implicit
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -40,7 +37,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_lastfm.html"> Tutorial</a></li>
@@ -96,7 +93,7 @@
     text-align: unset;
 }
 </style>
-<section id="implicit">
+<div class="section" id="implicit">
 <h1>Implicit<a class="headerlink" href="#implicit" title="Permalink to this headline"></a></h1>
 <p>Fast Python Collaborative Filtering for Implicit Datasets</p>
 <p>This project provides fast Python implementations of several different popular recommendation algorithms for
@@ -113,14 +110,14 @@ implicit feedback datasets:</p>
 parallel among all available CPU cores.  In addition, the ALS and BPR models both have custom CUDA
 kernels - enabling fitting on compatible GPU’s. This library also supports using approximate nearest neighbours libraries such as <a class="reference external" href="https://github.com/spotify/annoy">Annoy</a>, <a class="reference external" href="https://github.com/searchivarius/nmslib">NMSLIB</a>
 and <a class="reference external" href="https://github.com/facebookresearch/faiss">Faiss</a> for <a class="reference external" href="http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/">speeding up making recommendations</a>.</p>
-<section id="basic-usage">
+<div class="section" id="basic-usage">
 <h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">implicit</span>
 
 <span class="c1"># initialize a model</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">implicit</span><span class="o">.</span><span class="n">als</span><span class="o">.</span><span class="n">AlternatingLeastSquares</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
 
-<span class="c1"># train the model on a sparse matrix of item/user/confidence weights</span>
+<span class="c1"># train the model on a sparse matrix of user/item/confidence weights</span>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">user_item_data</span><span class="p">)</span>
 
 <span class="c1"># recommend items for a user</span>
@@ -131,7 +128,7 @@ and <a class="reference external" href="https://github.com/facebookresearch/fais
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
@@ -157,16 +154,16 @@ and <a class="reference external" href="https://github.com/facebookresearch/fais
 </li>
 </ul>
 </div>
-</section>
-</section>
-<section id="indices-and-tables">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</section>
+</div>
 
 
            </div>

@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BayesianPersonalizedRanking &mdash; Implicit 0.5.2 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>BayesianPersonalizedRanking &mdash; Implicit 0.6.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -31,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> Implicit
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -41,7 +38,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html"> Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial_lastfm.html"> Tutorial</a></li>
@@ -117,11 +114,11 @@
     text-align: unset;
 }
 </style>
-<section id="bayesianpersonalizedranking">
+<div class="section" id="bayesianpersonalizedranking">
 <h1>BayesianPersonalizedRanking<a class="headerlink" href="#bayesianpersonalizedranking" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="implicit.cpu.bpr.BayesianPersonalizedRanking">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">implicit.cpu.bpr.</span></span><span class="sig-name descname"><span class="pre">BayesianPersonalizedRanking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">factors=100</span></em>, <em class="sig-param"><span class="pre">learning_rate=0.01</span></em>, <em class="sig-param"><span class="pre">regularization=0.01</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></em>, <em class="sig-param"><span class="pre">iterations=100</span></em>, <em class="sig-param"><span class="pre">num_threads=0</span></em>, <em class="sig-param"><span class="pre">verify_negative_samples=True</span></em>, <em class="sig-param"><span class="pre">random_state=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking" title="Permalink to this definition"></a></dt>
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">implicit.cpu.bpr.</span></code><code class="sig-name descname"><span class="pre">BayesianPersonalizedRanking</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">factors=100</span></em>, <em class="sig-param"><span class="pre">learning_rate=0.01</span></em>, <em class="sig-param"><span class="pre">regularization=0.01</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></em>, <em class="sig-param"><span class="pre">iterations=100</span></em>, <em class="sig-param"><span class="pre">num_threads=0</span></em>, <em class="sig-param"><span class="pre">verify_negative_samples=True</span></em>, <em class="sig-param"><span class="pre">random_state=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="matrix_factorization_base.html#implicit.cpu.matrix_factorization_base.MatrixFactorizationBase" title="implicit.cpu.matrix_factorization_base.MatrixFactorizationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.cpu.matrix_factorization_base.MatrixFactorizationBase</span></code></a></p>
 <p>Bayesian Personalized Ranking</p>
 <p>A recommender model that learns  a matrix factorization embedding based off minimizing the
@@ -130,25 +127,24 @@ Feedback</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>factors</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of latent factors to compute</p></li>
-<li><p><strong>learning_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – The learning rate to apply for SGD updates during training</p></li>
-<li><p><strong>regularization</strong> (<em>float</em><em>, </em><em>optional</em>) – The regularization factor to use</p></li>
+<li><p><strong>factors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of latent factors to compute</p></li>
+<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – The learning rate to apply for SGD updates during training</p></li>
+<li><p><strong>regularization</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – The regularization factor to use</p></li>
 <li><p><strong>dtype</strong> (<em>data-type</em><em>, </em><em>optional</em>) – Specifies whether to generate 64 bit or 32 bit floating point factors</p></li>
-<li><p><strong>iterations</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of training epochs to use when fitting the data</p></li>
-<li><p><strong>verify_negative_samples</strong> (<em>bool</em><em>, </em><em>optional</em>) – When sampling negative items, check if the randomly picked negative item has actually
+<li><p><strong>iterations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of training epochs to use when fitting the data</p></li>
+<li><p><strong>verify_negative_samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – When sampling negative items, check if the randomly picked negative item has actually
 been liked by the user. This check increases the time needed to train but usually leads
 to better predictions.</p></li>
-<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of threads to use for fitting the model. This only
-applies for the native extensions. Specifying 0 means to default
-to the number of cores on the machine.</p></li>
-<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>RandomState</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – The random state for seeding the initial item and user factors.
+<li><p><strong>num_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of threads to use for fitting the model and batch recommend calls.
+Specifying 0 means to default to the number of cores on the machine.</p></li>
+<li><p><strong>random_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>RandomState</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a><em>, </em><em>optional</em>) – The random state for seeding the initial item and user factors.
 Default is None.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="implicit.cpu.bpr.BayesianPersonalizedRanking.item_factors">
-<span class="sig-name descname"><span class="pre">item_factors</span></span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.item_factors" title="Permalink to this definition"></a></dt>
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.item_factors">
+<code class="sig-name descname"><span class="pre">item_factors</span></code><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.item_factors" title="Permalink to this definition"></a></dt>
 <dd><p>Array of latent factors for each item in the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -158,8 +154,8 @@ Default is None.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="implicit.cpu.bpr.BayesianPersonalizedRanking.user_factors">
-<span class="sig-name descname"><span class="pre">user_factors</span></span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.user_factors" title="Permalink to this definition"></a></dt>
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.user_factors">
+<code class="sig-name descname"><span class="pre">user_factors</span></code><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.user_factors" title="Permalink to this definition"></a></dt>
 <dd><p>Array of latent factors for each user in the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -169,8 +165,8 @@ Default is None.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="implicit.cpu.bpr.BayesianPersonalizedRanking.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.fit" title="Permalink to this definition"></a></dt>
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.fit">
+<code class="sig-name descname"><span class="pre">fit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Factorizes the user_items matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -179,15 +175,36 @@ Default is None.</p></li>
 the rows of the matrix are the user, and the columns are the items liked by that user.
 BPR ignores the weight value of the matrix right now - it treats non zero entries
 as a binary signal that the user liked the item.</p></li>
-<li><p><strong>show_progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
+<li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="implicit.cpu.bpr.BayesianPersonalizedRanking.recommend">
-<span class="sig-name descname"><span class="pre">recommend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_already_liked_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalculate_user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.recommend" title="Permalink to this definition"></a></dt>
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.load">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileobj_or_path</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../recommender_base.html#implicit.recommender_base.RecommenderBase" title="implicit.recommender_base.RecommenderBase"><span class="pre">implicit.recommender_base.RecommenderBase</span></a><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.load" title="Permalink to this definition"></a></dt>
+<dd><p>Loads the model from a file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileobj_or_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/io.html#io.IOBase" title="(in Python v3.10)"><em>io.IOBase</em></a>) – Either the filename or an open file-like object to load the model from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The model loaded up from disk</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../recommender_base.html#implicit.recommender_base.RecommenderBase" title="implicit.recommender_base.RecommenderBase">RecommenderBase</a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.save" title="implicit.cpu.bpr.BayesianPersonalizedRanking.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.load.html#numpy.load" title="(in NumPy v1.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.load</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.recommend">
+<code class="sig-name descname"><span class="pre">recommend</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_already_liked_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalculate_user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.recommend" title="Permalink to this definition"></a></dt>
 <dd><p>Recommends items for users.</p>
 <p>This method allows you to calculate the top N recommendations for a user or
 batch of users. Passing an array of userids instead of a single userid will
@@ -210,18 +227,18 @@ a subset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>userid</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>array_like</em><em>]</em>) – The userid or array of userids to calculate recommendations for</p></li>
+<li><p><strong>userid</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>array_like</em><em>]</em>) – The userid or array of userids to calculate recommendations for</p></li>
 <li><p><strong>user_items</strong> (<em>csr_matrix</em>) – A sparse matrix of shape (users, number_items). This lets us look
 up the liked items and their weights for the user. This is used to filter out
 items that have already been liked from the output, and to also potentially
 recalculate the user representation. Each row in this sparse matrix corresponds
 to a row in the userid parameter: that is the first row in this matrix contains
 the liked items for the first user in the userid array.</p></li>
-<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of results to return</p></li>
-<li><p><strong>filter_already_liked_items</strong> (<em>bool</em><em>, </em><em>optional</em>) – When true, don’t return items present in the training set that were rated
+<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of results to return</p></li>
+<li><p><strong>filter_already_liked_items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – When true, don’t return items present in the training set that were rated
 by the specified user.</p></li>
 <li><p><strong>filter_items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – List of extra item ids to filter out from the output</p></li>
-<li><p><strong>recalculate_user</strong> (<em>bool</em><em>, </em><em>optional</em>) – When true, don’t rely on stored user embeddings and instead recalculate from the
+<li><p><strong>recalculate_user</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – When true, don’t rely on stored user embeddings and instead recalculate from the
 passed in user_items. This option isn’t supported by all models.</p></li>
 <li><p><strong>items</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Array of extra item ids. When set this will only rank the items in this array instead
 of ranking every item the model was fit for. This parameter cannot be used with
@@ -234,21 +251,26 @@ be 1-dimensional with N items. When passed an array of userids, these will be
 2-dimensional arrays with a row for each user.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="implicit.cpu.bpr.BayesianPersonalizedRanking.similar_items">
-<span class="sig-name descname"><span class="pre">similar_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">itemid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalculate_item</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.similar_items" title="Permalink to this definition"></a></dt>
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.save">
+<code class="sig-name descname"><span class="pre">save</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileobj_or_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.save" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.similar_items">
+<code class="sig-name descname"><span class="pre">similar_items</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">itemid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalculate_item</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.similar_items" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates a list of similar items</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>itemid</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>array_like</em><em>]</em>) – The item id or an array of item ids to retrieve similar items for</p></li>
-<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of similar items to return</p></li>
-<li><p><strong>recalculate_item</strong> (<em>bool</em><em>, </em><em>optional</em>) – When true, don’t rely on stored item state and instead recalculate from the
+<li><p><strong>itemid</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>array_like</em><em>]</em>) – The item id or an array of item ids to retrieve similar items for</p></li>
+<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of similar items to return</p></li>
+<li><p><strong>recalculate_item</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – When true, don’t rely on stored item state and instead recalculate from the
 passed in item_users</p></li>
 <li><p><strong>item_users</strong> (<em>csr_matrix</em><em>, </em><em>optional</em>) – A sparse matrix of shape (itemid, number_users). This lets us look
 up the users for each item. This is only needs to be set when setting
@@ -264,20 +286,20 @@ set will be included. Cannot be used with the filter_items options</p></li>
 <dd class="field-even"><p>Tuple of (itemids, scores) arrays</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="implicit.cpu.bpr.BayesianPersonalizedRanking.similar_users">
-<span class="sig-name descname"><span class="pre">similar_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.similar_users" title="Permalink to this definition"></a></dt>
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.similar_users">
+<code class="sig-name descname"><span class="pre">similar_users</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.similar_users" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the most similar users for a userid or array of userids</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>userid</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>array_like</em><em>]</em>) – The userid or an array of userids to retrieve similar users for.</p></li>
-<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of similar users to return</p></li>
+<li><p><strong>userid</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>array_like</em><em>]</em>) – The userid or an array of userids to retrieve similar users for.</p></li>
+<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of similar users to return</p></li>
 <li><p><strong>filter_users</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of user ids to filter out from the results being returned</p></li>
 <li><p><strong>users</strong> (<em>array_like</em><em>, </em><em>optional</em>) – An array of user ids to include in the output. If not set all users in the training
 set will be included. Cannot be used with the filter_users options</p></li>
@@ -287,20 +309,20 @@ set will be included. Cannot be used with the filter_users options</p></li>
 <dd class="field-even"><p>Tuple of (userids, scores) arrays</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="implicit.cpu.bpr.BayesianPersonalizedRanking.to_gpu">
-<span class="sig-name descname"><span class="pre">to_gpu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.to_gpu" title="Permalink to this definition"></a></dt>
+<dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.to_gpu">
+<code class="sig-name descname"><span class="pre">to_gpu</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="../gpu/bpr.html#implicit.gpu.bpr.BayesianPersonalizedRanking" title="implicit.gpu.bpr.BayesianPersonalizedRanking"><span class="pre">implicit.gpu.bpr.BayesianPersonalizedRanking</span></a><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.to_gpu" title="Permalink to this definition"></a></dt>
 <dd><p>Converts this model to an equivalent version running on the gpu</p>
 </dd></dl>
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

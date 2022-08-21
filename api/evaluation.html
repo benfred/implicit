@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evaluation &mdash; Implicit 0.5.2 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>Evaluation &mdash; Implicit 0.6.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -31,7 +28,7 @@
             <a href="../index.html" class="icon icon-home"> Implicit
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -41,7 +38,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html"> Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial_lastfm.html"> Tutorial</a></li>
@@ -103,11 +100,11 @@
     text-align: unset;
 }
 </style>
-<section id="module-implicit.evaluation">
+<div class="section" id="module-implicit.evaluation">
 <span id="evaluation"></span><h1>Evaluation<a class="headerlink" href="#module-implicit.evaluation" title="Permalink to this headline"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="implicit.evaluation.AUC_at_k">
-<span class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></span><span class="sig-name descname"><span class="pre">AUC_at_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.AUC_at_k" title="Permalink to this definition"></a></dt>
+<dt id="implicit.evaluation.AUC_at_k">
+<code class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></code><code class="sig-name descname"><span class="pre">AUC_at_k</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.AUC_at_k" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate limited AUC for a given trained model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -115,9 +112,9 @@
 <li><p><strong>model</strong> (<a class="reference internal" href="models/recommender_base.html#implicit.recommender_base.RecommenderBase" title="implicit.recommender_base.RecommenderBase"><em>RecommenderBase</em></a>) – The fitted recommendation model to test</p></li>
 <li><p><strong>train_user_items</strong> (<em>csr_matrix</em>) – Sparse matrix of user by item that contains elements that were used in training the model</p></li>
 <li><p><strong>test_user_items</strong> (<em>csr_matrix</em>) – Sparse matrix of user by item that contains withheld elements to test on</p></li>
-<li><p><strong>K</strong> (<em>int</em>) – Number of items to test on</p></li>
-<li><p><strong>show_progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
-<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of items to test on</p></li>
+<li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
+<li><p><strong>num_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
 to the number of cores on the machine. Note: aside from the ALS and BPR
 models, setting this to more than 1 will likely hurt performance rather than
 help.</p></li>
@@ -127,14 +124,14 @@ help.</p></li>
 <dd class="field-even"><p>the calculated ndcg&#64;k</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="implicit.evaluation.leave_k_out_split">
-<span class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></span><span class="sig-name descname"><span class="pre">leave_k_out_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ratings</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=1</span></em>, <em class="sig-param"><span class="pre">float</span> <span class="pre">train_only_size=0.0</span></em>, <em class="sig-param"><span class="pre">random_state=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.leave_k_out_split" title="Permalink to this definition"></a></dt>
+<dt id="implicit.evaluation.leave_k_out_split">
+<code class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></code><code class="sig-name descname"><span class="pre">leave_k_out_split</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ratings</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=1</span></em>, <em class="sig-param"><span class="pre">float</span> <span class="pre">train_only_size=0.0</span></em>, <em class="sig-param"><span class="pre">random_state=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.leave_k_out_split" title="Permalink to this definition"></a></dt>
 <dd><p>Implements the ‘leave-k-out’ split protocol for a ratings matrix. Default
 parameters will produce a ‘leave-one-out’ split.</p>
 <p>This will create two matrices, one where each eligible user (i.e. user with &gt; K + 1
@@ -145,10 +142,10 @@ in the train set. By default, all eligible users may appear in the test set.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ratings</strong> (<em>csr_matrix</em>) – The input ratings CSR matrix to be split.</p></li>
-<li><p><strong>K</strong> (<em>int</em>) – The total number of samples to be ‘left out’ in the test set.</p></li>
-<li><p><strong>train_only_size</strong> (<em>float</em>) – The size (as a fraction) of the users set that should appear <em>only</em> in the
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The total number of samples to be ‘left out’ in the test set.</p></li>
+<li><p><strong>train_only_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The size (as a fraction) of the users set that should appear <em>only</em> in the
 training matrix.</p></li>
-<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>None</em><em> or </em><em>RandomState</em>) – The existing RandomState. If None, or an int, will be used
+<li><p><strong>random_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a><em> or </em><em>RandomState</em>) – The existing RandomState. If None, or an int, will be used
 to seed a new numpy RandomState.</p></li>
 </ul>
 </dd>
@@ -162,8 +159,8 @@ to seed a new numpy RandomState.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="implicit.evaluation.mean_average_precision_at_k">
-<span class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></span><span class="sig-name descname"><span class="pre">mean_average_precision_at_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.mean_average_precision_at_k" title="Permalink to this definition"></a></dt>
+<dt id="implicit.evaluation.mean_average_precision_at_k">
+<code class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></code><code class="sig-name descname"><span class="pre">mean_average_precision_at_k</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.mean_average_precision_at_k" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates MAP&#64;K for a given trained model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -171,9 +168,9 @@ to seed a new numpy RandomState.</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="models/recommender_base.html#implicit.recommender_base.RecommenderBase" title="implicit.recommender_base.RecommenderBase"><em>RecommenderBase</em></a>) – The fitted recommendation model to test</p></li>
 <li><p><strong>train_user_items</strong> (<em>csr_matrix</em>) – Sparse matrix of user by item that contains elements that were used in training the model</p></li>
 <li><p><strong>test_user_items</strong> (<em>csr_matrix</em>) – Sparse matrix of user by item that contains withheld elements to test on</p></li>
-<li><p><strong>K</strong> (<em>int</em>) – Number of items to test on</p></li>
-<li><p><strong>show_progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
-<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of items to test on</p></li>
+<li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
+<li><p><strong>num_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
 to the number of cores on the machine. Note: aside from the ALS and BPR
 models, setting this to more than 1 will likely hurt performance rather than
 help.</p></li>
@@ -183,14 +180,14 @@ help.</p></li>
 <dd class="field-even"><p>the calculated MAP&#64;k</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="implicit.evaluation.ndcg_at_k">
-<span class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></span><span class="sig-name descname"><span class="pre">ndcg_at_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.ndcg_at_k" title="Permalink to this definition"></a></dt>
+<dt id="implicit.evaluation.ndcg_at_k">
+<code class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></code><code class="sig-name descname"><span class="pre">ndcg_at_k</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.ndcg_at_k" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates ndcg&#64;K for a given trained model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -198,9 +195,9 @@ help.</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="models/recommender_base.html#implicit.recommender_base.RecommenderBase" title="implicit.recommender_base.RecommenderBase"><em>RecommenderBase</em></a>) – The fitted recommendation model to test</p></li>
 <li><p><strong>train_user_items</strong> (<em>csr_matrix</em>) – Sparse matrix of user by item that contains elements that were used in training the model</p></li>
 <li><p><strong>test_user_items</strong> (<em>csr_matrix</em>) – Sparse matrix of user by item that contains withheld elements to test on</p></li>
-<li><p><strong>K</strong> (<em>int</em>) – Number of items to test on</p></li>
-<li><p><strong>show_progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
-<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of items to test on</p></li>
+<li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
+<li><p><strong>num_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
 to the number of cores on the machine. Note: aside from the ALS and BPR
 models, setting this to more than 1 will likely hurt performance rather than
 help.</p></li>
@@ -210,14 +207,14 @@ help.</p></li>
 <dd class="field-even"><p>the calculated ndcg&#64;k</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="implicit.evaluation.precision_at_k">
-<span class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></span><span class="sig-name descname"><span class="pre">precision_at_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.precision_at_k" title="Permalink to this definition"></a></dt>
+<dt id="implicit.evaluation.precision_at_k">
+<code class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></code><code class="sig-name descname"><span class="pre">precision_at_k</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.precision_at_k" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates P&#64;K for a given trained model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -230,9 +227,9 @@ help.</p></li>
 </p></li>
 <li><p><strong>test_user_items</strong> (<em>csr_matrix</em>) – Sparse matrix of user by item that contains withheld elements to
 test on</p></li>
-<li><p><strong>K</strong> (<em>int</em>) – Number of items to test on</p></li>
-<li><p><strong>show_progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
-<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of items to test on</p></li>
+<li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
+<li><p><strong>num_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
 to the number of cores on the machine. Note: aside from the ALS and BPR
 models, setting this to more than 1 will likely hurt performance rather than
 help.</p></li>
@@ -242,14 +239,14 @@ help.</p></li>
 <dd class="field-even"><p>the calculated p&#64;k</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="implicit.evaluation.ranking_metrics_at_k">
-<span class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></span><span class="sig-name descname"><span class="pre">ranking_metrics_at_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.ranking_metrics_at_k" title="Permalink to this definition"></a></dt>
+<dt id="implicit.evaluation.ranking_metrics_at_k">
+<code class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></code><code class="sig-name descname"><span class="pre">ranking_metrics_at_k</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model</span></em>, <em class="sig-param"><span class="pre">train_user_items</span></em>, <em class="sig-param"><span class="pre">test_user_items</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">K=10</span></em>, <em class="sig-param"><span class="pre">show_progress=True</span></em>, <em class="sig-param"><span class="pre">int</span> <span class="pre">num_threads=1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.ranking_metrics_at_k" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates ranking metrics for a given trained model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -262,9 +259,9 @@ help.</p></li>
 </p></li>
 <li><p><strong>test_user_items</strong> (<em>csr_matrix</em>) – Sparse matrix of user by item that contains withheld elements to
 test on</p></li>
-<li><p><strong>K</strong> (<em>int</em>) – Number of items to test on</p></li>
-<li><p><strong>show_progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
-<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of items to test on</p></li>
+<li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
+<li><p><strong>num_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of threads to use for testing. Specifying 0 means to default
 to the number of cores on the machine. Note: aside from the ALS and BPR
 models, setting this to more than 1 will likely hurt performance rather than
 help.</p></li>
@@ -274,21 +271,21 @@ help.</p></li>
 <dd class="field-even"><p>the calculated p&#64;k</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="implicit.evaluation.train_test_split">
-<span class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></span><span class="sig-name descname"><span class="pre">train_test_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ratings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.train_test_split" title="Permalink to this definition"></a></dt>
+<dt id="implicit.evaluation.train_test_split">
+<code class="sig-prename descclassname"><span class="pre">implicit.evaluation.</span></code><code class="sig-name descname"><span class="pre">train_test_split</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ratings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.evaluation.train_test_split" title="Permalink to this definition"></a></dt>
 <dd><p>Randomly splits the ratings matrix into two matrices for training/testing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ratings</strong> (<em>coo_matrix</em>) – A sparse matrix to split</p></li>
-<li><p><strong>train_percentage</strong> (<em>float</em>) – What percentage of ratings should be used for training</p></li>
-<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>None</em><em> or </em><em>RandomState</em>) – The existing RandomState. If None, or an int, will be used
+<li><p><strong>train_percentage</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – What percentage of ratings should be used for training</p></li>
+<li><p><strong>random_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a><em> or </em><em>RandomState</em>) – The existing RandomState. If None, or an int, will be used
 to seed a new numpy RandomState.</p></li>
 </ul>
 </dd>
@@ -301,7 +298,7 @@ to seed a new numpy RandomState.</p></li>
 </dl>
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

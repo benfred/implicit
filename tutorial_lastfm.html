@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial - Recommending Music with the last.fm 360K dataset. &mdash; Implicit 0.5.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Tutorial - Recommending Music with the last.fm 360K dataset. &mdash; Implicit 0.6.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -33,7 +30,7 @@
             <a href="index.html" class="icon icon-home"> Implicit
           </a>
               <div class="version">
-                0.5
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -43,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html"> Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#"> Tutorial</a><ul>
@@ -292,11 +289,12 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -305,10 +303,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -320,12 +322,15 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -352,28 +357,27 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<section id="Tutorial---Recommending-Music-with-the-last.fm-360K-dataset.">
+<div class="section" id="Tutorial---Recommending-Music-with-the-last.fm-360K-dataset.">
 <h1>Tutorial - Recommending Music with the last.fm 360K dataset.<a class="headerlink" href="#Tutorial---Recommending-Music-with-the-last.fm-360K-dataset." title="Permalink to this headline"></a></h1>
 <p>This tutorial shows the major functionality of the <a class="reference external" href="https://github.com/benfred/implicit">implicit</a> library by building a music recommender system using the the <a class="reference external" href="http://ocelma.net/MusicRecommendationDataset/lastfm-360K.html">last.fm 360K dataset</a>.</p>
-<section id="Getting-the-Dataset">
+<div class="section" id="Getting-the-Dataset">
 <h2>Getting the Dataset<a class="headerlink" href="#Getting-the-Dataset" title="Permalink to this headline"></a></h2>
 <p>Implicit includes code to access several different popular recommender datasets in the <code class="docutils literal notranslate"><span class="pre">implicit.datasets</span></code> module. The following code will both download the lastfm dataset locally, as well as load it up into memory:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">implicit.datasets.lastfm</span> <span class="kn">import</span> <span class="n">get_lastfm</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">implicit.datasets.lastfm</span> <span class="kn">import</span> <span class="n">get_lastfm</span>
 
 <span class="n">artists</span><span class="p">,</span> <span class="n">users</span><span class="p">,</span> <span class="n">artist_user_plays</span> <span class="o">=</span> <span class="n">get_lastfm</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">artist_user_plays</span></code> is a scipy sparse matrix, with the each row corresponding to a different musician and each column corresponding to a different user. The non-zero entries in the <code class="docutils literal notranslate"><span class="pre">artist_user_plays</span></code> matrix contains the number of times that the user has played that artist. The <code class="docutils literal notranslate"><span class="pre">artists</span></code> and <code class="docutils literal notranslate"><span class="pre">users</span></code> variables are arrays of string labels for each row and column in the <code class="docutils literal notranslate"><span class="pre">artist_user_plays</span></code> matrix.</p>
-<p>The implicit library is solely focused on implicit feedback recommenders systems - where we are given positive examples of what the user has interacted with, but aren’t given the corresponding negative examples of what users aren’t interested in. For this example we’re shown the number of times that the user has played an artist in the dataset and can infer that a high play count indicates that the user likes an artist. However we can’t infer that just because the user hasn’t played an band
+<p>The implicit library is solely focused on implicit feedback recommenders systems - where we are given positive examples of what the user has interacted with, but aren’t given the corresponding negative examples of what users aren’t interested in. For this example we’re shown the number of times that the user has played an artist in the dataset and can infer that a high play count indicates that the user likes an artist. However we can’t infer that just because the user hasn’t played a band
 before that means the user doesn’t like the band.</p>
-</section>
-<section id="Training-a-Model">
+</div>
+<div class="section" id="Training-a-Model">
 <h2>Training a Model<a class="headerlink" href="#Training-a-Model" title="Permalink to this headline"></a></h2>
 <p>Implicit provides implementations of several different algorithms for implicit feedback recommender systems. For this example we’ll be looking at the <code class="docutils literal notranslate"><span class="pre">AlternatingLeastSquares</span></code> model that’s based off the paper <a class="reference external" href="http://yifanhu.net/PUB/cf.pdf">Collaborative Filtering for Implicit Feedback Datasets</a>. This model aims to learn a binary target of whether each user has interacted with each item - but weights each binary interaction by a confidence value of how confident we are in this user/item
 interaction. The implementation in implicit uses the values of a sparse matrix to represent the confidences, with the non zero entries representing whether or not the user has interacted with the item.</p>
@@ -383,8 +387,7 @@ interaction. The implementation in implicit uses the values of a sparse matrix t
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">implicit.nearest_neighbours</span> <span class="kn">import</span> <span class="n">bm25_weight</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">implicit.nearest_neighbours</span> <span class="kn">import</span> <span class="n">bm25_weight</span>
 
 <span class="c1"># weight the matrix, both to reduce impact of users that have played the same artist thousands of times</span>
 <span class="c1"># and to reduce the weight given to popular items</span>
@@ -400,11 +403,10 @@ interaction. The implementation in implicit uses the values of a sparse matrix t
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">implicit.als</span> <span class="kn">import</span> <span class="n">AlternatingLeastSquares</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">implicit.als</span> <span class="kn">import</span> <span class="n">AlternatingLeastSquares</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">AlternatingLeastSquares</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">user_plays</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AlternatingLeastSquares</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">user_plays</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -415,16 +417,15 @@ interaction. The implementation in implicit uses the values of a sparse matrix t
 <script type="application/vnd.jupyter.widget-view+json">{"model_id": "7d824141fc3b4bf096687375b99223e8", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>Fitting the model will happen on any compatible Nvidia GPU, or using all the available cores on your CPU if you don’t have a GPU enabled. You can force the operation by setting the <code class="docutils literal notranslate"><span class="pre">use_gpu</span></code> flag on the constructor of the <code class="docutils literal notranslate"><span class="pre">AlternatingLeastSquares</span></code> model.</p>
-</section>
-<section id="Making-Recommendations">
+</div>
+<div class="section" id="Making-Recommendations">
 <h2>Making Recommendations<a class="headerlink" href="#Making-Recommendations" title="Permalink to this headline"></a></h2>
 <p>After training the model, you can make recommendations for either a single user or a batch of users with the <code class="docutils literal notranslate"><span class="pre">.recommend</span></code> function on the model:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Get recommendations for the a single user</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get recommendations for the a single user</span>
 <span class="n">userid</span> <span class="o">=</span> <span class="mi">12345</span>
 <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">userid</span><span class="p">,</span> <span class="n">user_plays</span><span class="p">[</span><span class="n">userid</span><span class="p">],</span> <span class="n">N</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">filter_already_liked_items</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
@@ -435,8 +436,7 @@ interaction. The implementation in implicit uses the values of a sparse matrix t
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Use pandas to display the output in a table, pandas isn&#39;t a dependency of implicit otherwise</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use pandas to display the output in a table, pandas isn&#39;t a dependency of implicit otherwise</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;artist&quot;</span><span class="p">:</span> <span class="n">artists</span><span class="p">[</span><span class="n">ids</span><span class="p">],</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">scores</span><span class="p">,</span> <span class="s2">&quot;already_liked&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">user_plays</span><span class="p">[</span><span class="n">userid</span><span class="p">]</span><span class="o">.</span><span class="n">indices</span><span class="p">)})</span>
@@ -539,16 +539,15 @@ interaction. The implementation in implicit uses the values of a sparse matrix t
 <p>The <code class="docutils literal notranslate"><span class="pre">already_liked</span></code> column there shows if the user has interacted with the item already, and in this result most of the items being returned have already been interacted with by the user. We can remove these items from the result set with the <code class="docutils literal notranslate"><span class="pre">filter_already_liked_items</span></code> parameter - setting to <code class="docutils literal notranslate"><span class="pre">True</span></code> will remove all of these items from the results. The <code class="docutils literal notranslate"><span class="pre">user_plays[userid]</span></code> parameter is used to look up what items each user has interacted with, and can just be set to None if you aren’t
 filtering the users own likes or recalculating the user representation on the fly.</p>
 <p>There are also more filtering options present in the <code class="docutils literal notranslate"><span class="pre">filter_items</span></code> parameter and <code class="docutils literal notranslate"><span class="pre">items</span></code> parameter, as well as options for recalculating the user representation on the fly with the <code class="docutils literal notranslate"><span class="pre">recalculate_user</span></code> parameter. See the API reference for more details.</p>
-</section>
-<section id="Recommending-similar-items">
+</div>
+<div class="section" id="Recommending-similar-items">
 <h2>Recommending similar items<a class="headerlink" href="#Recommending-similar-items" title="Permalink to this headline"></a></h2>
 <p>Each model in implicit also has the ability to show related items through the <code class="docutils literal notranslate"><span class="pre">similar_items</span></code> method. For instance to get the related items for the Beatles:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># get related items for the beatles (itemid = 25512)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get related items for the beatles (itemid = 25512)</span>
 <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span><span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">similar_items</span><span class="p">(</span><span class="mi">252512</span><span class="p">)</span>
 
 <span class="c1"># display the results using pandas for nicer formatting</span>
@@ -638,8 +637,8 @@ filtering the users own likes or recalculating the user representation on the fl
 </table>
 </div></div>
 </div>
-</section>
-<section id="Making-batch-recommendations">
+</div>
+<div class="section" id="Making-batch-recommendations">
 <h2>Making batch recommendations<a class="headerlink" href="#Making-batch-recommendations" title="Permalink to this headline"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">.recommend</span></code>, <code class="docutils literal notranslate"><span class="pre">.similar_items</span></code> and <code class="docutils literal notranslate"><span class="pre">.similar_users</span></code> calls all have the ability to generate batches of recommendations - in addition to just calculating a single user or item. Passing an array of userids or itemids to these methods will trigger the batch methods, and return a 2D array of ids and scores - with each row in the output matrices corresponding to value in the input. This will tend to be quite a bit more efficient calling the method repeatedly, as implicit will use multiple
 threads on the CPU and achieve better device utilization on the GPU with larger batches.</p>
@@ -647,8 +646,7 @@ threads on the CPU and achieve better device utilization on the GPU with larger 
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Make recommendations for the first 1000 users in the dataset</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make recommendations for the first 1000 users in the dataset</span>
 <span class="n">userids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">userids</span><span class="p">,</span> <span class="n">user_plays</span><span class="p">[</span><span class="n">userids</span><span class="p">])</span>
 <span class="n">ids</span><span class="p">,</span> <span class="n">ids</span><span class="o">.</span><span class="n">shape</span>
@@ -671,8 +669,8 @@ threads on the CPU and achieve better device utilization on the GPU with larger 
  (1000, 10))
 </pre></div></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

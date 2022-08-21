@@ -33,7 +33,7 @@ Basic Usage
     # initialize a model
     model = implicit.als.AlternatingLeastSquares(factors=64)
 
-    # train the model on a sparse matrix of item/user/confidence weights
+    # train the model on a sparse matrix of user/item/confidence weights
     model.fit(user_item_data)
 
     # recommend items for a user
