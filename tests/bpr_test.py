@@ -40,18 +40,11 @@ def test_fit_almost_empty_matrix():
 
 
 def test_fit_callback():
-    class FitCallback:
-        def __init__(self):
-            self.num_called = 0
+    num_called = 0
 
-        def get_num_called(self):
-            return self.num_called
-
-        def get_callback(self):
-            def inner(epoch, elapsed, correct, skipped):
-                self.num_called += 1
-
-            return inner
+    def callback(epoch, elapsed, correct, skipped):
+        nonlocal num_called
+        num_called += 1
 
     raw = [
         [1, 1, 0, 1, 0, 0],
@@ -64,7 +57,5 @@ def test_fit_callback():
     ]
     model = BayesianPersonalizedRanking(iterations=5, use_gpu=False)
 
-    fit_callback = FitCallback()
-    model.fit(csr_matrix(raw), show_progress=False, fit_callback=fit_callback.get_callback())
-
-    assert fit_callback.get_num_called() == model.iterations
+    model.fit(csr_matrix(raw), show_progress=False, callback=callback)
+    assert num_called == model.iterations

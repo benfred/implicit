@@ -73,8 +73,8 @@ class FaissModel(RecommenderBase):
         self.use_gpu = use_gpu
         super().__init__()
 
-    def fit(self, Cui, show_progress=True):
-        self.model.fit(Cui, show_progress)
+    def fit(self, Cui, show_progress=True, callback=None):
+        self.model.fit(Cui, show_progress, callback=callback)
 
         item_factors = self.model.item_factors
         if implicit.gpu.HAS_CUDA and isinstance(item_factors, implicit.gpu.Matrix):

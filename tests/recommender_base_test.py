@@ -431,3 +431,20 @@ class RecommenderBaseTestMixin:
             model.save(filename)
             reloaded = model.load(filename)
             assert model.__dict__ == reloaded.__dict__
+
+    def test_fit_callback(self):
+        model = self._get_model()
+
+        num_called = 0
+
+        def callback(*args, **kwargs):
+            nonlocal num_called
+            num_called += 1
+
+        try:
+            model.fit(get_checker_board(5), show_progress=False, callback=callback)
+        except NotImplementedError:
+            # callback isn't supported w/ ItemItem KNN models
+            return
+
+        assert num_called >= 1
