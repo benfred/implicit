@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BayesianPersonalizedRanking &mdash; Implicit 0.6.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>BayesianPersonalizedRanking &mdash; Implicit 0.6.1 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
@@ -166,7 +166,7 @@ Default is None.</p></li>
 
 <dl class="py method">
 <dt id="implicit.cpu.bpr.BayesianPersonalizedRanking.fit">
-<code class="sig-name descname"><span class="pre">fit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.fit" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname"><span class="pre">fit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.cpu.bpr.BayesianPersonalizedRanking.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Factorizes the user_items matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -176,6 +176,7 @@ the rows of the matrix are the user, and the columns are the items liked by that
 BPR ignores the weight value of the matrix right now - it treats non zero entries
 as a binary signal that the user liked the item.</p></li>
 <li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em><em>, </em><em>optional</em>) – Callable function on each epoch with such arguments as epoch, elapsed time and progress</p></li>
 </ul>
 </dd>
 </dl>
