@@ -74,7 +74,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self._YtY = None
         self._XtX = None
 
-    def fit(self, user_items, show_progress=True, fit_callback=None):
+    def fit(self, user_items, show_progress=True, callback=None):
         """Factorizes the user_items matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
@@ -98,7 +98,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             and the value is the confidence that the user liked the item.
         show_progress : bool, optional
             Whether to show a progress bar during fitting
-        fit_callback: Callable, optional
+        callback: Callable, optional
             Callable function on each epoch with such arguments as epoch, elapsed time and progress
         """
         # initialize the random state
@@ -161,10 +161,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                         log.info("loss %.4f", loss)
 
                 # Backward compatibility
-                if not fit_callback:
-                    fit_callback = self.fit_callback
-                if fit_callback:
-                    fit_callback(iteration, time.time() - s, loss)
+                if not callback:
+                    callback = self.fit_callback
+                if callback:
+                    callback(iteration, time.time() - s, loss)
 
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)
