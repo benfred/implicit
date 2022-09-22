@@ -358,7 +358,7 @@ def AUC_at_k(model, train_user_items, test_user_items, int K=10,
     Returns
     -------
     float
-        the calculated ndcg@k
+        the calculated AUC@k
     """
     return ranking_metrics_at_k(
         model, train_user_items, test_user_items, K, show_progress, num_threads)['auc']
