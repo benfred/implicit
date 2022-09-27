@@ -117,9 +117,39 @@
 <div class="section" id="nearest-neighbour-models">
 <h1>Nearest Neighbour Models<a class="headerlink" href="#nearest-neighbour-models" title="Permalink to this headline"></a></h1>
 <p>Implicit contains several item-item nearest neighbour models. See
-<a href="#id3"><span class="problematic" id="id4">`this post`&lt;https://www.benfrederickson.com/distance-metrics/&gt;`_</span></a> for more information.</p>
+<a class="reference external" href="https://www.benfrederickson.com/distance-metrics/">this post</a> for more information.</p>
 <div class="section" id="cosinerecommender">
 <h2>CosineRecommender<a class="headerlink" href="#cosinerecommender" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt id="implicit.nearest_neighbours.CosineRecommender">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></code><code class="sig-name descname"><span class="pre">CosineRecommender</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.nearest_neighbours.CosineRecommender" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#implicit.nearest_neighbours.ItemItemRecommender" title="implicit.nearest_neighbours.ItemItemRecommender"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.nearest_neighbours.ItemItemRecommender</span></code></a></p>
+<p>An Item-Item Recommender on Cosine distances between items</p>
+</dd></dl>
+
+</div>
+<div class="section" id="tfidfrecommender">
+<h2>TFIDFRecommender<a class="headerlink" href="#tfidfrecommender" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt id="implicit.nearest_neighbours.TFIDFRecommender">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></code><code class="sig-name descname"><span class="pre">TFIDFRecommender</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.nearest_neighbours.TFIDFRecommender" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#implicit.nearest_neighbours.ItemItemRecommender" title="implicit.nearest_neighbours.ItemItemRecommender"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.nearest_neighbours.ItemItemRecommender</span></code></a></p>
+<p>An Item-Item Recommender on TF-IDF distances between items</p>
+</dd></dl>
+
+</div>
+<div class="section" id="bm25recommender">
+<h2>BM25Recommender<a class="headerlink" href="#bm25recommender" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt id="implicit.nearest_neighbours.BM25Recommender">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></code><code class="sig-name descname"><span class="pre">BM25Recommender</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.nearest_neighbours.BM25Recommender" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#implicit.nearest_neighbours.ItemItemRecommender" title="implicit.nearest_neighbours.ItemItemRecommender"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.nearest_neighbours.ItemItemRecommender</span></code></a></p>
+<p>An Item-Item Recommender on BM25 distance between items</p>
+</dd></dl>
+
+</div>
+<div class="section" id="itemitemrecommender">
+<h2>ItemItemRecommender<a class="headerlink" href="#itemitemrecommender" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt id="implicit.nearest_neighbours.ItemItemRecommender">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></code><code class="sig-name descname"><span class="pre">ItemItemRecommender</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.nearest_neighbours.ItemItemRecommender" title="Permalink to this definition"></a></dt>
@@ -147,7 +177,7 @@ means to default to the number of cores on the machine.</p></li>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#id2" title="implicit.nearest_neighbours.ItemItemRecommender.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.savez.html#numpy.savez" title="(in NumPy v1.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.savez</span></code></a></p>
+<p><a class="reference internal" href="#implicit.nearest_neighbours.ItemItemRecommender.load" title="implicit.nearest_neighbours.ItemItemRecommender.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.savez.html#numpy.savez" title="(in NumPy v1.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.savez</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -168,84 +198,7 @@ means to default to the number of cores on the machine.</p></li>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#id1" title="implicit.nearest_neighbours.ItemItemRecommender.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.load.html#numpy.load" title="(in NumPy v1.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.load</span></code></a></p>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="tfidfrecommender">
-<h2>TFIDFRecommender<a class="headerlink" href="#tfidfrecommender" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt id="implicit.nearest_neighbours.TFIDFRecommender">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></code><code class="sig-name descname"><span class="pre">TFIDFRecommender</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.nearest_neighbours.TFIDFRecommender" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#id0" title="implicit.nearest_neighbours.ItemItemRecommender"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.nearest_neighbours.ItemItemRecommender</span></code></a></p>
-<p>An Item-Item Recommender on TF-IDF distances between items</p>
-</dd></dl>
-
-</div>
-<div class="section" id="bm25recommender">
-<h2>BM25Recommender<a class="headerlink" href="#bm25recommender" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt id="implicit.nearest_neighbours.BM25Recommender">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></code><code class="sig-name descname"><span class="pre">BM25Recommender</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#implicit.nearest_neighbours.BM25Recommender" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#id0" title="implicit.nearest_neighbours.ItemItemRecommender"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.nearest_neighbours.ItemItemRecommender</span></code></a></p>
-<p>An Item-Item Recommender on BM25 distance between items</p>
-</dd></dl>
-
-</div>
-<div class="section" id="itemitemrecommender">
-<h2>ItemItemRecommender<a class="headerlink" href="#itemitemrecommender" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt id="id0">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">implicit.nearest_neighbours.</span></code><code class="sig-name descname"><span class="pre">ItemItemRecommender</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../recommender_base.html#implicit.recommender_base.RecommenderBase" title="implicit.recommender_base.RecommenderBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit.recommender_base.RecommenderBase</span></code></a></p>
-<p>Base class for Item-Item Nearest Neighbour recommender models
-here.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of neighbours to include when calculating the item-item
-similarity matrix</p></li>
-<li><p><strong>num_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of threads to use for fitting the model. Specifying 0
-means to default to the number of cores on the machine.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="id1">
-<code class="sig-name descname"><span class="pre">save</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileobj_or_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition"></a></dt>
-<dd><p>Saves the model to a file, using the numpy <cite>.npz</cite> format</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/io.html#io.IOBase" title="(in Python v3.10)"><em>io.IOBase</em></a>) – Either the filename or an open file-like object to save the model to</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#id2" title="implicit.nearest_neighbours.ItemItemRecommender.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.savez.html#numpy.savez" title="(in NumPy v1.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.savez</span></code></a></p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt id="id2">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileobj_or_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition"></a></dt>
-<dd><p>Loads the model from a file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fileobj_or_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/io.html#io.IOBase" title="(in Python v3.10)"><em>io.IOBase</em></a>) – Either the filename or an open file-like object to load the model from</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The model loaded up from disk</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../recommender_base.html#implicit.recommender_base.RecommenderBase" title="implicit.recommender_base.RecommenderBase">RecommenderBase</a></p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#id1" title="implicit.nearest_neighbours.ItemItemRecommender.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.load.html#numpy.load" title="(in NumPy v1.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.load</span></code></a></p>
+<p><a class="reference internal" href="#implicit.nearest_neighbours.ItemItemRecommender.save" title="implicit.nearest_neighbours.ItemItemRecommender.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.load.html#numpy.load" title="(in NumPy v1.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.load</span></code></a></p>
 </div>
 </dd></dl>
 
