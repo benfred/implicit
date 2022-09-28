@@ -2,17 +2,16 @@ Nearest Neighbour Models
 ========================
 
 Implicit contains several item-item nearest neighbour models. See
-`this post`<https://www.benfrederickson.com/distance-metrics/>`_ for more information.
+`this post <https://www.benfrederickson.com/distance-metrics/>`_ for more information.
 
 
 CosineRecommender
 -----------------
 
-.. autoclass:: implicit.nearest_neighbours.ItemItemRecommender
+.. autoclass:: implicit.nearest_neighbours.CosineRecommender
    :members:
    :show-inheritance:
    :exclude-members: fit,recommend,similar_items,similar_users
-
 
 TFIDFRecommender
 -------------------

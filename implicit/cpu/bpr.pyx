@@ -122,7 +122,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
 
     @cython.cdivision(True)
     @cython.boundscheck(False)
-    def fit(self, user_items, show_progress=True):
+    def fit(self, user_items, show_progress=True, callback=None):
         """ Factorizes the user_items matrix
 
         Parameters
@@ -134,6 +134,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             as a binary signal that the user liked the item.
         show_progress : bool, optional
             Whether to show a progress bar
+        callback: Callable, optional
+            Callable function on each epoch with such arguments as epoch, elapsed time and progress
         """
         rs = check_random_state(self.random_state)
 
@@ -190,6 +192,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         log.debug("Running %i BPR training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
+                s = time.time()
                 correct, skipped = bpr_update(rng, userids, user_items.indices, user_items.indptr,
                                               self.user_factors, self.item_factors,
                                               self.learning_rate, self.regularization, num_threads,
@@ -200,6 +203,9 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                     progress.set_postfix(
                         {"train_auc": "%.2f%%" % (100.0 * correct / (total - skipped)),
                          "skipped": "%.2f%%" % (100.0 * skipped / total)})
+
+                if callback:
+                    callback(epoch, time.time() - s, correct, skipped)
 
         self._check_fit_errors()
 

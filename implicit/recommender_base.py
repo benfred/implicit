@@ -13,9 +13,9 @@ class RecommenderBase(metaclass=ABCMeta):
     """Defines a common interface for all recommendation models"""
 
     @abstractmethod
-    def fit(self, user_items, show_process=True):
+    def fit(self, user_items, show_progress=True, callback=None):
         """
-        Trains the model on a sparse matrix of item/user/weight
+        Trains the model on a sparse matrix of user/item/weight
 
         Parameters
         ----------
@@ -25,6 +25,8 @@ class RecommenderBase(metaclass=ABCMeta):
             The values are how confident you are that the item is liked by the user.
         show_progress : bool, optional
             Whether to show a progress bar during fitting
+        callback: Callable, optional
+            Callable function on each epoch with such arguments as epoch, elapsed time and progress
         """
 
     @abstractmethod

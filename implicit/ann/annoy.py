@@ -63,9 +63,9 @@ class AnnoyModel(RecommenderBase):
         self.n_trees = n_trees
         self.search_k = search_k
 
-    def fit(self, Cui, show_progress=True):
+    def fit(self, Cui, show_progress=True, callback=None):
         # train the model
-        self.model.fit(Cui, show_progress)
+        self.model.fit(Cui, show_progress, callback)
 
         item_factors = self.model.item_factors
         if implicit.gpu.HAS_CUDA and isinstance(item_factors, implicit.gpu.Matrix):

@@ -27,7 +27,7 @@ struct Matrix {
   // underlying storage buffer is shared in this case.
   Matrix(const Matrix &other, size_t rowid);
 
-  // Slice a contiguous series of rows from this Matrix. The underlying storge
+  // Slice a contiguous series of rows from this Matrix. The underlying storage
   // buffer is shared here.
   Matrix(const Matrix &other, size_t start_rowid, size_t end_rowid);
 
