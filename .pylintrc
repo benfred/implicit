@@ -44,5 +44,6 @@ disable=fixme,
 
 [SIMILARITIES]
 min-similarity-lines=64
+max-public-methods=30
 ignore-docstrings=yes
 ignore-imports=yes
