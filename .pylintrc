@@ -17,7 +17,6 @@ disable=fixme,
     trailing-whitespace,
     invalid-name,
     import-error,
-    no-self-use,
 
     # disable code-complexity check
     too-many-function-args,
