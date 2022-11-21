@@ -17,7 +17,6 @@ disable=fixme,
     trailing-whitespace,
     invalid-name,
     import-error,
-    no-self-use,
 
     # disable code-complexity check
     too-many-function-args,
@@ -44,6 +43,5 @@ disable=fixme,
 
 [SIMILARITIES]
 min-similarity-lines=64
-max-public-methods=30
 ignore-docstrings=yes
 ignore-imports=yes

@@ -13,6 +13,8 @@ from implicit.evaluation import precision_at_k
 from implicit.nearest_neighbours import ItemItemRecommender
 from implicit.utils import ParameterWarning
 
+# pylint: disable=too-many-public-methods
+
 
 def get_checker_board(X):
     """Returns a 'checkerboard' matrix: where every even userid has liked
