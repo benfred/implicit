@@ -58,7 +58,7 @@ cdef class NearestNeighboursScorer(object):
         self.lock = threading.RLock()
 
     @cython.boundscheck(False)
-    def recommend(self, int u, int[:] user_indptr, int[:] user_indices, floating[:] user_data,
+    def recommend(self, int[:] user_indptr, int[:] user_indices, floating[:] user_data,
                   int K=10, bool remove_own_likes=True):
         cdef int index1, index2, i, count
         cdef double weight
