@@ -5,11 +5,14 @@ import warnings
 import cython
 import numpy as np
 import scipy.sparse
+
 from cython cimport floating, integral
+
 from cython.operator import dereference
 from cython.parallel import parallel, prange
 
 from libcpp cimport bool
+from libcpp.algorithm cimport sort_heap
 from libcpp.utility cimport pair
 from libcpp.vector cimport vector
 
@@ -18,10 +21,16 @@ from tqdm.auto import tqdm
 from implicit.utils import check_csr
 
 
+cdef extern from "<functional>" namespace "std" nogil:
+    cdef cppclass greater[T=*]:
+        greater() except +
+
+
 cdef extern from "implicit/nearest_neighbours.h" namespace "implicit" nogil:
     cdef cppclass TopK[Index, Value]:
         TopK(size_t K)
         vector[pair[Value, Index]] results
+        greater[pair[Value, Index]] heap_order
 
     cdef cppclass SparseMatrixMultiplier[Index, Value]:
         SparseMatrixMultiplier(Index item_count)
@@ -49,7 +58,7 @@ cdef class NearestNeighboursScorer(object):
         self.lock = threading.RLock()
 
     @cython.boundscheck(False)
-    def recommend(self, int u, int[:] user_indptr, int[:] user_indices, floating[:] user_data,
+    def recommend(self, int[:] user_indptr, int[:] user_indices, floating[:] user_data,
                   int K=10, bool remove_own_likes=True):
         cdef int index1, index2, i, count
         cdef double weight
@@ -83,6 +92,7 @@ cdef class NearestNeighboursScorer(object):
             indices = ret_indices = np.zeros(count, dtype=np.int32)
             data = ret_data = np.zeros(count)
 
+            sort_heap(topK.results.begin(), topK.results.end(), topK.heap_order)
             with nogil:
                 i = 0
                 for result in topK.results:
@@ -143,6 +153,7 @@ def all_pairs_knn(users, unsigned int K=100, int num_threads=0, show_progress=Tr
                 neighbours.foreach(dereference(topk))
 
                 index2 = K * i
+
                 for result in topk.results:
                     rows[index2] = i
                     cols[index2] = result.second
