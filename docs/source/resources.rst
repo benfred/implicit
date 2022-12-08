@@ -14,6 +14,8 @@ These blog posts describe the algorithms that power this library:
 
 There are also several other blog posts about using Implicit to build recommendation systems:
 
+ * `H&M Personalized Fashion Recommendations Kaggle Competition <https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations/discussion/324129>`_
+ * `Yandex Cup 2022: Like Prediction <https://github.com/greenwolf-nsk/yandex-cup-2022-recsys>`_
  * `Recommending GitHub Repositories with Google BigQuery and the implicit library <https://medium.com/@jbochi/recommending-github-repositories-with-google-bigquery-and-the-implicit-library-e6cce666c77>`_
  * `Intro to Implicit Matrix Factorization: Classic ALS with Sketchfab Models <http://blog.ethanrosenthal.com/2016/10/19/implicit-mf-part-1/>`_
  * `A Gentle Introduction to Recommender Systems with Implicit Feedback <https://jessesw.com/Rec-System/>`_
