@@ -1,7 +1,7 @@
 import io
 import os.path
 
-from packaging.version import LegacyVersion
+from packaging.version import Version
 from setuptools import find_packages
 from skbuild import setup
 from skbuild.cmaker import get_cmake_version
@@ -15,7 +15,7 @@ except ImportError:
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
 try:
-    if LegacyVersion(get_cmake_version()) < LegacyVersion("3.17"):
+    if Version(get_cmake_version()) < Version("3.17"):
         setup_requires.append("cmake>=3.17")
 except SKBuildError:
     setup_requires.append("cmake>=3.17")
