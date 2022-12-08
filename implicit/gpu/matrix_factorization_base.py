@@ -221,8 +221,15 @@ class MatrixFactorizationBase(RecommenderBase):
         }
 
     def __setstate__(self, state):
-        self.item_factors = implicit.gpu.Matrix(state["item_factors"])
-        self.user_factors = implicit.gpu.Matrix(state["user_factors"])
+        # default initialize members
+        self.__init__()
+        item_factors = state["item_factors"]
+        if item_factors is not None:
+            self.item_factors = implicit.gpu.Matrix(item_factors)
+
+        user_factors = state["user_factors"]
+        if user_factors is not None:
+            self.user_factors = implicit.gpu.Matrix(user_factors)
 
 
 def check_random_state(random_state):
