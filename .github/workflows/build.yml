@@ -62,7 +62,7 @@ jobs:
         cibw-arch: [auto]
         include:
           - os: ubuntu-latest
-            cibw_arch: aarch64
+            cibw-arch: aarch64
 
     steps:
       - uses: actions/checkout@v2
