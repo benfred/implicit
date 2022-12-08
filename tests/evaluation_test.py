@@ -3,8 +3,11 @@ import pytest
 from scipy.sparse import csr_matrix, random
 
 import implicit
-from implicit.datasets.movielens import get_movielens
 from implicit.evaluation import leave_k_out_split, precision_at_k, train_test_split
+
+pytest.importorskip("h5py")
+
+from implicit.datasets.movielens import get_movielens  # noqa
 
 
 def _get_sample_matrix():
