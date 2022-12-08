@@ -80,8 +80,9 @@ These blog posts describe the algorithms that power this library:
  * [Approximate Nearest Neighbours for Recommender Systems](https://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/)
  * [Distance Metrics for Fun and Profit](https://www.benfrederickson.com/distance-metrics/)
 
-There are also several other blog posts about using Implicit to build recommendation systems:
-
+There are also several other articles about using Implicit to build recommendation systems:
+ * [H&M Personalized Fashion Recommendations Kaggle Competition](https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations/discussion/324129)
+ * [Yandex Cup 2022: Like Prediction](https://github.com/greenwolf-nsk/yandex-cup-2022-recsys)
  * [Recommending GitHub Repositories with Google BigQuery and the implicit library](https://medium.com/@jbochi/recommending-github-repositories-with-google-bigquery-and-the-implicit-library-e6cce666c77)
  * [Intro to Implicit Matrix Factorization: Classic ALS with Sketchfab Models](http://blog.ethanrosenthal.com/2016/10/19/implicit-mf-part-1/)
  * [A Gentle Introduction to Recommender Systems with Implicit Feedback](https://jessesw.com/Rec-System/).
@@ -93,7 +94,7 @@ This library requires SciPy version 0.16 or later and Python version 3.6 or late
 
 GPU Support requires at least version 11 of the [NVidia CUDA Toolkit](https://developer.nvidia.com/cuda-downloads).
 
-This library has been tested with Python 3.6, 3.7, 3.8, 3.9 and 3.10 on Ubuntu, OSX and Windows.
+This library is tested with Python 3.7, 3.8, 3.9, 3.10 and 3.11 on Ubuntu, OSX and Windows.
 
 #### Benchmarks
 

@@ -16,10 +16,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: 3.9
 
@@ -67,7 +67,7 @@ jobs:
             cibw-arch: aarch64
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up QEMU
         if: runner.os == 'Linux'
@@ -87,7 +87,7 @@ jobs:
         if: runner.os == 'Linux'
 
       - name: Upload Binaries
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: wheels
           path: wheelhouse
@@ -101,14 +101,14 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: implicit_source
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: wheels
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -139,7 +139,7 @@ jobs:
     if: "startsWith(github.ref, 'refs/tags/')"
     needs: [test-wheels]
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: wheels
       - name: Create GitHub Release
@@ -157,4 +157,4 @@ jobs:
         run: |
           pip install --upgrade wheel pip setuptools twine
           twine upload *
-          rm *
+fnkr/github-action-ghr          rm *
