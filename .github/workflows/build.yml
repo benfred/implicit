@@ -157,4 +157,4 @@ jobs:
         run: |
           pip install --upgrade wheel pip setuptools twine
           twine upload *
-fnkr/github-action-ghr          rm *
+          rm *
