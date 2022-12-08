@@ -13,6 +13,8 @@ from implicit.evaluation import precision_at_k
 from implicit.nearest_neighbours import ItemItemRecommender
 from implicit.utils import ParameterWarning
 
+# pylint: disable=too-many-public-methods
+
 
 def get_checker_board(X):
     """Returns a 'checkerboard' matrix: where every even userid has liked
@@ -382,12 +384,26 @@ class RecommenderBaseTestMixin:
             self.assertEqual(set(current_ids), set(selected_items))
 
     def test_pickle(self):
-        item_users = get_checker_board(50)
+        user_items = get_checker_board(50)
         model = self._get_model()
-        model.fit(item_users, show_progress=False)
+        model.fit(user_items, show_progress=False)
 
         pickled = pickle.dumps(model)
-        pickle.loads(pickled)
+        reloaded = pickle.loads(pickled)
+
+        # make sure we can call methods on the reloaded index, and get the same results back
+        # (https://github.com/benfred/implicit/issues/631)
+        ids, _ = model.recommend(0, user_items[0])
+        reloaded_ids, _ = reloaded.recommend(0, user_items[0])
+        assert_array_equal(ids, reloaded_ids)
+
+        ids, _ = model.similar_items(0)
+        reloaded_ids, _ = reloaded.similar_items(0)
+        assert_array_equal(ids, reloaded_ids)
+
+    def test_pickle_unfitted_model(self):
+        model = self._get_model()
+        pickle.loads(pickle.dumps(model))
 
     def test_invalid_user_items(self):
 
