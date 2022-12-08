@@ -7,7 +7,7 @@ import tempfile
 import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
-from scipy.sparse import csr_matrix
+from scipy.sparse import coo_matrix, csr_matrix
 
 from implicit.evaluation import precision_at_k
 from implicit.nearest_neighbours import ItemItemRecommender
@@ -99,6 +99,7 @@ class RecommenderBaseTestMixin:
         ids, scores = model.recommend(
             userids, user_items[userids], N=5, filter_already_liked_items=False
         )
+
         for userid in range(50):
             ids_user, scores_user = model.recommend(
                 userid, user_items[userid], N=5, filter_already_liked_items=False
@@ -311,6 +312,26 @@ class RecommenderBaseTestMixin:
         model = self._get_model()
         with pytest.warns(ParameterWarning):
             model.fit(user_items.tolil(), show_progress=False)
+
+    def test_fit_ordering(self):
+        # models should return scores that are decreasing in value
+        samples = 1000
+        user_count = 100
+        item_count = 200
+
+        rng = np.random.RandomState(10)
+        itemids = rng.randint(0, item_count, size=samples, dtype=np.int32)
+        userids = rng.randint(0, user_count, size=samples, dtype=np.int32)
+
+        likes = coo_matrix((np.ones(samples), (userids, itemids))).tocsr()
+
+        model = self._get_model()
+
+        model.fit(likes, show_progress=False)
+        for userid in userids:
+            ids, scores = model.recommend(userid, likes[userid])
+            print(ids, scores)
+            assert np.all(np.diff(scores) <= 0)
 
     def test_dtype(self):
         # models should be able to accept input of either float32 or float64

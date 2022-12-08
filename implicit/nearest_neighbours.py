@@ -81,7 +81,6 @@ class ItemItemRecommender(RecommenderBase):
                 raise IndexError("Some of selected itemids are not in the model")
 
         ids, scores = self.scorer.recommend(
-            userid,
             user_items.indptr,
             user_items.indices,
             user_items.data,
