@@ -59,7 +59,6 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         python-version: [36, 37, 38, 39, 310, 311]
-        python-version: [36, 37, 38, 39, 310]
         cibw-arch: auto
         include:
           - os: ubuntu-latest
