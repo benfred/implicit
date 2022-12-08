@@ -103,12 +103,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         pip install -r implicit_source/requirements.txt
-    - name: Install h5py
-      run: pip install h5py
-      # skip installing h5py on python3.11, until binary wheels are supported
-      # https://github.com/h5py/h5py/issues/2146
-      if: ${{ matrix.python-version }} != '3.11'
-
     - name: Install ANN Libraries
       run: pip install annoy nmslib
       if: runner.os == 'Linux'
