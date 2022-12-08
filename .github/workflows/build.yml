@@ -59,6 +59,10 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         python-version: [36, 37, 38, 39, 310]
+        cibw-arch: auto
+        include:
+          - os: ubuntu-latest
+            cibw_arch: aarch64
 
     steps:
       - uses: actions/checkout@v2
@@ -73,7 +77,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.3.1
         env:
           CIBW_BUILD: cp${{matrix.python-version}}-*
-          CIBW_ARCHS_LINUX: auto aarch64
+          CIBW_ARCHS_LINUX: ${{ matrix.cibw-arch }}
 
       - name: Rename Wheels
         run: |
