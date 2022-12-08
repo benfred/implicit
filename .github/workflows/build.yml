@@ -84,7 +84,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, '3.10', '3.11']
+        python-version: [3.7, 3.8, 3.9, '3.10', '3.11']
         os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
@@ -107,11 +107,12 @@ jobs:
       run: pip install h5py
       # skip installing h5py on python3.11, until binary wheels are supported
       # https://github.com/h5py/h5py/issues/2146
-      if: ${{ matrix.python-version }} != '3.11'
+      if: ${{ matrix.python-version != '3.11' }}
 
     - name: Install ANN Libraries
       run: pip install annoy nmslib
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' && ${{ matrix.python-version != '3.11' }} 
+
     - name: Install wheel
       run: |
         pip install --force-reinstall --no-deps --no-index --find-links . implicit
