@@ -215,21 +215,20 @@ class MatrixFactorizationBase(RecommenderBase):
         self.to_cpu().save(file)
 
     def __getstate__(self):
-        return {
-            "item_factors": self.item_factors.to_numpy() if self.item_factors else None,
-            "user_factors": self.user_factors.to_numpy() if self.user_factors else None,
-        }
+        state = self.__dict__.copy()
+        # _knn is unpickleable - the rest are cached attributes that don't need to be saved
+        for attr in ["_knn", "_user_norms", "_user_norms_host", "_item_norms", "_item_norms_host"]:
+            state[attr] = None
+        state["item_factors"] = self.item_factors.to_numpy() if self.item_factors else None
+        state["user_factors"] = self.user_factors.to_numpy() if self.user_factors else None
+        return state
 
     def __setstate__(self, state):
-        # default initialize members
-        self.__init__()
-        item_factors = state["item_factors"]
-        if item_factors is not None:
-            self.item_factors = implicit.gpu.Matrix(item_factors)
-
-        user_factors = state["user_factors"]
-        if user_factors is not None:
-            self.user_factors = implicit.gpu.Matrix(user_factors)
+        self.__dict__.update(state)
+        if self.item_factors is not None:
+            self.item_factors = implicit.gpu.Matrix(self.item_factors)
+        if self.user_factors is not None:
+            self.user_factors = implicit.gpu.Matrix(self.user_factors)
 
 
 def check_random_state(random_state):

@@ -290,3 +290,17 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         ret.user_factors = self.user_factors.to_numpy() if self.user_factors is not None else None
         ret.item_factors = self.item_factors.to_numpy() if self.item_factors is not None else None
         return ret
+
+    def __getstate__(self):
+        state = super().__getstate__()
+        state["_solver"] = None
+        state["_XtX"] = self._XtX.to_numpy() if self._XtX is not None else None
+        state["_YtY"] = self._YtY.to_numpy() if self._YtY is not None else None
+        return state
+
+    def __setstate__(self, state):
+        super().__setstate__(state)
+        if self._XtX is not None:
+            self._XtX = implicit.gpu.Matrix(self._XtX)
+        if self._YtY is not None:
+            self._YtY = implicit.gpu.Matrix(self._YtY)
