@@ -54,16 +54,12 @@ def test_recalculate_after_pickle(use_gpu):
     user_items = get_checker_board(10)
     model = AlternatingLeastSquares(factors=2, use_gpu=use_gpu, regularization=0.1)
     model.fit(user_items, show_progress=False)
-    print(model._XtX)
     model._XtX = model._YtY = None
 
-    original_ids, scores = model.recommend(0, user_items=user_items[0], recalculate_user=True)
-    print(scores)
+    original_ids, _ = model.recommend(0, user_items=user_items[0], recalculate_user=True)
 
     model = pickle.loads(pickle.dumps(model))
-    print(model._XtX)
-    ids, scores = model.recommend(0, user_items=user_items[0], recalculate_user=True)
-    print(scores)
+    ids, _ = model.recommend(0, user_items=user_items[0], recalculate_user=True)
 
     assert_array_equal(ids, original_ids)
 

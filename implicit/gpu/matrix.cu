@@ -17,6 +17,8 @@ Vector<T>::Vector(size_t size, const T *host_data)
   if (host_data) {
     CHECK_CUDA(
         cudaMemcpy(data, host_data, size * sizeof(T), cudaMemcpyHostToDevice));
+  } else {
+    CHECK_CUDA(cudaMemset(data, 0, size * sizeof(T)));
   }
 }
 
