@@ -75,6 +75,8 @@ Matrix::Matrix(size_t rows, size_t cols, float *host_data, bool allocate)
     if (host_data) {
       CHECK_CUDA(cudaMemcpy(data, host_data, rows * cols * sizeof(float),
                             cudaMemcpyHostToDevice));
+    } else {
+      CHECK_CUDA(cudaMemset(data, 0, rows * cols * sizeof(float)));
     }
   } else {
     data = host_data;
