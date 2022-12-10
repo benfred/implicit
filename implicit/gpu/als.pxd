@@ -5,7 +5,7 @@ cdef extern from "implicit/gpu/als.h" namespace "implicit::gpu" nogil:
     cdef cppclass LeastSquaresSolver:
         LeastSquaresSolver() except +
 
-        void calculate_yty(const Matrix & Y, Matrix * YtY, float regularization) except *
+        void calculate_yty(const Matrix & Y, Matrix * YtY, float regularization) except +
 
         void least_squares(const CSRMatrix & Cui, Matrix * X,
                            const Matrix & YtY, const Matrix & Y,

@@ -1,3 +1,4 @@
+import pickle
 import unittest
 
 import numpy as np
@@ -31,19 +32,33 @@ def test_zero_iterations_with_loss(use_gpu):
     model = AlternatingLeastSquares(
         factors=128, use_gpu=use_gpu, iterations=0, calculate_training_loss=True
     )
-    model.fit(csr_matrix(np.ones((10, 10))))
+    model.fit(csr_matrix(np.ones((10, 10))), show_progress=False)
 
 
 @pytest.mark.skipif(not HAS_CUDA, reason="test requires gpu")
 def test_recalculate_after_cpu_conversion():
     # test out issue reported in https://github.com/benfred/implicit/issues/597
     user_items = get_checker_board(50)
-
     model = AlternatingLeastSquares(factors=2, use_gpu=True)
-    model.fit(user_items)
+    model.fit(user_items, show_progress=False)
     original_ids, _ = model.recommend(0, user_items=user_items[0], recalculate_user=True)
 
     model = model.to_cpu().to_gpu()
+    ids, _ = model.recommend(0, user_items=user_items[0], recalculate_user=True)
+
+    assert_array_equal(ids, original_ids)
+
+
+@pytest.mark.parametrize("use_gpu", [True, False] if HAS_CUDA else [False])
+def test_recalculate_after_pickle(use_gpu):
+    user_items = get_checker_board(10)
+    model = AlternatingLeastSquares(factors=2, use_gpu=use_gpu, regularization=0.1)
+    model.fit(user_items, show_progress=False)
+    model._XtX = model._YtY = None
+
+    original_ids, _ = model.recommend(0, user_items=user_items[0], recalculate_user=True)
+
+    model = pickle.loads(pickle.dumps(model))
     ids, _ = model.recommend(0, user_items=user_items[0], recalculate_user=True)
 
     assert_array_equal(ids, original_ids)

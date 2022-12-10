@@ -132,6 +132,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         # invalidate cached norms and squared factors
         self._item_norms = self._user_norms = None
+        self._item_norms_host = self._user_norms_host = None
+        self._YtY = self._XtX = None
 
         Ciu = implicit.gpu.CSRMatrix(Ciu)
         Cui = implicit.gpu.CSRMatrix(Cui)
@@ -139,18 +141,18 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Y = self.item_factors
         loss = None
 
-        self._YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors)
-        self._XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors)
+        _YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors)
+        _XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors)
 
         log.debug("Running %i ALS iterations", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for iteration in range(self.iterations):
                 s = time.time()
-                self.solver.calculate_yty(Y, self._YtY, self.regularization)
-                self.solver.least_squares(Cui, X, self._YtY, Y, self.cg_steps)
+                self.solver.calculate_yty(Y, _YtY, self.regularization)
+                self.solver.least_squares(Cui, X, _YtY, Y, self.cg_steps)
 
-                self.solver.calculate_yty(X, self._XtX, self.regularization)
-                self.solver.least_squares(Ciu, Y, self._XtX, X, self.cg_steps)
+                self.solver.calculate_yty(X, _XtX, self.regularization)
+                self.solver.least_squares(Ciu, Y, _XtX, X, self.cg_steps)
                 progress.update(1)
 
                 if self.calculate_training_loss:
@@ -290,3 +292,17 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         ret.user_factors = self.user_factors.to_numpy() if self.user_factors is not None else None
         ret.item_factors = self.item_factors.to_numpy() if self.item_factors is not None else None
         return ret
+
+    def __getstate__(self):
+        state = super().__getstate__()
+        state["_solver"] = None
+        state["_XtX"] = self._XtX.to_numpy() if self._XtX is not None else None
+        state["_YtY"] = self._YtY.to_numpy() if self._YtY is not None else None
+        return state
+
+    def __setstate__(self, state):
+        super().__setstate__(state)
+        if self._XtX is not None:
+            self._XtX = implicit.gpu.Matrix(self._XtX)
+        if self._YtY is not None:
+            self._YtY = implicit.gpu.Matrix(self._YtY)
