@@ -234,7 +234,7 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
             free(r)
             free(Ap)
 
-def least_squares_ialspp(Cui, X, Y, regularization, num_threads=0, cg_steps=3, block_size=32):
+def least_squares_ialspp(Cui, X, Y, regularization, num_threads=0, cg_steps=3, block_size=128):
     dim = X.shape[1]
     pred = np.zeros_like(Cui.data).astype('float32')
     full_gramian = np.dot(Y.T, Y)
@@ -273,7 +273,7 @@ def _least_squares_ialspp(integral[:] indptr, integral[:] indices, float[:] data
         p = <floating *> malloc(sizeof(floating) * block_size)
         r = <floating *> malloc(sizeof(floating) * block_size)
         try:
-            for u in prange(users, schedule='dynamic', chunksize=32):
+            for u in prange(users, schedule='dynamic', chunksize=16):
                 # start from previous iteration
                 x = &X[u, block_beg]
 

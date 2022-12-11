@@ -1,4 +1,5 @@
 """ Implicit Alternating Least Squares """
+ """ Implicit Alternating Least Squares """
 import functools
 import heapq
 import logging
@@ -412,8 +413,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     def solver(self):
         if self.use_ialspp:
             if self.factors < 512:
-                log.warn("it is highly recommended that ialspp used in higher dimension than or equal to 512")
-            block_size = min(64, self.factors // 2)
+                log.warn(
+                    "it is highly recommended that ialspp used in higher dimension than or equal to 512"
+                )
+            block_size = min(128, self.factors // 4)
             block_size = max(256, block_size)
             solver = _als.least_squares_ialspp
             return functools.partial(solver, cg_steps=self.cg_steps, block_size=block_size)
