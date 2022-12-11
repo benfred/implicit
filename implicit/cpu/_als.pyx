@@ -281,8 +281,7 @@ def _least_squares_ialspp(integral[:] indptr, integral[:] indices, float[:] data
                 if indptr[u] == indptr[u+1]:
                     memset(x, 0, sizeof(floating) * block_size)
                     continue
-                # 여기서 풀어야 하는 것
-                # TODO: Calculating YtCuPu once before the loop begins?
+
                 # calculate residual r = (YtCuPu - (YtCuY.dot(Xu)
                 temp = -1.0
                 symv(b"U", &block_size, &temp, &YtY[0, 0], &block_size, x, &one, &zero, r, &one)

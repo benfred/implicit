@@ -323,6 +323,6 @@ def test_comparison_cg_alspp(use_native):
 
     cg.fit(tr)
     ialspp.fit(tr)
-    cg_pr = ranking_metrics_at_k(cg, tr, vali, 10)["precision"]
-    ialspp_pr = ranking_metrics_at_k(ialspp, tr, vali, 10)["precision"]
-    assert (abs(cg_pr - ialspp_pr) / (1e-6 + max(cg_pr, ialspp_pr))) <= 0.05
+    cg_pr = ranking_metrics_at_k(cg, tr, vali, 30)["precision"]
+    ialspp_pr = ranking_metrics_at_k(ialspp, tr, vali, 30)["precision"]
+    assert (abs(cg_pr - ialspp_pr) / (1e-6 + max(cg_pr, ialspp_pr))) <= 0.1
