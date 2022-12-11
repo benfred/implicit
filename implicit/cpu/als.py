@@ -412,7 +412,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     def solver(self):
         if self.use_ialspp:
             if self.factors < 512:
-                log.warn(
+                log.warning(
                     "it is highly recommended that ialspp used in higher dimension than or equal to 512"
                 )
             block_size = min(128, self.factors // 4)
@@ -592,7 +592,7 @@ def _least_squares_ialspp(
     Cui, pred, X, Y, gramian, regularization, block_beg, cg_steps, block_size
 ):
     YtY = gramian + regularization * np.eye(block_size, dtype=Y.dtype)
-    users, factors = X.shape
+    users = X.shape[0]
     for u in range(users):
         # start from previous iteration
         x = X[u, block_beg : block_beg + block_size]
