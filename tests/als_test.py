@@ -3,12 +3,12 @@ import unittest
 
 import numpy as np
 import pytest
-from implcit.evaluation import ranking_metrics_at_k, train_test_split
 from numpy.testing import assert_array_equal
 from recommender_base_test import RecommenderBaseTestMixin, get_checker_board
 from scipy.sparse import coo_matrix, csr_matrix, random
 
 from implicit.als import AlternatingLeastSquares
+from implicit.evaluation import ranking_metrics_at_k, train_test_split
 from implicit.gpu import HAS_CUDA
 
 # pylint: disable=consider-using-f-string
