@@ -296,7 +296,7 @@ def test_incremental_retrain(use_gpu):
 
 
 @pytest.mark.parametrize("use_native", [True, False] if HAS_CUDA else [False])
-def test_high_dim(use_native):
+def test_comparison_cg_alspp(use_native):
     tr, vali = train_test_split(get_checker_board(64), 0.5)
     cg = AlternatingLeastSquares(
         factors=512,
@@ -306,7 +306,7 @@ def test_high_dim(use_native):
         use_cg=True,
         use_gpu=False,
         use_ialspp=False,
-        iterations=2,
+        iterations=3,
         calculate_training_loss=True,
     )
     ialspp = AlternatingLeastSquares(
@@ -317,7 +317,7 @@ def test_high_dim(use_native):
         use_cg=False,
         use_gpu=False,
         use_ialspp=True,
-        iterations=2,
+        iterations=3,
         calculate_training_loss=True,
     )
 
@@ -325,4 +325,4 @@ def test_high_dim(use_native):
     ialspp.fit(tr)
     cg_pr = ranking_metrics_at_k(cg, tr, vali, 10)["precision"]
     ialspp_pr = ranking_metrics_at_k(ialspp, tr, vali, 10)["precision"]
-    assert (abs(cg_pr - ialspp_pr) / (1e-6 + max(cg_pr, ialspp_pr))) <= 0.03
+    assert (abs(cg_pr - ialspp_pr) / (1e-6 + max(cg_pr, ialspp_pr))) <= 0.05
