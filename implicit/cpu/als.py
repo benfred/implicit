@@ -417,10 +417,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                 )
             block_size = min(128, self.factors // 4)
             block_size = max(256, block_size)
-            solver = _als.least_squares_ialspp
+            solver = _als.least_squares_ialspp if self.use_native else least_squares_ialspp
             return functools.partial(solver, cg_steps=self.cg_steps, block_size=block_size)
         if self.use_cg:
-            solver = _als.least_squares_cg if self.use_native else least_squares_ialspp
+            solver = _als.least_squares_cg if self.use_native else least_squares_cg
             return functools.partial(solver, cg_steps=self.cg_steps)
 
         return _als.least_squares if self.use_native else least_squares
