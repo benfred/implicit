@@ -571,7 +571,7 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
         X[u] = x
 
 
-def least_squares_ialspp(Cui, X, Y, regularization, num_threads=0, cg_steps=3, block_size=32):
+def least_squares_ialspp(Cui, X, Y, regularization, num_threads=0, cg_steps=3, block_size=128):
     factors = X.shape[1]
     pred = np.zeros_like(Cui.data).astype(np.float32)
     full_gramian = np.dot(Y.T, Y)
