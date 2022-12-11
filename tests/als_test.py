@@ -9,7 +9,7 @@ from scipy.sparse import coo_matrix, csr_matrix, random
 
 from implicit.als import AlternatingLeastSquares
 from implicit.gpu import HAS_CUDA
-
+from implcit.evaluation import ranking_metrics_at_k, train_test_split
 # pylint: disable=consider-using-f-string
 
 
