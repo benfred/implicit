@@ -11,6 +11,7 @@ def AlternatingLeastSquares(
     dtype=np.float32,
     use_native=True,
     use_cg=True,
+    use_ialspp=False,
     use_gpu=implicit.gpu.HAS_CUDA,
     iterations=15,
     calculate_training_loss=False,
@@ -42,6 +43,9 @@ def AlternatingLeastSquares(
         Use native extensions to speed up model fitting
     use_cg : bool, optional
         Use a faster Conjugate Gradient solver to calculate factors
+    use_ialspp: bool, optional
+        Use a faster Block Coordinate Descent solver to calculate factors. It works only with factors >= 64.
+        Only CPU version is available now.
     use_gpu : bool, optional
         Fit on the GPU if available, default is to run on GPU only if available
     iterations : int, optional
@@ -72,6 +76,7 @@ def AlternatingLeastSquares(
         dtype,
         use_native,
         use_cg,
+        use_ialspp,
         iterations,
         calculate_training_loss,
         num_threads,
