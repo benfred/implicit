@@ -205,8 +205,13 @@ cpdef leave_k_out_split(
     candidate_items = items[full_candidate_mask]
     candidate_data = data[full_candidate_mask]
 
+    # reindex candidate_user indices so they are properly formatted for the
+    # calculations in _take_tails
+    xsorted = np.argsort(unique_candidate_users)
+    reindexed_candidate_users = np.searchsorted(unique_candidate_users[xsorted], candidate_users)
+
     test_idx, train_idx = _take_tails(
-        candidate_users, K, shuffled=True, return_complement=True
+        reindexed_candidate_users, K, shuffled=True, return_complement=True
     )
 
     # get all remaining remaining candidate user-item pairs, and prepare to append to
