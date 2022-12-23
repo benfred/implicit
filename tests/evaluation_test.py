@@ -18,17 +18,21 @@ def _get_matrix():
     mat = random(100, 100, density=0.1, format="csr", dtype=np.float32)
     return mat.tocoo()
 
+
 def _get_fixed_matrix():
-    mat =  csr_matrix([
-        [1, 0, 0, 0],
-        [3, 2, 1, 0],
-        [1, 0, 0, 0],
-        [0, 1, 0, 0],
-        [0, 0, 1, 0],
-        [0, 1, 1, 1],
-        [0, 0, 1, 0],
-    ])
+    mat = csr_matrix(
+        [
+            [1, 0, 0, 0],
+            [3, 2, 1, 0],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 1, 1, 1],
+            [0, 0, 1, 0],
+        ]
+    )
     return mat.tocoo()
+
 
 def test_train_test_split():
     seed = np.random.randint(1000)
@@ -44,7 +48,7 @@ def test_leave_k_out_returns_correct_shape():
     """
 
     mat = _get_matrix()
-    train, test = leave_k_out_split(mat, K=1) 
+    train, test = leave_k_out_split(mat, K=1)
     assert train.shape == mat.shape
     assert test.shape == mat.shape
 
