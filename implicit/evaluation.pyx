@@ -122,7 +122,8 @@ cdef _take_tails(arr, int n, return_complement=False, shuffled=False):
     idx = arr.argsort()
     sorted_arr = arr[idx]
 
-    end = np.bincount(sorted_arr).cumsum() - 1
+    _, counts = np.unique(sorted_arr, return_counts=True)
+    end = counts.cumsum() - 1
     start = end - n
     ranges = np.linspace(start, end, num=n + 1, dtype=int)[1:]
 
