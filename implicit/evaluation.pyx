@@ -187,11 +187,13 @@ cpdef leave_k_out_split(
 
     # get only users with n + 1 interactions
     candidate_mask = counts > K + 1
+    if sum(candidate_mask) == 0:
+        return ratings.tocsr(), csr_matrix(ratings.shape)
     unique_candidate_users = unique_users[candidate_mask]
 
     # keep a given subset of users _only_ in the training set.
     if train_only_size > 0.0:
-        adjusted_ratio = min(1, (1 - train_only_size) / (unique_candidate_users.shape[0] / unique_users.shape[0]))
+        adjusted_ratio = min(1, (1 - train_only_size) / (unique_candidate_users.shape[0] / (unique_users.shape[0] + 1)))
         train_only_mask = _choose(random_state, len(unique_candidate_users), adjusted_ratio)
         unique_candidate_users = unique_candidate_users[train_only_mask]
 
