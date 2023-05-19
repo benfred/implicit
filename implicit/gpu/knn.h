@@ -2,8 +2,8 @@
 #define IMPLICIT_GPU_KNN_H_
 #include <memory>
 
-#include <rmm/mr/device/device_memory_resource.hpp>
 #include <raft/core/resources.hpp>
+#include <rmm/mr/device/device_memory_resource.hpp>
 
 #include "implicit/gpu/matrix.h"
 
