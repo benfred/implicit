@@ -4,8 +4,6 @@
 #include <cub/device/device_segmented_radix_sort.cuh>
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
-#include <faiss/gpu/utils/BlockSelectKernel.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
 #include <rmm/cuda_stream_view.hpp>
 #include <rmm/mr/device/cuda_memory_resource.hpp>
 #include <rmm/mr/device/device_memory_resource.hpp>
@@ -17,15 +15,14 @@
 #include <thrust/iterator/transform_iterator.h>
 #include <thrust/transform.h>
 
+#include <raft/matrix/select_k.cuh>
+
 #include "implicit/gpu/knn.h"
 #include "implicit/gpu/utils.h"
 
 namespace implicit {
 namespace gpu {
 namespace {
-const static int TILE_GROUPS = 32;
-const static int MAX_TILE_ROWS = 32;
-
 // faiss seems to have issues when distances contain -FLT_MAX, and can return a
 // '-1' in the indices returned, instead of an actual valid row number. When we
 // filter, instead of setting to -FLT_MAX, set to the next smallest valid
@@ -95,7 +92,7 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
         "Must have same number of columns in each matrix for topk");
   }
 
-  rmm::cuda_stream_view stream;
+  auto stream = raft::resource::get_cuda_stream(handle);
 
   size_t available_temp_memory = max_temp_memory;
 
@@ -126,33 +123,15 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
     available_temp_memory -= indices_size;
   }
 
-  // Create temporary memory for storing results. We're padding out temp memory
-  // so that we can tile the columns (break up a single row to multiple top-k
-  // operations) if there aren't many rows in the input
+  // Create temporary memory for storing results.
   size_t temp_distances_cols = items.rows;
-  size_t padding = 0;
-
-  // just in case we're tiling each row, we'l need some temp memory for that too
-  size_t tile_memory =
-      TILE_GROUPS * MAX_TILE_ROWS * k * (sizeof(float) + sizeof(int));
-  bool allow_tiling = tile_memory * 4 < available_temp_memory;
-  if (allow_tiling) {
-    padding = temp_distances_cols % TILE_GROUPS;
-    if (padding) {
-      temp_distances_cols += TILE_GROUPS - padding;
-    }
-    available_temp_memory -= tile_memory;
-  }
 
   // We need 6 copies of the matrix for argsort code - and then some
   // extra memory per SM as well.
+  // TODO: re-examine this
   size_t batch_size =
       (available_temp_memory /
        (sizeof(float) * static_cast<size_t>(temp_distances_cols)));
-  if (k >= GPU_MAX_SELECTION_K) {
-    batch_size *= 0.15;
-  }
-
   batch_size = std::min(batch_size, query.rows);
   batch_size = std::max(batch_size, static_cast<size_t>(1));
 
@@ -160,14 +139,6 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
                                       mr.get());
   Matrix temp_distances(batch_size, temp_distances_cols, temp_mem.data(),
                         false);
-
-  // Fill temp_distances if we're padding so that results don't appear
-  if (padding) {
-    thrust::device_ptr<float> data =
-        thrust::device_pointer_cast(temp_distances.data);
-    thrust::fill(data, data + temp_distances.rows * temp_distances.cols,
-                 -FLT_MAX);
-  }
 
   for (int start = 0; start < query.rows; start += batch_size) {
     auto end = std::min(query.rows, start + batch_size);
@@ -230,11 +201,20 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
           });
     }
 
-    argpartition(temp_distances, k, indices + start * k, distances + start * k,
-                 allow_tiling);
+    auto distance_view = raft::make_device_matrix_view<const float, int64_t>(temp_distances.data,
+      temp_distances.rows, temp_distances.cols);
+
+    raft::matrix::select_k<float, int>(handle,
+      distance_view,
+      std::nullopt,
+      raft::make_device_matrix_view<float, int64_t>(distances + start * k, temp_distances.rows, k),
+      raft::make_device_matrix_view<int, int64_t>(indices + start * k, temp_distances.rows, k),
+      false);
 
     // TODO: callback per batch (show progress etc)
   }
+
+  raft::resource::sync_stream(handle);
 
   if (host_indices) {
     CHECK_CUDA(cudaMemcpy(host_indices, indices, indices_size,
@@ -245,134 +225,6 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
     CHECK_CUDA(cudaMemcpy(host_distances, distances, distances_size,
                           cudaMemcpyDeviceToHost));
   }
-}
-
-void KnnQuery::argpartition(const Matrix &items, int k, int *indices,
-                            float *distances, bool allow_tiling) {
-  k = std::min(k, static_cast<int>(items.cols));
-
-  if (k >= GPU_MAX_SELECTION_K) {
-    rmm::cuda_stream_view stream;
-    rmm::device_uvector<int> temp_indices(items.rows * items.cols, stream,
-                                          mr.get());
-    rmm::device_uvector<float> temp_distances(items.rows * items.cols, stream,
-                                              mr.get());
-    argsort(items, temp_indices.data(), temp_distances.data());
-    copy_columns(temp_distances.data(), items.rows, items.cols, distances, k);
-    copy_columns(temp_indices.data(), items.rows, items.cols, indices, k);
-    return;
-  }
-
-  int rows = items.rows;
-  int cols = items.cols;
-
-  // faiss runBlockSelect isn't the fastest option when there aren't that many
-  // rows, since each row in the query only gets a single thread block to
-  // process it. For queries with a small number of rows, we're going to break
-  // up each row into TILE_GROUPS sub-rows, in one runBlockSelect, and then
-  // combine the results from those in a final select op.
-  bool tile_rows =
-      (rows <= MAX_TILE_ROWS) && (cols % TILE_GROUPS == 0) && (cols >= 65536);
-  if (allow_tiling && tile_rows) {
-    // Run the first block select on the sub-rows
-    int rows_tile = rows * TILE_GROUPS;
-    int cols_tile = cols / TILE_GROUPS;
-
-    rmm::cuda_stream_view stream;
-    rmm::device_uvector<int> temp_indices(rows_tile * k, stream, mr.get());
-    rmm::device_uvector<float> temp_distances(rows_tile * k, stream, mr.get());
-
-    faiss::gpu::DeviceTensor<float, 2, true> items_tensor(
-        const_cast<float *>(items.data), {rows_tile, cols_tile});
-    faiss::gpu::DeviceTensor<float, 2, true> temp_distances_tensor(
-        temp_distances.data(), {rows_tile, k});
-    faiss::gpu::DeviceTensor<int, 2, true> temp_indices_tensor(
-        temp_indices.data(), {rows_tile, k});
-    faiss::gpu::runBlockSelect(items_tensor, temp_distances_tensor,
-                               temp_indices_tensor, true, k, 0);
-
-    // Calculate the true index for all the topk results (since the current
-    // temp_indices will be relative to the split values)
-    auto count = thrust::make_counting_iterator<size_t>(0);
-    int *temp_indices_ptr = temp_indices.data();
-    thrust::for_each(count, count + rows_tile * k, [=] __device__(int i) {
-      int offset = cols_tile * ((i / k) % TILE_GROUPS);
-      temp_indices_ptr[i] += offset;
-    });
-
-    // reshape the temp tensors we calculated in the first pass, and then get
-    // the actual output
-    faiss::gpu::DeviceTensor<float, 2, true> temp_input_distances_tensor(
-        temp_distances.data(), {rows, k * TILE_GROUPS});
-    faiss::gpu::DeviceTensor<int, 2, true> temp_input_indices_tensor(
-        temp_indices.data(), {rows, k * TILE_GROUPS});
-    faiss::gpu::DeviceTensor<float, 2, true> distances_tensor(distances,
-                                                              {rows, k});
-    faiss::gpu::DeviceTensor<int, 2, true> indices_tensor(indices, {rows, k});
-    faiss::gpu::runBlockSelectPair(temp_input_distances_tensor,
-                                   temp_input_indices_tensor, distances_tensor,
-                                   indices_tensor, true, k, 0);
-  } else {
-    faiss::gpu::DeviceTensor<float, 2, true> items_tensor(
-        const_cast<float *>(items.data), {rows, cols});
-    faiss::gpu::DeviceTensor<float, 2, true> distances_tensor(distances,
-                                                              {rows, k});
-    faiss::gpu::DeviceTensor<int, 2, true> indices_tensor(indices, {rows, k});
-    faiss::gpu::runBlockSelect(items_tensor, distances_tensor, indices_tensor,
-                               true, k, 0);
-  }
-
-  CHECK_CUDA(cudaDeviceSynchronize());
-}
-
-void KnnQuery::argsort(const Matrix &items, int *indices, float *distances) {
-  // We can't do this in place https://github.com/NVIDIA/cub/issues/238 ?
-  // so generate temp memory for this
-
-  rmm::cuda_stream_view stream;
-
-  rmm::device_uvector<int> temp_indices(items.rows * items.cols, stream,
-                                        mr.get());
-  thrust::transform(
-      thrust::make_counting_iterator<int>(0),
-      thrust::make_counting_iterator<int>(items.rows * items.cols),
-      thrust::make_constant_iterator<int>(items.cols),
-      thrust::device_pointer_cast(temp_indices.data()), thrust::modulus<int>());
-
-  int cols = items.cols;
-  auto segment_offsets = thrust::make_transform_iterator(
-      thrust::make_counting_iterator<int>(0),
-      [=] __device__(int i) { return i * cols; });
-
-  void *temp_mem = NULL;
-  size_t temp_size = 0;
-
-  // sort the values.
-  if (items.rows > 1) {
-    auto err = cub::DeviceSegmentedRadixSort::SortPairsDescending(
-        NULL, temp_size, items.data, distances, temp_indices.data(), indices,
-        items.rows * items.cols, items.rows, segment_offsets,
-        segment_offsets + 1);
-    CHECK_CUDA(err);
-    temp_mem = mr->allocate(temp_size, stream);
-    err = cub::DeviceSegmentedRadixSort::SortPairsDescending(
-        temp_mem, temp_size, items.data, distances, temp_indices.data(),
-        indices, items.rows * items.cols, items.rows, segment_offsets,
-        segment_offsets + 1);
-    CHECK_CUDA(err);
-  } else {
-    size_t temp_size = 0;
-    auto err = cub::DeviceRadixSort::SortPairsDescending(
-        NULL, temp_size, items.data, distances, temp_indices.data(), indices,
-        items.cols);
-    CHECK_CUDA(err);
-    temp_mem = mr->allocate(temp_size, stream);
-    err = cub::DeviceRadixSort::SortPairsDescending(
-        temp_mem, temp_size, items.data, distances, temp_indices.data(),
-        indices, items.cols);
-    CHECK_CUDA(err);
-  }
-  mr->deallocate(temp_mem, temp_size, stream);
 }
 
 KnnQuery::~KnnQuery() {

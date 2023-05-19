@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <rmm/mr/device/device_memory_resource.hpp>
+#include <raft/core/resources.hpp>
 
 #include "implicit/gpu/matrix.h"
 
@@ -21,12 +22,9 @@ public:
             const COOMatrix *query_filter = NULL,
             Vector<int> *item_filter = NULL);
 
-  void argpartition(const Matrix &items, int k, int *indices, float *distances,
-                    bool allow_tiling);
-  void argsort(const Matrix &items, int *indices, float *distances);
-
 protected:
   std::unique_ptr<rmm::mr::device_memory_resource> mr;
+  raft::resources handle;
   size_t max_temp_memory;
 };
 } // namespace gpu
