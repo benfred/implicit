@@ -90,9 +90,9 @@ def _batch_call(func, ids, *args, N=10, **kwargs):
     for i, idx in enumerate(ids):
         current_kwargs = kwargs
         if user_items is not None:
-            current_kwargs = dict(user_items=user_items[i], **kwargs)
+            current_kwargs = {"user_items": user_items[i], **kwargs}
         elif item_users is not None:
-            current_kwargs = dict(item_users=item_users[i], **kwargs)
+            current_kwargs = {"item_users": item_users[i], **kwargs}
 
         batch_ids, batch_scores = func(idx, *args, N=N, **current_kwargs)
 

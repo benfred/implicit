@@ -444,21 +444,21 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         return ret
 
     def save(self, fileobj_or_path):
-        args = dict(
-            user_factors=self.user_factors,
-            item_factors=self.item_factors,
-            regularization=self.regularization,
-            factors=self.factors,
-            num_threads=self.num_threads,
-            iterations=self.iterations,
-            use_native=self.use_native,
-            use_cg=self.use_cg,
-            cg_steps=self.cg_steps,
-            calculate_training_loss=self.calculate_training_loss,
-            dtype=self.dtype.name,
-            random_state=self.random_state,
-            alpha=self.alpha,
-        )
+        args = {
+            "user_factors": self.user_factors,
+            "item_factors": self.item_factors,
+            "regularization": self.regularization,
+            "factors": self.factors,
+            "num_threads": self.num_threads,
+            "iterations": self.iterations,
+            "use_native": self.use_native,
+            "use_cg": self.use_cg,
+            "cg_steps": self.cg_steps,
+            "calculate_training_loss": self.calculate_training_loss,
+            "dtype": self.dtype.name,
+            "random_state": self.random_state,
+            "alpha": self.alpha,
+        }
         # filter out 'None' valued args, since we can't go np.load on
         # them without using pickle
         args = {k: v for k, v in args.items() if v is not None}

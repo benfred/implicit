@@ -158,10 +158,12 @@ class ItemItemRecommender(RecommenderBase):
             self.scorer = None
 
     def save(self, fileobj_or_path):
-        args = dict(K=self.K)
+        args = {"K": self.K}
         m = self.similarity
         if m is not None:
-            args.update(dict(shape=m.shape, data=m.data, indptr=m.indptr, indices=m.indices))
+            args.update(
+                {"shape": m.shape, "data": m.data, "indptr": m.indptr, "indices": m.indices}
+            )
         np.savez(fileobj_or_path, **args)
 
     @classmethod
