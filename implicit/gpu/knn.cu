@@ -204,13 +204,13 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
     auto distance_view = raft::make_device_matrix_view<const float, int64_t>(
         temp_distances.data, temp_distances.rows, temp_distances.cols);
 
-    auto current_k  = std::min(k, static_cast<int>(temp_distances.cols));
+    auto current_k = std::min(k, static_cast<int>(temp_distances.cols));
     raft::matrix::select_k<float, int>(
         handle, distance_view, std::nullopt,
-        raft::make_device_matrix_view<float, int64_t>(distances + start * k,
-                                                      temp_distances.rows, current_k),
-        raft::make_device_matrix_view<int, int64_t>(indices + start * k,
-                                                    temp_distances.rows, current_k),
+        raft::make_device_matrix_view<float, int64_t>(
+            distances + start * k, temp_distances.rows, current_k),
+        raft::make_device_matrix_view<int, int64_t>(
+            indices + start * k, temp_distances.rows, current_k),
         false);
 
     // TODO: callback per batch (show progress etc)
