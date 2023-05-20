@@ -427,7 +427,6 @@ class RecommenderBaseTestMixin:
         pickle.loads(pickle.dumps(model))
 
     def test_invalid_user_items(self):
-
         user_items = get_checker_board(50)
         model = self._get_model()
         model.fit(user_items, show_progress=False)
