@@ -38,6 +38,10 @@ def _check_knn_queries(items, queries, k=5, max_temp_memory=500_000_000):
         implicit.gpu._cuda.Matrix(items), implicit.gpu._cuda.Matrix(queries), k
     )
 
+    order = np.argsort(-distances, kind="stable")
+    ids = np.take_along_axis(ids, order, axis=1)
+    distances = np.take_along_axis(distances, order, axis=1)
+
     # compute on the cpu
     batch = queries.dot(items.T)
     exact_ids = np.flip(np.argsort(batch)[:, -k:], axis=1)
