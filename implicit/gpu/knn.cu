@@ -16,6 +16,7 @@
 
 #include <raft/core/resource/cublas_handle.hpp>
 #include <raft/core/resource/cuda_stream.hpp>
+#include <raft/core/resource/thrust_policy.hpp>
 #include <raft/matrix/select_k.cuh>
 
 #include "implicit/gpu/knn.h"
