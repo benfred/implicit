@@ -118,17 +118,15 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
   // Create temporary memory for storing results.
   size_t temp_distances_cols = items.rows;
 
-  size_t batch_size =
-      (available_temp_memory /
-       (sizeof(float) * static_cast<size_t>(items.rows)));
+  size_t batch_size = (available_temp_memory /
+                       (sizeof(float) * static_cast<size_t>(items.rows)));
 
   batch_size = std::min(batch_size, query.rows);
   batch_size = std::max(batch_size, static_cast<size_t>(1));
 
   rmm::device_uvector<float> temp_mem(batch_size * items.rows, stream,
                                       mr.get());
-  Matrix temp_distances(batch_size, items.rows, temp_mem.data(),
-                        false);
+  Matrix temp_distances(batch_size, items.rows, temp_mem.data(), false);
 
   for (int start = 0; start < query.rows; start += batch_size) {
     auto end = std::min(query.rows, start + batch_size);
@@ -246,12 +244,14 @@ void KnnQuery::argsort(const int *input_indices, const float *input_distances,
   if (rows > 1) {
     auto err = cub::DeviceSegmentedRadixSort::SortPairsDescending(
         NULL, temp_size, input_distances, distances, input_indices, indices,
-        rows * cols, rows, segment_offsets, segment_offsets + 1, 0, sizeof(float) * 8, stream);
+        rows * cols, rows, segment_offsets, segment_offsets + 1, 0,
+        sizeof(float) * 8, stream);
     CHECK_CUDA(err);
     temp_mem = mr->allocate(temp_size, stream);
     err = cub::DeviceSegmentedRadixSort::SortPairsDescending(
         temp_mem, temp_size, input_distances, distances, input_indices, indices,
-        rows * cols, rows, segment_offsets, segment_offsets + 1, 0, sizeof(float) * 8, stream);
+        rows * cols, rows, segment_offsets, segment_offsets + 1, 0,
+        sizeof(float) * 8, stream);
     CHECK_CUDA(err);
   } else {
     size_t temp_size = 0;
