@@ -2,7 +2,6 @@
 
 #include <cub/device/device_radix_sort.cuh>
 #include <cub/device/device_segmented_radix_sort.cuh>
-#include <cublas_v2.h>
 #include <cuda_runtime.h>
 #include <rmm/cuda_stream_view.hpp>
 #include <rmm/mr/device/cuda_memory_resource.hpp>
@@ -15,6 +14,8 @@
 #include <thrust/iterator/transform_iterator.h>
 #include <thrust/transform.h>
 
+#include <raft/core/resource/cublas_handle.hpp>
+#include <raft/core/resource/cuda_stream.hpp>
 #include <raft/matrix/select_k.cuh>
 
 #include "implicit/gpu/knn.h"
@@ -50,17 +51,6 @@ bool is_host_memory(void *address) {
 #endif
 }
 
-template <typename T>
-void copy_columns(const T *input, int rows, int cols, T *output,
-                  int output_cols) {
-  auto count = thrust::make_counting_iterator<int>(0);
-  thrust::for_each(count, count + (rows * output_cols), [=] __device__(int i) {
-    int col = i % output_cols;
-    int row = i / output_cols;
-    output[col + row * output_cols] = input[col + row * cols];
-  });
-}
-
 KnnQuery::KnnQuery(size_t temp_memory) {
   if (!temp_memory) {
     // use half of free GPU memory, limited to 8GB max
@@ -80,8 +70,6 @@ KnnQuery::KnnQuery(size_t temp_memory) {
   static rmm::mr::cuda_memory_resource upstream_mr;
   mr.reset(new rmm::mr::pool_memory_resource<rmm::mr::cuda_memory_resource>(
       &upstream_mr, max_temp_memory, max_temp_memory));
-
-  CHECK_CUBLAS(cublasCreate(&blas_handle));
 }
 
 void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
@@ -149,18 +137,20 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
     // matrix multiple the items by the batch, store in distances
     float alpha = 1.0, beta = 0.;
 
+    auto blas_handle = raft::resource::get_cublas_handle(handle);
     CHECK_CUBLAS(cublasSgemm(blas_handle, CUBLAS_OP_T, CUBLAS_OP_N, items.rows,
                              batch.rows, items.cols, &alpha, items.data,
                              items.cols, batch.data, batch.cols, &beta,
                              temp_distances.data, temp_distances.cols));
 
+    auto thrust_policy = raft::resource::get_thrust_policy(handle);
     // If we have norms (cosine distance etc) normalize the results here
     if (item_norms != NULL) {
       auto count = thrust::make_counting_iterator<size_t>(0);
       int cols = temp_distances.cols;
       int item_norm_cols = items.rows;
       float *data = temp_distances.data;
-      thrust::for_each(count,
+      thrust::for_each(thrust_policy, count,
                        count + (static_cast<size_t>(temp_distances.rows) *
                                 static_cast<size_t>(temp_distances.cols)),
                        [=] __device__(size_t i) {
@@ -178,7 +168,8 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
       int items_size = item_filter->size;
       int cols = temp_distances.cols;
       float filter_distance = FLT_FILTER_DISTANCE;
-      thrust::for_each(count, count + items_size * temp_distances.rows,
+      thrust::for_each(thrust_policy, count,
+                       count + items_size * temp_distances.rows,
                        [=] __device__(size_t i) {
                          int col = items[i % items_size];
                          int row = i / items_size;
@@ -193,12 +184,13 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
       float *data = temp_distances.data;
       int items = temp_distances.cols;
       float filter_distance = FLT_FILTER_DISTANCE;
-      thrust::for_each(
-          count, count + query_filter->nonzeros, [=] __device__(int i) {
-            if ((row[i] >= start) && (row[i] < end)) {
-              data[(row[i] - start) * items + col[i]] = filter_distance;
-            }
-          });
+      thrust::for_each(thrust_policy, count, count + query_filter->nonzeros,
+                       [=] __device__(int i) {
+                         if ((row[i] >= start) && (row[i] < end)) {
+                           data[(row[i] - start) * items + col[i]] =
+                               filter_distance;
+                         }
+                       });
     }
 
     auto distance_view = raft::make_device_matrix_view<const float, int64_t>(
@@ -229,10 +221,7 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
   }
 }
 
-KnnQuery::~KnnQuery() {
-  // TODO: don't check this, there isn't anything we can do here anyways
-  CHECK_CUBLAS(cublasDestroy(blas_handle));
-}
+KnnQuery::~KnnQuery() {}
 
 } // namespace gpu
 } // namespace implicit

@@ -7,15 +7,12 @@
 
 #include "implicit/gpu/matrix.h"
 
-struct cublasContext;
-
 namespace implicit {
 namespace gpu {
 class KnnQuery {
 public:
   KnnQuery(size_t temp_memory = 0);
   ~KnnQuery();
-  cublasContext *blas_handle;
 
   void topk(const Matrix &items, const Matrix &query, int k, int *indices,
             float *distances, float *item_norms = NULL,
