@@ -111,7 +111,7 @@ def calculate_similar_artists(output_filename, model_name="als"):
                     artist = artists[artistid]
                     for other, score in zip(ids[i], scores[i]):
                         o.write(f"{artist}\t{artists[other]}\t{score}\n")
-                progress.update(batch_size)
+                progress.update(len(batch))
 
     logging.debug("generated similar artists in %0.2fs", time.time() - start)
 
@@ -158,7 +158,7 @@ def calculate_recommendations(output_filename, model_name="als"):
                     username = users[userid]
                     for other, score in zip(ids[i], scores[i]):
                         o.write(f"{username}\t{artists[other]}\t{score}\n")
-                progress.update(batch_size)
+                progress.update(len(batch))
     logging.debug("generated recommendations in %0.2fs", time.time() - start)
 
 
