@@ -88,14 +88,18 @@ def calculate_similar_movies(output_filename, model_name="als", min_rating=4.0, 
     log.debug("calculating similar movies")
     with tqdm.tqdm(total=len(to_generate)) as progress:
         with codecs.open(output_filename, "w", "utf8") as o:
-            for movieid in to_generate:
-                # if this movie has no ratings, skip over (for instance 'Graffiti Bridge' has
-                # no ratings > 4 meaning we've filtered out all data for it.
-                if ratings.indptr[movieid] != ratings.indptr[movieid + 1]:
-                    title = titles[movieid]
-                    for other, score in zip(*model.similar_items(movieid, 11)):
-                        o.write(f"{title}\t{titles[other]}\t{score}\n")
-                progress.update(1)
+            batch_size = 1000
+            for startidx in range(0, len(to_generate), batch_size):
+                batch = to_generate[startidx : startidx + batch_size]
+                ids, scores = model.similar_items(batch, 11)
+                for i, movieid in enumerate(batch):
+                    # if this movie has no ratings, skip over (for instance 'Graffiti Bridge' has
+                    # no ratings > 4 meaning we've filtered out all data for it.
+                    if ratings.indptr[movieid] != ratings.indptr[movieid + 1]:
+                        title = titles[movieid]
+                        for other, score in zip(ids[i], scores[i]):
+                            o.write(f"{title}\t{titles[other]}\t{score}\n")
+                progress.update(len(batch))
 
 
 if __name__ == "__main__":
