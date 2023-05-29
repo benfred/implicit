@@ -7,10 +7,6 @@ from skbuild import setup
 from skbuild.cmaker import get_cmake_version
 from skbuild.exceptions import SKBuildError
 
-try:
-    import numpy.distutils  # noqa
-except ImportError:
-    pass
 
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
