@@ -1,21 +1,16 @@
 import io
 import os.path
 
-from packaging.version import LegacyVersion
+from packaging.version import Version
 from setuptools import find_packages
 from skbuild import setup
 from skbuild.cmaker import get_cmake_version
 from skbuild.exceptions import SKBuildError
 
-try:
-    import numpy.distutils  # noqa
-except ImportError:
-    pass
-
 # Add CMake as a build requirement if cmake is not installed or is too low a version
 setup_requires = []
 try:
-    if LegacyVersion(get_cmake_version()) < LegacyVersion("3.17"):
+    if Version(get_cmake_version()) < Version("3.17"):
         setup_requires.append("cmake>=3.17")
 except SKBuildError:
     setup_requires.append("cmake>=3.17")
@@ -36,7 +31,7 @@ def exclude_non_implicit_cmake_files(cmake_manifest):
 
 setup(
     name="implicit",
-    version="0.5.2",
+    version="0.6.2",
     description="Collaborative Filtering for Implicit Feedback Datasets",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",

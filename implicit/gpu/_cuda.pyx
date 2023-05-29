@@ -180,7 +180,7 @@ cdef class Matrix(object):
         ret.c_matrix = new CppMatrix(self.c_matrix.astype(itemsize))
         return ret
 
-    def resize(self, int rows, int cols):
+    def resize(self, size_t rows, size_t cols):
         self.c_matrix.resize(rows, cols)
 
     def to_numpy(self):

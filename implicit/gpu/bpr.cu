@@ -16,7 +16,7 @@ namespace gpu {
 
 __global__ void bpr_update_kernel(int samples, unsigned int *random_likes,
                                   unsigned int *random_dislikes, int *itemids,
-                                  int *userids, int *indptr, int factors,
+                                  int *userids, int *indptr, size_t factors,
                                   float *X, float *Y, float learning_rate,
                                   float reg, bool verify_negative_samples,
                                   int *stats) {

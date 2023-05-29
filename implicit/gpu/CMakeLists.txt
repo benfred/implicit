@@ -14,7 +14,7 @@ else()
     add_cython_target(_cuda CXX)
 
     # use rapids-cmake to install dependencies
-    file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-22.02/RAPIDS.cmake
+    file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-23.04/RAPIDS.cmake
         ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
     include(${CMAKE_BINARY_DIR}/RAPIDS.cmake)
     include(rapids-cmake)
@@ -29,17 +29,18 @@ else()
     include(${rapids-cmake-dir}/cpm/rmm.cmake)
     rapids_cpm_rmm(BUILD_EXPORT_SET implicit-exports INSTALL_EXPORT_SET implicit-exports)
 
-    # get faiss from git
-    rapids_cpm_find(FAISS 1.7.2
+    # get raft
+    # note: we're using RAFT in header only mode right now - mainly to reduce binary
+    # size of the compiled wheels
+    rapids_cpm_find(raft 23.06
         CPM_ARGS
-          GIT_REPOSITORY  https://github.com/facebookresearch/faiss.git
-          VERSION         1.7.2
+          GIT_REPOSITORY  https://github.com/rapidsai/raft.git
+          GIT_TAG         branch-23.06
           DOWNLOAD_ONLY   YES
     )
-    FILE(GLOB FAISS_BLOCK_SELECT ${FAISS_SOURCE_DIR}/faiss/gpu/utils/blockselect/*.cu)
-    include_directories(${FAISS_SOURCE_DIR})
+    include_directories(${raft_SOURCE_DIR}/cpp/include)
 
-    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda -Wno-deprecated-gpu-targets -Xfatbin=-compress-all")
+    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda -Wno-deprecated-gpu-targets -Xfatbin=-compress-all --expt-relaxed-constexpr")
 
     add_library(_cuda MODULE ${_cuda}
         als.cu
@@ -47,15 +48,6 @@ else()
         matrix.cu
         random.cu
         knn.cu
-        # we need a limited subset of faiss for the blockselect code. rather than compile all of
-        # faiss, just include the minimal subset here
-        ${FAISS_BLOCK_SELECT}
-        ${FAISS_SOURCE_DIR}/faiss/gpu/utils/BlockSelectFloat.cu
-        ${FAISS_SOURCE_DIR}/faiss/gpu/utils/DeviceUtils.cu
-        ${FAISS_SOURCE_DIR}/faiss/gpu/GpuResources.cpp
-
-        # Faiss seemed to remove their half support blockselect code in https://github.com/facebookresearch/faiss/pull/1817/files
-        faiss_block_select_half.cu
     )
 
     python_extension_module(_cuda)
@@ -65,9 +57,9 @@ else()
         set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES $ENV{IMPLICIT_CUDA_ARCH})
     else()
         if (${CUDAToolkit_VERSION} VERSION_LESS "11.1.0")
-            set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "37;50;70;60;80")
+            set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "60;70;80")
         else()
-            set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "37;50;70;60;80;86")
+            set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "60;70;80;86")
         endif()
     endif()
     target_link_libraries(_cuda CUDA::cublas CUDA::curand rmm::rmm)

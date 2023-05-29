@@ -27,10 +27,16 @@ class ItemItemRecommender(RecommenderBase):
         self.num_threads = num_threads
         self.scorer = None
 
-    def fit(self, weighted, show_progress=True):
+    def fit(self, weighted, show_progress=True, callback=None):
         """Computes and stores the similarity matrix"""
+        if callback:
+            raise NotImplementedError("callback isn't support on ItemItemRecommender.fit")
+
         self.similarity = all_pairs_knn(
-            weighted, self.K, show_progress=show_progress, num_threads=self.num_threads
+            weighted,
+            self.K,
+            show_progress=show_progress,
+            num_threads=self.num_threads,
         ).tocsr()
         self.scorer = NearestNeighboursScorer(self.similarity)
 
@@ -75,7 +81,6 @@ class ItemItemRecommender(RecommenderBase):
                 raise IndexError("Some of selected itemids are not in the model")
 
         ids, scores = self.scorer.recommend(
-            userid,
             user_items.indptr,
             user_items.indices,
             user_items.data,
@@ -153,10 +158,12 @@ class ItemItemRecommender(RecommenderBase):
             self.scorer = None
 
     def save(self, fileobj_or_path):
-        args = dict(K=self.K)
+        args = {"K": self.K}
         m = self.similarity
         if m is not None:
-            args.update(dict(shape=m.shape, data=m.data, indptr=m.indptr, indices=m.indices))
+            args.update(
+                {"shape": m.shape, "data": m.data, "indptr": m.indptr, "indices": m.indices}
+            )
         np.savez(fileobj_or_path, **args)
 
     @classmethod
@@ -180,17 +187,17 @@ class ItemItemRecommender(RecommenderBase):
 class CosineRecommender(ItemItemRecommender):
     """An Item-Item Recommender on Cosine distances between items"""
 
-    def fit(self, counts, show_progress=True):
+    def fit(self, counts, show_progress=True, callback=None):
         # cosine distance is just the dot-product of a normalized matrix
-        ItemItemRecommender.fit(self, normalize(counts.T).T, show_progress)
+        ItemItemRecommender.fit(self, normalize(counts.T).T, show_progress, callback)
 
 
 class TFIDFRecommender(ItemItemRecommender):
     """An Item-Item Recommender on TF-IDF distances between items"""
 
-    def fit(self, counts, show_progress=True):
+    def fit(self, counts, show_progress=True, callback=None):
         weighted = normalize(tfidf_weight(counts.T)).T
-        ItemItemRecommender.fit(self, weighted, show_progress)
+        ItemItemRecommender.fit(self, weighted, show_progress, callback)
 
 
 class BM25Recommender(ItemItemRecommender):
@@ -201,9 +208,9 @@ class BM25Recommender(ItemItemRecommender):
         self.K1 = K1
         self.B = B
 
-    def fit(self, counts, show_progress=True):
+    def fit(self, counts, show_progress=True, callback=None):
         weighted = bm25_weight(counts.T, self.K1, self.B).T
-        ItemItemRecommender.fit(self, weighted, show_progress)
+        ItemItemRecommender.fit(self, weighted, show_progress, callback)
 
 
 def tfidf_weight(X):

@@ -76,7 +76,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self._YtY = None
         self._XtX = None
 
-    def fit(self, user_items, show_progress=True):
+    def fit(self, user_items, show_progress=True, callback=None):
         """Factorizes the user_items matrix.
 
         After calling this method, the members 'user_factors' and 'item_factors' will be
@@ -100,6 +100,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             and the value is the confidence that the user liked the item.
         show_progress : bool, optional
             Whether to show a progress bar during fitting
+        callback: Callable, optional
+            Callable function on each epoch with such arguments as epoch, elapsed time and progress
         """
         # initialize the random state
         random_state = check_random_state(self.random_state)
@@ -135,6 +137,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         # invalidate cached norms and squared factors
         self._item_norms = self._user_norms = None
+        self._item_norms_host = self._user_norms_host = None
+        self._YtY = self._XtX = None
 
         Ciu = implicit.gpu.CSRMatrix(Ciu)
         Cui = implicit.gpu.CSRMatrix(Cui)
@@ -142,20 +146,18 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Y = self.item_factors
         loss = None
 
-        self._YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors).astype(self._itemsize)
-        self._XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors).astype(self._itemsize)
-
-        solver = self.solver
+        _YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors).astype(self._itemsize)
+        _XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors).astype(self._itemsize)
 
         log.debug("Running %i ALS iterations", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for iteration in range(self.iterations):
                 s = time.time()
-                solver.calculate_yty(Y, self._YtY, self.regularization)
-                solver.least_squares(Cui, X, self._YtY, Y, self.cg_steps)
+                self.solver.calculate_yty(Y, _YtY, self.regularization)
+                self.solver.least_squares(Cui, X, _YtY, Y, self.cg_steps)
 
-                solver.calculate_yty(X, self._XtX, self.regularization)
-                solver.least_squares(Ciu, Y, self._XtX, X, self.cg_steps)
+                self.solver.calculate_yty(X, _XtX, self.regularization)
+                self.solver.least_squares(Ciu, Y, _XtX, X, self.cg_steps)
                 progress.update(1)
 
                 if self.calculate_training_loss:
@@ -165,8 +167,11 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
                     if not show_progress:
                         log.info("loss %.4f", loss)
 
-                if self.fit_callback:
-                    self.fit_callback(iteration, time.time() - s, loss)
+                # Backward compatibility
+                if not callback:
+                    callback = self.fit_callback
+                if callback:
+                    callback(iteration, time.time() - s, loss)
 
         if self.calculate_training_loss:
             log.info("Final training loss %.4f", loss)
@@ -268,14 +273,14 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
     @property
     def YtY(self):
         if self._YtY is None:
-            self._YtY = implicit.gpu.Matrix(self.factors, self.factors)
+            self._YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors)
             self.solver.calculate_yty(self.item_factors, self._YtY, self.regularization)
         return self._YtY
 
     @property
     def XtX(self):
         if self._XtX is None:
-            self._XtX = implicit.gpu.Matrix(self.factors, self.factors)
+            self._XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors)
             self.solver.calculate_yty(self.user_factors, self._XtX, self.regularization)
         return self._XtX
 
@@ -292,3 +297,17 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         ret.user_factors = self.user_factors.to_numpy() if self.user_factors is not None else None
         ret.item_factors = self.item_factors.to_numpy() if self.item_factors is not None else None
         return ret
+
+    def __getstate__(self):
+        state = super().__getstate__()
+        state["_solver"] = None
+        state["_XtX"] = self._XtX.to_numpy() if self._XtX is not None else None
+        state["_YtY"] = self._YtY.to_numpy() if self._YtY is not None else None
+        return state
+
+    def __setstate__(self, state):
+        super().__setstate__(state)
+        if self._XtX is not None:
+            self._XtX = implicit.gpu.Matrix(self._XtX)
+        if self._YtY is not None:
+            self._YtY = implicit.gpu.Matrix(self._YtY)

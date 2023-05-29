@@ -11,13 +11,15 @@
 namespace implicit {
 namespace gpu {
 template <typename T>
-Vector<T>::Vector(int size, const T *host_data)
+Vector<T>::Vector(size_t size, const T *host_data)
     : size(size),
       storage(new rmm::device_uvector<T>(size, rmm::cuda_stream_view())),
       data(storage->data()) {
   if (host_data) {
     CHECK_CUDA(
         cudaMemcpy(data, host_data, size * sizeof(T), cudaMemcpyHostToDevice));
+  } else {
+    CHECK_CUDA(cudaMemset(data, 0, size * sizeof(T)));
   }
 }
 
@@ -29,7 +31,7 @@ template struct Vector<char>;
 template struct Vector<int>;
 template struct Vector<float>;
 
-Matrix::Matrix(const Matrix &other, int rowid)
+Matrix::Matrix(const Matrix &other, size_t rowid)
     : rows(1), cols(other.cols), data(other.at(rowid * other.cols)),
       storage(other.storage), itemsize(other.itemsize) {
   if (rowid >= other.rows) {
@@ -37,7 +39,7 @@ Matrix::Matrix(const Matrix &other, int rowid)
   }
 }
 
-Matrix::Matrix(const Matrix &other, int start_rowid, int end_rowid)
+Matrix::Matrix(const Matrix &other, size_t start_rowid, size_t end_rowid)
     : rows(end_rowid - start_rowid), cols(other.cols),
       data(other.at(start_rowid * other.cols)), storage(other.storage),
       itemsize(other.itemsize) {
@@ -50,13 +52,13 @@ Matrix::Matrix(const Matrix &other, int start_rowid, int end_rowid)
 }
 
 template <typename T>
-void copy_rowids(const T *input, const int *rowids, int rows, int cols,
+void copy_rowids(const T *input, const int *rowids, size_t rows, size_t cols,
                  T *output) {
   // copy rows over
-  auto count = thrust::make_counting_iterator<int>(0);
-  thrust::for_each(count, count + (rows * cols), [=] __device__(int i) {
-    int col = i % cols;
-    int row = rowids[i / cols];
+  auto count = thrust::make_counting_iterator<size_t>(0);
+  thrust::for_each(count, count + (rows * cols), [=] __device__(size_t i) {
+    size_t col = i % cols;
+    size_t row = rowids[i / cols];
     output[i] = input[col + row * cols];
   });
 }
@@ -75,7 +77,7 @@ Matrix::Matrix(const Matrix &other, const Vector<int> &rowids)
   }
 }
 
-Matrix::Matrix(int rows, int cols, void *host_data, bool allocate,
+Matrix::Matrix(size_t rows, size_t cols, void *host_data, bool allocate,
                size_t itemsize)
     : rows(rows), cols(cols), itemsize(itemsize) {
   if (allocate) {
@@ -85,13 +87,15 @@ Matrix::Matrix(int rows, int cols, void *host_data, bool allocate,
     if (host_data) {
       CHECK_CUDA(cudaMemcpy(data, host_data, rows * cols * itemsize,
                             cudaMemcpyHostToDevice));
+    } else {
+      CHECK_CUDA(cudaMemset(data, 0, rows * cols * itemsize));
     }
   } else {
     data = host_data;
   }
 }
 
-void Matrix::resize(int rows, int cols) {
+void Matrix::resize(size_t rows, size_t cols) {
   if (cols != this->cols) {
     throw std::logic_error(
         "changing number of columns in Matrix::resize is not implemented yet");
@@ -105,7 +109,9 @@ void Matrix::resize(int rows, int cols) {
   CHECK_CUDA(cudaMemcpy(new_storage->data(), data,
                         this->rows * this->cols * itemsize,
                         cudaMemcpyDeviceToDevice));
-  int extra_rows = rows - this->rows;
+  size_t extra_rows = rows - this->rows;
+  CHECK_CUDA(cudaMemset(new_storage->data() + this->rows * this->cols, 0,
+                        extra_rows * cols * itemsize));
   storage.reset(new_storage);
   data = storage->data();
   CHECK_CUDA(
@@ -121,8 +127,8 @@ void Matrix::assign_rows(const Vector<int> &rowids, const Matrix &other) {
         "column dimensionality mismatch in Matrix::assign_rows");
   }
 
-  auto count = thrust::make_counting_iterator<int>(0);
-  int other_cols = other.cols, other_rows = other.rows;
+  auto count = thrust::make_counting_iterator<size_t>(0);
+  size_t other_cols = other.cols, other_rows = other.rows;
 
   int *rowids_data = rowids.data;
 
@@ -130,10 +136,10 @@ void Matrix::assign_rows(const Vector<int> &rowids, const Matrix &other) {
   float *self_data = *this;
 
   thrust::for_each(count, count + (other_rows * other_cols),
-                   [=] __device__(int i) {
-                     int col = i % other_cols;
-                     int row = rowids_data[i / other_cols];
-                     int idx = col + row * other_cols;
+                   [=] __device__(size_t i) {
+                     size_t col = i % other_cols;
+                     size_t row = rowids_data[i / other_cols];
+                     size_t idx = col + row * other_cols;
                      self_data[idx] = other_data[i];
                    });
 }
@@ -168,7 +174,7 @@ Matrix Matrix::astype(size_t itemsize) const {
 }
 
 template <typename T>
-__global__ void calculate_norms_kernel(const T *input, int rows, int cols,
+__global__ void calculate_norms_kernel(const T *input, size_t rows, size_t cols,
                                        T *output) {
   static __shared__ float shared[32];
   for (int i = blockIdx.x; i < rows; i += gridDim.x) {
@@ -220,17 +226,23 @@ CSRMatrix::CSRMatrix(int rows, int cols, int nonzeros, const int *indptr_,
                      const int *indices_, const float *data_)
     : rows(rows), cols(cols), nonzeros(nonzeros) {
 
-  CHECK_CUDA(cudaMalloc(&indptr, (rows + 1) * sizeof(int)));
+  CHECK_CUDA(cudaMallocManaged(&indptr, (rows + 1) * sizeof(int)));
   CHECK_CUDA(cudaMemcpy(indptr, indptr_, (rows + 1) * sizeof(int),
                         cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMemAdvise(indptr, (rows + 1) * sizeof(int),
+                           cudaMemAdviseSetReadMostly, 0));
 
-  CHECK_CUDA(cudaMalloc(&indices, nonzeros * sizeof(int)));
+  CHECK_CUDA(cudaMallocManaged(&indices, nonzeros * sizeof(int)));
   CHECK_CUDA(cudaMemcpy(indices, indices_, nonzeros * sizeof(int),
                         cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMemAdvise(indices, nonzeros * sizeof(int),
+                           cudaMemAdviseSetReadMostly, 0));
 
-  CHECK_CUDA(cudaMalloc(&data, nonzeros * sizeof(float)));
-  CHECK_CUDA(
-      cudaMemcpy(data, data_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMallocManaged(&data, nonzeros * sizeof(float)));
+  CHECK_CUDA(cudaMemcpy(data, data_, nonzeros * sizeof(float),
+                        cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMemAdvise(data, nonzeros * sizeof(float),
+                           cudaMemAdviseSetReadMostly, 0));
 }
 
 CSRMatrix::~CSRMatrix() {
@@ -243,15 +255,15 @@ COOMatrix::COOMatrix(int rows, int cols, int nonzeros, const int *row_,
                      const int *col_, const float *data_)
     : rows(rows), cols(cols), nonzeros(nonzeros) {
 
-  CHECK_CUDA(cudaMalloc(&row, nonzeros * sizeof(int)));
+  CHECK_CUDA(cudaMallocManaged(&row, nonzeros * sizeof(int)));
   CHECK_CUDA(
       cudaMemcpy(row, row_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
 
-  CHECK_CUDA(cudaMalloc(&col, nonzeros * sizeof(int)));
+  CHECK_CUDA(cudaMallocManaged(&col, nonzeros * sizeof(int)));
   CHECK_CUDA(
       cudaMemcpy(col, col_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
 
-  CHECK_CUDA(cudaMalloc(&data, nonzeros * sizeof(float)));
+  CHECK_CUDA(cudaMallocManaged(&data, nonzeros * sizeof(float)));
   CHECK_CUDA(
       cudaMemcpy(data, data_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
 }

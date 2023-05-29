@@ -10,11 +10,11 @@ namespace implicit {
 namespace gpu {
 // Thin wrappers of CUDA memory: copies to from host, frees in destructor etc
 template <typename T> struct Vector {
-  Vector(int size, const T *data = NULL);
+  Vector(size_t size, const T *data = NULL);
   void to_host(T *output) const;
 
   std::shared_ptr<rmm::device_uvector<T>> storage;
-  int size;
+  size_t size;
   T *data;
 };
 
@@ -23,21 +23,21 @@ struct Matrix {
   // device (if allocate=True and data != null). If allocate=false, this assumes
   // the data is preallocated on the gpu (cupy etc) and doesn't allocate any new
   // storage
-  Matrix(int rows, int cols, void *data = NULL, bool allocate = true,
+  Matrix(size_t rows, size_t cols, void *data = NULL, bool allocate = true,
          size_t itemsize = 4);
 
   // Create a new Matrix by slicing a single row from an existing one. The
   // underlying storage buffer is shared in this case.
-  Matrix(const Matrix &other, int rowid);
+  Matrix(const Matrix &other, size_t rowid);
 
-  // Slice a contiguous series of rows from this Matrix. The underlying storge
+  // Slice a contiguous series of rows from this Matrix. The underlying storage
   // buffer is shared here.
-  Matrix(const Matrix &other, int start_rowid, int end_rowid);
+  Matrix(const Matrix &other, size_t start_rowid, size_t end_rowid);
 
   // select a bunch of rows from this matrix. this creates a copy
   Matrix(const Matrix &other, const Vector<int> &rowids);
 
-  void resize(int rows, int cols);
+  void resize(size_t rows, size_t cols);
   void assign_rows(const Vector<int> &rowids, const Matrix &other);
 
   Matrix astype(size_t itemsize) const;
@@ -50,7 +50,7 @@ struct Matrix {
   // Calculates norms for each row in the matrix
   Matrix calculate_norms() const;
 
-  int rows, cols;
+  size_t rows, cols;
   void *data;
   size_t itemsize;
 

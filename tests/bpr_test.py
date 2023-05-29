@@ -37,3 +37,25 @@ def test_fit_empty_matrix():
 def test_fit_almost_empty_matrix():
     raw = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
     return BayesianPersonalizedRanking(use_gpu=False).fit(csr_matrix(raw), show_progress=False)
+
+
+def test_fit_callback():
+    num_called = 0
+
+    def callback(epoch, elapsed, correct, skipped):
+        nonlocal num_called
+        num_called += 1
+
+    raw = [
+        [1, 1, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0, 0],
+        [1, 0, 1, 0, 0, 0],
+        [1, 1, 0, 0, 0, 0],
+        [0, 0, 1, 1, 0, 1],
+        [0, 1, 0, 0, 0, 1],
+        [0, 0, 0, 0, 1, 1],
+    ]
+    model = BayesianPersonalizedRanking(iterations=5, use_gpu=False)
+
+    model.fit(csr_matrix(raw), show_progress=False, callback=callback)
+    assert num_called == model.iterations

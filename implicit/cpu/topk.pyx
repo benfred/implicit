@@ -9,7 +9,7 @@ from cython.parallel import parallel, prange
 cdef extern from "implicit/cpu/select.h" namespace "implicit" nogil:
     cdef void select[T](const T * batch,
                         int batch_rows, int batch_columns, int k,
-                        int * ids, T * distances) nogil except *
+                        int * ids, T * distances) nogil except +
 
 
 def topk(items, query, int k, item_norms=None, filter_query_items=None, filter_items=None, int num_threads=0):

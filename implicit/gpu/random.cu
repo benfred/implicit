@@ -16,7 +16,7 @@ RandomState::RandomState(long seed) {
   CHECK_CURAND(curandSetPseudoRandomGeneratorSeed(rng, seed));
 }
 
-Matrix RandomState::uniform(int rows, int cols, float low, float high) {
+Matrix RandomState::uniform(size_t rows, size_t cols, float low, float high) {
   Matrix ret(rows, cols, NULL);
   CHECK_CURAND(curandGenerateUniform(rng, ret, rows * cols));
 
@@ -31,7 +31,7 @@ Matrix RandomState::uniform(int rows, int cols, float low, float high) {
   return ret;
 }
 
-Matrix RandomState::randn(int rows, int cols, float mean, float stddev) {
+Matrix RandomState::randn(size_t rows, size_t cols, float mean, float stddev) {
   Matrix ret(rows, cols, NULL);
   CHECK_CURAND(curandGenerateNormal(rng, ret, rows * cols, mean, stddev));
   return ret;

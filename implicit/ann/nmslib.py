@@ -71,13 +71,13 @@ class NMSLibModel(RecommenderBase):
 
         self.max_norm = None
 
-    def fit(self, Cui, show_progress=True):
+    def fit(self, Cui, show_progress=True, callback=None):
         # nmslib can be a little chatty when first imported, disable some of
         # the logging
         logging.getLogger("nmslib").setLevel(logging.WARNING)
 
         # train the model
-        self.model.fit(Cui, show_progress)
+        self.model.fit(Cui, show_progress, callback=callback)
         item_factors = self.model.item_factors
         if implicit.gpu.HAS_CUDA and isinstance(item_factors, implicit.gpu.Matrix):
             item_factors = item_factors.to_numpy()
