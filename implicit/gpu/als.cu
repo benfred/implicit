@@ -24,7 +24,7 @@ template <> inline constexpr float SMALL<half> = 1e-10;
 template <typename T>
 __global__ void least_squares_cg_kernel(int factors, size_t user_count,
                                         size_t item_count, T *X,
-                                        const T *Y, const T *YtY,
+                                        const T *Y, const float *YtY,
                                         const int *indptr, const int *indices,
                                         const float *data, int cg_steps) {
   extern __shared__ float shared_memory[];
@@ -51,8 +51,7 @@ __global__ void least_squares_cg_kernel(int factors, size_t user_count,
     // calculate residual r = YtCuPu - YtCuY Xu
     r = 0;
     for (int i = 0; i < factors; ++i) {
-      r -= convert<T, float>(x[i]) *
-           convert<T, float>(YtY[i * factors + threadIdx.x]);
+      r -= convert<T, float>(x[i]) * YtY[i * factors + threadIdx.x];
     }
     for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
       float Yi = convert<T, float>(Y[indices[index] * factors + threadIdx.x]);
@@ -76,7 +75,7 @@ __global__ void least_squares_cg_kernel(int factors, size_t user_count,
       // calculate Ap = YtCuYp - without actually calculating YtCuY
       Ap = 0;
       for (int i = 0; i < factors; ++i) {
-        Ap += P[i] * convert<T, float>(YtY[i * factors + threadIdx.x]);
+        Ap += P[i] * YtY[i * factors + threadIdx.x];
       }
       for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
         float Yi = convert<T, float>(Y[indices[index] * factors + threadIdx.x]);
@@ -114,7 +113,7 @@ __global__ void least_squares_cg_kernel(int factors, size_t user_count,
 }
 
 template <typename T>
-__global__ void l2_regularize_kernel(size_t factors, T regularization, T *YtY) {
+__global__ void l2_regularize_kernel(size_t factors, float regularization, float *YtY) {
   YtY[threadIdx.x * factors + threadIdx.x] += regularization;
 }
 
@@ -127,37 +126,43 @@ void LeastSquaresSolver::calculate_yty(const Matrix &Y, Matrix *YtY,
   if (YtY->cols != Y.cols)
     throw invalid_argument("YtY and Y should have the same number of columns");
 
-  if (Y.itemsize != YtY->itemsize) {
-    throw invalid_argument("YtY and Y should have the same dtype");
-  }
-
   // calculate YtY: note this expects col-major (and we have row-major
   // basically) so that we're inverting the CUBLAS_OP_T/CU_BLAS_OP_N ordering to
   // overcome this (like calculate YYt instead of YtY)
   size_t factors = Y.cols, item_count = Y.rows;
+  float alpha = 1.0, beta = 0.;
   if (Y.itemsize == 4) {
-    float alpha = 1.0, beta = 0.;
-
     CHECK_CUBLAS(cublasSgemm(blas_handle, CUBLAS_OP_N, CUBLAS_OP_T, factors,
                              factors, item_count, &alpha, Y, factors, Y,
                              factors, &beta, *YtY, factors));
-    CHECK_CUDA(cudaDeviceSynchronize());
 
-    // regularize the matrix
-    l2_regularize_kernel<float><<<1, factors>>>(factors, regularization, *YtY);
-    CHECK_CUDA(cudaDeviceSynchronize());
   } else if (Y.itemsize == 2) {
-    half alpha = 1.0, beta = 0.;
-
-    CHECK_CUBLAS(cublasHgemm(blas_handle, CUBLAS_OP_N, CUBLAS_OP_T, factors,
-                             factors, item_count, &alpha, Y, factors, Y,
-                             factors, &beta, *YtY, factors));
-    CHECK_CUDA(cudaDeviceSynchronize());
-
-    // regularize the matrix
-    l2_regularize_kernel<half><<<1, factors>>>(factors, regularization, *YtY);
-    CHECK_CUDA(cudaDeviceSynchronize());
+    // our factors are float16, but we accumulate into a float32 YtY
+    CHECK_CUBLAS(cublasSgemmEx(
+            blas_handle,
+            CUBLAS_OP_N,
+            CUBLAS_OP_T,
+            factors,
+            factors,
+            item_count,
+            &alpha,
+            Y.data,
+            CUDA_R_16F,
+            factors,
+            Y.data,
+            CUDA_R_16F,
+            factors,
+            &beta,
+            YtY->data,
+            CUDA_R_32F,
+            factors));
   }
+
+  CHECK_CUDA(cudaDeviceSynchronize());
+
+  // regularize the matrix
+  l2_regularize_kernel<float><<<1, factors>>>(factors, regularization, *YtY);
+  CHECK_CUDA(cudaDeviceSynchronize());
 }
 
 void LeastSquaresSolver::least_squares(const CSRMatrix &Cui, Matrix *X,
@@ -172,8 +177,6 @@ void LeastSquaresSolver::least_squares(const CSRMatrix &Cui, Matrix *X,
     throw invalid_argument("Dimensionality mismatch between rows of Cui and X");
   if (Cui.cols > Y.rows)
     throw invalid_argument("Dimensionality mismatch between cols of Cui and Y");
-  if (Y.itemsize != YtY.itemsize)
-    throw invalid_argument("YtY and Y should have the same dtype");
   if (Y.itemsize != X->itemsize)
     throw invalid_argument("X and Y should have the same dtype");
 

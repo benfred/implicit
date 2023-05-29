@@ -146,8 +146,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Y = self.item_factors
         loss = None
 
-        _YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors).astype(self._itemsize)
-        _XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors).astype(self._itemsize)
+        _YtY = implicit.gpu.Matrix.zeros(self.factors, self.factors)
+        _XtX = implicit.gpu.Matrix.zeros(self.factors, self.factors)
 
         log.debug("Running %i ALS iterations", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
