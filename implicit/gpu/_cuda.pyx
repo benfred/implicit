@@ -57,9 +57,7 @@ cdef class KnnQuery(object):
         cdef CppVector[int] * c_item_filter = NULL
         cdef int rows = queries.rows
         cdef int[:, :] indices_view
-        cdef float[:, :] temp_float
-        cdef uint16_t[:, :] temp_half
-        cdef void * distances_ptr = NULL
+        cdef float[:, :] distances_view
 
         cdef CppMatrix * c_item_norms = NULL
         if item_norms is not None:
@@ -72,24 +70,13 @@ cdef class KnnQuery(object):
             c_item_filter = item_filter.c_vector
 
         indices = np.zeros((rows, k), dtype="int32")
+        distances = np.zeros((rows, k), dtype="float32")
         indices_view = indices
-
-        if items.c_matrix.itemsize == 4:
-            distances = np.zeros((rows, k), dtype="float32")
-            temp_float = distances
-            distances_ptr = &temp_float[0, 0]
-
-        elif items.c_matrix.itemsize == 2:
-            distances = np.zeros((rows, k), dtype="float16")
-            temp_half = distances.view(np.uint16)
-            distances_ptr = &temp_half[0, 0]
-
-        else:
-            raise ValueError(f"Invalid itemsize for matrix {items.c_matrix.itemsize}")
+        distances_view = distances
 
         with nogil:
             self.c_knn.topk(dereference(items.c_matrix), dereference(queries), k,
-                            &indices_view[0, 0], distances_ptr, c_item_norms, c_query_filter, c_item_filter)
+                            &indices_view[0, 0], &distances_view[0, 0], c_item_norms, c_query_filter, c_item_filter)
 
         return indices, distances
 

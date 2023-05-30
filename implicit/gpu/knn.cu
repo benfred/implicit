@@ -74,7 +74,7 @@ KnnQuery::KnnQuery(size_t temp_memory) {
 }
 
 void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
-                    int *indices, void *distances, Matrix *item_norms,
+                    int *indices, float *distances, Matrix *item_norms,
                     const COOMatrix *query_filter, Vector<int> *item_filter) {
   if (query.cols != items.cols) {
     throw std::invalid_argument(
@@ -86,12 +86,12 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
   }
 
   if (items.itemsize == 4) {
-    topk_impl<float>(items, query, k, indices,
-                     reinterpret_cast<float *>(distances), item_norms,
+    topk_impl<float>(items, query, k, indices, distances,
+                     item_norms,
                      query_filter, item_filter);
   } else if (items.itemsize == 2) {
-    topk_impl<half>(items, query, k, indices,
-                    reinterpret_cast<half *>(distances), item_norms,
+    topk_impl<half>(items, query, k, indices,distances,
+                    item_norms,
                     query_filter, item_filter);
   } else {
     throw std::invalid_argument("invalid itemsize for topk");
@@ -119,20 +119,33 @@ template <>
 void gemm<half>(cublasContext *blas_handle, const Matrix &items,
                 const Matrix &batch, Matrix *output) {
   // matrix multiple the items by the batch, store in distances
-  half alpha = 1.0, beta = 0.;
+  float alpha = 1.0, beta = 0.;
 
-  half *output_data = *output;
-
-  CHECK_CUBLAS(cublasHgemm(blas_handle, CUBLAS_OP_T, CUBLAS_OP_N, items.rows,
-                           batch.rows, items.cols, &alpha, items, items.cols,
-                           batch, batch.cols, &beta, output_data,
-                           output->cols));
+  // our factors are float16, but we accumulate into a float32
+  CHECK_CUBLAS(cublasSgemmEx(
+          blas_handle,
+          CUBLAS_OP_T,
+          CUBLAS_OP_N,
+          items.rows,
+          batch.rows,
+          items.cols,
+          &alpha,
+          items.data,
+          CUDA_R_16F,
+          items.cols,
+          batch.data,
+          CUDA_R_16F,
+          batch.cols,
+          &beta,
+          output->data,
+          CUDA_R_32F,
+          output->cols));
 }
 } // namespace
 
 template <typename T>
 void KnnQuery::topk_impl(const Matrix &items, const Matrix &query, int k,
-                         int *indices, T *distances, Matrix *item_norms,
+                         int *indices, float *distances, Matrix *item_norms,
                          const COOMatrix *query_filter,
                          Vector<int> *item_filter) {
   auto stream = raft::resource::get_cuda_stream(handle);
@@ -143,13 +156,13 @@ void KnnQuery::topk_impl(const Matrix &items, const Matrix &query, int k,
   // entries in our matrix)
   available_temp_memory = std::min(available_temp_memory, size_t{4294967296});
 
-  T *host_distances = NULL;
-  std::unique_ptr<rmm::device_uvector<T>> distances_storage;
-  size_t distances_size = query.rows * k * sizeof(T);
+  float *host_distances = NULL;
+  std::unique_ptr<rmm::device_uvector<float>> distances_storage;
+  size_t distances_size = query.rows * k * sizeof(float);
   if (is_host_memory(distances)) {
     host_distances = distances;
     distances_storage.reset(
-        new rmm::device_uvector<T>(query.rows * k, stream, mr.get()));
+        new rmm::device_uvector<float>(query.rows * k, stream, mr.get()));
     distances = distances_storage->data();
     available_temp_memory -= distances_size;
   }
@@ -174,12 +187,8 @@ void KnnQuery::topk_impl(const Matrix &items, const Matrix &query, int k,
   batch_size = std::min(batch_size, query.rows);
   batch_size = std::max(batch_size, static_cast<size_t>(1));
 
-  rmm::device_uvector<T> temp_mem(batch_size * items.rows, stream,
-                                  mr.get());
-
-  Matrix temp_distances(batch_size, items.rows, temp_mem.data(), false,
-                        items.itemsize);
-
+  rmm::device_uvector<T> temp_mem(batch_size * items.rows, stream, mr.get());
+  Matrix temp_distances(batch_size, items.rows, temp_mem.data(), false);
 
   for (int start = 0; start < query.rows; start += batch_size) {
     auto end = std::min(query.rows, start + batch_size);
@@ -196,8 +205,8 @@ void KnnQuery::topk_impl(const Matrix &items, const Matrix &query, int k,
       auto count = thrust::make_counting_iterator<size_t>(0);
       int cols = temp_distances.cols;
       int item_norm_cols = items.rows;
-      T *data = temp_distances;
-      T *item_norms_data = *item_norms;
+      float *data = temp_distances;
+      const float *item_norms_data = *item_norms;
       thrust::for_each(thrust_policy, count,
                        count + (static_cast<size_t>(temp_distances.rows) *
                                 static_cast<size_t>(temp_distances.cols)),
@@ -211,13 +220,12 @@ void KnnQuery::topk_impl(const Matrix &items, const Matrix &query, int k,
 
     if (item_filter != NULL) {
       auto count = thrust::make_counting_iterator<size_t>(0);
-      T *data = temp_distances;
+      float *data = temp_distances;
       int *items = item_filter->data;
       int items_size = item_filter->size;
       int cols = temp_distances.cols;
 
-      // TODO: fix this for half
-      T filter_distance = FLT_FILTER_DISTANCE;
+      float filter_distance = FLT_FILTER_DISTANCE;
       thrust::for_each(thrust_policy, count,
                        count + items_size * temp_distances.rows,
                        [=] __device__(size_t i) {
@@ -231,10 +239,9 @@ void KnnQuery::topk_impl(const Matrix &items, const Matrix &query, int k,
       auto count = thrust::make_counting_iterator<size_t>(0);
       int *row = query_filter->row;
       int *col = query_filter->col;
-      T *data = temp_distances;
+      float *data = temp_distances;
       int items = temp_distances.cols;
-      // TODO: fix this for half
-      T filter_distance = FLT_FILTER_DISTANCE;
+      float filter_distance = FLT_FILTER_DISTANCE;
       thrust::for_each(thrust_policy, count, count + query_filter->nonzeros,
                        [=] __device__(int i) {
                          if ((row[i] >= start) && (row[i] < end)) {
@@ -245,17 +252,17 @@ void KnnQuery::topk_impl(const Matrix &items, const Matrix &query, int k,
     }
 
     auto current_k = std::min(k, static_cast<int>(temp_distances.cols));
-    rmm::device_uvector<T> best_distances(temp_distances.rows * current_k,
+    rmm::device_uvector<float> best_distances(temp_distances.rows * current_k,
                                               stream, mr.get());
     rmm::device_uvector<int> best_indices(temp_distances.rows * current_k,
                                           stream, mr.get());
 
-    auto distance_view = raft::make_device_matrix_view<const T, int64_t>(
+    auto distance_view = raft::make_device_matrix_view<const float, int64_t>(
         temp_distances, temp_distances.rows, temp_distances.cols);
 
-    raft::matrix::select_k<T, int>(
+    raft::matrix::select_k<float, int>(
         handle, distance_view, std::nullopt,
-        raft::make_device_matrix_view<T, int64_t>(
+        raft::make_device_matrix_view<float, int64_t>(
             best_distances.data(), temp_distances.rows, current_k),
         raft::make_device_matrix_view<int, int64_t>(
             best_indices.data(), temp_distances.rows, current_k),
@@ -280,9 +287,8 @@ void KnnQuery::topk_impl(const Matrix &items, const Matrix &query, int k,
   }
 }
 
-template <typename T>
-void KnnQuery::argsort(const int *input_indices, const T *input_distances,
-                       int rows, int cols, int *indices, T *distances) {
+void KnnQuery::argsort(const int *input_indices, const float *input_distances,
+                       int rows, int cols, int *indices, float *distances) {
   rmm::cuda_stream_view stream;
   auto segment_offsets = thrust::make_transform_iterator(
       thrust::make_counting_iterator<int>(0),
@@ -296,24 +302,24 @@ void KnnQuery::argsort(const int *input_indices, const T *input_distances,
     auto err = cub::DeviceSegmentedRadixSort::SortPairsDescending(
         NULL, temp_size, input_distances, distances, input_indices, indices,
         rows * cols, rows, segment_offsets, segment_offsets + 1, 0,
-        sizeof(T) * 8, stream);
+        sizeof(float) * 8, stream);
     CHECK_CUDA(err);
     temp_mem = mr->allocate(temp_size, stream);
     err = cub::DeviceSegmentedRadixSort::SortPairsDescending(
         temp_mem, temp_size, input_distances, distances, input_indices, indices,
         rows * cols, rows, segment_offsets, segment_offsets + 1, 0,
-        sizeof(T) * 8, stream);
+        sizeof(float) * 8, stream);
     CHECK_CUDA(err);
   } else {
     size_t temp_size = 0;
     auto err = cub::DeviceRadixSort::SortPairsDescending(
         NULL, temp_size, input_distances, distances, input_indices, indices,
-        cols, 0, sizeof(T) * 8, stream);
+        cols, 0, sizeof(float) * 8, stream);
     CHECK_CUDA(err);
     temp_mem = mr->allocate(temp_size, stream);
     err = cub::DeviceRadixSort::SortPairsDescending(
         temp_mem, temp_size, input_distances, distances, input_indices, indices,
-        cols, 0, sizeof(T) * 8, stream);
+        cols, 0, sizeof(float) * 8, stream);
     CHECK_CUDA(err);
   }
   mr->deallocate(temp_mem, temp_size, stream);

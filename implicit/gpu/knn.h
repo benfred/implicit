@@ -15,19 +15,18 @@ public:
   ~KnnQuery();
 
   void topk(const Matrix &items, const Matrix &query, int k, int *indices,
-            void *distances, Matrix *item_norms = NULL,
+            float *distances, Matrix *item_norms = NULL,
             const COOMatrix *query_filter = NULL,
             Vector<int> *item_filter = NULL);
 
   template <typename T>
   void topk_impl(const Matrix &items, const Matrix &query, int k, int *indices,
-                 T *distances, Matrix *item_norms = NULL,
+                 float *distances, Matrix *item_norms = NULL,
                  const COOMatrix *query_filter = NULL,
                  Vector<int> *item_filter = NULL);
   
-  template <typename T>
-  void argsort(const int *input_indices, const T *input_distances, int rows,
-               int cols, int *indices, T *distances);
+  void argsort(const int *input_indices, const float *input_distances, int rows,
+               int cols, int *indices, float *distances);
 
 protected:
   std::unique_ptr<rmm::mr::device_memory_resource> mr;

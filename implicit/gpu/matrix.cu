@@ -110,6 +110,7 @@ void Matrix::resize(size_t rows, size_t cols) {
                         this->rows * this->cols * itemsize,
                         cudaMemcpyDeviceToDevice));
   size_t extra_rows = rows - this->rows;
+  // TODO: next line is probably wrong
   CHECK_CUDA(cudaMemset(new_storage->data() + this->rows * this->cols, 0,
                         extra_rows * cols * itemsize));
   storage.reset(new_storage);
@@ -175,7 +176,7 @@ Matrix Matrix::astype(size_t itemsize) const {
 
 template <typename T>
 __global__ void calculate_norms_kernel(const T *input, size_t rows, size_t cols,
-                                       T *output) {
+                                       float *output) {
   static __shared__ float shared[32];
   for (int i = blockIdx.x; i < rows; i += gridDim.x) {
     float value = convert<T, float>(input[i * cols + threadIdx.x]);
@@ -185,7 +186,7 @@ __global__ void calculate_norms_kernel(const T *input, size_t rows, size_t cols,
       if (norm == 0) {
         norm = 1e-10;
       }
-      output[i] = convert<float, T>(norm);
+      output[i] = norm;
     }
   }
 }
@@ -201,7 +202,7 @@ Matrix Matrix::calculate_norms() const {
   int block_count = 256 * multiprocessor_count;
   int thread_count = cols;
 
-  Matrix output(1, rows, NULL, true, itemsize);
+  Matrix output(1, rows, NULL, true);
 
   if (itemsize == 4) {
     calculate_norms_kernel<float>
