@@ -199,7 +199,7 @@ void LeastSquaresSolver::least_squares(const CSRMatrix &Cui, Matrix *X,
 template <typename T>
 __global__ void calculate_loss_kernel(int factors, size_t user_count,
                                       size_t item_count, const T *X, const T *Y,
-                                      const T *YtY, const int *indptr,
+                                      const float *YtY, const int *indptr,
                                       const int *indices, const float *data,
                                       float regularization, float *output) {
   // https://devblogs.nvidia.com/parallelforall/using-shared-memory-cuda-cc/
@@ -217,8 +217,7 @@ __global__ void calculate_loss_kernel(int factors, size_t user_count,
     r = 0;
     for (int i = 0; i < factors; ++i) {
       // TODO: is this correct?
-      r += convert<T, float>(x[i]) *
-           convert<T, float>(YtY[i * factors + threadIdx.x]);
+      r += convert<T, float>(x[i]) * YtY[i * factors + threadIdx.x];
     }
 
     for (int index = indptr[u]; index < indptr[u + 1]; ++index) {
@@ -262,10 +261,18 @@ float LeastSquaresSolver::calculate_loss(const CSRMatrix &Cui, const Matrix &X,
   float temp[2] = {0, 0};
   Matrix output(2, 1, temp);
 
-  // TODO: half support
-  calculate_loss_kernel<float><<<1024, factors, X.itemsize * factors>>>(
-      factors, user_count, item_count, X, Y, YtY, Cui.indptr, Cui.indices,
-      Cui.data, regularization, output);
+  if (Y.itemsize == 4) {
+    calculate_loss_kernel<float><<<1024, factors, X.itemsize * factors>>>(
+        factors, user_count, item_count, X, Y, YtY, Cui.indptr, Cui.indices,
+        Cui.data, regularization, output);
+  } else if (Y.itemsize == 2) {
+    calculate_loss_kernel<half><<<1024, factors, X.itemsize * factors>>>(
+        factors, user_count, item_count, X, Y, YtY, Cui.indptr, Cui.indices,
+        Cui.data, regularization, output);
+  } else {
+    throw invalid_argument(
+        "invalid dtype in LeastSquaresSolver::calculate_loss");
+  }
   CHECK_CUDA(cudaDeviceSynchronize());
   output.to_host(temp);
 
