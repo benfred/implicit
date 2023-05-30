@@ -164,6 +164,11 @@ cdef class Matrix(object):
 
     def astype(self, dtype):
         dtype = np.dtype(dtype)
+        _ALLOWED_DTYPES = (np.float16, np.float32)
+        if dtype not in _ALLOWED_DTYPES:
+            raise ValueError(f"Invalid dtype '{dtype}' for GPU model. "
+                             f"Allowed dtypes are: {_ALLOWED_DTYPES}")
+
         cdef int itemsize = dtype.itemsize
         ret = Matrix(None)
         ret.c_matrix = new CppMatrix(self.c_matrix.astype(itemsize))

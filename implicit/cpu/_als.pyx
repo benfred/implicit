@@ -55,7 +55,16 @@ cdef inline void gesv(int * n, int * nrhs, floating * a, int * lda, int * piv, f
         cython_lapack.sgesv(n, nrhs, a, lda, piv, b, ldb, info)
 
 
+def _check_als_dtype(X):
+    _ALLOWED_DTYPES = (np.float32, np.float64)
+    if X.dtype not in _ALLOWED_DTYPES:
+        raise ValueError(f"Invalid dtype {X.dtype} for cpu ALS model. "
+                         f"Allowed dtypes are: {_ALLOWED_DTYPES}")
+
+
 def least_squares(Cui, X, Y, regularization, num_threads=0):
+    _check_als_dtype(X)
+    _check_als_dtype(Y)
     YtY = np.dot(np.transpose(Y), Y)
     _least_squares(YtY, Cui.indptr, Cui.indices, Cui.data.astype('float32'),
                    X, Y, regularization, num_threads)
@@ -132,6 +141,8 @@ def _least_squares(YtY, integral[:] indptr, integral[:] indices, float[:] data,
 
 
 def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
+    _check_als_dtype(X)
+    _check_als_dtype(Y)
     return _least_squares_cg(Cui.indptr, Cui.indices, Cui.data.astype('float32'),
                              X, Y, regularization, num_threads, cg_steps)
 

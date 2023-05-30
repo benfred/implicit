@@ -168,8 +168,7 @@ Matrix Matrix::astype(size_t itemsize) const {
     half *output_data = ret;
     convert_array<float, half>(input_data, rows * cols, output_data);
   } else {
-    throw std::runtime_error(
-        "don't know how to interpret itemsize parameter to Matrix::astype");
+    throw std::runtime_error("Invalid dtype for Matrix::astype");
   }
   return ret;
 }
