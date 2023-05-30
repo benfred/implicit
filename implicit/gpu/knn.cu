@@ -86,12 +86,10 @@ void KnnQuery::topk(const Matrix &items, const Matrix &query, int k,
   }
 
   if (items.itemsize == 4) {
-    topk_impl<float>(items, query, k, indices, distances,
-                     item_norms,
+    topk_impl<float>(items, query, k, indices, distances, item_norms,
                      query_filter, item_filter);
   } else if (items.itemsize == 2) {
-    topk_impl<half>(items, query, k, indices,distances,
-                    item_norms,
+    topk_impl<half>(items, query, k, indices, distances, item_norms,
                     query_filter, item_filter);
   } else {
     throw std::invalid_argument("invalid itemsize for topk");
@@ -123,23 +121,9 @@ void gemm<half>(cublasContext *blas_handle, const Matrix &items,
 
   // our factors are float16, but we accumulate into a float32
   CHECK_CUBLAS(cublasSgemmEx(
-          blas_handle,
-          CUBLAS_OP_T,
-          CUBLAS_OP_N,
-          items.rows,
-          batch.rows,
-          items.cols,
-          &alpha,
-          items.data,
-          CUDA_R_16F,
-          items.cols,
-          batch.data,
-          CUDA_R_16F,
-          batch.cols,
-          &beta,
-          output->data,
-          CUDA_R_32F,
-          output->cols));
+      blas_handle, CUBLAS_OP_T, CUBLAS_OP_N, items.rows, batch.rows, items.cols,
+      &alpha, items.data, CUDA_R_16F, items.cols, batch.data, CUDA_R_16F,
+      batch.cols, &beta, output->data, CUDA_R_32F, output->cols));
 }
 } // namespace
 

@@ -24,7 +24,7 @@ public:
                  float *distances, Matrix *item_norms = NULL,
                  const COOMatrix *query_filter = NULL,
                  Vector<int> *item_filter = NULL);
-  
+
   void argsort(const int *input_indices, const float *input_distances, int rows,
                int cols, int *indices, float *distances);
 

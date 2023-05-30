@@ -22,11 +22,10 @@ template <> inline constexpr float SMALL<half> = 1e-10;
 } // namespace
 
 template <typename T>
-__global__ void least_squares_cg_kernel(int factors, size_t user_count,
-                                        size_t item_count, T *X,
-                                        const T *Y, const float *YtY,
-                                        const int *indptr, const int *indices,
-                                        const float *data, int cg_steps) {
+__global__ void
+least_squares_cg_kernel(int factors, size_t user_count, size_t item_count, T *X,
+                        const T *Y, const float *YtY, const int *indptr,
+                        const int *indices, const float *data, int cg_steps) {
   extern __shared__ float shared_memory[];
   float *P = &shared_memory[0];
   float *shared = &shared_memory[factors];
@@ -113,7 +112,8 @@ __global__ void least_squares_cg_kernel(int factors, size_t user_count,
 }
 
 template <typename T>
-__global__ void l2_regularize_kernel(size_t factors, float regularization, float *YtY) {
+__global__ void l2_regularize_kernel(size_t factors, float regularization,
+                                     float *YtY) {
   YtY[threadIdx.x * factors + threadIdx.x] += regularization;
 }
 
@@ -138,24 +138,12 @@ void LeastSquaresSolver::calculate_yty(const Matrix &Y, Matrix *YtY,
 
   } else if (Y.itemsize == 2) {
     // our factors are float16, but we accumulate into a float32 YtY
-    CHECK_CUBLAS(cublasSgemmEx(
-            blas_handle,
-            CUBLAS_OP_N,
-            CUBLAS_OP_T,
-            factors,
-            factors,
-            item_count,
-            &alpha,
-            Y.data,
-            CUDA_R_16F,
-            factors,
-            Y.data,
-            CUDA_R_16F,
-            factors,
-            &beta,
-            YtY->data,
-            CUDA_R_32F,
-            factors));
+    CHECK_CUBLAS(cublasSgemmEx(blas_handle, CUBLAS_OP_N, CUBLAS_OP_T, factors,
+                               factors, item_count, &alpha, Y.data, CUDA_R_16F,
+                               factors, Y.data, CUDA_R_16F, factors, &beta,
+                               YtY->data, CUDA_R_32F, factors));
+  } else {
+    throw std::invalid_argument("invalid dtype for calculate_yty");
   }
 
   CHECK_CUDA(cudaDeviceSynchronize());
@@ -204,7 +192,7 @@ void LeastSquaresSolver::least_squares(const CSRMatrix &Cui, Matrix *X,
             Cui.indices, Cui.data, cg_steps);
   } else {
     throw invalid_argument(
-        "Unknown itemsize in LeastSquaresSolver::least_squares");
+        "invalid dtype in LeastSquaresSolver::least_squares");
   }
 
   CHECK_CUDA(cudaDeviceSynchronize());

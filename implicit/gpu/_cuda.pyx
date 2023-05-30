@@ -162,7 +162,9 @@ cdef class Matrix(object):
         rows = IntVector(np.array(rowids).astype("int32"))
         self.c_matrix.assign_rows(dereference(rows.c_vector), dereference(other.c_matrix))
 
-    def astype(self, int itemsize):
+    def astype(self, dtype):
+        dtype = np.dtype(dtype)
+        cdef int itemsize = dtype.itemsize
         ret = Matrix(None)
         ret.c_matrix = new CppMatrix(self.c_matrix.astype(itemsize))
         return ret

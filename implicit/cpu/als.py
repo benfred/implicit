@@ -433,6 +433,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             factors=self.factors,
             regularization=self.regularization,
             alpha=self.alpha,
+            dtype=self.dtype,
             iterations=self.iterations,
             calculate_training_loss=self.calculate_training_loss,
             random_state=self.random_state,

@@ -37,7 +37,7 @@ def AlternatingLeastSquares(
     alpha : float, optional
         The weight to give to positive examples.
     dtype : data-type, optional
-        Specifies whether to generate 64 bit or 32 bit floating point factors
+        Specifies whether to generate 64 bit or 32 bit or 16 bit floating point factors
     use_native : bool, optional
         Use native extensions to speed up model fitting
     use_cg : bool, optional
@@ -61,6 +61,7 @@ def AlternatingLeastSquares(
             factors,
             regularization,
             alpha,
+            dtype=dtype,
             iterations=iterations,
             calculate_training_loss=calculate_training_loss,
             random_state=random_state,
