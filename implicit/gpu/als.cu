@@ -111,7 +111,6 @@ least_squares_cg_kernel(int factors, size_t user_count, size_t item_count, T *X,
   }
 }
 
-template <typename T>
 __global__ void l2_regularize_kernel(size_t factors, float regularization,
                                      float *YtY) {
   YtY[threadIdx.x * factors + threadIdx.x] += regularization;
@@ -149,7 +148,7 @@ void LeastSquaresSolver::calculate_yty(const Matrix &Y, Matrix *YtY,
   CHECK_CUDA(cudaDeviceSynchronize());
 
   // regularize the matrix
-  l2_regularize_kernel<float><<<1, factors>>>(factors, regularization, *YtY);
+  l2_regularize_kernel<<<1, factors>>>(factors, regularization, *YtY);
   CHECK_CUDA(cudaDeviceSynchronize());
 }
 
