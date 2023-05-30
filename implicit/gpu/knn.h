@@ -15,9 +15,15 @@ public:
   ~KnnQuery();
 
   void topk(const Matrix &items, const Matrix &query, int k, int *indices,
-            float *distances, float *item_norms = NULL,
+            float *distances, Matrix *item_norms = NULL,
             const COOMatrix *query_filter = NULL,
             Vector<int> *item_filter = NULL);
+
+  template <typename T>
+  void topk_impl(const Matrix &items, const Matrix &query, int k, int *indices,
+                 float *distances, Matrix *item_norms = NULL,
+                 const COOMatrix *query_filter = NULL,
+                 Vector<int> *item_filter = NULL);
 
   void argsort(const int *input_indices, const float *input_distances, int rows,
                int cols, int *indices, float *distances);

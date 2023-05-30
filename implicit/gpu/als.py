@@ -27,6 +27,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         The regularization factor to use
     alpha : float, optional
         The weight to give to positive examples.
+    dtype : data-type, optional
+        Specifies whether to use 16 bit or 32 bit floating point factors
     iterations : int, optional
         The number of ALS iterations to use when fitting data
     calculate_training_loss : bool, optional
@@ -48,6 +50,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         factors=64,
         regularization=0.01,
         alpha=1.0,
+        dtype=np.float32,
         iterations=15,
         calculate_training_loss=False,
         random_state=None,
@@ -61,6 +64,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.factors = factors
         self.regularization = regularization
         self.alpha = alpha
+        self.dtype = dtype
 
         # options on how to fit the model
         self.iterations = iterations
@@ -123,10 +127,13 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self.user_factors = random_state.uniform(
                 users, self.factors, low=-0.5 / self.factors, high=0.5 / self.factors
             )
+            self.user_factors = self.user_factors.astype(self.dtype)
+
         if self.item_factors is None:
             self.item_factors = random_state.uniform(
                 items, self.factors, low=-0.5 / self.factors, high=0.5 / self.factors
             )
+            self.item_factors = self.item_factors.astype(self.dtype)
 
         log.debug("Initialized factors in %s", time.time() - s)
 
@@ -176,7 +183,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             user_items = self.alpha * user_items
 
         users = 1 if np.isscalar(userid) else len(userid)
-        user_factors = implicit.gpu.Matrix.zeros(users, self.factors)
+        user_factors = implicit.gpu.Matrix.zeros(users, self.factors).astype(self.dtype)
         Cui = implicit.gpu.CSRMatrix(user_items)
 
         self.solver.least_squares(
@@ -189,7 +196,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             item_users = self.alpha * item_users
 
         items = 1 if np.isscalar(itemid) else len(itemid)
-        item_factors = implicit.gpu.Matrix.zeros(items, self.factors)
+        item_factors = implicit.gpu.Matrix.zeros(items, self.factors).astype(self.dtype)
         Ciu = implicit.gpu.CSRMatrix(item_users)
         self.solver.least_squares(
             Ciu, item_factors, self.XtX, self.user_factors, cg_steps=self.factors
@@ -285,6 +292,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             factors=self.factors,
             regularization=self.regularization,
             alpha=self.alpha,
+            dtype=self.dtype,
             iterations=self.iterations,
             calculate_training_loss=self.calculate_training_loss,
             random_state=self.random_state,

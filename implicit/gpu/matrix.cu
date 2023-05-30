@@ -3,6 +3,7 @@
 #include <thrust/iterator/counting_iterator.h>
 #include <thrust/transform.h>
 
+#include "implicit/gpu/convert.cuh"
 #include "implicit/gpu/dot.cuh"
 #include "implicit/gpu/matrix.h"
 #include "implicit/gpu/utils.h"
@@ -31,8 +32,8 @@ template struct Vector<int>;
 template struct Vector<float>;
 
 Matrix::Matrix(const Matrix &other, size_t rowid)
-    : rows(1), cols(other.cols), data(other.data + rowid * other.cols),
-      storage(other.storage) {
+    : rows(1), cols(other.cols), data(other.at(rowid * other.cols)),
+      storage(other.storage), itemsize(other.itemsize) {
   if (rowid >= other.rows) {
     throw std::invalid_argument("row index out of bounds for matrix");
   }
@@ -40,7 +41,8 @@ Matrix::Matrix(const Matrix &other, size_t rowid)
 
 Matrix::Matrix(const Matrix &other, size_t start_rowid, size_t end_rowid)
     : rows(end_rowid - start_rowid), cols(other.cols),
-      data(other.data + start_rowid * other.cols), storage(other.storage) {
+      data(other.at(start_rowid * other.cols)), storage(other.storage),
+      itemsize(other.itemsize) {
   if (end_rowid < start_rowid) {
     throw std::invalid_argument("end_rowid < start_rowid for matrix slice");
   }
@@ -49,8 +51,9 @@ Matrix::Matrix(const Matrix &other, size_t start_rowid, size_t end_rowid)
   }
 }
 
-void copy_rowids(const float *input, const int *rowids, size_t rows,
-                 size_t cols, float *output) {
+template <typename T>
+void copy_rowids(const T *input, const int *rowids, size_t rows, size_t cols,
+                 T *output) {
   // copy rows over
   auto count = thrust::make_counting_iterator<size_t>(0);
   thrust::for_each(count, count + (rows * cols), [=] __device__(size_t i) {
@@ -61,24 +64,31 @@ void copy_rowids(const float *input, const int *rowids, size_t rows,
 }
 
 Matrix::Matrix(const Matrix &other, const Vector<int> &rowids)
-    : rows(rowids.size), cols(other.cols) {
+    : rows(rowids.size), cols(other.cols), itemsize(other.itemsize) {
   storage.reset(
-      new rmm::device_uvector<float>(rows * cols, rmm::cuda_stream_view()));
+      new rmm::device_buffer(itemsize * rows * cols, rmm::cuda_stream_view()));
   data = storage->data();
-  copy_rowids(other.data, rowids.data, rows, cols, data);
+  if (itemsize == 4) {
+    copy_rowids<float>(other, rowids.data, rows, cols, *this);
+  } else if (itemsize == 2) {
+    copy_rowids<half>(other, rowids.data, rows, cols, *this);
+  } else {
+    throw std::runtime_error("unknown itemsize initializing Matrix");
+  }
 }
 
-Matrix::Matrix(size_t rows, size_t cols, float *host_data, bool allocate)
-    : rows(rows), cols(cols) {
+Matrix::Matrix(size_t rows, size_t cols, void *host_data, bool allocate,
+               size_t itemsize)
+    : rows(rows), cols(cols), itemsize(itemsize) {
   if (allocate) {
-    storage.reset(
-        new rmm::device_uvector<float>(rows * cols, rmm::cuda_stream_view()));
+    storage.reset(new rmm::device_buffer(itemsize * rows * cols,
+                                         rmm::cuda_stream_view()));
     data = storage->data();
     if (host_data) {
-      CHECK_CUDA(cudaMemcpy(data, host_data, rows * cols * sizeof(float),
+      CHECK_CUDA(cudaMemcpy(data, host_data, rows * cols * itemsize,
                             cudaMemcpyHostToDevice));
     } else {
-      CHECK_CUDA(cudaMemset(data, 0, rows * cols * sizeof(float)));
+      CHECK_CUDA(cudaMemset(data, 0, rows * cols * itemsize));
     }
   } else {
     data = host_data;
@@ -95,15 +105,16 @@ void Matrix::resize(size_t rows, size_t cols) {
         "reducing number of rows in Matrix::resize is not implemented yet");
   }
   auto new_storage =
-      new rmm::device_uvector<float>(rows * cols, rmm::cuda_stream_view());
+      new rmm::device_buffer(itemsize * rows * cols, rmm::cuda_stream_view());
   CHECK_CUDA(cudaMemcpy(new_storage->data(), data,
-                        this->rows * this->cols * sizeof(float),
+                        this->rows * this->cols * itemsize,
                         cudaMemcpyDeviceToDevice));
   size_t extra_rows = rows - this->rows;
-  CHECK_CUDA(cudaMemset(new_storage->data() + this->rows * this->cols, 0,
-                        extra_rows * cols * sizeof(float)));
   storage.reset(new_storage);
   data = storage->data();
+  CHECK_CUDA(
+      cudaMemset(at(this->rows * this->cols), 0, extra_rows * cols * itemsize));
+
   this->rows = rows;
   this->cols = cols;
 }
@@ -118,8 +129,9 @@ void Matrix::assign_rows(const Vector<int> &rowids, const Matrix &other) {
   size_t other_cols = other.cols, other_rows = other.rows;
 
   int *rowids_data = rowids.data;
-  float *other_data = other.data;
-  float *self_data = data;
+
+  const float *other_data = other;
+  float *self_data = *this;
 
   thrust::for_each(count, count + (other_rows * other_cols),
                    [=] __device__(size_t i) {
@@ -130,22 +142,52 @@ void Matrix::assign_rows(const Vector<int> &rowids, const Matrix &other) {
                    });
 }
 
-__global__ void calculate_norms_kernel(const float *input, size_t rows,
-                                       size_t cols, float *output) {
+template <typename I, typename O>
+void convert_array(const I *input, size_t elements, O *output) {
+  auto count = thrust::make_counting_iterator<size_t>(0);
+  thrust::for_each(count, count + elements, [=] __device__(size_t i) {
+    output[i] = convert<I, O>(input[i]);
+  });
+}
+
+Matrix Matrix::astype(size_t itemsize) const {
+  if (itemsize == this->itemsize) {
+    return *this;
+  }
+
+  Matrix ret(rows, cols, NULL, true, itemsize);
+  if (this->itemsize == 2 && itemsize == 4) {
+    const half *input_data = *this;
+    float *output_data = ret;
+    convert_array<half, float>(input_data, rows * cols, output_data);
+  } else if (this->itemsize == 4 && itemsize == 2) {
+    const float *input_data = *this;
+    half *output_data = ret;
+    convert_array<float, half>(input_data, rows * cols, output_data);
+  } else {
+    throw std::runtime_error("Invalid dtype for Matrix::astype");
+  }
+  return ret;
+}
+
+template <typename T>
+__global__ void calculate_norms_kernel(const T *input, size_t rows, size_t cols,
+                                       float *output) {
   static __shared__ float shared[32];
   for (int i = blockIdx.x; i < rows; i += gridDim.x) {
-    float value = input[i * cols + threadIdx.x];
+    float value = convert<T, float>(input[i * cols + threadIdx.x]);
     float squared_norm = dot(value, value, shared);
     if (threadIdx.x == 0) {
-      output[i] = sqrt(squared_norm);
-      if (output[i] == 0) {
-        output[i] = 1e-10;
+      float norm = sqrt(squared_norm);
+      if (norm == 0) {
+        norm = 1e-10;
       }
+      output[i] = norm;
     }
   }
 }
 
-Matrix calculate_norms(const Matrix &input) {
+Matrix Matrix::calculate_norms() const {
   int devId;
   CHECK_CUDA(cudaGetDevice(&devId));
 
@@ -154,19 +196,27 @@ Matrix calculate_norms(const Matrix &input) {
                                     cudaDevAttrMultiProcessorCount, devId));
 
   int block_count = 256 * multiprocessor_count;
-  int thread_count = input.cols;
+  int thread_count = cols;
 
-  Matrix output(1, input.rows, NULL);
-  calculate_norms_kernel<<<block_count, thread_count>>>(
-      input.data, input.rows, input.cols, output.data);
+  Matrix output(1, rows, NULL, true);
+
+  if (itemsize == 4) {
+    calculate_norms_kernel<float>
+        <<<block_count, thread_count>>>(*this, rows, cols, output);
+  } else if (itemsize == 2) {
+    calculate_norms_kernel<half>
+        <<<block_count, thread_count>>>(*this, rows, cols, output);
+  } else {
+    throw std::runtime_error("unknown itemsize in calculate_norms");
+  }
 
   CHECK_CUDA(cudaDeviceSynchronize());
   return output;
 }
 
-void Matrix::to_host(float *out) const {
-  CHECK_CUDA(cudaMemcpy(out, data, rows * cols * sizeof(float),
-                        cudaMemcpyDeviceToHost));
+void Matrix::to_host(void *out) const {
+  CHECK_CUDA(
+      cudaMemcpy(out, data, rows * cols * itemsize, cudaMemcpyDeviceToHost));
 }
 
 CSRMatrix::CSRMatrix(int rows, int cols, int nonzeros, const int *indptr_,

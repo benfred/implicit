@@ -17,18 +17,19 @@ cdef extern from "implicit/gpu/matrix.h" namespace "implicit::gpu" nogil:
         size_t size
 
     cdef cppclass Matrix:
-        Matrix(size_t rows, size_t cols, float * data, bool host) except +
+        Matrix(size_t rows, size_t cols, void * data, bool host, size_t itemsize) except +
         Matrix(const Matrix & other, size_t rowid) except +
         Matrix(const Matrix & other, size_t start, size_t end) except +
         Matrix(const Matrix & other, const Vector[int] & rowids) except +
         Matrix(Matrix && other) except +
-        void to_host(float * output) except +
+        void to_host(void * output) except +
         void resize(size_t rows, size_t cols) except +
         void assign_rows(const Vector[int] & rowids, const Matrix & other) except +
+        Matrix calculate_norms() except +
+        Matrix astype(size_t itemsize) except +
         size_t rows, cols
-        float * data
-
-    Matrix calculate_norms(const Matrix & items) except +
+        void * data
+        size_t itemsize
 
     cdef cppclass KnnQuery:
         KnnQuery()

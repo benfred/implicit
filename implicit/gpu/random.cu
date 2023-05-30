@@ -18,10 +18,11 @@ RandomState::RandomState(long seed) {
 
 Matrix RandomState::uniform(size_t rows, size_t cols, float low, float high) {
   Matrix ret(rows, cols, NULL);
-  CHECK_CURAND(curandGenerateUniform(rng, ret.data, rows * cols));
+  CHECK_CURAND(curandGenerateUniform(rng, ret, rows * cols));
 
   if ((low != 0.0) || (high != 1.0)) {
-    auto start = thrust::device_pointer_cast(ret.data);
+    float *data = ret;
+    auto start = thrust::device_pointer_cast(data);
     thrust::transform(start, start + rows * cols, start,
                       thrust::placeholders::_1 =
                           thrust::placeholders::_1 * (high - low) + low);
@@ -32,7 +33,7 @@ Matrix RandomState::uniform(size_t rows, size_t cols, float low, float high) {
 
 Matrix RandomState::randn(size_t rows, size_t cols, float mean, float stddev) {
   Matrix ret(rows, cols, NULL);
-  CHECK_CURAND(curandGenerateNormal(rng, ret.data, rows * cols, mean, stddev));
+  CHECK_CURAND(curandGenerateNormal(rng, ret, rows * cols, mean, stddev));
   return ret;
 }
 

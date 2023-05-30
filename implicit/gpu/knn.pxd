@@ -7,6 +7,6 @@ cdef extern from "implicit/gpu/knn.h" namespace "implicit::gpu" nogil:
 
         void topk(const Matrix & items, const Matrix & query, int k,
                   int * indices, float * distances,
-                  float * item_norms,
+                  Matrix * item_norms,
                   COOMatrix * query_filter,
                   Vector[int] * item_filter) except +

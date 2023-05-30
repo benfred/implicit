@@ -26,6 +26,12 @@ if HAS_CUDA:
                 factors=32, regularization=0, random_state=23, use_gpu=True
             )
 
+    class GPUALSTestFloat16(unittest.TestCase, RecommenderBaseTestMixin):
+        def _get_model(self):
+            return AlternatingLeastSquares(
+                factors=32, regularization=0, random_state=23, use_gpu=True, dtype=np.float16
+            )
+
 
 @pytest.mark.parametrize("use_gpu", [True, False] if HAS_CUDA else [False])
 def test_zero_iterations_with_loss(use_gpu):
