@@ -110,9 +110,6 @@ void Matrix::resize(size_t rows, size_t cols) {
                         this->rows * this->cols * itemsize,
                         cudaMemcpyDeviceToDevice));
   size_t extra_rows = rows - this->rows;
-  // TODO: next line is probably wrong
-  CHECK_CUDA(cudaMemset(new_storage->data() + this->rows * this->cols, 0,
-                        extra_rows * cols * itemsize));
   storage.reset(new_storage);
   data = storage->data();
   CHECK_CUDA(
