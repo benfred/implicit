@@ -17,8 +17,7 @@ using std::invalid_argument;
 
 namespace {
 // We apparently need different stopping criteria for half precision
-template <typename T> inline constexpr float SMALL = 1e-20;
-template <> inline constexpr float SMALL<half> = 1e-10;
+constexpr float SMALL = 1e-20;
 } // namespace
 
 template <typename T>
@@ -67,7 +66,7 @@ least_squares_cg_kernel(int factors, size_t user_count, size_t item_count, T *X,
     __syncthreads();
 
     float rsold = dot(r, r, shared);
-    if (rsold < SMALL<T>)
+    if (rsold < SMALL)
       continue;
 
     for (int it = 0; it < cg_steps; ++it) {
@@ -91,7 +90,7 @@ least_squares_cg_kernel(int factors, size_t user_count, size_t item_count, T *X,
       r -= alpha * Ap;
       __syncthreads();
       float rsnew = dot(r, r, shared);
-      if (rsnew < SMALL<T>)
+      if (rsnew < SMALL)
         break;
 
       P[threadIdx.x] = p = r + (rsnew / rsold) * p;

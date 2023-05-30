@@ -55,7 +55,7 @@ cdef class KnnQuery(object):
         cdef CppMatrix * queries = m.c_matrix
         cdef CppCOOMatrix * c_query_filter = NULL
         cdef CppVector[int] * c_item_filter = NULL
-        cdef int rows = queries.rows
+        cdef size_t rows = queries.rows
         cdef int[:, :] indices_view
         cdef float[:, :] distances_view
 
