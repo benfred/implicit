@@ -38,6 +38,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         Use native extensions to speed up model fitting
     use_cg : bool, optional
         Use a faster Conjugate Gradient solver to calculate factors
+    use_ialspp: bool, optional
+        Use a faster Block Coordinate Descent solver to calculate factors. It works only with factors >= 64.
     iterations : int, optional
         The number of ALS iterations to use when fitting data
     calculate_training_loss : bool, optional
@@ -65,6 +67,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         dtype=np.float32,
         use_native=True,
         use_cg=True,
+        use_ialspp=False,
         iterations=15,
         calculate_training_loss=False,
         num_threads=0,
@@ -81,6 +84,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.dtype = np.dtype(dtype)
         self.use_native = use_native
         self.use_cg = use_cg
+        self.use_ialspp = use_ialspp
         self.iterations = iterations
         self.calculate_training_loss = calculate_training_loss
         self.fit_callback = None
@@ -406,9 +410,19 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
     @property
     def solver(self):
+        if self.use_ialspp:
+            if self.factors < 512:
+                log.warning(
+                    "it is highly recommended that ialspp used in higher dimension than or equal to 512"
+                )
+            block_size = min(128, self.factors // 4)
+            block_size = max(256, block_size)
+            solver = _als.least_squares_ialspp if self.use_native else least_squares_ialspp
+            return functools.partial(solver, cg_steps=self.cg_steps, block_size=block_size)
         if self.use_cg:
             solver = _als.least_squares_cg if self.use_native else least_squares_cg
             return functools.partial(solver, cg_steps=self.cg_steps)
+
         return _als.least_squares if self.use_native else least_squares
 
     @property
@@ -556,3 +570,75 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
             rsold = rsnew
 
         X[u] = x
+
+
+def least_squares_ialspp(Cui, X, Y, regularization, num_threads=0, cg_steps=3, block_size=128):
+    factors = X.shape[1]
+    pred = np.zeros_like(Cui.data).astype(np.float32)
+    full_gramian = np.dot(Y.T, Y)
+    for block_beg in range(0, factors, block_size):
+        if block_beg + block_size >= factors:
+            block_size = factors - block_beg
+        if block_size == block_beg:
+            break
+        gramian = full_gramian[
+            block_beg : block_beg + block_size, block_beg : block_beg + block_size
+        ]
+        _least_squares_ialspp(
+            Cui, pred, X, Y, gramian, regularization, block_beg, cg_steps, block_size
+        )
+
+
+def _least_squares_ialspp(
+    Cui, pred, X, Y, gramian, regularization, block_beg, cg_steps, block_size
+):
+    YtY = gramian + regularization * np.eye(block_size, dtype=Y.dtype)
+    users = X.shape[0]
+    for u in range(users):
+        # start from previous iteration
+        x = X[u, block_beg : block_beg + block_size]
+
+        # calculate residual error r = (YtCuPu - (YtCuY.dot(Xu)
+        r = -YtY.dot(x)
+        for index in range(Cui.indptr[u], Cui.indptr[u + 1]):
+            i, confidence = Cui.indices[index], Cui.data[index]
+            _pred = pred[index]
+            y = Y[i, block_beg : block_beg + block_size]
+            if confidence > 0:
+                r += (confidence - (confidence - 1) * (y.dot(x) - _pred)) * y
+            else:
+                confidence *= -1
+                r += -(confidence - 1) * (y.dot(x) - _pred) * y
+
+        p = r.copy()
+        rsold = r.dot(r)
+        if rsold < 1e-20:
+            continue
+
+        for _ in range(cg_steps):
+            # calculate Ap = YtCuYp - without actually calculating YtCuY
+            Ap = YtY.dot(p)
+            for i, confidence in nonzeros(Cui, u):
+                if confidence < 0:
+                    confidence *= -1
+
+                Ap += (
+                    (confidence - 1)
+                    * Y[i, block_beg : block_beg + block_size].dot(p)
+                    * Y[i, block_beg : block_beg + block_size]
+                )
+
+            # standard CG update
+            alpha = rsold / p.dot(Ap)
+            x += alpha * p
+            r -= alpha * Ap
+            rsnew = r.dot(r)
+            if rsnew < 1e-20:
+                break
+            p = r + (rsnew / rsold) * p
+            rsold = rsnew
+
+        X[u, block_beg : block_beg + block_size] = x
+        for index in range(Cui.indptr[u], Cui.indptr[u + 1]):
+            i = Cui.indices[index]
+            pred[index] = -np.dot(x, Y[i, block_beg : block_beg + block_size])

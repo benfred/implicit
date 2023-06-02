@@ -8,6 +8,7 @@ from recommender_base_test import RecommenderBaseTestMixin, get_checker_board
 from scipy.sparse import coo_matrix, csr_matrix, random
 
 from implicit.als import AlternatingLeastSquares
+from implicit.evaluation import ranking_metrics_at_k, train_test_split
 from implicit.gpu import HAS_CUDA
 
 # pylint: disable=consider-using-f-string
@@ -298,3 +299,36 @@ def test_incremental_retrain(use_gpu):
     model.partial_fit_items([101], likes[1])
     ids, _ = model.recommend(101, likes[1], N=3)
     assert set(ids) == {1, 100, 101}
+
+
+@pytest.mark.parametrize("use_native", [True, False] if HAS_CUDA else [False])
+def test_comparison_cg_alspp(use_native):
+    tr, vali = train_test_split(get_checker_board(64), 0.5)
+    cg = AlternatingLeastSquares(
+        factors=512,
+        regularization=0,
+        alpha=5.0,
+        use_native=use_native,
+        use_cg=True,
+        use_gpu=False,
+        use_ialspp=False,
+        iterations=3,
+        calculate_training_loss=True,
+    )
+    ialspp = AlternatingLeastSquares(
+        factors=512,
+        regularization=0,
+        alpha=5.0,
+        use_native=use_native,
+        use_cg=False,
+        use_gpu=False,
+        use_ialspp=True,
+        iterations=3,
+        calculate_training_loss=True,
+    )
+
+    cg.fit(tr)
+    ialspp.fit(tr)
+    cg_pr = ranking_metrics_at_k(cg, tr, vali, 30)["precision"]
+    ialspp_pr = ranking_metrics_at_k(ialspp, tr, vali, 30)["precision"]
+    assert (abs(cg_pr - ialspp_pr) / (1e-6 + max(cg_pr, ialspp_pr))) <= 0.1

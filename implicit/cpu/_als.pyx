@@ -245,6 +245,119 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
             free(r)
             free(Ap)
 
+def least_squares_ialspp(Cui, X, Y, regularization, num_threads=0, cg_steps=3, block_size=128):
+    dim = X.shape[1]
+    pred = np.zeros_like(Cui.data).astype('float32')
+    full_gramian = np.dot(Y.T, Y)
+    for block_beg in range(0, dim, block_size):
+        if block_beg + block_size >= dim:
+            block_size = dim - block_beg
+        if block_size == block_beg:
+            break
+        gramian = full_gramian[block_beg:block_beg + block_size, block_beg:block_beg + block_size]
+        _least_squares_ialspp(Cui.indptr, Cui.indices, Cui.data.astype('float32'), pred,
+                              X, Y, gramian, block_beg, block_size, regularization, num_threads, cg_steps)
+
+@cython.cdivision(True)
+@cython.boundscheck(False)
+def _least_squares_ialspp(integral[:] indptr, integral[:] indices, float[:] data, float[:] pred,
+                         floating[:, :] X, floating[:, :] Y, floating[:, :] gramian,
+                         int block_beg, int block_size, float regularization,
+                         int num_threads=0, int cg_steps=3):
+    dtype = np.float64 if floating is double else np.float32
+
+    cdef integral users = X.shape[0], u, i, index
+    cdef int one = 1, it
+    cdef floating confidence, temp, alpha, rsnew, rsold
+    cdef floating zero = 0.
+
+    cdef floating[:, :] YtY = gramian + regularization * np.eye(block_size, dtype=dtype)
+
+    cdef floating * x
+    cdef floating * p
+    cdef floating * r
+    cdef floating * Ap
+
+    with nogil, parallel(num_threads=num_threads):
+        # allocate temp memory for each thread
+        Ap = <floating *> malloc(sizeof(floating) * block_size)
+        p = <floating *> malloc(sizeof(floating) * block_size)
+        r = <floating *> malloc(sizeof(floating) * block_size)
+        try:
+            for u in prange(users, schedule='dynamic', chunksize=16):
+                # start from previous iteration
+                x = &X[u, block_beg]
+
+                # if we have no items for this user, skip and set to zero
+                if indptr[u] == indptr[u+1]:
+                    memset(x, 0, sizeof(floating) * block_size)
+                    continue
+
+                # calculate residual r = (YtCuPu - (YtCuY.dot(Xu)
+                temp = -1.0
+                symv(b"U", &block_size, &temp, &YtY[0, 0], &block_size, x, &one, &zero, r, &one)
+                for index in range(indptr[u], indptr[u + 1]):
+                    i = indices[index]
+                    confidence = data[index]
+
+                    if confidence > 0:
+                        temp = confidence
+                    else:
+                        temp = 0
+                        confidence = -1 * confidence
+
+                    temp = temp - (confidence - 1) * (dot(&block_size, &Y[i, block_beg], &one, x, &one) - pred[index])
+                    axpy(&block_size, &temp, &Y[i, block_beg], &one, r, &one)
+
+                memcpy(p, r, sizeof(floating) * block_size)
+                rsold = dot(&block_size, r, &one, r, &one)
+
+                if rsold < 1e-20:
+                    continue
+
+                for it in range(cg_steps):
+                    # calculate Ap = YtCuYp - without actually calculating YtCuY
+                    temp = 1.0
+                    symv(b"U", &block_size, &temp, &YtY[0, 0], &block_size, p, &one, &zero, Ap, &one)
+
+                    for index in range(indptr[u], indptr[u + 1]):
+                        i = indices[index]
+                        confidence = data[index]
+
+                        if confidence < 0:
+                            confidence = -1 * confidence
+
+                        temp = (confidence - 1) * dot(&block_size, &Y[i, block_beg], &one, p, &one)
+                        axpy(&block_size, &temp, &Y[i, 0], &one, Ap, &one)
+
+                    # alpha = rsold / p.dot(Ap);
+                    alpha = rsold / dot(&block_size, p, &one, Ap, &one)
+
+                    # x += alpha * p
+                    axpy(&block_size, &alpha, p, &one, x, &one)
+
+                    # r -= alpha * Ap
+                    temp = alpha * -1
+                    axpy(&block_size, &temp, Ap, &one, r, &one)
+
+                    rsnew = dot(&block_size, r, &one, r, &one)
+                    if rsnew < 1e-20:
+                        break
+
+                    # p = r + (rsnew/rsold) * p
+                    temp = rsnew / rsold
+                    scal(&block_size, &temp, p, &one)
+                    temp = 1.0
+                    axpy(&block_size, &temp, r, &one, p, &one)
+
+                    rsold = rsnew
+                for index in range(indptr[u], indptr[u + 1]):
+                    i = indices[index]
+                    pred[index] -= dot(&block_size, &Y[i, block_beg], &one, x, &one)
+        finally:
+            free(p)
+            free(r)
+            free(Ap)
 
 def calculate_loss(Cui, X, Y, regularization, num_threads=0):
     return _calculate_loss(Cui, Cui.indptr, Cui.indices, Cui.data.astype('float32'),
