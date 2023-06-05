@@ -7,6 +7,7 @@ from numpy.testing import assert_array_equal
 from recommender_base_test import RecommenderBaseTestMixin, get_checker_board
 from scipy.sparse import coo_matrix, csr_matrix, random
 
+import implicit
 from implicit.als import AlternatingLeastSquares
 from implicit.gpu import HAS_CUDA
 
@@ -298,3 +299,17 @@ def test_incremental_retrain(use_gpu):
     model.partial_fit_items([101], likes[1])
     ids, _ = model.recommend(101, likes[1], N=3)
     assert set(ids) == {1, 100, 101}
+
+
+def test_calculate_loss_segfault():
+    # this previous snippet used to segfault, because of a bug in calculate_loss
+    factors = 1
+    regularization = 0
+    n_users, n_items = 4, 4
+
+    item_factors = np.random.random((n_items, factors)).astype("float32")
+    user_factors = np.random.random((n_users, factors)).astype("float32")
+    c_ui = coo_matrix(([1.0, 1.0], ([0, 1], [0, 1])), shape=(n_users, n_items)).tocsr()
+
+    loss = implicit.cpu._als.calculate_loss(c_ui, user_factors, item_factors, regularization)
+    assert loss > 0
