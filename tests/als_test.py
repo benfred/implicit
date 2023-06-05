@@ -302,7 +302,7 @@ def test_incremental_retrain(use_gpu):
 
 
 def test_calculate_loss_segfault():
-    # this previous snippet used to segfault, because of a bug in calculate_loss
+    # this code used to segfault, because of a bug in calculate_loss
     factors = 1
     regularization = 0
     n_users, n_items = 4, 4
