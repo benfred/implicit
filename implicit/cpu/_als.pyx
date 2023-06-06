@@ -295,7 +295,7 @@ def _calculate_loss(Cui, integral[:] indptr, integral[:] indices, float[:] data,
                 loss += dot(&N, r, &one, &X[u, 0], &one)
                 user_norm += dot(&N, &X[u, 0], &one, &X[u, 0], &one)
 
-            for u in prange(users, schedule='dynamic', chunksize=8):
+            for i in prange(items, schedule='dynamic', chunksize=8):
                 item_norm += dot(&N, &Y[i, 0], &one, &Y[i, 0], &one)
 
         finally:
