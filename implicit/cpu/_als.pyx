@@ -247,6 +247,7 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
 
 
 def calculate_loss(Cui, X, Y, regularization, num_threads=0):
+    """ Calculates the loss for an ALS model """
     return _calculate_loss(Cui, Cui.indptr, Cui.indices, Cui.data.astype('float32'),
                            X, Y, regularization, num_threads)
 

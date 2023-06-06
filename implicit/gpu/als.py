@@ -314,3 +314,17 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             self._XtX = implicit.gpu.Matrix(self._XtX)
         if self._YtY is not None:
             self._YtY = implicit.gpu.Matrix(self._YtY)
+
+
+def calculate_loss(Cui, X, Y, regularization, solver=None):
+    """Calculates the loss for an ALS model"""
+    if not isinstance(Cui, implicit.gpu.CSRMatrix):
+        Cui = implicit.gpu.CSRMatrix(Cui)
+    if not isinstance(X, implicit.gpu.Matrix):
+        X = implicit.gpu.Matrix(X)
+    if not isinstance(Y, implicit.gpu.Matrix):
+        Y = implicit.gpu.Matrix(Y)
+    if solver is None:
+        solver = implicit.gpu.LeastSquaresSolver()
+
+    return solver.calculate_loss(Cui, X, Y, regularization)

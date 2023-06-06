@@ -301,6 +301,56 @@ def test_incremental_retrain(use_gpu):
     assert set(ids) == {1, 100, 101}
 
 
+@pytest.mark.parametrize("use_gpu", [True, False] if HAS_CUDA else [False])
+def test_calculate_loss_simple(use_gpu):
+    if use_gpu:
+        calculate_loss = implicit.gpu.als.calculate_loss
+
+    else:
+        calculate_loss = implicit.cpu.als.calculate_loss
+
+    # the only user has liked item 0, but not interacted with item 1
+    n_users, n_items = 1, 2
+    ratings = coo_matrix(([1.0], ([0], [0])), shape=(n_users, n_items)).tocsr()
+
+    # factors are designed to be perfectly wrong, to test loss function
+    item_factors = np.array([[0.0], [1.0]], dtype="float32")
+    user_factors = np.array([[1.0]], dtype="float32")
+
+    loss = calculate_loss(ratings, user_factors, item_factors, regularization=0)
+    assert loss == pytest.approx(1.0)
+
+    loss = calculate_loss(ratings, user_factors, item_factors, regularization=1.0)
+    assert loss == pytest.approx(2.0)
+
+
+@pytest.mark.skipif(not implicit.gpu.HAS_CUDA, reason="needs cuda build")
+@pytest.mark.parametrize("n_users", [2**13, 2**19])
+@pytest.mark.parametrize("n_items", [2**19])
+@pytest.mark.parametrize("n_samples", [2**20])
+@pytest.mark.parametrize("regularization", [0.0, 1.0, 500000.0])
+def test_gpu_loss(n_users, n_items, n_samples, regularization):
+    # we used to have some errors in the gpu loss function
+    # if  n_items * n_users >2**31. Test out that the loss on the gpu
+    # matches that on the cpu
+    # https://github.com/benfred/implicit/issues/441
+    # https://github.com/benfred/implicit/issues/367
+    liked_items = np.random.randint(0, n_items, n_samples)
+    liked_users = np.random.randint(0, n_users, n_samples)
+    ratings = coo_matrix(
+        (np.ones(n_samples), (liked_users, liked_items)), shape=(n_users, n_items)
+    ).tocsr()
+
+    factors = 32
+    item_factors = np.random.random((n_items, factors)).astype("float32")
+    user_factors = np.random.random((n_users, factors)).astype("float32")
+
+    gpu_loss = implicit.gpu.als.calculate_loss(ratings, user_factors, item_factors, regularization)
+    cpu_loss = implicit.cpu.als.calculate_loss(ratings, user_factors, item_factors, regularization)
+
+    assert gpu_loss == pytest.approx(cpu_loss, rel=1e-5)
+
+
 def test_calculate_loss_segfault():
     # this code used to segfault, because of a bug in calculate_loss
     factors = 1
@@ -311,5 +361,5 @@ def test_calculate_loss_segfault():
     user_factors = np.random.random((n_users, factors)).astype("float32")
     c_ui = coo_matrix(([1.0, 1.0], ([0, 1], [0, 1])), shape=(n_users, n_items)).tocsr()
 
-    loss = implicit.cpu._als.calculate_loss(c_ui, user_factors, item_factors, regularization)
+    loss = implicit.cpu.als.calculate_loss(c_ui, user_factors, item_factors, regularization)
     assert loss > 0

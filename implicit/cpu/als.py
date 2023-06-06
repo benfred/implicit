@@ -556,3 +556,6 @@ def least_squares_cg(Cui, X, Y, regularization, num_threads=0, cg_steps=3):
             rsold = rsnew
 
         X[u] = x
+
+
+calculate_loss = _als.calculate_loss
