@@ -256,7 +256,7 @@ float LeastSquaresSolver::calculate_loss(const CSRMatrix &Cui, const Matrix &X,
   size_t item_count = Y.rows, factors = Y.cols, user_count = X.rows;
 
   Matrix YtY(factors, factors, NULL);
-  calculate_yty(Y, &YtY, regularization);
+  calculate_yty(Y, &YtY, 0.0);
 
   float temp[2] = {0, 0};
   Matrix output(2, 1, temp);
@@ -276,7 +276,8 @@ float LeastSquaresSolver::calculate_loss(const CSRMatrix &Cui, const Matrix &X,
   CHECK_CUDA(cudaDeviceSynchronize());
   output.to_host(temp);
 
-  return temp[0] / (temp[1] + Cui.rows * Cui.cols - Cui.nonzeros);
+  size_t rows = Cui.rows, cols = Cui.cols;
+  return temp[0] / (temp[1] + rows * cols - Cui.nonzeros);
 }
 
 LeastSquaresSolver::~LeastSquaresSolver() {
