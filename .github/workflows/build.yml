@@ -95,7 +95,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: wheels
-          path: wheelhouse
+          paths:
+            - wheelhouse
+            - dist
 
   test-wheels:
     needs: [build-wheels]
