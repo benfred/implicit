@@ -1,6 +1,4 @@
 # distutils: language = c++
-# cython: language_level=3
-# cython: embedsignature=True
 
 import cython
 import numpy as np
