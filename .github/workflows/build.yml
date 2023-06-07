@@ -84,7 +84,7 @@ jobs:
       - name: Build sdist
         run: |
           python -m build . --sdist -o wheelhouse
-        if: ${{ matrix.python-version == '3.11' && runner.os == 'Linux' }}
+        if: ${{ matrix.python-version == '311' && runner.os == 'Linux' }}
 
       - name: Rename Wheels
         run: |
