@@ -7,3 +7,4 @@ include LICENSE
 include tox.ini
 include pyproject.toml
 include setup.cfg
+prune _skbuild

@@ -81,6 +81,12 @@ jobs:
           CIBW_BUILD: cp${{matrix.python-version}}-*
           CIBW_ARCHS_LINUX: ${{ matrix.cibw-arch }}
 
+      - name: Build sdist
+        run: |
+          pip install build 
+          python -m build . --sdist -o wheelhouse
+        if: ${{ matrix.python-version == '311' && runner.os == 'Linux' }}
+
       - name: Rename Wheels
         run: |
           python ci/rename_wheels.py
