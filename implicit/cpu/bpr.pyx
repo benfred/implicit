@@ -1,6 +1,3 @@
-# cython: language_level=3
-# cython: embedsignature=True
-
 import cython
 
 from cython cimport floating, integral
