@@ -83,7 +83,7 @@ jobs:
 
       - name: Build sdist
         run: |
-          python -m build . --sdist
+          python -m build . --sdist -o wheelhouse
         if: ${{ matrix.python-version == '3.11' && runner.os == 'Linux' }}
 
       - name: Rename Wheels
@@ -95,9 +95,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: wheels
-          path: |
-            wheelhouse
-            dist
+          path: wheelhouse
 
   test-wheels:
     needs: [build-wheels]
