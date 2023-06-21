@@ -40,7 +40,7 @@ cdef extern from "implicit/nearest_neighbours.h" namespace "implicit" nogil:
 
 
 cdef class NearestNeighboursScorer(object):
-    """ Class to return the top K items from multipying a users likes
+    """ Class to return the top K items from multiplying a users likes
     by a precomputed sparse similarity matrix. """
     cdef SparseMatrixMultiplier[int, double] * neighbours
 
