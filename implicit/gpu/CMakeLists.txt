@@ -14,7 +14,7 @@ else()
     add_cython_target(_cuda CXX)
 
     # use rapids-cmake to install dependencies
-    file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-23.04/RAPIDS.cmake
+    file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-23.06/RAPIDS.cmake
         ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
     include(${CMAKE_BINARY_DIR}/RAPIDS.cmake)
     include(rapids-cmake)
@@ -22,8 +22,33 @@ else()
     include(rapids-cuda)
     include(rapids-export)
     include(rapids-find)
+    include(${rapids-cmake-dir}/cpm/package_override.cmake)
+
     rapids_cpm_init()
     rapids_cmake_build_type(Release)
+
+    # thrust/cub have a cmake issue where the conda build fails
+    # to find them, and needs these patches
+    # https://github.com/benfred/cub/commit/97934d146b771fd2e8bda75f73349a4b3c9e10a7
+    # https://github.com/benfred/thrust/commit/8452c764cc8d772314169e99811535f3a9108cfe
+    # (note that cub is pulled in through thrust here - meaning we only need to override
+    # the thrust version to pull it in)
+    # Issue is tracked in https://github.com/NVIDIA/thrust/issues/1966
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/override.json
+      [=[
+        {
+          "packages" : {
+            "Thrust" : {
+              "version" : "1.17.2",
+              "git_url" : "https://github.com/benfred/thrust.git",
+              "git_tag" : "no_cmake_find_root_path",
+              "git_shallow" : true,
+              "always_download" : true,
+            }
+          }
+        }
+    ]=])
+    rapids_cpm_package_override(${CMAKE_CURRENT_BINARY_DIR}/override.json)
 
     # get rmm
     include(${rapids-cmake-dir}/cpm/rmm.cmake)
