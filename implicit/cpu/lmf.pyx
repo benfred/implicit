@@ -52,7 +52,7 @@ cdef class RNGVector(object):
             self.rng.push_back(mt19937(rng_seeds[i]))
             self.dist.push_back(uniform_int_distribution[long](0, rows))
 
-    cdef inline long generate(self, int thread_id) nogil:
+    cdef inline long generate(self, int thread_id) noexcept nogil:
         return self.dist[thread_id](self.rng[thread_id])
 
 
@@ -218,7 +218,7 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
 
 @cython.cdivision(True)
-cdef inline floating sigmoid(floating x) nogil:
+cdef inline floating sigmoid(floating x) noexcept nogil:
     if x >= 0:
         return 1 / (1+exp(-x))
     else:
