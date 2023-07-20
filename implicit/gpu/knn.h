@@ -25,9 +25,6 @@ public:
                  const COOMatrix *query_filter = NULL,
                  Vector<int> *item_filter = NULL);
 
-  void argsort(const int *input_indices, const float *input_distances, int rows,
-               int cols, int *indices, float *distances);
-
 protected:
   std::unique_ptr<rmm::mr::device_memory_resource> mr;
   raft::resources handle;
