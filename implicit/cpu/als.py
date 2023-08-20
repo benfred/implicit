@@ -215,6 +215,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             Sparse matrix of (users, items) that contain the users that liked
             each item.
         """
+        user_items = check_csr(user_items)
 
         # we're using the cholesky solver here on purpose, since for a full recompute
         users = 1 if np.isscalar(userid) else len(userid)
@@ -252,6 +253,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
             Sparse matrix of (items, users) that contain the users that liked
             each item
         """
+        item_users = check_csr(item_users)
 
         if self.alpha != 1.0:
             item_users = self.alpha * item_users
