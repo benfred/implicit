@@ -9,6 +9,8 @@ from libc.stdint cimport uint16_t
 from libcpp cimport bool
 from libcpp.utility cimport move, pair
 
+from implicit.utils import check_csr
+
 from .als cimport LeastSquaresSolver as CppLeastSquaresSolver
 from .bpr cimport bpr_update as cpp_bpr_update
 from .knn cimport KnnQuery as CppKnnQuery
@@ -220,6 +222,8 @@ cdef class CSRMatrix(object):
     cdef CppCSRMatrix * c_matrix
 
     def __cinit__(self, X):
+        X = check_csr(X)
+
         cdef int[:] indptr = X.indptr
         cdef int[:] indices = X.indices
         cdef float[:] data = X.data.astype(np.float32)
