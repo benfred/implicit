@@ -307,7 +307,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.user_factors[userids] = user_factors
 
         # clear any cached properties that are invalidated by this update
-        self._user_norms = self._user_norms_host = None
+        self._user_norms = None
         self._XtX = None
 
     def partial_fit_items(self, itemids, item_users):
@@ -344,7 +344,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         self.item_factors[itemids] = item_factors
 
         # clear any cached properties that are invalidated by this update
-        self._item_norms = self._item_norms_host = None
+        self._item_norms = None
         self._YtY = None
 
     def explain(self, userid, user_items, itemid, user_weights=None, N=10):
