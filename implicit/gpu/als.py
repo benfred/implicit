@@ -234,6 +234,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         self.user_factors.assign_rows(userids, user_factors)
 
+        # clear any cached properties that are invalidated by this update
+        self._user_norms = self._user_norms_host = None
+        self._XtX = None
+
     def partial_fit_items(self, itemids, item_users):
         """Incrementally updates item factors
 
@@ -265,6 +269,10 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
 
         # update the stored factors with the newly calculated values
         self.item_factors.assign_rows(itemids, item_factors)
+
+        # clear any cached properties that are invalidated by this update
+        self._item_norms = self._item_norms_host = None
+        self._YtY = None
 
     @property
     def solver(self):
