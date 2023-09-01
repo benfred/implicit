@@ -401,7 +401,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
     cdef int users = test_user_items.shape[0], items = test_user_items.shape[1]
     cdef int u, i, batch_idx
     # precision
-    cdef double relevant = 0, pr_div = 0, total = 0
+    cdef double relevant = 0, pr_div = 1e-7, rc_div=1e-7, total = 0
     # map
     cdef double mean_ap = 0, ap = 0
     # ndcg
@@ -410,7 +410,8 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
     cdef double ndcg = 0, idcg
     # auc
     cdef double mean_auc = 0, auc, hit, miss, num_pos_items, num_neg_items
-
+    # mrr
+    cdef double mrr = 0
     cdef int[:] test_indptr = test_user_items.indptr
     cdef int[:] test_indices = test_user_items.indices
 
@@ -419,17 +420,18 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
 
     cdef unordered_set[int] likes
 
-
+    if (K < 1) or (K > items):
+        raise ValueError("The 'K' must in between [1, num items]")
     batch_size = 1000
     start_idx = 0
 
     # get an array of userids that have at least one item in the test set
     to_generate = np.arange(users, dtype="int32")
     to_generate = to_generate[np.ediff1d(test_user_items.indptr) > 0]
+    total_users = len(to_generate)
+    progress = tqdm(total=total_users, disable=not show_progress)
 
-    progress = tqdm(total=len(to_generate), disable=not show_progress)
-
-    while start_idx < len(to_generate):
+    while start_idx < total_users:
         batch = to_generate[start_idx: start_idx + batch_size]
         ids, _ = model.recommend(batch, train_user_items[batch], N=K)
         start_idx += batch_size
@@ -441,35 +443,38 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                 for i in range(test_indptr[u], test_indptr[u+1]):
                     likes.insert(test_indices[i])
 
-                pr_div += fmin(K, likes.size())
+                rc_div += fmin(K, likes.size())
+                pr_div += likes.size()
                 ap = 0
                 hit = 0
                 miss = 0
                 auc = 0
+
                 idcg = cg_sum[min(K, likes.size()) - 1]
                 num_pos_items = likes.size()
                 num_neg_items = items - num_pos_items
-
                 for i in range(K):
                     if likes.find(ids[batch_idx, i]) != likes.end():
                         relevant += 1
                         hit += 1
-                        ap += hit / (i + 1)
+                        ap += hit / (i + 1.0)
                         ndcg += cg[i] / idcg
+                        if hit == 1:
+                            mrr += 1 / (i + 1.0)
                     else:
                         miss += 1
                         auc += hit
-                auc += ((hit + num_pos_items) / 2.0) * (num_neg_items - miss)
-                mean_ap += ap / fmin(K, likes.size())
-                mean_auc += auc / (num_pos_items * num_neg_items)
-                total += 1
-
+                auc += ((hit + num_pos_items) * (num_neg_items - miss)) / 2.0
+                mean_ap += ap / (1e-7 + likes.size())
+                mean_auc += auc / (1e-7 + num_pos_items * num_neg_items)
         progress.update(len(batch))
 
     progress.close()
     return {
         "precision": relevant / pr_div,
-        "map": mean_ap / total,
-        "ndcg": ndcg / total,
-        "auc": mean_auc / total
+        "recall": relevant / rc_div,
+        "map": mean_ap / total_users,
+        "ndcg": ndcg / total_users,
+        "auc": mean_auc / total_users,
+        "mrr": mrr / total_users
     }
