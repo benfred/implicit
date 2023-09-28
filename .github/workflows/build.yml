@@ -76,7 +76,7 @@ jobs:
           platforms: all
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.3
+        uses: pypa/cibuildwheel@v2.16.1
         env:
           CIBW_BUILD: cp${{matrix.python-version}}-*
           CIBW_ARCHS_LINUX: ${{ matrix.cibw-arch }}
