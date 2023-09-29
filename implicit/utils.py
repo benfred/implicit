@@ -65,21 +65,22 @@ def check_blas_config():
 def check_random_state(random_state):
     """Validate the random state.
 
-    Check a random seed or existing numpy RandomState
-    and get back an initialized RandomState.
+    Check a random seed or existing numpy rng
+    and get back an initialized numpy.randon.Generator
 
     Parameters
     ----------
-    random_state : int, None or RandomState
+    random_state : int, None, np.random.RandomState or np.random.Generator
         The existing RandomState. If None, or an int, will be used
         to seed a new numpy RandomState.
     """
-    # if it's an existing random state, pass through
+    # backwards compatibility
     if isinstance(random_state, np.random.RandomState):
-        return random_state
+        return np.random.default_rng(random_state.rand_int(2**31))
+
     # otherwise try to initialize a new one, and let it fail through
     # on the numpy side if it doesn't work
-    return np.random.RandomState(random_state)
+    return np.random.default_rng(random_state)
 
 
 def augment_inner_product_matrix(factors):

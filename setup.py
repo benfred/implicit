@@ -44,6 +44,6 @@ setup(
         "Collaborative Filtering, Recommender Systems"
     ),
     packages=find_packages(),
-    install_requires=["numpy", "scipy>=0.16", "tqdm>=4.27", "threadpoolctl"],
+    install_requires=["numpy>=1.17.0", "scipy>=0.16", "tqdm>=4.27", "threadpoolctl"],
     cmake_process_manifest_hook=exclude_non_implicit_cmake_files,
 )

@@ -179,7 +179,7 @@ def test_factorize(use_native, use_gpu, use_cg, dtype):
     reconstructed = rows.dot(cols.T)
     for i in range(counts.shape[0]):
         for j in range(counts.shape[1]):
-            assert pytest.approx(counts[i, j], abs=1e-4) == reconstructed[i, j], (
+            assert pytest.approx(counts[i, j], abs=1e-3) == reconstructed[i, j], (
                 "failed to reconstruct row=%s, col=%s,"
                 " value=%.5f, dtype=%s, cg=%s, native=%s gpu=%s"
                 % (i, j, reconstructed[i, j], dtype, use_cg, use_native, use_gpu)

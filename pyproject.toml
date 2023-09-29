@@ -37,7 +37,5 @@ CUDACXX = "/usr/local/cuda/bin/nvcc"
 [tool.cibuildwheel.macos]
 archs = ["x86_64", "universal2", "arm64"]
 
-
-
 [tool.pytest.ini_options]
 filterwarnings = ['ignore::implicit.utils.ParameterWarning']
