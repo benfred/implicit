@@ -20,7 +20,7 @@ def exclude_non_implicit_cmake_files(cmake_manifest):
 
 setup(
     name="implicit",
-    version="0.7.1",
+    version="0.7.2",
     description="Collaborative Filtering for Implicit Feedback Datasets",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
