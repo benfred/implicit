@@ -74,7 +74,7 @@ def check_random_state(random_state):
         The existing RandomState. If None, or an int, will be used
         to seed a new numpy RandomState.
     """
-    # backwards compatability
+    # backwards compatibility
     if isinstance(random_state, np.random.RandomState):
         return np.random.default_rng(random_state.rand_int(2**31))
 
