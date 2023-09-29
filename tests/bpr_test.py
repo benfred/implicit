@@ -22,7 +22,7 @@ if HAS_CUDA:
                 factors=3,
                 regularization=0,
                 use_gpu=True,
-                learning_rate=0.05,
+                learning_rate=0.1,
                 random_state=42,
             )
 

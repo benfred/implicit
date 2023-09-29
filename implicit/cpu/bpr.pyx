@@ -93,7 +93,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
     num_threads : int, optional
         The number of threads to use for fitting the model and batch recommend calls.
         Specifying 0 means to default to the number of cores on the machine.
-    random_state : int, RandomState or None, optional
+    random_state : int, RandomState, Generator or None, optional
         The random state for seeding the initial item and user factors.
         Default is None.
 
@@ -156,7 +156,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # Note: the final dimension is for the item bias term - which is set to a 1 for all users
         # this simplifies interfacing with approximate nearest neighbours libraries etc
         if self.item_factors is None:
-            self.item_factors = (rs.rand(items, self.factors + 1).astype(self.dtype) - .5)
+            self.item_factors = (rs.random((items, self.factors + 1), dtype=self.dtype) - .5)
             self.item_factors /= self.factors
 
             # set factors to all zeros for items without any ratings
@@ -164,7 +164,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.item_factors[item_counts == 0] = np.zeros(self.factors + 1)
 
         if self.user_factors is None:
-            self.user_factors = (rs.rand(users, self.factors + 1).astype(self.dtype) - .5)
+            self.user_factors = (rs.random((users, self.factors + 1), dtype=self.dtype) - .5)
             self.user_factors /= self.factors
 
             # set factors to all zeros for users without any ratings
@@ -183,7 +183,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             num_threads = multiprocessing.cpu_count()
 
         # initialize RNG's, one per thread. Also pass the seeds for each thread's RNG
-        cdef long[:] rng_seeds = rs.randint(0, 2**31, size=num_threads)
+        cdef long[:] rng_seeds = rs.integers(0, 2**31, size=num_threads)
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
 
         log.debug("Running %i BPR training epochs", self.iterations)

@@ -239,13 +239,17 @@ def check_random_state(random_state):
 
     Parameters
     ----------
-    random_state : int, None or RandomState
+    random_state : int, None, np.random.RandomState or np.random.Generator
         The existing RandomState. If None, or an int, will be used
         to seed a new curand RandomState generator
     """
     if isinstance(random_state, np.random.RandomState):
         # we need to convert from numpy random state our internal random state
         return implicit.gpu.RandomState(random_state.randint(2**31))
+
+    if isinstance(random_state, np.random.Generator):
+        # we need to convert from numpy random state our internal random state
+        return implicit.gpu.RandomState(random_state.integers(2**31))
 
     # otherwise try to initialize a new one, and let it fail through
     # on the numpy side if it doesn't work

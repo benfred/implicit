@@ -33,7 +33,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         When sampling negative items, check if the randomly picked negative item has actually
         been liked by the user. This check increases the time needed to train but usually leads
         to better predictions.
-    random_state : int, RandomState or None, optional
+    random_state : int, RandomState, Generator or None, optional
         The random state for seeding the initial item and user factors.
         Default is None.
 
@@ -103,7 +103,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         # Note: the final dimension is for the item bias term - which is set to a 1 for all users
         # this simplifies interfacing with approximate nearest neighbours libraries etc
         if self.item_factors is None:
-            item_factors = rs.rand(items, self.factors + 1).astype("float32") - 0.5
+            item_factors = rs.random((items, self.factors + 1), "float32") - 0.5
             item_factors /= self.factors
 
             # set factors to all zeros for items without any ratings
@@ -112,7 +112,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             self.item_factors = implicit.gpu.Matrix(item_factors)
 
         if self.user_factors is None:
-            user_factors = rs.rand(users, self.factors + 1).astype("float32") - 0.5
+            user_factors = rs.random((users, self.factors + 1), "float32") - 0.5
             user_factors /= self.factors
 
             # set factors to all zeros for users without any ratings
@@ -142,7 +142,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                     Y,
                     self.learning_rate,
                     self.regularization,
-                    rs.randint(2**31),
+                    rs.integers(2**31),
                     self.verify_negative_samples,
                 )
                 progress.update(1)

@@ -25,9 +25,10 @@ def test_topk_ascending(k, batch, temp_memory):
 def test_topk_random(k, batch, temp_memory):
     num_items = 1000
     factors = 10
-    np.random.seed(0)
-    items = np.random.uniform(size=(num_items, factors)).astype("float32")
-    queries = np.random.uniform(size=(batch, factors)).astype("float32")
+
+    rs = np.random.default_rng(0)
+    items = rs.random(size=(num_items, factors), dtype="float32")
+    queries = rs.random(size=(batch, factors), dtype="float32")
     _check_knn_queries(items, queries, k, max_temp_memory=temp_memory)
 
 
@@ -46,8 +47,8 @@ def _check_knn_queries(items, queries, k=5, max_temp_memory=500_000_000):
         exact_distances[r] = batch[r][exact_ids[r]]
 
     # make sure that we match
-    assert_array_equal(ids, exact_ids)
     assert_allclose(distances, exact_distances, rtol=1e-06)
+    assert_array_equal(ids, exact_ids)
 
 
 @pytest.mark.skipif(not implicit.gpu.HAS_CUDA, reason="needs cuda build")
