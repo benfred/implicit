@@ -1,9 +1,9 @@
-import os
 import time
 import warnings
 
 import numpy as np
 import scipy.sparse
+import threadpoolctl
 
 
 def nonzeros(m, row):
@@ -22,19 +22,44 @@ def check_blas_config():
     global _checked_blas_config  # pylint: disable=global-statement
     if _checked_blas_config:
         return
-    _checked_blas_config = True
 
-    if np.__config__.get_info("openblas_info") and os.environ.get("OPENBLAS_NUM_THREADS") != "1":
-        warnings.warn(
-            "OpenBLAS detected. Its highly recommend to set the environment variable "
-            "'export OPENBLAS_NUM_THREADS=1' to disable its internal multithreading"
-        )
-    if np.__config__.get_info("blas_mkl_info") and os.environ.get("MKL_NUM_THREADS") != "1":
-        warnings.warn(
-            "Intel MKL BLAS detected. Its highly recommend to set the environment "
-            "variable 'export MKL_NUM_THREADS=1' to disable its internal "
-            "multithreading"
-        )
+    for api in threadpoolctl.threadpool_info():
+        num_threads = api["num_threads"]
+        if api["user_api"] != "blas" or num_threads == 1:
+            continue
+
+        internal_api = api["internal_api"]
+        if internal_api == "openblas":
+            warnings.warn(
+                f"OpenBLAS is configured to use {num_threads} threads. It is highly recommended"
+                " to disable its internal threadpool by setting the environment variable"
+                " 'OPENBLAS_NUM_THREADS=1' or by calling 'threadpoolctl.threadpool_limits(1,"
+                ' "blas")\'. Having OpenBLAS use a threadpool can lead to severe performance'
+                " issues here.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+        elif internal_api == "mkl":
+            warnings.warn(
+                f"Intel MKL BLAS is configured to use {num_threads} threads. It is highly"
+                " recommended to disable its internal threadpool by setting the environment"
+                " variable 'MKL_NUM_THREADS=1' or by callng 'threadpoolctl.threadpool_limits(1,"
+                ' "blas")\'. Having MKL use a threadpool can lead to severe performance issues',
+                RuntimeWarning,
+                stacklevel=2,
+            )
+        else:
+            # probably using blis, which is by default single threaded. warn anyways
+            # for when threadpoolctl gets support for VecLib/Accelerate etc
+            warnings.warn(
+                f"BLAS library {internal_api} is configured to use {num_threads} threads."
+                " It is highly recommended to disable its internal threadpool by calling"
+                " 'threadpoolctl.threadpool_limits(1, \"blas\")'.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+
+    _checked_blas_config = True
 
 
 def check_random_state(random_state):
