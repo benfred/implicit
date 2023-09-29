@@ -183,7 +183,7 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
             num_threads = multiprocessing.cpu_count()
 
         # initialize RNG's, one per thread. Also pass the seeds for each thread's RNG
-        cdef long[:] rng_seeds = rs.integers(0, 2**31, size=num_threads)
+        cdef long[:] rng_seeds = rs.integers(0, 2**31, size=num_threads, dtype="long")
         cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
 
         log.debug("Running %i BPR training epochs", self.iterations)
