@@ -127,7 +127,7 @@ jobs:
 
     - name: Install ANN Libraries
       run: pip install annoy nmslib
-      if: ${{ matrix.python-version != '3.12' && runner.os == 'Linux' }}
+      if: ${{ matrix.python-version != '3.12' &&  matrix.python-version != '3.11' && runner.os == 'Linux' }}
 
     - name: Install wheel
       run: |
