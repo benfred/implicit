@@ -58,7 +58,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        python-version: [36, 37, 38, 39, 310, 311]
+        python-version: [36, 37, 38, 39, 310, 311, 312]
         cibw-arch: [auto, aarch64]
         exclude:
           - os: macos-latest
@@ -76,7 +76,7 @@ jobs:
           platforms: all
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.16.1
+        uses: pypa/cibuildwheel@v2.16.2
         env:
           CIBW_BUILD: cp${{matrix.python-version}}-*
           CIBW_ARCHS_LINUX: ${{ matrix.cibw-arch }}
@@ -85,7 +85,7 @@ jobs:
         run: |
           pip install build 
           python -m build . --sdist -o wheelhouse
-        if: ${{ matrix.python-version == '311' && runner.os == 'Linux' }}
+        if: ${{ matrix.python-version == '312' && runner.os == 'Linux' }}
 
       - name: Rename Wheels
         run: |
@@ -103,7 +103,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9, '3.10', '3.11']
+        python-version: [3.7, 3.8, 3.9, '3.10', '3.11', '3.12']
         os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
@@ -127,7 +127,7 @@ jobs:
 
     - name: Install ANN Libraries
       run: pip install annoy nmslib
-      if: ${{ matrix.python-version != '3.11' && runner.os == 'Linux' }}
+      if: ${{ matrix.python-version != '3.12' &&  matrix.python-version != '3.11' && runner.os == 'Linux' }}
 
     - name: Install wheel
       run: |
