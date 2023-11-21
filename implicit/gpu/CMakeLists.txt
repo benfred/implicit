@@ -14,7 +14,7 @@ else()
     add_cython_target(_cuda CXX)
 
     # use rapids-cmake to install dependencies
-    file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-23.08/RAPIDS.cmake
+    file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-23.12/RAPIDS.cmake
         ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
     include(${CMAKE_BINARY_DIR}/RAPIDS.cmake)
     include(rapids-cmake)
@@ -57,10 +57,10 @@ else()
     # get raft
     # note: we're using RAFT in header only mode right now - mainly to reduce binary
     # size of the compiled wheels
-    rapids_cpm_find(raft 23.08
+    rapids_cpm_find(raft 23.12
         CPM_ARGS
           GIT_REPOSITORY  https://github.com/rapidsai/raft.git
-          GIT_TAG         branch-23.08
+          GIT_TAG         branch-23.12
           DOWNLOAD_ONLY   YES
     )
     include_directories(${raft_SOURCE_DIR}/cpp/include)
