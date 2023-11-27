@@ -15,7 +15,22 @@ def _get_sample_matrix():
 
 
 def _get_matrix():
-    mat = random(100, 100, density=0.5, format="csr", dtype=np.float32)
+    mat = random(100, 100, density=0.1, format="csr", dtype=np.float32)
+    return mat.tocoo()
+
+
+def _get_fixed_matrix():
+    mat = csr_matrix(
+        [
+            [1, 0, 0, 0],
+            [3, 2, 1, 0],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 1, 1, 1],
+            [0, 0, 1, 0],
+        ]
+    )
     return mat.tocoo()
 
 
@@ -45,6 +60,10 @@ def test_leave_k_out_outputs_produce_input():
     """
 
     mat = _get_matrix()
+    train, test = leave_k_out_split(mat, K=1)
+    assert ((train + test) - mat).nnz == 0
+
+    mat = _get_fixed_matrix()
     train, test = leave_k_out_split(mat, K=1)
     assert ((train + test) - mat).nnz == 0
 
