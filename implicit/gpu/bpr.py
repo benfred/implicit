@@ -157,6 +157,8 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
                 if callback:
                     callback(_epoch, time.time() - s, correct, skipped)
 
+        self._check_fit_errors()
+
     def to_cpu(self) -> implicit.cpu.bpr.BayesianPersonalizedRanking:
         """Converts this model to an equivalent version running on the cpu"""
         ret = implicit.cpu.bpr.BayesianPersonalizedRanking(
