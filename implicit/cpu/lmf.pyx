@@ -174,20 +174,24 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
 
         # initialize RNG's, one per thread. Also pass the seeds for each thread's RNG
         cdef long[:] rng_seeds = rs.integers(0, 2**31, size=num_threads, dtype="long")
-        cdef RNGVector rng = RNGVector(num_threads, len(user_items.data) - 1, rng_seeds)
+        cdef long[:] rng_seeds2 = rs.integers(0, 2**31, size=num_threads, dtype="long")
+        # Separate RNG per update direction: user update samples item IDs [0, items),
+        # item update samples user IDs [0, users).
+        cdef RNGVector user_neg_rng = RNGVector(num_threads, items - 1, rng_seeds)
+        cdef RNGVector item_neg_rng = RNGVector(num_threads, users - 1, rng_seeds2)
 
         log.debug("Running %i LMF training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
             for epoch in range(self.iterations):
                 s = time.time()
                 # user update
-                lmf_update(rng, user_vec_deriv_sum,
+                lmf_update(user_neg_rng, user_vec_deriv_sum,
                            self.user_factors, self.item_factors,
                            user_items.indices, user_items.indptr, user_items.data,
                            self.learning_rate, self.regularization, self.neg_prop, num_threads)
                 self.user_factors[:, -2] = 1.0
                 # item update
-                lmf_update(rng, item_vec_deriv_sum,
+                lmf_update(item_neg_rng, item_vec_deriv_sum,
                            self.item_factors, self.user_factors,
                            item_users.indices, item_users.indptr, item_users.data,
                            self.learning_rate, self.regularization, self.neg_prop, num_threads)
@@ -235,7 +239,9 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
                integral num_threads):
 
     cdef integral n_users = user_vectors.shape[0]
-    cdef integral n_items = item_vectors.shape[1]
+    # item_vectors rows = number of opposite-side entities (items during user update,
+    # users during item update).  shape[1] was wrong — that gives n_factors+2.
+    cdef integral n_items = item_vectors.shape[0]
     cdef integral n_factors = user_vectors.shape[1]
 
     cdef integral u, i, it, c, _, index, f
@@ -272,21 +278,27 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
                         deriv[_] = deriv[_] - z * item_vectors[i, _]
 
                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
-                for _ in range(min(n_items, user_seen_item * neg_prop)):
-                    index = rng.generate(thread_id)
-                    i = indices[index]
-                    exp_r = 0
-                    for _ in range(n_factors):
-                        exp_r = exp_r + (user_vectors[u, _] * item_vectors[i, _])
-                    z = sigmoid(exp_r)
-
-                    for _ in range(n_factors):
-                        deriv[_] = deriv[_] - z * item_vectors[i, _]
-                for _ in range(n_factors):
-                    deriv[_] -= reg * user_vectors[u, _]
-                    deriv_sum_sq[u, _] += deriv[_] * deriv[_]
+                # Sample uniformly from [0, n_items); reject any item the user has
+                # actually interacted with.  Guard against users who have seen every
+                # item (no valid negative exists).
+                if user_seen_item < n_items:
+                    for c in range(user_seen_item * neg_prop):
+                        i = rng.generate(thread_id)
+                        # indices[indptr[u]:indptr[u+1]] is sorted (guaranteed by fit()),
+                        # so binary_search gives O(log k) rejection per sample.
+                        while binary_search(&indices[indptr[u]], &indices[indptr[u + 1]], i):
+                            i = rng.generate(thread_id)
+                        exp_r = 0
+                        for f in range(n_factors):
+                            exp_r = exp_r + (user_vectors[u, f] * item_vectors[i, f])
+                        z = sigmoid(exp_r)
+                        for f in range(n_factors):
+                            deriv[f] = deriv[f] - z * item_vectors[i, f]
+                for f in range(n_factors):
+                    deriv[f] -= reg * user_vectors[u, f]
+                    deriv_sum_sq[u, f] += deriv[f] * deriv[f]
 
                     # a small constant is added for numerical stability
-                    user_vectors[u, _] += (lr / (sqrt(1e-6 + deriv_sum_sq[u, _]))) * deriv[_]
+                    user_vectors[u, f] += (lr / (sqrt(1e-6 + deriv_sum_sq[u, f]))) * deriv[f]
         finally:
             free(deriv)
