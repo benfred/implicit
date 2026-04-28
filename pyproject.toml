@@ -39,3 +39,6 @@ archs = ["x86_64", "universal2", "arm64"]
 
 [tool.pytest.ini_options]
 filterwarnings = ['ignore::implicit.utils.ParameterWarning']
+
+[tool.pylint.design]
+max-positional-arguments = 12
