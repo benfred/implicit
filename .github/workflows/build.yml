@@ -106,13 +106,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         pip install -r implicit_source/requirements.txt
-    - name: Install h5py
-      run: pip install h5py
-
     - name: Install ANN Libraries
       run: pip install annoy nmslib
       if: ${{ matrix.python-version != '3.14' && runner.os == 'Linux' }}
-
     - name: Install wheel
       run: |
         pip install --force-reinstall --no-deps --no-index --find-links . implicit
