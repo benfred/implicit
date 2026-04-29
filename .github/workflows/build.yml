@@ -57,29 +57,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        python-version: [38, 39, 310, 311, 312, 313, 314]
-        cibw-arch: [auto, aarch64]
-        exclude:
-          - os: macos-latest
-            cibw-arch: aarch64
-          - os: windows-latest
-            cibw-arch: aarch64
+        os: [macos-latest, ubuntu-latest, windows-latest, ubuntu-24.04-arm]
 
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set up QEMU
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: all
-
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.4.1
-        env:
-          CIBW_BUILD: cp${{matrix.python-version}}-*
-          CIBW_ARCHS_LINUX: ${{ matrix.cibw-arch }}
 
       - name: Build sdist
         run: |
@@ -95,8 +79,8 @@ jobs:
       - name: Upload Binaries
         uses: actions/upload-artifact@v7
         with:
-          name: wheels
-          path: wheelhouse
+          name: wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
 
   test-wheels:
     needs: [build-wheels]
