@@ -1,4 +1,5 @@
-""" Common test functions for all recommendation models """
+"""Common test functions for all recommendation models"""
+
 import os
 import pickle
 import random

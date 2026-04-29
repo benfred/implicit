@@ -1,8 +1,9 @@
-""" Models that use various Approximate Nearest Neighbours libraries in order to quickly
+"""Models that use various Approximate Nearest Neighbours libraries in order to quickly
 generate recommendations and lists of similar items.
 
 See http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/
 """
+
 import implicit.gpu
 
 

@@ -1,4 +1,5 @@
-""" Implicit Alternating Least Squares """
+"""Implicit Alternating Least Squares"""
+
 import functools
 import heapq
 import logging

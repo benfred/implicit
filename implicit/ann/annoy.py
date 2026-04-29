@@ -12,7 +12,6 @@ log = logging.getLogger("implicit")
 
 
 class AnnoyModel(RecommenderBase):
-
     """Speeds up inference calls to MatrixFactorization models by using an
     `Annoy <https://github.com/spotify/annoy>`_ index to calculate similar items and
     recommend items.

@@ -1,4 +1,5 @@
-""" test script to verify the CG method works, and time it versus cholesky """
+"""test script to verify the CG method works, and time it versus cholesky"""
+
 import argparse
 import json
 import logging
