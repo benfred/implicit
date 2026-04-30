@@ -12,7 +12,6 @@ log = logging.getLogger("implicit")
 
 
 class NMSLibModel(RecommenderBase):
-
     """Speeds up inference calls to MatrixFactorization models by using
     `NMSLib <https://github.com/nmslib/nmslib>`_ to create approximate nearest neighbours
     indices of the latent factors.
