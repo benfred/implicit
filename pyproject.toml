@@ -22,7 +22,7 @@ skip = ["*t-*", "*musl*",  "*-manylinux_i686", "*win32"]
 
 [[tool.cibuildwheel.overrides]]
 select = "*-manylinux_x86_64*"
-before-all = "ci/install_cuda.sh"
+before-all = "ci/install_cuda_13.sh"
 
 # auditwheel includes cuda libraries, just skip it
 [tool.cibuildwheel.linux]
