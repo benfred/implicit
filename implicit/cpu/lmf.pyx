@@ -175,10 +175,14 @@ class LogisticMatrixFactorization(MatrixFactorizationBase):
         # initialize RNG's, one per thread. Also pass the seeds for each thread's RNG
         cdef long[:] rng_seeds = rs.integers(0, 2**31, size=num_threads, dtype="long")
         cdef long[:] rng_seeds2 = rs.integers(0, 2**31, size=num_threads, dtype="long")
-        # Separate RNG per update direction: user update samples item IDs [0, items),
-        # item update samples user IDs [0, users).
-        cdef RNGVector user_neg_rng = RNGVector(num_threads, items - 1, rng_seeds)
-        cdef RNGVector item_neg_rng = RNGVector(num_threads, users - 1, rng_seeds2)
+        # Popularity-weighted sampling (matches BPR): RNG generates an offset into the
+        # global CSR `indices` array; dereferencing gives an item/user id weighted by
+        # interaction frequency.  Two separate RNGs with independent seed streams.
+        # Popularity-weighted sampling performs better than uniform.
+        cdef RNGVector user_neg_rng = RNGVector(
+            num_threads, len(user_items.data) - 1, rng_seeds)
+        cdef RNGVector item_neg_rng = RNGVector(
+            num_threads, len(item_users.data) - 1, rng_seeds2)
 
         log.debug("Running %i LMF training epochs", self.iterations)
         with tqdm(total=self.iterations, disable=not show_progress) as progress:
@@ -239,9 +243,6 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
                integral num_threads):
 
     cdef integral n_users = user_vectors.shape[0]
-    # item_vectors rows = number of opposite-side entities (items during user update,
-    # users during item update).  shape[1] was wrong — that gives n_factors+2.
-    cdef integral n_items = item_vectors.shape[0]
     cdef integral n_factors = user_vectors.shape[1]
 
     cdef integral u, i, it, c, _, index, f
@@ -278,22 +279,25 @@ def lmf_update(RNGVector rng, floating[:, :] deriv_sum_sq,
                         deriv[_] = deriv[_] - z * item_vectors[i, _]
 
                 # Negative(Sampled) Item Indices exp(y_ui) / (1 + exp(y_ui)) * y_i
-                # Sample uniformly from [0, n_items); reject any item the user has
-                # actually interacted with.  Guard against users who have seen every
-                # item (no valid negative exists).
-                if user_seen_item < n_items:
-                    for c in range(user_seen_item * neg_prop):
-                        i = rng.generate(thread_id)
-                        # indices[indptr[u]:indptr[u+1]] is sorted (guaranteed by fit()),
-                        # so binary_search gives O(log k) rejection per sample.
-                        while binary_search(&indices[indptr[u]], &indices[indptr[u + 1]], i):
-                            i = rng.generate(thread_id)
-                        exp_r = 0
-                        for f in range(n_factors):
-                            exp_r = exp_r + (user_vectors[u, f] * item_vectors[i, f])
-                        z = sigmoid(exp_r)
-                        for f in range(n_factors):
-                            deriv[f] = deriv[f] - z * item_vectors[i, f]
+                # Popularity-weighted sampling (matches BPR): draw a random offset into
+                # the global CSR `indices` array, then dereference to get an item id.
+                # Items appearing in more user histories are sampled proportionally
+                # more often.  If the drawn item happens to be a positive for this
+                # user we skip it (BPR-style: bounded, cannot deadlock).
+                # indices[indptr[u]:indptr[u+1]] is sorted (guaranteed by fit()),
+                # so binary_search gives O(log k) rejection per draw.
+                # Popularity-weighted sampling performs better than uniform.
+                for c in range(user_seen_item * neg_prop):
+                    index = rng.generate(thread_id)
+                    i = indices[index]
+                    if binary_search(&indices[indptr[u]], &indices[indptr[u + 1]], i):
+                        continue
+                    exp_r = 0
+                    for f in range(n_factors):
+                        exp_r = exp_r + (user_vectors[u, f] * item_vectors[i, f])
+                    z = sigmoid(exp_r)
+                    for f in range(n_factors):
+                        deriv[f] = deriv[f] - z * item_vectors[i, f]
                 for f in range(n_factors):
                     deriv[f] -= reg * user_vectors[u, f]
                     deriv_sum_sq[u, f] += deriv[f] * deriv[f]
