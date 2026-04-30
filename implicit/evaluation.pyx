@@ -431,8 +431,6 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
 
     while start_idx < len(to_generate):
         batch = to_generate[start_idx: start_idx + batch_size]
-        print(train_user_items)
-        print(batch)
         ids, _ = model.recommend(batch, train_user_items[np.asarray(batch)], N=K)
         start_idx += batch_size
 
