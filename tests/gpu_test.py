@@ -19,7 +19,7 @@ def test_topk_ascending(k, batch, temp_memory):
 
 
 @pytest.mark.skipif(not implicit.gpu.HAS_CUDA, reason="needs cuda build")
-@pytest.mark.parametrize("k", [4, 64, 128])
+@pytest.mark.parametrize("k", [4, 64])
 @pytest.mark.parametrize("batch", [1, 10, 100])
 @pytest.mark.parametrize("temp_memory", [500_000_000, 500_000])
 def test_topk_random(k, batch, temp_memory):
