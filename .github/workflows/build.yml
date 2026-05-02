@@ -58,11 +58,14 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest, ubuntu-24.04-arm]
+        python-version: [38, 39, 310, 311, 312, 313, 314]
 
     steps:
       - uses: actions/checkout@v6
 
       - name: Build wheels
+        env:
+          CIBW_BUILD: cp${{matrix.python-version}}-*
         uses: pypa/cibuildwheel@v3.4.1
 
       - name: Build sdist
@@ -79,7 +82,7 @@ jobs:
       - name: Upload Binaries
         uses: actions/upload-artifact@v7
         with:
-          name: wheels-${{ matrix.os }}
+          name: wheels-${{ matrix.os }}-${{ matrix.python-version }}
           path: ./wheelhouse/*.whl
 
   test-wheels:
@@ -96,7 +99,8 @@ jobs:
         path: implicit_source
     - uses: actions/download-artifact@v8
       with:
-        name: wheels-${{ matrix.os }}
+        pattern: wheels-${{ matrix.os }}-*
+        merge-multiple: true
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
       with:
