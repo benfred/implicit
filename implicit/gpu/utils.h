@@ -13,7 +13,9 @@ using std::invalid_argument;
 // and throws exceptions on failure (which cython can proxy back to python)
 
 #define CHECK_CUDA(code)                                                       \
-  { checkCuda((code), __FILE__, __LINE__); }
+  {                                                                            \
+    checkCuda((code), __FILE__, __LINE__);                                     \
+  }
 inline void checkCuda(cudaError_t code, const char *file, int line) {
   if (code != cudaSuccess) {
     std::stringstream err;
@@ -46,7 +48,9 @@ inline const char *cublasGetErrorString(cublasStatus_t status) {
 }
 
 #define CHECK_CUBLAS(code)                                                     \
-  { checkCublas((code), __FILE__, __LINE__); }
+  {                                                                            \
+    checkCublas((code), __FILE__, __LINE__);                                   \
+  }
 inline void checkCublas(cublasStatus_t code, const char *file, int line) {
   if (code != CUBLAS_STATUS_SUCCESS) {
     std::stringstream err;
@@ -57,7 +61,9 @@ inline void checkCublas(cublasStatus_t code, const char *file, int line) {
 }
 
 #define CHECK_CURAND(code)                                                     \
-  { checkCurand((code), __FILE__, __LINE__); }
+  {                                                                            \
+    checkCurand((code), __FILE__, __LINE__);                                   \
+  }
 inline void checkCurand(curandStatus_t code, const char *file, int line) {
   if (code != CURAND_STATUS_SUCCESS) {
     std::stringstream err;
