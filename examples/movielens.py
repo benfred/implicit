@@ -13,7 +13,6 @@ dataset
 from __future__ import print_function
 
 import argparse
-import codecs
 import logging
 import time
 
@@ -87,7 +86,7 @@ def calculate_similar_movies(output_filename, model_name="als", min_rating=4.0, 
 
     log.debug("calculating similar movies")
     with tqdm.tqdm(total=len(to_generate)) as progress:
-        with codecs.open(output_filename, "w", "utf8") as o:
+        with open(output_filename, "w", encoding="utf8") as o:
             batch_size = 1000
             for startidx in range(0, len(to_generate), batch_size):
                 batch = to_generate[startidx : startidx + batch_size]

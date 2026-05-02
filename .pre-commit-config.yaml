@@ -1,31 +1,18 @@
 repos:
-      - repo: https://github.com/timothycrosley/isort
-        rev: 5.12.0
+      - repo: https://github.com/astral-sh/ruff-pre-commit
+        rev: v0.15.12
         hooks:
-        - id: isort
-          additional_dependencies: [toml]
-      - repo: https://github.com/python/black
-        rev: 23.3.0
-        hooks:
-        - id: black
-      - repo: https://github.com/pycqa/flake8
-        rev: 6.0.0
-        hooks:
-        - id: flake8
-      - repo: https://github.com/pycqa/pylint
-        rev: v2.17.4
-        hooks:
-        - id: pylint
+        - id: ruff-check
+          types_or: [ python, pyi, jupyter, pyproject ]
+          args: [ --fix ]
+        - id: ruff-format
       - repo: https://github.com/codespell-project/codespell
         rev: v2.2.4
         hooks:
         - id: codespell
-      - repo: local
+      - repo: https://github.com/pre-commit/mirrors-clang-format
+        rev: v22.1.4
         hooks:
         - id: clang-format
-          name: clang-format
-          description: Format files with ClangFormat.
-          entry: clang-format --dry-run --Werror
-          language: system 
           files: \.(cu|cuh|h|cpp)$
 

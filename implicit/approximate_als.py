@@ -1,8 +1,9 @@
-""" Models that use various Approximate Nearest Neighbours libraries in order to quickly
+"""Models that use various Approximate Nearest Neighbours libraries in order to quickly
 generate recommendations and lists of similar items.
 
 See http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/
 """
+
 import implicit.gpu
 
 
@@ -14,7 +15,7 @@ def NMSLibAlternatingLeastSquares(
     index_params=None,
     query_params=None,
     use_gpu=implicit.gpu.HAS_CUDA,
-    **kwargs
+    **kwargs,
 ):
     # delay importing here in case nmslib isn't installed
     from implicit.ann.nmslib import NMSLibModel
@@ -38,7 +39,7 @@ def AnnoyAlternatingLeastSquares(
     n_trees=50,
     search_k=-1,
     use_gpu=implicit.gpu.HAS_CUDA,
-    **kwargs
+    **kwargs,
 ):
     als_model = implicit.als.AlternatingLeastSquares(*args, use_gpu=use_gpu, **kwargs)
     from implicit.ann.annoy import AnnoyModel
@@ -59,7 +60,7 @@ def FaissAlternatingLeastSquares(
     nlist=400,
     nprobe=20,
     use_gpu=implicit.gpu.HAS_CUDA,
-    **kwargs
+    **kwargs,
 ):
     # note that we're using the factory function here to instantiate a CPU/GPU model as appropriate
     als_model = implicit.als.AlternatingLeastSquares(*args, use_gpu=use_gpu, **kwargs)

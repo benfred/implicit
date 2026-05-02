@@ -226,20 +226,28 @@ CSRMatrix::CSRMatrix(int rows, int cols, int nonzeros, const int *indptr_,
   CHECK_CUDA(cudaMallocManaged(&indptr, (rows + 1) * sizeof(int)));
   CHECK_CUDA(cudaMemcpy(indptr, indptr_, (rows + 1) * sizeof(int),
                         cudaMemcpyHostToDevice));
-  CHECK_CUDA(cudaMemAdvise(indptr, (rows + 1) * sizeof(int),
-                           cudaMemAdviseSetReadMostly, 0));
 
   CHECK_CUDA(cudaMallocManaged(&indices, nonzeros * sizeof(int)));
   CHECK_CUDA(cudaMemcpy(indices, indices_, nonzeros * sizeof(int),
                         cudaMemcpyHostToDevice));
-  CHECK_CUDA(cudaMemAdvise(indices, nonzeros * sizeof(int),
-                           cudaMemAdviseSetReadMostly, 0));
 
   CHECK_CUDA(cudaMallocManaged(&data, nonzeros * sizeof(float)));
   CHECK_CUDA(cudaMemcpy(data, data_, nonzeros * sizeof(float),
                         cudaMemcpyHostToDevice));
+
+#if CUDART_VERSION >= 13000
+  cudaMemLocation location;
+  location.type = cudaMemLocationTypeDevice;
+  location.id = 0;
+#else
+  int location = 0;
+#endif
+  CHECK_CUDA(cudaMemAdvise(indptr, (rows + 1) * sizeof(int),
+                           cudaMemAdviseSetReadMostly, location));
+  CHECK_CUDA(cudaMemAdvise(indices, nonzeros * sizeof(int),
+                           cudaMemAdviseSetReadMostly, location));
   CHECK_CUDA(cudaMemAdvise(data, nonzeros * sizeof(float),
-                           cudaMemAdviseSetReadMostly, 0));
+                           cudaMemAdviseSetReadMostly, location));
 }
 
 CSRMatrix::~CSRMatrix() {

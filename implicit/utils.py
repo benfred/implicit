@@ -138,14 +138,14 @@ def _batch_call(func, ids, *args, N=10, **kwargs):
 
 def _filter_items_from_results(queryid, ids, scores, filter_items, N):
     if np.isscalar(queryid):
-        mask = np.in1d(ids, filter_items, invert=True)
+        mask = np.isin(ids, filter_items, invert=True)
         ids, scores = ids[mask][:N], scores[mask][:N]
     else:
         rows = len(queryid)
         filtered_scores = np.zeros((rows, N), dtype=scores.dtype)
         filtered_ids = np.zeros((rows, N), dtype=ids.dtype)
         for row in range(rows):
-            mask = np.in1d(ids[row], filter_items, invert=True)
+            mask = np.isin(ids[row], filter_items, invert=True)
             filtered_ids[row] = ids[row][mask][:N]
             filtered_scores[row] = scores[row][mask][:N]
         ids, scores = filtered_ids, filtered_scores

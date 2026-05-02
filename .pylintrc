@@ -45,3 +45,6 @@ disable=fixme,
 min-similarity-lines=64
 ignore-docstrings=yes
 ignore-imports=yes
+
+[DESIGN]
+max-positional-arguments=12
