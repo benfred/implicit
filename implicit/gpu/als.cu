@@ -35,7 +35,7 @@ least_squares_cg_kernel(int factors, size_t user_count, size_t item_count, T *X,
 
   // Stride over users in the grid:
   // https://devblogs.nvidia.com/parallelforall/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/
-  for (int u = blockIdx.x; u < user_count; u += gridDim.x) {
+  for (size_t u = blockIdx.x; u < user_count; u += gridDim.x) {
     T *x = &X[u * factors];
 
     float x_value = convert<T, float>(x[threadIdx.x]);
@@ -102,7 +102,7 @@ least_squares_cg_kernel(int factors, size_t user_count, size_t item_count, T *X,
     // complain and don't let it perpetuate
     if (isnan(rsold)) {
       if (threadIdx.x == 0) {
-        printf("Warning NaN Detected in row %i of %lu\n", u, user_count);
+        printf("Warning NaN Detected in row %zu of %lu\n", u, user_count);
       }
       x_value = 0;
     }
