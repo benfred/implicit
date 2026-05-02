@@ -20,12 +20,9 @@ repos:
         rev: v2.2.4
         hooks:
         - id: codespell
-      - repo: local
+      - repo: https://github.com/pre-commit/mirrors-clang-format
+        rev: v22.1.4
         hooks:
         - id: clang-format
-          name: clang-format
-          description: Format files with ClangFormat.
-          entry: clang-format --dry-run --Werror
-          language: system 
           files: \.(cu|cuh|h|cpp)$
 
