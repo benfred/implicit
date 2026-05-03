@@ -2,10 +2,13 @@
 #define IMPLICIT_GPU_KNN_H_
 #include <memory>
 
-#include <raft/core/resource/device_memory_resource.hpp>
 #include <raft/core/resources.hpp>
 
 #include "implicit/gpu/matrix.h"
+
+namespace rmm::mr {
+struct device_memory_resource;
+}
 
 namespace implicit {
 namespace gpu {
