@@ -11,7 +11,7 @@ elseif(DEFINED ENV{IMPLICIT_DISABLE_CUDA})
 
 else()
     enable_language(CUDA)
-    add_cython_target(_cuda CXX)
+    cython_transpile(_cuda.pyx LANGUAGE CXX)
 
     add_compile_options(-DCCCL_IGNORE_DEPRECATED_STREAM_REF_HEADER)
 
@@ -31,7 +31,7 @@ else()
 
     # We must find CCCL ourselves before raft so that we get the right version.
     include(${rapids-cmake-dir}/cpm/cccl.cmake)
-    rapids_cpm_cccl(BUILD_EXPORT_SET implicit-exports INSTALL_EXPORT_SET implicit-exports)
+    rapids_cpm_cccl() 
 
     # get rmm
     include(${rapids-cmake-dir}/cpm/rmm.cmake)
@@ -52,15 +52,13 @@ else()
     )
     set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda -Wno-deprecated-gpu-targets -Xfatbin=-compress-all --expt-relaxed-constexpr")
 
-    add_library(_cuda MODULE ${_cuda}
+    python_add_library(_cuda MODULE _cuda.cxx
         als.cu
         bpr.cu
         matrix.cu
         random.cu
         knn.cu
     )
-
-    python_extension_module(_cuda)
 
     if(DEFINED ENV{IMPLICIT_CUDA_ARCH})
         message("using cuda arch $ENV{IMPLICIT_CUDA_ARCH}")
@@ -78,7 +76,7 @@ else()
         get_target_property(CUDA_ARCH _cuda CUDA_ARCHITECTURES)
         message("using cuda architectures ${CUDA_ARCH} for cuda version ${CUDAToolkit_VERSION}")
     endif()
-    target_link_libraries(_cuda CUDA::cublas CUDA::curand rmm::rmm raft::raft)
+    target_link_libraries(_cuda PRIVATE CUDA::cublas CUDA::curand rmm::rmm raft::raft)
 
     install(TARGETS _cuda LIBRARY DESTINATION implicit/gpu)
 endif()
