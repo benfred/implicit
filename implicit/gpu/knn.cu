@@ -5,9 +5,9 @@
 #include <cub/device/device_segmented_radix_sort.cuh>
 #include <cuda_runtime.h>
 #include <rmm/cuda_stream_view.hpp>
-#include <rmm/mr/cuda_memory_resource.hpp>
-#include <rmm/mr/device_memory_resource.hpp>
-#include <rmm/mr/pool_memory_resource.hpp>
+#include <rmm/mr/device/cuda_memory_resource.hpp>
+#include <rmm/mr/device/device_memory_resource.hpp>
+#include <rmm/mr/device/pool_memory_resource.hpp>
 #include <thrust/device_ptr.h>
 #include <thrust/functional.h>
 #include <thrust/iterator/constant_iterator.h>
