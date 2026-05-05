@@ -32,7 +32,7 @@ classifiers = [
 dependencies = ["numpy>=1.17.0", "scipy>=0.16", "tqdm>=4.27", "threadpoolctl"]
 
 [tool.scikit-build]
-wheel.exclude = ["**.pyx", "**.cmake", "**.cuh", "**.hpp", "include/nvtx/*"]
+wheel.exclude = ["**.pyx", "**.cmake", "**.cuh", "**.hpp", "**.h", "**.hpp.in"]
 
 [tool.cibuildwheel]
 # skip testing in the cibuildwheel phase, will install the wheels later
