@@ -35,12 +35,11 @@ else()
 
     # get rmm
     include(${rapids-cmake-dir}/cpm/rmm.cmake)
-    rapids_cpm_rmm(BUILD_EXPORT_SET implicit-exports INSTALL_EXPORT_SET implicit-exports)
+    rapids_cpm_rmm(BUILD_EXPORT_SET implicit-exports)
 
     rapids_cpm_find(raft 26.02
         GLOBAL_TARGETS raft::raft
         BUILD_EXPORT_SET    implicit-exports
-        INSTALL_EXPORT_SET  implicit-exports
         CPM_ARGS
           GIT_REPOSITORY  https://github.com/rapidsai/raft.git
           GIT_TAG         v26.02.00
