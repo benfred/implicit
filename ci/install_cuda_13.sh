@@ -4,7 +4,6 @@ dnf install -y \
     cuda-nvcc-13-0 \
     cuda-cudart-devel-13-0 \
     libcurand-devel-13-0 \
-    libcublas-devel-13-0 \
-    ninja-build
+    libcublas-devel-13-0 
 
 ln -s cuda-13.0 /usr/local/cuda
