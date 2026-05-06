@@ -35,7 +35,6 @@ dependencies = ["numpy>=1.17.0", "scipy>=0.16", "tqdm>=4.27", "threadpoolctl"]
 wheel.exclude = ["**.pyx", "**.cmake", "**.cuh", "**.hpp", "**.h", "**.hpp.in"]
 cmake.version = ">=3.21.0"
 ninja.version = ">=1.10"
-build-dir = "build"
 
 [tool.cibuildwheel]
 # skip testing in the cibuildwheel phase, will install the wheels later

@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-import warnings
-
 HAS_CUDA = False
 try:
     from ._cuda import *  # noqa
@@ -10,10 +8,10 @@ try:
     HAS_CUDA = True
 
 except RuntimeError as e:
+    import warnings
+
     warnings.warn(
         f"CUDA extension is built, but disabling GPU support because of '{e}'",
     )
-except ImportError as e:
-    warnings.warn(
-        f"Disabling GPU support because of '{e}'",
-    )
+except ImportError:
+    pass
