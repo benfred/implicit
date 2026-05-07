@@ -38,6 +38,7 @@ gpu = ["rmm-cu13"]
 wheel.exclude = ["**.pyx", "**.cmake", "**.cuh", "**.hpp", "**.h", "**.hpp.in", "**librapids_logger.so", "**librmm.so"]
 cmake.version = ">=3.21.0"
 ninja.version = ">=1.10"
+build-dir = "build"
 
 [tool.cibuildwheel]
 # skip testing in the cibuildwheel phase, will install the wheels later
