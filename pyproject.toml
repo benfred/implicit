@@ -16,7 +16,7 @@ readme = "README.md"
 authors = [
   { name = "Ben Frederickson", email = "ben@benfrederickson.com" },
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
