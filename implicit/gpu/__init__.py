@@ -6,7 +6,8 @@ HAS_CUDA = False
 HAS_RMM = False
 
 try:
-    # RMM is required to enable GPU support - use with 'pip install rmm-cu13'
+    # RMM is required to enable GPU support - install with 'pip install rmm-cu13'
+    # Note that we need to import rmm here before importing the _cuda.so extension
     import rmm  # noqa
 
     HAS_RMM = True
