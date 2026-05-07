@@ -31,8 +31,11 @@ classifiers = [
 ]
 dependencies = ["numpy>=1.17.0", "scipy>=0.16", "tqdm>=4.27", "threadpoolctl"]
 
+[project.optional-dependencies]
+gpu = ["rmm-cu13"]
+
 [tool.scikit-build]
-wheel.exclude = ["**.pyx", "**.cmake", "**.cuh", "**.hpp", "**.h", "**.hpp.in"]
+wheel.exclude = ["**.pyx", "**.cmake", "**.cuh", "**.hpp", "**.h", "**.hpp.in", "**librapids_logger.so", "**librmm.so"]
 cmake.version = ">=3.21.0"
 ninja.version = ">=1.10"
 build-dir = "build"
