@@ -389,8 +389,8 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
 
     Returns
     -------
-    float
-        the calculated p@k
+    dict[str, float]
+        the calculated metrics@k
     """
     if not isinstance(train_user_items, csr_matrix):
         train_user_items = train_user_items.tocsr()
