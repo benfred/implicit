@@ -62,6 +62,7 @@ class ItemItemRecommender(RecommenderBase):
                 userid,
                 user_items=user_items,
                 N=N,
+                score_dtype=np.float64,
                 filter_already_liked_items=filter_already_liked_items,
                 filter_items=filter_items,
                 recalculate_user=recalculate_user,
@@ -115,7 +116,12 @@ class ItemItemRecommender(RecommenderBase):
 
         if not np.isscalar(itemid):
             return _batch_call(
-                self.similar_items, itemid, N=N, filter_items=filter_items, items=items
+                self.similar_items,
+                itemid,
+                N=N,
+                score_dtype=np.float64,
+                filter_items=filter_items,
+                items=items,
             )
 
         if filter_items is not None and items is not None:

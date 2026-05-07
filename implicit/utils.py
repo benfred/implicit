@@ -103,11 +103,11 @@ def augment_inner_product_matrix(factors):
     return max_norm, np.append(factors, extra_dimension.reshape(norms.shape[0], 1), axis=1)
 
 
-def _batch_call(func, ids, *args, N=10, **kwargs):
+def _batch_call(func, ids, *args, N=10, id_dtype=np.int32, score_dtype=np.float32, **kwargs):
     # we're running in batch mode, just loop over each item and call the scalar version of the
     # function
-    output_ids = np.zeros((len(ids), N), dtype=np.int32)
-    output_scores = np.zeros((len(ids), N), dtype=np.float32)
+    output_ids = np.zeros((len(ids), N), dtype=id_dtype)
+    output_scores = np.zeros((len(ids), N), dtype=score_dtype)
 
     user_items = kwargs.pop("user_items") if "user_items" in kwargs else None
     item_users = kwargs.pop("item_users") if "item_users" in kwargs else None
