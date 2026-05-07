@@ -1,4 +1,4 @@
-""" An example of using this library to calculate related artists
+"""An example of using this library to calculate related artists
 from the last.fm dataset. More details can be found
 at http://www.benfrederickson.com/matrix-factorization/
 
@@ -6,8 +6,8 @@ This code will automatically download a HDF5 version of the dataset from
 GitHub when it is first run. The original dataset can also be found at
 http://ocelma.net/MusicRecommendationDataset/lastfm-360K.html
 """
+
 import argparse
-import codecs
 import logging
 import time
 
@@ -102,7 +102,7 @@ def calculate_similar_artists(output_filename, model_name="als"):
     # write out as a TSV of artistid, otherartistid, score
     logging.debug("writing similar items")
     with tqdm.tqdm(total=len(to_generate)) as progress:
-        with codecs.open(output_filename, "w", "utf8") as o:
+        with open(output_filename, "w", encoding="utf8") as o:
             batch_size = 1000
             for startidx in range(0, len(to_generate), batch_size):
                 batch = to_generate[startidx : startidx + batch_size]
@@ -146,7 +146,7 @@ def calculate_recommendations(output_filename, model_name="als"):
     # generate recommendations for each user and write out to a file
     start = time.time()
     with tqdm.tqdm(total=len(users)) as progress:
-        with codecs.open(output_filename, "w", "utf8") as o:
+        with open(output_filename, "w", encoding="utf8") as o:
             batch_size = 1000
             to_generate = np.arange(len(users))
             for startidx in range(0, len(to_generate), batch_size):

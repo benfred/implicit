@@ -62,6 +62,7 @@ class ItemItemRecommender(RecommenderBase):
                 userid,
                 user_items=user_items,
                 N=N,
+                score_dtype=np.float64,
                 filter_already_liked_items=filter_already_liked_items,
                 filter_items=filter_items,
                 recalculate_user=recalculate_user,
@@ -89,15 +90,15 @@ class ItemItemRecommender(RecommenderBase):
         )
 
         if filter_items is not None:
-            mask = np.in1d(ids, filter_items, invert=True)
+            mask = np.isin(ids, filter_items, invert=True)
             ids, scores = ids[mask][:N], scores[mask][:N]
 
         elif items is not None:
-            mask = np.in1d(ids, items)
+            mask = np.isin(ids, items)
             ids, scores = ids[mask], scores[mask]
 
             # returned items should be equal to input selected items
-            missing = items[np.in1d(items, ids, invert=True)]
+            missing = items[np.isin(items, ids, invert=True)]
             if missing.size:
                 ids = np.append(ids, missing)
                 scores = np.append(scores, np.full(missing.size, -np.finfo(scores.dtype).max))
@@ -115,7 +116,12 @@ class ItemItemRecommender(RecommenderBase):
 
         if not np.isscalar(itemid):
             return _batch_call(
-                self.similar_items, itemid, N=N, filter_items=filter_items, items=items
+                self.similar_items,
+                itemid,
+                N=N,
+                score_dtype=np.float64,
+                filter_items=filter_items,
+                items=items,
             )
 
         if filter_items is not None and items is not None:
@@ -128,15 +134,15 @@ class ItemItemRecommender(RecommenderBase):
         scores = self.similarity[itemid].data
 
         if filter_items is not None:
-            mask = np.in1d(ids, filter_items, invert=True)
+            mask = np.isin(ids, filter_items, invert=True)
             ids, scores = ids[mask], scores[mask]
 
         elif items is not None:
-            mask = np.in1d(ids, items)
+            mask = np.isin(ids, items)
             ids, scores = ids[mask], scores[mask]
 
             # returned items should be equal to input selected items
-            missing = items[np.in1d(items, ids, invert=True)]
+            missing = items[np.isin(items, ids, invert=True)]
             if missing.size:
                 ids = np.append(ids, missing)
                 scores = np.append(scores, np.full(missing.size, -np.finfo(scores.dtype).max))

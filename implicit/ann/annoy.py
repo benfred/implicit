@@ -12,7 +12,6 @@ log = logging.getLogger("implicit")
 
 
 class AnnoyModel(RecommenderBase):
-
     """Speeds up inference calls to MatrixFactorization models by using an
     `Annoy <https://github.com/spotify/annoy>`_ index to calculate similar items and
     recommend items.
@@ -125,9 +124,7 @@ class AnnoyModel(RecommenderBase):
 
         # support recalculate_item if possible. TODO: refactor this
         if hasattr(self.model, "_item_factor"):
-            factor = self.model._item_factor(
-                itemid, item_users, recalculate_item
-            )  # pylint: disable=protected-access
+            factor = self.model._item_factor(itemid, item_users, recalculate_item)  # pylint: disable=protected-access
         elif recalculate_item:
             raise NotImplementedError(f"recalculate_item isn't supported with {self.model}")
         else:
@@ -192,9 +189,7 @@ class AnnoyModel(RecommenderBase):
 
         # support recalculate_user if possible (TODO: come back to this since its a bit of a hack)
         if hasattr(self.model, "+_user_factor"):
-            user = self.model._user_factor(
-                userid, user_items, recalculate_user
-            )  # pylint: disable=protected-access
+            user = self.model._user_factor(userid, user_items, recalculate_user)  # pylint: disable=protected-access
         elif recalculate_user:
             raise NotImplementedError(f"recalculate_user isn't supported with {self.model}")
         else:
