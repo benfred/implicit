@@ -3,9 +3,12 @@
 #include <memory>
 
 #include <raft/core/resources.hpp>
-#include <rmm/mr/device/device_memory_resource.hpp>
 
 #include "implicit/gpu/matrix.h"
+
+namespace rmm::mr {
+struct device_memory_resource;
+}
 
 namespace implicit {
 namespace gpu {

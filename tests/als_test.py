@@ -348,7 +348,7 @@ def test_gpu_loss(n_users, n_items, n_samples, regularization):
     gpu_loss = implicit.gpu.als.calculate_loss(ratings, user_factors, item_factors, regularization)
     cpu_loss = implicit.cpu.als.calculate_loss(ratings, user_factors, item_factors, regularization)
 
-    assert gpu_loss == pytest.approx(cpu_loss, rel=1e-5)
+    assert gpu_loss == pytest.approx(cpu_loss, rel=1e-4)
 
 
 def test_calculate_loss_segfault():

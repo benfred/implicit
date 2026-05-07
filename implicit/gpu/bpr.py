@@ -56,6 +56,9 @@ class BayesianPersonalizedRanking(MatrixFactorizationBase):
         random_state=None,
     ):
         super().__init__()
+        if not implicit.gpu.HAS_RMM:
+            raise ValueError("RMM isn't installed, can't train on GPU.")
+
         if not implicit.gpu.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 
