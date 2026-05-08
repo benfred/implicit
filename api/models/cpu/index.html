@@ -1,18 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CPU Models &mdash; Implicit 0.6.1 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+  <title>CPU Models &mdash; Implicit 0.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -25,23 +29,23 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> Implicit
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Implicit
           </a>
-              <div class="version">
-                0.6
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html"> Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial_lastfm.html"> Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html"> API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Models</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../recommender_base.html"> RecommenderBase</a></li>
@@ -76,10 +80,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">API Reference</a> &raquo;</li>
-          <li><a href="../index.html">Recommendation Models</a> &raquo;</li>
-      <li>CPU Models</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Recommendation Models</a></li>
+      <li class="breadcrumb-item active">CPU Models</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/api/models/cpu/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -89,38 +93,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  
-<style>
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast.container + .nbinput.container {
-    margin-top: -19px;
-}
-
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
-}
-</style>
-<div class="section" id="cpu-models">
-<h1>CPU Models<a class="headerlink" href="#cpu-models" title="Permalink to this headline"></a></h1>
+  <section id="cpu-models">
+<h1>CPU Models<a class="headerlink" href="#cpu-models" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="als.html"> AlternatingLeastSquares</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bpr.html"> BayesianPersonalizedRanking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lmf.html"> LogisticMatrixFactorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="als.html"> AlternatingLeastSquares</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="als.html#implicit.cpu.als.AlternatingLeastSquares"><code class="docutils literal notranslate"><span class="pre">AlternatingLeastSquares</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bpr.html"> BayesianPersonalizedRanking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bpr.html#implicit.cpu.bpr.BayesianPersonalizedRanking"><code class="docutils literal notranslate"><span class="pre">BayesianPersonalizedRanking</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lmf.html"> LogisticMatrixFactorization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lmf.html#implicit.cpu.lmf.LogisticMatrixFactorization"><code class="docutils literal notranslate"><span class="pre">LogisticMatrixFactorization</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="knn.html"> Nearest Neighbours Models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="knn.html#cosinerecommender">CosineRecommender</a></li>
 <li class="toctree-l2"><a class="reference internal" href="knn.html#tfidfrecommender">TFIDFRecommender</a></li>
@@ -128,10 +117,13 @@
 <li class="toctree-l2"><a class="reference internal" href="knn.html#itemitemrecommender">ItemItemRecommender</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="matrix_factorization_base.html"> MatrixFactorizationBase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix_factorization_base.html"> MatrixFactorizationBase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="matrix_factorization_base.html#implicit.cpu.matrix_factorization_base.MatrixFactorizationBase"><code class="docutils literal notranslate"><span class="pre">MatrixFactorizationBase</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
-</div>
+</section>
 
 
            </div>
