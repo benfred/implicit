@@ -10,7 +10,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "implicit"
-version = "0.7.2"
+version = "0.7.3"
 description = "Collaborative Filtering for Implicit Feedback Datasets"
 readme = "README.md"
 authors = [
