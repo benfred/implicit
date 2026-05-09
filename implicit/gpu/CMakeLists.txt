@@ -11,10 +11,13 @@ elseif(DEFINED ENV{IMPLICIT_DISABLE_CUDA})
 
 else()
     enable_language(CUDA)
-    add_cython_target(_cuda CXX)
+    cython_transpile(_cuda.pyx LANGUAGE CXX)
+
+    add_compile_options(-DCCCL_IGNORE_DEPRECATED_STREAM_REF_HEADER)
 
     # use rapids-cmake to install dependencies
-    file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-23.12/RAPIDS.cmake
+    set(rapids-cmake-version "26.02")
+    file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/refs/heads/release/26.02/RAPIDS.cmake
         ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
     include(${CMAKE_BINARY_DIR}/RAPIDS.cmake)
     include(rapids-cmake)
@@ -22,60 +25,38 @@ else()
     include(rapids-cuda)
     include(rapids-export)
     include(rapids-find)
-    include(${rapids-cmake-dir}/cpm/package_override.cmake)
 
     rapids_cpm_init()
     rapids_cmake_build_type(Release)
 
-    # thrust/cub have a cmake issue where the conda build fails
-    # to find them, and needs these patches
-    # https://github.com/benfred/cub/commit/97934d146b771fd2e8bda75f73349a4b3c9e10a7
-    # https://github.com/benfred/thrust/commit/8452c764cc8d772314169e99811535f3a9108cfe
-    # (note that cub is pulled in through thrust here - meaning we only need to override
-    # the thrust version to pull it in)
-    # Issue is tracked in https://github.com/NVIDIA/thrust/issues/1966
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/override.json
-      [=[
-        {
-          "packages" : {
-            "Thrust" : {
-              "version" : "1.17.2",
-              "git_url" : "https://github.com/benfred/thrust.git",
-              "git_tag" : "no_cmake_find_root_path",
-              "git_shallow" : true,
-              "always_download" : true,
-            }
-          }
-        }
-    ]=])
-    rapids_cpm_package_override(${CMAKE_CURRENT_BINARY_DIR}/override.json)
+    # We must find CCCL ourselves before raft so that we get the right version.
+    include(${rapids-cmake-dir}/cpm/cccl.cmake)
+    rapids_cpm_cccl() 
 
     # get rmm
     include(${rapids-cmake-dir}/cpm/rmm.cmake)
-    rapids_cpm_rmm(BUILD_EXPORT_SET implicit-exports INSTALL_EXPORT_SET implicit-exports)
+    rapids_cpm_rmm()
 
-    # get raft
-    # note: we're using RAFT in header only mode right now - mainly to reduce binary
-    # size of the compiled wheels
-    rapids_cpm_find(raft 23.12
+    rapids_cpm_find(raft 26.02
+        GLOBAL_TARGETS raft::raft
         CPM_ARGS
           GIT_REPOSITORY  https://github.com/rapidsai/raft.git
-          GIT_TAG         branch-23.12
-          DOWNLOAD_ONLY   YES
+          GIT_TAG         v26.02.00
+          SOURCE_SUBDIR   cpp
+          OPTIONS
+              "BUILD_TESTS OFF"
+              "BUILD_PRIMS_BENCH OFF"
+              "RAFT_COMPILE_LIBRARY OFF"
     )
-    include_directories(${raft_SOURCE_DIR}/cpp/include)
-
     set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda -Wno-deprecated-gpu-targets -Xfatbin=-compress-all --expt-relaxed-constexpr")
 
-    add_library(_cuda MODULE ${_cuda}
+    python_add_library(_cuda MODULE _cuda.cxx
         als.cu
         bpr.cu
         matrix.cu
         random.cu
         knn.cu
     )
-
-    python_extension_module(_cuda)
 
     if(DEFINED ENV{IMPLICIT_CUDA_ARCH})
         message("using cuda arch $ENV{IMPLICIT_CUDA_ARCH}")
@@ -85,7 +66,7 @@ else()
             set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "60;70;80")
         elseif (${CUDAToolkit_VERSION} VERSION_LESS "11.8.0")
             set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "60;70;80;86")
-        elseif (${CUDAToolkit_VERSION} VERSION_LESS "12.0.0")
+        elseif (${CUDAToolkit_VERSION} VERSION_LESS "13.0.0")
             set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "60;70;80;86;90")
         else()
             set_target_properties(_cuda PROPERTIES CUDA_ARCHITECTURES "80;86;90;100;120")
@@ -93,7 +74,7 @@ else()
         get_target_property(CUDA_ARCH _cuda CUDA_ARCHITECTURES)
         message("using cuda architectures ${CUDA_ARCH} for cuda version ${CUDAToolkit_VERSION}")
     endif()
-    target_link_libraries(_cuda CUDA::cublas CUDA::curand rmm::rmm)
+    target_link_libraries(_cuda PRIVATE CUDA::cublas CUDA::curand raft::raft)
 
     install(TARGETS _cuda LIBRARY DESTINATION implicit/gpu)
 endif()

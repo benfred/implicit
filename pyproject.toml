@@ -1,14 +1,44 @@
 [build-system]
 requires = [
-    "setuptools>=42",
     "wheel",
-    "scikit-build>=0.13.1",
-    "Cython>=0.24",
+    "scikit-build-core>=0.11",
+    "cython",
+    "cython-cmake",
     "scipy>=0.16",
-    "cmake>=3.18",
-    "ninja"
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "implicit"
+version = "0.7.3"
+description = "Collaborative Filtering for Implicit Feedback Datasets"
+readme = "README.md"
+authors = [
+  { name = "Ben Frederickson", email = "ben@benfrederickson.com" },
+]
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Natural Language :: English",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Cython",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = ["numpy>=1.17.0", "scipy>=0.16", "tqdm>=4.27", "threadpoolctl"]
+
+[project.optional-dependencies]
+gpu = ["rmm-cu13"]
+
+[tool.scikit-build]
+wheel.exclude = ["**.pyx", "**.cmake", "**.cuh", "**.hpp", "**.h", "**.hpp.in", "**librapids_logger.so", "**librmm.so"]
+cmake.version = ">=3.21.0"
+ninja.version = ">=1.10"
+build-dir = "build"
 
 [tool.cibuildwheel]
 # skip testing in the cibuildwheel phase, will install the wheels later

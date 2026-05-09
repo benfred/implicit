@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest, ubuntu-24.04-arm]
-        python-version: [38, 39, 310, 311, 312, 313, 314]
+        python-version: [39, 310, 311, 312, 313, 314]
 
     steps:
       - uses: actions/checkout@v6
@@ -60,7 +60,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.8, 3.9, '3.10', '3.11', '3.12', '3.13', '3.14']
+        python-version: [3.9, '3.10', '3.11', '3.12', '3.13', '3.14']
         os: [macos-latest, ubuntu-latest, windows-latest, ubuntu-24.04-arm]
 
     steps:

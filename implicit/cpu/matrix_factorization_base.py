@@ -5,7 +5,7 @@ import warnings
 import numpy as np
 from scipy.sparse import csr_matrix, lil_matrix
 
-from ..recommender_base import ModelFitError, RecommenderBase
+from ..recommender_base import RecommenderBase
 from .topk import topk
 
 
@@ -247,10 +247,7 @@ class MatrixFactorizationBase(RecommenderBase):
         return self._item_norms
 
     def _check_fit_errors(self):
-        is_nan = np.any(np.isnan(self.user_factors), axis=None)
-        is_nan |= np.any(np.isnan(self.item_factors), axis=None)
-        if is_nan:
-            raise ModelFitError("NaN encountered in factors")
+        self._check_factors(self.user_factors, self.item_factors)
 
 
 def _filter_items_from_sparse_matrix(items, query_items):

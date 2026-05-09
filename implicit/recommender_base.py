@@ -214,3 +214,10 @@ class RecommenderBase(metaclass=ABCMeta):
             items=selected_items,
             filter_already_liked_items=False,
         )
+
+    @staticmethod
+    def _check_factors(user_factors, item_factors):
+        is_nan = np.any(np.isnan(user_factors), axis=None)
+        is_nan |= np.any(np.isnan(item_factors), axis=None)
+        if is_nan:
+            raise ModelFitError("NaN encountered in factors")

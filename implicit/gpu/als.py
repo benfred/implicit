@@ -55,6 +55,9 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         calculate_training_loss=False,
         random_state=None,
     ):
+        if not implicit.gpu.HAS_RMM:
+            raise ValueError("RMM isn't installed, can't train on GPU.")
+
         if not implicit.gpu.HAS_CUDA:
             raise ValueError("No CUDA extension has been built, can't train on GPU.")
 

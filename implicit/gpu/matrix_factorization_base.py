@@ -201,6 +201,9 @@ class MatrixFactorizationBase(RecommenderBase):
 
     similar_items.__doc__ = RecommenderBase.similar_items.__doc__
 
+    def _check_fit_errors(self):
+        self._check_factors(self.user_factors.to_numpy(), self.item_factors.to_numpy())
+
     def recalculate_user(self, userid, user_items):
         raise NotImplementedError("recalculate_user is not supported with this model")
 
