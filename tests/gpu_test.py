@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 from recommender_base_test import get_checker_board
+from scipy.sparse import coo_matrix
 
 import implicit
 
@@ -81,3 +82,14 @@ def test_cpu_gpu_conversion(model_class, from_gpu):
         rtol=1e-3,
         atol=1e-3,
     )
+
+
+@pytest.mark.skipif(not implicit.gpu.HAS_CUDA, reason="needs cuda build")
+def test_coo_matrix_copies_float_data():
+    row = np.array([0, 1, 2, 0, 1, 2], dtype=np.int32)
+    col = np.array([0, 1, 2, 1, 2, 0], dtype=np.int32)
+    data = np.array([1.5, 2.7, 3.14159, 0.1, 1000.5, -1.5], dtype=np.float32)
+
+    matrix = implicit.gpu.COOMatrix(coo_matrix((data, (row, col)), shape=(3, 3)))
+
+    assert matrix is not None

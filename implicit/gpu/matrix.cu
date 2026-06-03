@@ -270,7 +270,7 @@ COOMatrix::COOMatrix(int rows, int cols, int nonzeros, const int *row_,
 
   CHECK_CUDA(cudaMallocManaged(&data, nonzeros * sizeof(float)));
   CHECK_CUDA(
-      cudaMemcpy(data, data_, nonzeros * sizeof(int), cudaMemcpyHostToDevice));
+      cudaMemcpy(data, data_, nonzeros * sizeof(float), cudaMemcpyHostToDevice));
 }
 
 COOMatrix::~COOMatrix() {
