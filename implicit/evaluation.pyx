@@ -237,6 +237,13 @@ def precision_at_k(model, train_user_items, test_user_items, int K=10,
                    show_progress=True, int num_threads=1):
     """ Calculates P@K for a given trained model
 
+    The numerator counts hits in the top K recommendations across all users
+    with held-out items. Each of these users contributes the smaller of K
+    and their number of distinct held-out items to the denominator.
+
+    For example, at K=3, if two users have one and three held-out items
+    respectively, one hit for each user gives a score of 2 / (1 + 3) = 0.5.
+
     Parameters
     ----------
     model : RecommenderBase
@@ -390,7 +397,8 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
     Returns
     -------
     dict[str, float]
-        the calculated metrics@k
+        The calculated metrics at K. The ``"precision"`` entry uses the
+        denominator described in :func:`precision_at_k`.
     """
     if not isinstance(train_user_items, csr_matrix):
         train_user_items = train_user_items.tocsr()
