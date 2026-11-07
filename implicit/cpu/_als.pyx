@@ -23,12 +23,18 @@ cdef inline void axpy(int * n, floating * da, floating * dx, int * incx, floatin
     else:
         cython_blas.saxpy(n, da, dx, incx, dy, incy)
 
-cdef inline void symv(char *uplo, int *n, floating *alpha, floating *a, int *lda, floating *x,
-                      int *incx, floating *beta, floating *y, int *incy) noexcept nogil:
-    if floating is double:
-        cython_blas.dsymv(uplo, n, alpha, a, lda, x, incx, beta, y, incy)
-    else:
-        cython_blas.ssymv(uplo, n, alpha, a, lda, x, incx, beta, y, incy)
+cdef inline void symv(int *n, floating alpha, floating *a, floating *x, floating *y) noexcept nogil:
+    """ y = alpha * a.dot(x) for a symmetric, row-major n x n matrix a.
+
+    Done as n axpy calls rather than one BLAS symv call: with a pthreads OpenBLAS
+    build, symv called from many OpenMP threads stops scaling at a handful of
+    threads, while the level 1 routines are fine. """
+    cdef int one = 1, k
+    cdef floating temp
+    memset(y, 0, sizeof(floating) * n[0])
+    for k in range(n[0]):
+        temp = alpha * x[k]
+        axpy(n, &temp, a + k * n[0], &one, y, &one)
 
 cdef inline floating dot(int *n, floating *sx, int *incx, floating *sy, int *incy) noexcept nogil:
     if floating is double:
@@ -159,7 +165,6 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
     cdef integral users = X.shape[0], u, i, index
     cdef int one = 1, it, N = X.shape[1]
     cdef floating confidence, temp, alpha, rsnew, rsold
-    cdef floating zero = 0.
 
     cdef floating[:, :] YtY = np.dot(np.transpose(Y), Y) + regularization * np.eye(N, dtype=dtype)
 
@@ -184,8 +189,7 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
                     continue
 
                 # calculate residual r = (YtCuPu - (YtCuY.dot(Xu)
-                temp = -1.0
-                symv(b"U", &N, &temp, &YtY[0, 0], &N, x, &one, &zero, r, &one)
+                symv(&N, <floating> -1.0, &YtY[0, 0], x, r)
 
                 for index in range(indptr[u], indptr[u + 1]):
                     i = indices[index]
@@ -208,8 +212,7 @@ def _least_squares_cg(integral[:] indptr, integral[:] indices, float[:] data,
 
                 for it in range(cg_steps):
                     # calculate Ap = YtCuYp - without actually calculating YtCuY
-                    temp = 1.0
-                    symv(b"U", &N, &temp, &YtY[0, 0], &N, p, &one, &zero, Ap, &one)
+                    symv(&N, <floating> 1.0, &YtY[0, 0], p, Ap)
 
                     for index in range(indptr[u], indptr[u + 1]):
                         i = indices[index]
@@ -263,7 +266,6 @@ def _calculate_loss(Cui, integral[:] indptr, integral[:] indices, float[:] data,
     cdef integral users = X.shape[0], items = Y.shape[0], u, i, index
     cdef int one = 1, N = X.shape[1]
     cdef floating confidence, temp
-    cdef floating zero = 0.
 
     cdef floating[:, :] YtY = np.dot(np.transpose(Y), Y)
 
@@ -276,8 +278,7 @@ def _calculate_loss(Cui, integral[:] indptr, integral[:] indices, float[:] data,
         try:
             for u in prange(users, schedule='dynamic', chunksize=8):
                 # calculates (A.dot(Xu) - 2 * b).dot(Xu), without calculating A
-                temp = 1.0
-                symv(b"U", &N, &temp, &YtY[0, 0], &N, &X[u, 0], &one, &zero, r, &one)
+                symv(&N, <floating> 1.0, &YtY[0, 0], &X[u, 0], r)
 
                 for index in range(indptr[u], indptr[u + 1]):
                     i = indices[index]
