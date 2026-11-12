@@ -434,9 +434,8 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
         ids, _ = model.recommend(batch, train_user_items[np.asarray(batch)], N=K)
         start_idx += batch_size
 
-        # the model can return fewer than K items (for instance if K is larger than
-        # the number of items), so only look at the items that were actually returned
-        num_recs = min(K, ids.shape[1])
+        # the model can't return more than `items` recommendations
+        num_recs = min(K, items)
 
         with nogil:
             for batch_idx in range(len(batch)):
