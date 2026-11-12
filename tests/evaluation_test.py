@@ -3,11 +3,20 @@ import pytest
 from scipy.sparse import csr_matrix, random
 
 import implicit
-from implicit.evaluation import leave_k_out_split, precision_at_k, train_test_split
+from implicit.als import AlternatingLeastSquares
+from implicit.bpr import BayesianPersonalizedRanking
+from implicit.evaluation import (
+    leave_k_out_split,
+    precision_at_k,
+    ranking_metrics_at_k,
+    train_test_split,
+)
+from implicit.lmf import LogisticMatrixFactorization
 
 pytest.importorskip("h5py")
 
 from implicit.datasets.movielens import get_movielens  # noqa
+from recommender_base_test import get_checker_board  # noqa
 
 
 def _get_sample_matrix():
@@ -117,3 +126,28 @@ def test_evaluate_movielens_100k():
     model.fit(train)
 
     assert precision_at_k(model, train, test) > 0.2
+
+
+@pytest.mark.parametrize(
+    "model",
+    [
+        AlternatingLeastSquares(factors=8, use_gpu=False, random_state=42),
+        BayesianPersonalizedRanking(factors=8, use_gpu=False, random_state=42),
+        LogisticMatrixFactorization(factors=8, use_gpu=False, random_state=42),
+    ],
+)
+def test_ranking_metrics_k_larger_than_number_of_items(model):
+    user_items = get_checker_board(50)
+    model.fit(user_items, show_progress=False)
+    test_user_items = csr_matrix(np.eye(50))
+
+    # asking for more items than there are in the model should only return the available
+    # items, and the metrics shouldn't count any item twice
+    ids, _ = model.recommend(np.arange(50), user_items, N=100)
+    assert ids.shape == (50, 50)
+
+    all_items = ranking_metrics_at_k(model, user_items, test_user_items, K=50, show_progress=False)
+    too_many = ranking_metrics_at_k(model, user_items, test_user_items, K=100, show_progress=False)
+
+    assert too_many == pytest.approx(all_items)
+    assert all(0 <= value <= 1 for value in too_many.values())

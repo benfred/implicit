@@ -71,6 +71,9 @@ cdef class KnnQuery(object):
         if item_filter is not None:
             c_item_filter = item_filter.c_vector
 
+        # we can't return more results than there are items
+        k = min(k, <int>items.c_matrix.rows)
+
         indices = np.zeros((rows, k), dtype="int32")
         distances = np.zeros((rows, k), dtype="float32")
         indices_view = indices

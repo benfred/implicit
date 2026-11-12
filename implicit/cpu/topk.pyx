@@ -17,6 +17,10 @@ def topk(items, query, int k, item_norms=None, filter_query_items=None, filter_i
         query = query.reshape((1, len(query)))
 
     cdef int query_rows = query.shape[0]
+
+    # we can't return more results than there are items
+    k = min(k, items.shape[0])
+
     indices = np.zeros((query_rows, k), dtype="int32")
     distances = np.zeros((query_rows, k), dtype=query.dtype)
 

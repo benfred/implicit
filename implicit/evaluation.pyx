@@ -399,7 +399,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
         test_user_items = test_user_items.tocsr()
 
     cdef int users = test_user_items.shape[0], items = test_user_items.shape[1]
-    cdef int u, i, batch_idx
+    cdef int u, i, batch_idx, num_recs
     # precision
     cdef double relevant = 0, pr_div = 0, total = 0
     # map
@@ -434,6 +434,9 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
         ids, _ = model.recommend(batch, train_user_items[np.asarray(batch)], N=K)
         start_idx += batch_size
 
+        # the model can't return more than `items` recommendations
+        num_recs = min(K, items)
+
         with nogil:
             for batch_idx in range(len(batch)):
                 u = batch[batch_idx]
@@ -450,7 +453,7 @@ def ranking_metrics_at_k(model, train_user_items, test_user_items, int K=10,
                 num_pos_items = likes.size()
                 num_neg_items = items - num_pos_items
 
-                for i in range(K):
+                for i in range(num_recs):
                     if likes.find(ids[batch_idx, i]) != likes.end():
                         relevant += 1
                         hit += 1
