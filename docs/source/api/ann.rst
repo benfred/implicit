@@ -30,3 +30,9 @@ FaissModel
 .. autoclass:: implicit.ann.faiss.FaissModel
    :members:
    :show-inheritance:
+
+MLXVSModel
+----------
+.. autoclass:: implicit.ann.mlxvs.MLXVSModel
+   :members:
+   :show-inheritance:

@@ -20,7 +20,7 @@ implicit feedback datasets:
 All models have multi-threaded training routines, using Cython and OpenMP to fit the models in
 parallel among all available CPU cores.  In addition, the ALS and BPR models both have custom CUDA
 kernels - enabling fitting on compatible GPU's. This library also supports using approximate nearest neighbours libraries such as `Annoy <https://github.com/spotify/annoy>`_, `NMSLIB <https://github.com/searchivarius/nmslib>`_
-and `Faiss <https://github.com/facebookresearch/faiss>`_ for `speeding up making recommendations <http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/>`_.
+`Faiss <https://github.com/facebookresearch/faiss>`_ and `mlxvs <https://github.com/mikepapadim/mlxvs>`_ (on the GPU of Apple silicon Macs) for `speeding up making recommendations <http://www.benfrederickson.com/approximate-nearest-neighbours-for-recommender-systems/>`_.
 
 
 Basic Usage
