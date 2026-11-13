@@ -75,3 +75,27 @@ def FaissAlternatingLeastSquares(
         nprobe=nprobe,
         use_gpu=use_gpu,
     )
+
+
+def MLXVSAlternatingLeastSquares(
+    *args,
+    approximate_similar_items=True,
+    approximate_recommend=True,
+    graph_degree=32,
+    intermediate_graph_degree=64,
+    itopk_size=64,
+    **kwargs,
+):
+    # mlxvs searches on the GPU of Apple silicon Macs; the ALS model itself is fit on the CPU
+    als_model = implicit.als.AlternatingLeastSquares(*args, use_gpu=False, **kwargs)
+
+    from implicit.ann.mlxvs import MLXVSModel
+
+    return MLXVSModel(
+        als_model,
+        approximate_similar_items=approximate_similar_items,
+        approximate_recommend=approximate_recommend,
+        graph_degree=graph_degree,
+        intermediate_graph_degree=intermediate_graph_degree,
+        itopk_size=itopk_size,
+    )

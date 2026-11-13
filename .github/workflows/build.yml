@@ -83,6 +83,9 @@ jobs:
     - name: Install ANN Libraries
       run: pip install annoy nmslib
       if: ${{ matrix.python-version != '3.14' && runner.os == 'Linux' }}
+    - name: Install mlxvs (Apple silicon GPU)
+      run: pip install mlxvs
+      if: ${{ matrix.python-version != '3.9' && runner.os == 'macOS' }}
     - name: Install wheel
       run: |
         pip install --force-reinstall --no-deps --no-index --find-links . implicit
