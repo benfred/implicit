@@ -252,6 +252,25 @@ def test_explain():
     assert items[:2] == top_items
 
 
+@pytest.mark.parametrize("use_cached_weights", [False, True])
+def test_explain_single_user_row(use_cached_weights):
+    user_items = csr_matrix([[1, 0, 1], [0, 2, 3], [2, 1, 0]], dtype=np.float32)
+    model = AlternatingLeastSquares(
+        factors=2, iterations=5, alpha=2, use_gpu=False, num_threads=1, random_state=23
+    )
+    model.fit(user_items, show_progress=False)
+
+    userid, itemid = 1, 0
+    expected_score, expected_contributions, weights = model.explain(userid, user_items, itemid)
+    assert sorted(item for item, _ in expected_contributions) == [1, 2]
+
+    score, contributions, _ = model.explain(
+        userid, user_items[userid], itemid, user_weights=weights if use_cached_weights else None
+    )
+    assert score == pytest.approx(expected_score)
+    assert contributions == expected_contributions
+
+
 @pytest.mark.parametrize("use_gpu", [True, False] if HAS_CUDA else [False])
 def test_small_nan(use_gpu):
     # test out case where number of factors is larger than number of users:
