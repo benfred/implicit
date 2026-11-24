@@ -356,7 +356,8 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         userid : int
             The userid to explain recommendations for
         user_items : csr_matrix
-            Sparse matrix containing the liked items for the user
+            A single row containing the user's liked items, or the full
+            user-item matrix with this user's interactions in row `userid`.
         itemid : int
             The itemid to explain recommendations for
         user_weights : ndarray, optional
@@ -381,11 +382,13 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         if self.alpha != 1.0:
             user_items = self.alpha * user_items
 
+        row = 0 if user_items.shape[0] == 1 else userid
+
         # user_weights = Cholesky decomposition of Wu^-1
         # from section 5 of the paper CF for Implicit Feedback Datasets
         if user_weights is None:
             A, _ = user_linear_equation(
-                self.item_factors, self.YtY, user_items, userid, self.regularization, self.factors
+                self.item_factors, self.YtY, user_items, row, self.regularization, self.factors
             )
             user_weights = scipy.linalg.cho_factor(A)
         seed_item = self.item_factors[itemid]
@@ -396,7 +399,7 @@ class AlternatingLeastSquares(MatrixFactorizationBase):
         total_score = 0.0
         h = []
         h_len = 0
-        for other_itemid, confidence in nonzeros(user_items, userid):
+        for other_itemid, confidence in nonzeros(user_items, row):
             if confidence < 0:
                 continue
 
